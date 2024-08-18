@@ -1,5 +1,5 @@
 import { ListSupplierExecludeReasonVM } from "./supplierExecludeReasonVM";
-import { ListSupplierHoldReasonVM } from "./SupplierHoldReasonVM";
+import { ListSupplierHoldReasonVM } from "./supplierHoldReasonVM";
 
 export class ListSupplierExecludeVM {
     id: number;

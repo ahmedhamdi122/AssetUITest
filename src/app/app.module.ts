@@ -12,7 +12,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 // import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // import { MatSidenavModule } from '@angular/material/sidenav';
  import { MatToolbarModule } from '@angular/material/toolbar';
-// import { MatDividerModule } from '@angular/material/divider';
+ import { MatDividerModule } from '@angular/material/divider';
 // import { MatIconModule } from '@angular/material/icon';
 // import { MatButtonModule } from '@angular/material/button';
 // import { MatMenuModule } from '@angular/material/menu';
@@ -33,7 +33,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 // import { PickListModule } from 'primeng/picklist';
 // import { DialogModule } from 'primeng/dialog';
  import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
-// import { TooltipModule } from 'primeng/tooltip';
+ import { TooltipModule } from 'primeng/tooltip';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -43,6 +43,7 @@ import { AuthenticateRoutingModule } from './authenticate/authenticate-routing.m
 import { AuthenticateModule } from './authenticate/authenticate.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { DashboardRoutingModule } from './dashboard/dashboard-routing.module';
+import { NgxBarcode6Module } from 'ngx-barcode6';
 // import { RoleCategoriesModule } from './Features/role-categories/role-categories.module';
 // import { RoleCategoriesRoutingModule } from './Features/role-categories/role-categories-routing.module';
 // import { OrganizationsModule } from './Features/organizations/organizations.module';
@@ -57,12 +58,12 @@ import { DashboardRoutingModule } from './dashboard/dashboard-routing.module';
 // import { HospitalsRoutingModule } from './Features/hospitals/hospitals-routing.module';
 // import { UsersModule } from './Features/users/users.module';
 // import { UsersRoutingModule } from './Features/users/users-routing.module';
-// import { MasterAssetsModule } from './Features/master-assets/master-assets.module';
-// import { MasterAssetsRoutingModule } from './Features/master-assets/master-assets-routing.module';
+ import { MasterAssetsModule } from './Features/master-assets/master-assets.module';
+ import { MasterAssetsRoutingModule } from './Features/master-assets/master-assets-routing.module';
 // import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 // import { ConfirmationService } from 'primeng/api';
-// import { HospitalAssetsModule } from './Features/hospital-assets/hospital-assets.module';
-// import { HospitalAssetsRoutingModule } from './Features/hospital-assets/hospital-assets-routing.module';
+ import { HospitalAssetsModule } from './Features/hospital-assets/hospital-assets.module';
+ import { HospitalAssetsRoutingModule } from './Features/hospital-assets/hospital-assets-routing.module';
 // import { MatInputModule } from '@angular/material/input';
 // import { MatFormFieldModule } from '@angular/material/form-field';
 // import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -84,17 +85,17 @@ import { DashboardRoutingModule } from './dashboard/dashboard-routing.module';
 // import { EmployeesRoutingModule } from './Features/employees/employees-routing.module';
 
 
-// import { FullCalendarModule } from '@fullcalendar/angular';
-// import interactionPlugin from '@fullcalendar/interaction';
-// import dayGridPlugin from '@fullcalendar/daygrid';
+  import { FullCalendarModule } from '@fullcalendar/angular';
+import interactionPlugin from '@fullcalendar/interaction';
+ import dayGridPlugin from '@fullcalendar/daygrid';
 // import timeGridPlugin from '@fullcalendar/timegrid';
 // import listPlugin from '@fullcalendar/list';
 
 // import { AgmCoreModule } from '@agm/core';
 // import { WorkOrdersRoutingModule } from './Features/work-orders/work-orders-routing.module';
 // import { WorkOrdersModule } from './Features/work-orders/work-orders.module';
-// import { BrandsModule } from './Features/brands/brands.module';
-// import { BrandsRoutingModule } from './Features/brands/brands-routing.module';
+import { BrandsModule } from './Features/brands/brands.module';
+import { BrandsRoutingModule } from './Features/brands/brands-routing.module';
 // import { AssetsStatusRoutingModule } from './Features/assets-status/assets-status-routing.module';
 // import { AssetsStatusModule } from './Features/assets-status/assets-status.module';
 // import { CategoriesRoutingModule } from './Features/categories/categories-routing.module';
@@ -104,10 +105,10 @@ import { DashboardRoutingModule } from './dashboard/dashboard-routing.module';
 // import { RequestTypesRoutingModule } from './Features/request-types/request-types-routing.module';
 // import { ProblemsModule } from './Features/problems/problems.module';
 // import { ProblemsRoutingModule } from './Features/problems/problems-routing.module';
-// import { SuppliersModule } from './Features/suppliers/suppliers.module';
-// import { SuppliersRoutingModule } from './Features/suppliers/suppliers-routing.module';
-// import { DepartmentsModule } from './Features/departments/departments.module';
-// import { DepartmentsRoutingModule } from './Features/departments/departments-routing.module';
+import { SuppliersModule } from './Features/suppliers/suppliers.module';
+import { SuppliersRoutingModule } from './Features/suppliers/suppliers-routing.module';
+import { DepartmentsModule } from './Features/departments/departments.module';
+import { DepartmentsRoutingModule } from './Features/departments/departments-routing.module';
 // import { RequestStatusModule } from './Features/request-status/request-status.module';
 // import { RequestStatusRoutingModule } from './Features/request-status/request-status-routing.module';
 // import { WorkOrderStatusModule } from './Features/work-order-status/work-order-status.module';
@@ -133,16 +134,11 @@ import { DashboardRoutingModule } from './dashboard/dashboard-routing.module';
 // import { MatBadgeModule } from '@angular/material/badge';
 // import { CarouselModule } from 'primeng/carousel';
 // import { FieldsetModule } from "primeng/fieldset";
-
-
-// import { PowerBIEmbedModule } from 'powerbi-client-angular';
-// import { NgxBarcodeModule } from 'ngx-barcode';
 // import { HospitalExecludesModule } from './Features/hospital-execludes/hospital-execludes.module';
 // import { HospitalExecludesRoutingModule } from './Features/hospital-execludes/hospital-execludes-routing.module';
-// import { MemberExcludesModule } from './Features/member-excludes/member-excludes.module';
-// import { MemberExcludesRoutingModule } from './Features/member-excludes/member-excludes-routing.module';
+import { MemberExcludesModule } from './Features/member-excludes/member-excludes.module';
+import { MemberExcludesRoutingModule } from './Features/member-excludes/member-excludes-routing.module';
 // import { DropdownModule } from 'primeng/dropdown';
-
 // import { FileUploadModule } from 'primeng/fileupload';
 // import { A11yModule } from '@angular/cdk/a11y';
 // import { CookieService } from 'ngx-cookie-service';
@@ -168,19 +164,19 @@ import { AuthGuard } from './Shared/Services/guards/authGuard.guard';
 // import { DeleteModule } from './Shared/delete/delete.module';
 import { ViewComponent } from './Features/errors/view/view.component';
 import { AuthenticationService } from './Shared/Services/guards/authentication.service';
-import { TestComponent } from './test/test/test.component';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 
 // FullCalendarModule.registerPlugins([
 //   interactionPlugin,
 //   dayGridPlugin,
-//   timeGridPlugin, listPlugin
+//   //timeGridPlugin, listPlugin
 // ]);
 @NgModule({
   declarations: [AppComponent,
     //  CreateFloorComponent,
     //  EditFloorComponent, EditRoomComponent, CreateRoomComponent, 
      ViewComponent,
-    TestComponent
+    
   ],
   imports: [
     // DeleteModule,
@@ -192,49 +188,15 @@ import { TestComponent } from './test/test/test.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     // MatSidenavModule,
-    // TooltipModule,
+     TooltipModule,
      MatToolbarModule,
-    // MatDividerModule,
-    // MatIconModule,
-    // MatButtonModule,
-    // MatMenuModule,
-    // MatListModule,
-    // MatSnackBarModule,
-    // MatDialogModule,
-    // MatRadioModule,
-    // MatInputModule,
-    // MatCheckboxModule,
-    // MatDatepickerModule,
-    // MatNativeDateModule,
-    // NgxMatFileInputModule,
-    // AvatarModule,
-    // PickListModule,
-    // MultiSelectModule,
-    // DynamicDialogModule,
-    // MatFormFieldModule,
-    // DialogModule,
-    // ListboxModule,
-    // MatTabsModule,
-    // MatSelectModule,
-    // MatExpansionModule,
-    // MatCheckboxModule,
-    // TableModule,
-     //NgbModule,
-    // ChartModule,
-    // FullCalendarModule,
-    // NgxQRCodeModule,
-    // AutoCompleteModule,
-    // BadgeModule,
-    // MatBadgeModule,
-    // CarouselModule,
-    // MatButtonModule,
-    // FieldsetModule,
-    // NgxBarcodeModule,
-    // PowerBIEmbedModule,
-    // DropdownModule,
-    // MatSelectModule,
-    // FileUploadModule,
+     NgxBarcode6Module,
+     MatDividerModule,
+  FullCalendarModule,
+  BrandsRoutingModule,
+  BrandsModule,
     // A11yModule,
+    
      NgxUiLoaderModule,
     // MatProgressSpinnerModule,
     TranslateModule.forRoot({
@@ -248,20 +210,18 @@ import { TestComponent } from './test/test/test.component';
     //   libraries: ["places", "geometry"],
     //   apiKey: 'AIzaSyCxvNEG1CRZ0pzoriAujg07y101MbOkFrQ'
     // }),
-
-
+    DepartmentsRoutingModule,
+    DepartmentsModule,
+    SuppliersRoutingModule,
+    SuppliersModule,
      AuthenticateModule,
      AuthenticateRoutingModule,
-
     LayoutModule,
     LayoutRoutingModule,
-
-    // AuthenticateModule,
-    // AuthenticateRoutingModule,
-
     DashboardModule,
     DashboardRoutingModule,
-
+    MemberExcludesModule,
+    MemberExcludesRoutingModule,
     // RoleCategoriesModule,
     // RoleCategoriesRoutingModule,
 
@@ -277,128 +237,21 @@ import { TestComponent } from './test/test/test.component';
     // CitiesModule,
     // CitiesRoutingModule,
 
-    // HospitalsModule,
-    // HospitalsRoutingModule,
+
 
     // UsersModule,
     // UsersRoutingModule,
 
-    // MasterAssetsModule,
-    // MasterAssetsRoutingModule,
+    MasterAssetsModule,
+    MasterAssetsRoutingModule,
 
-    // HospitalAssetsModule,
-    // HospitalAssetsRoutingModule,
-
-    // ContractsModule,
-    // ContractsRoutingModule,
-
-
-    // RequetsModule,
-    // RequetsRoutingModule,
-
-
-    // WorkOrdersModule,
-    // WorkOrdersRoutingModule,
-
-    // HospitalBuildingsModule,
-    // HospitalBuildingsRoutingModule,
-
-    // HospitalFloorsModule,
-    // HospitalAssetsRoutingModule,
-
-    // HospitalRoomsModule,
-    // HospitalRoomsRoutingModule,
-
-    // EmployeesModule,
-    // EmployeesRoutingModule,
-
-    // BrandsModule,
-    // BrandsRoutingModule,
-
-    // AssetsStatusRoutingModule,
-    // AssetsStatusModule,
-
-    // OriginsRoutingModule,
-    // OriginsModule,
-
-    // RequestTypesModule,
-    // RequestTypesRoutingModule,
-
-    // ProblemsModule,
-    // ProblemsRoutingModule,
-
-
-    // SuppliersModule,
-    // SuppliersRoutingModule,
-
-    // DepartmentsModule,
-    // DepartmentsRoutingModule,
-
-    // RequestStatusModule,
-    // RequestStatusRoutingModule,
-
-    // WorkOrderStatusModule,
-    // WorkOrderStatusRoutingModule,
-
-    // WorkOrderTypesModule,
-    // WorkOrderTypesRoutingModule,
-
-    // ClassificationsModule,
-    // ClassificationsRoutingModule,
-
-    // ECRISModule,
-    // ECRISRoutingModule,
-
-    // SubCategoriesModule,
-    // SubCategoriesRoutingModule,
-
-    // CategoriesModule,
-    // CategoriesRoutingModule,
-
-    // SubProblemModule,
-    // SubProblemRoutingModule,
-
-    // SupplierExecludesModule,
-    // SupplierExecludesRoutingModule,
-
-    // ReportsModule,
-    // ReportsRoutingModule,
-
-    // HospitalExecludesModule,
-    // HospitalExecludesRoutingModule,
-
-    // MemberExcludesModule,
-    // MemberExcludesRoutingModule,
-
-    // VisitsModule,
-    // VisitsRoutingModule,
-
-    // EngineersModule,
-    // EngineersRoutingModule,
-
-    // WnpmModule,
-    // WnpmRoutingModule,
-
-
-
-    // ExternalFixModule,
-    // ExternalFixRoutingMoule,
-    // StockTakingScheduleModule,
-    // StockTakingScheduleRoutingModule,
-
-    // AssetStocktakingModule,
-    // AssetStocktakingRoutingModule,
-
-    // ManfacturerpmassetsModule,
-    // ManfacturerpmassetsRoutingModule,
-
-    // AssetmovementModule,
-    // AssetsStatusRoutingModule,
-
+    HospitalAssetsModule,
+    HospitalAssetsRoutingModule,
+    
 
   ],
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
-  // { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
+   { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
      DialogService,
       // ConfirmationService, DatePipe, CookieService,
        AuthGuard

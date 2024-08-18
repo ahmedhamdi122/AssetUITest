@@ -1,4 +1,4 @@
-import { CreatePMAssetTaskVM } from "./MasterAssetVM";
+import { CreatePMAssetTaskVM } from "./masterAssetVM";
 
 export class ListPMAssetTimeVM {
     id: number;

@@ -1,4 +1,4 @@
-import { ListPMAssetTaskVM } from "./MasterAssetVM";
+import { ListPMAssetTaskVM } from "./masterAssetVM";
 
 export class MainClass {
     results: ListManfacturerPMAssetVM[];

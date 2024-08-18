@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateMasterContractVM, DetailMasterContractVM, EditMasterContractVM, GeneratedMasterContractNumberVM, ListMasterContractVM, MainClass, SortAndFilterContractVM } from '../Models/masterContractVM';
-import { environment } from '../../../../src/environments/environment';
+import { environment } from 'src/environments/environment';
 import { CreateContractDetailVM, ListContractDetailVM } from '../Models/contractDetailVM';
 import { ListHospitalVM } from '../Models/hospitalVM';
 import { CreateContractAttachmentVM, ListContractAttachmentVM } from '../Models/contractAttachmentVM';

@@ -1,4 +1,4 @@
-import { HospitalApplicationAttachmentVM } from "./HospitalApplicationVM";
+import { HospitalApplicationAttachmentVM } from "./hospitalApplicationVM";
 
 export class ListHospitalHoldReasonVM {
     id: number;
