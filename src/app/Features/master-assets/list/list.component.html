@@ -16,11 +16,13 @@
         <div class="col-2">
             <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true"
                 aria-controls="collapseExample" class="filterbutton">
-                <i class="fa-solid fa-filter"></i> {{'Asset.Filter'|translate}}</a>
+                <!-- <i class="fa-solid fa-filter"></i>  --><i class="pi pi-filter-fill" style="font-size: 1.5rem"></i>
+                {{'Asset.Filter'|translate}}</a>
         </div>
         <div class="col-2">
             <a class="addbutton" *ngIf="(isAdmin || isHospitalManager) || canAddMasterAsset" (click)="addMasterAsset()">
-                <i class="fa-solid fa-plus"></i> {{'Asset.Create' | translate}}</a>
+                <i class="pi pi-plus-circle
+                "></i> {{'Asset.Create' | translate}}</a>
         </div>
     </div>
 
@@ -146,12 +148,12 @@
                         <td style="text-align: inherit;">{{lang =="en" ? item.ecriName:item.ecriNameAr}}</td>
                         <td style="text-align: inherit;">{{item.model}}</td>
                         <td style="text-align: inherit;">
-                            <span class="viewIcon" (click)="viewMasterAsset(item.id)"><i class="fa-solid fa-eye"></i>
+                            <span class="viewIcon" (click)="viewMasterAsset(item.id)"><i class="pi pi-eye"style="color: green"></i>
                             </span>
-                            <span class="editIcon" (click)="editMasterAsset(item.id)"><i class="fa-solid fa-pen"></i>
+                            <span class="editIcon" (click)="editMasterAsset(item.id)"><i class="pi pi-pen-to-square" style="color: purple"></i>
                             </span>
                             <span class="deleteIcon" (click)="deleteMasterAsset(item.id)"><i
-                                    class="fa-solid fa-trash"></i>
+                                    class="pi pi-trash" style="color: red"></i>
                             </span>
                         </td>
                     </tr>

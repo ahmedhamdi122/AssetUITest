@@ -9,9 +9,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 // import { ChartModule } from 'primeng/chart';
 // import { ChartdashboardComponent } from './chartdashboard/chartdashboard.component';
-// import { DynamicDialogModule } from 'primeng/dynamicdialog';
-// import { DialogModule } from 'primeng/dialog';
-// import { TableModule } from 'primeng/table';
+ import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
 @NgModule({
   declarations: [DashPageComponent, 
     // ChartdashboardComponent
@@ -25,10 +25,10 @@ import { TranslateModule } from '@ngx-translate/core';
     DashboardRoutingModule,
     LayoutModule,
     // ChartModule,
-    // DynamicDialogModule,
+    DynamicDialogModule,
     TranslateModule,
-    // DialogModule,
-    // TableModule,
+    DialogModule,
+    TableModule,
     // MatRadioModule
   ],
   exports: [DashPageComponent, TranslateModule],

@@ -27,7 +27,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 // import { ChartModule } from 'primeng/chart';
 
 // import { AvatarModule } from 'primeng/avatar';
-// import { TableModule } from 'primeng/table';
+ import { TableModule } from 'primeng/table';
 // import { ListboxModule } from 'primeng/listbox';
 // import { MultiSelectModule } from 'primeng/multiselect';
 // import { PickListModule } from 'primeng/picklist';
@@ -196,7 +196,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
   BrandsRoutingModule,
   BrandsModule,
     // A11yModule,
-    
+    TableModule,
      NgxUiLoaderModule,
     // MatProgressSpinnerModule,
     TranslateModule.forRoot({

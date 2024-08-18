@@ -110,9 +110,7 @@ export class ListComponent implements OnInit {
       this.lstBrands = brands;
     });
 
-    this.ecriService.GetECRIS().subscribe(ecris => {
-      this.lstECRIS = ecris;
-    });
+  
 
 
     this.sortFilterObjects = {
@@ -180,7 +178,7 @@ export class ListComponent implements OnInit {
     });
 
     dialogRef2.onClose.subscribe((res) => {
-      this.reload();
+     // this.reload();
     });
   }
   deleteMasterAsset(id: number) {
@@ -197,7 +195,8 @@ export class ListComponent implements OnInit {
       });
 
       dialogRef2.afterClosed().subscribe(deleted => {
-        this.reload();
+        // this.reload();
+              //when click delete only
       });
 
     });
@@ -219,6 +218,7 @@ export class ListComponent implements OnInit {
 
     ref.onClose.subscribe(() => {
       //   this.reload();
+      //when click edit only
     });
   }
   viewMasterAsset(id: number) {
@@ -236,7 +236,7 @@ export class ListComponent implements OnInit {
     });
 
     ref.onClose.subscribe(() => {
-      this.reload();
+      // this.reload();
     });
   }
   reload() {
