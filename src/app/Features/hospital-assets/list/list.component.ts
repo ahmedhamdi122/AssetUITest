@@ -3,7 +3,6 @@ import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { DialogService, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { AssetDetailVM, MainClass, EditAssetDetailVM, ListAssetDetailVM, SearchHospitalAssetVM, SortAssetDetailVM, SortAndFilterVM } from 'src/app/Shared/Models/assetDetailVM';
 import { ListBrandVM } from 'src/app/Shared/Models/brandVM';
 import { ListDepartmentVM } from 'src/app/Shared/Models/departmentVM';
@@ -44,6 +43,8 @@ import { DetailsComponent } from '../details/details.component';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
 import { GovernorateService } from 'src/app/Shared/Services/governorate.service';
 import { HospitalService } from 'src/app/Shared/Services/hospital.service';
+import { ConfirmationService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -187,9 +188,9 @@ export class ListComponent implements OnInit {
 
   showTitle: boolean = false;
 
-  constructor(public dialogService: DialogService, private dialog: MatDialog, private masterAssetService: MasterAssetService,
-    private authenticationService: AuthenticationService, private assetStatusService: AssetStatusService,
-    private activeRoute: ActivatedRoute, private config: DynamicDialogConfig, private cdr: ChangeDetectorRef,
+  constructor(public dialogService: DialogService, private dialog: MatDialog, private masterAssetService: MasterAssetService,private confirmationService:ConfirmationService
+   , private authenticationService: AuthenticationService, private assetStatusService: AssetStatusService,
+    private activeRoute: ActivatedRoute, private cdr: ChangeDetectorRef,
     private assetDetailService: AssetDetailService, private governorateService: GovernorateService, private cityService: CityService,
     private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService,
     private supplierService: SupplierService, private originService: OriginService, private brandService: BrandService,
@@ -803,13 +804,13 @@ export class ListComponent implements OnInit {
       this.sortFilterObjects.searchObj.brandId = brandId;
       this.showTitle = false;
     }
-    if (this.config.data != null || this.config.data != undefined) {
-      let brandId = this.config.data.brandId;
-      console.log("brandId", brandId);
+    // if (this.config.data != null || this.config.data != undefined) {
+    //   let brandId = this.config.data.brandId;
+    //   console.log("brandId", brandId);
 
-      this.sortFilterObjects.searchObj.brandId = brandId;
-      this.showTitle = false;
-    }
+    //   this.sortFilterObjects.searchObj.brandId = brandId;
+    //   this.showTitle = false;
+    // }
     if (this.sortFilterObjects.searchObj.brandId == undefined) {
       this.sortFilterObjects.searchObj.brandId = 0;
       this.showTitle = true;
@@ -1002,24 +1003,33 @@ export class ListComponent implements OnInit {
     });
   }
   deleteAsset(id: number) {
-    this.assetDetailService.GetAssetById(id).subscribe((data) => {
-      this.selectedObj = data;
+    // this.assetDetailService.GetAssetById(id).subscribe((data) => {
+    //   this.selectedObj = data;
+    console.log("id :",id);
+      // const dialogRef2 = this.dialogService.open(DeleteconfirmationComponent, {
+      //   width: '30%',
+    
+      //   data: {
+      //     id: this.selectedObj.id,
+      //     name: this.selectedObj.assetName,
+      //     nameAr: this.selectedObj.assetNameAr,
+      //   },
+      // });
+      
 
-      const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
-        width: '30%',
-        autoFocus: true,
-        data: {
-          id: this.selectedObj.id,
-          name: this.selectedObj.assetName,
-          nameAr: this.selectedObj.assetNameAr,
-        },
-      });
+      // dialogRef2.onClose.subscribe(deleted => {
+      //   this.reset();
+      // });
 
-      dialogRef2.afterClosed().subscribe(deleted => {
-        this.reset();
-      });
-
+      this.confirmationService.confirm({
+        message: 'Are you sure that you want to proceed?',
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => { console.log("accept");},
+        reject: () => { console.log("reject")}
     });
+
+    // });
 
   }
   editAsset(id: number) {

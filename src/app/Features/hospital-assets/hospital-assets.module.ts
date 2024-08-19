@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HospitalAssetsRoutingModule } from './hospital-assets-routing.module';
@@ -27,7 +27,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DetailsComponent } from './details/details.component';
-import { MatListModule } from '@angular/material/list';
+//  import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSelectModule } from '@angular/material/select';
 import { ViewComponent } from './view/view.component';
@@ -50,6 +50,7 @@ import { AlertdeleteComponent } from './alertdelete/alertdelete.component';
 import { CalendarModule } from 'primeng/calendar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
+
 @NgModule({
   declarations: [
     ListComponent,
@@ -64,6 +65,7 @@ import { DeleteModule } from 'src/app/Shared/delete/delete.module';
     AlertdeleteComponent
   ],
   imports: [
+    BadgeModule,
     FullCalendarModule,
     NgxBarcode6Module,
     DeleteModule,
@@ -80,7 +82,7 @@ import { DeleteModule } from 'src/app/Shared/delete/delete.module';
     MatFormFieldModule,
     MatSnackBarModule,
     MultiSelectModule,
-    MatListModule,
+    //  MatListModule,
     MatSidenavModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -97,14 +99,11 @@ import { DeleteModule } from 'src/app/Shared/delete/delete.module';
     HospitalAssetsRoutingModule,
     PaginatorModule,
     TableModule,
-
     AutoCompleteModule,
     CarouselModule,
     MatButtonModule,
-
     BadgeModule,
     MatBadgeModule,
-    MatListModule,
     MatButtonModule,
     CalendarModule,
     RadioButtonModule,
@@ -112,5 +111,6 @@ import { DeleteModule } from 'src/app/Shared/delete/delete.module';
     MatInputModule
   ],
   providers: [MessageService, ConfirmationService, AuthGuard],
+  schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
 export class HospitalAssetsModule { }

@@ -3,33 +3,39 @@
         <div class="col-3" *ngIf="showTitle">
             <h4 class="card-title"> {{'Asset.HospitalAssets' | translate }} </h4>
         </div>
-        <button class="btn excelIcon" (click)="exportExcel()" pTooltip="{{'Asset.ExportExcel'| translate}}"
-            tooltipPosition="top"> <i class="fa-solid fa-file-excel fa-2xl"></i></button>
+        <div class="col-3">
+            <button class="btn excelIcon" (click)="exportExcel()" pTooltip="{{'Asset.ExportExcel'| translate}}"
+            tooltipPosition="top"><i class="pi pi-file-excel"></i>
+             <!-- <i class="pi pi-excel"></i> -->
+            </button>
         <button class="btn pdfIcon" (click)="printSelectedColumns()" pTooltip="{{'Asset.ExportPdf'| translate}}"
-            tooltipPosition="top"> <i class="fa-solid fa-columns fa-2xl"></i></button>
-        <div class="col-4"></div>
+            tooltipPosition="top"><i class="pi pi-file-pdf"></i>
+             <!-- <i class="fa-solid fa-columns fa-2xl"></i> -->
+            </button>
+        </div>
+        
+        <!-- <div class="col-4"></div> -->
         <div class="col-2">
             <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true"
                 aria-controls="collapseExample" class="filterbutton">
-                <i class="fa-solid fa-filter"></i> {{'Asset.Filter'|translate}}</a>
+                <i class="pi pi-filter-fill" style="font-size: 1.5rem"></i>
+                 {{'Asset.Filter'|translate}}</a>
         </div>
         <div class="col-2">
-            <a class="addbutton" *ngIf="showAdd" (click)="addAsset()"><i class="fa-solid fa-plus"></i> {{'Asset.Create'|
-                translate}}</a>
+            <a class="addbutton" *ngIf="showAdd" (click)="addAsset()"> <i class="pi pi-plus-circle"> {{'Asset.Create'|translate}}</i></a>
         </div>
 
     </div>
     <div class="row top-buffer">
-
         <div class="col-10">
             <mat-list role="list" name="lstStatusItems">
                 <mat-list-item class="mat-list-item" role="listitem">
-                    <button mat-stroked-button name="btnAll" [matBadge]="totalCount"
+                    <button mat-stroked-button name="btnAll" [matBadge]="totalCount" pBadge value="1000"
                         (click)="getHospitalAssetsByStatusId(0)" class="btnclicked">{{'Asset.All' | translate
                         }}</button>
                 </mat-list-item>
                 <mat-list-item class="mat-list-item" role="listitem" *ngFor="let sts of lstStatuses">
-                    <button *ngIf="sts.id===1" mat-stroked-button name="btn{{sts.id}}" class="btnclicked"
+                    <button *ngIf="sts.id===1" mat-stroked-button name="btn{{sts.id}}" class="btnclicked" 
                         [matBadge]="countNeedRepair" (click)="getHospitalAssetsByStatusId(sts.id)"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>

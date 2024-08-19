@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule ,CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -13,18 +13,18 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 // import { MatSidenavModule } from '@angular/material/sidenav';
  import { MatToolbarModule } from '@angular/material/toolbar';
  import { MatDividerModule } from '@angular/material/divider';
-// import { MatIconModule } from '@angular/material/icon';
-// import { MatButtonModule } from '@angular/material/button';
-// import { MatMenuModule } from '@angular/material/menu';
-// import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+ import { MatListModule } from '@angular/material/list';
 // import { MatRadioModule } from '@angular/material/radio';
 // import { MatSnackBarModule } from '@angular/material/snack-bar';
-// import { MatSelectModule } from '@angular/material/select';
+ import { MatSelectModule } from '@angular/material/select';
 // import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-// import { MatTabsModule } from '@angular/material/tabs';
-// import { MatExpansionModule } from '@angular/material/expansion';
-// import { MatCheckboxModule } from '@angular/material/checkbox';
-// import { ChartModule } from 'primeng/chart';
+ import { MatTabsModule } from '@angular/material/tabs';
+ import { MatExpansionModule } from '@angular/material/expansion';
+ import { MatCheckboxModule } from '@angular/material/checkbox';
+//  import { ChartModule } from 'primeng/chart';
 
 // import { AvatarModule } from 'primeng/avatar';
  import { TableModule } from 'primeng/table';
@@ -60,14 +60,14 @@ import { NgxBarcode6Module } from 'ngx-barcode6';
 // import { UsersRoutingModule } from './Features/users/users-routing.module';
  import { MasterAssetsModule } from './Features/master-assets/master-assets.module';
  import { MasterAssetsRoutingModule } from './Features/master-assets/master-assets-routing.module';
-// import { NgxMatFileInputModule } from '@angular-material-components/file-input';
-// import { ConfirmationService } from 'primeng/api';
+//  import { NgxMatFileInputModule } from '@angular-material-components/file-input';
+ import { ConfirmationService } from 'primeng/api';
  import { HospitalAssetsModule } from './Features/hospital-assets/hospital-assets.module';
  import { HospitalAssetsRoutingModule } from './Features/hospital-assets/hospital-assets-routing.module';
-// import { MatInputModule } from '@angular/material/input';
-// import { MatFormFieldModule } from '@angular/material/form-field';
-// import { MatDatepickerModule } from '@angular/material/datepicker';
-// import { MatNativeDateModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 // import { ContractsModule } from './Features/contracts/contracts.module';
 // import { ContractsRoutingModule } from './Features/contracts/contracts-routing.module';
 // import { RequetsRoutingModule } from './Features/requests/requests-routing.module';
@@ -131,15 +131,16 @@ import { DepartmentsRoutingModule } from './Features/departments/departments-rou
 // import { ReportsRoutingModule } from './Features/reports/reports-routing.module';
 // import { AutoCompleteModule } from 'primeng/autocomplete';
 // import { BadgeModule } from 'primeng/badge';
-// import { MatBadgeModule } from '@angular/material/badge';
-// import { CarouselModule } from 'primeng/carousel';
-// import { FieldsetModule } from "primeng/fieldset";
+ import { MatBadgeModule } from '@angular/material/badge';
+import { CarouselModule } from 'primeng/carousel';
+import { FieldsetModule } from "primeng/fieldset";
+import { BadgeModule } from 'primeng/badge';
 // import { HospitalExecludesModule } from './Features/hospital-execludes/hospital-execludes.module';
 // import { HospitalExecludesRoutingModule } from './Features/hospital-execludes/hospital-execludes-routing.module';
 import { MemberExcludesModule } from './Features/member-excludes/member-excludes.module';
 import { MemberExcludesRoutingModule } from './Features/member-excludes/member-excludes-routing.module';
-// import { DropdownModule } from 'primeng/dropdown';
-// import { FileUploadModule } from 'primeng/fileupload';
+import { DropdownModule } from 'primeng/dropdown';
+import { FileUploadModule } from 'primeng/fileupload';
 // import { A11yModule } from '@angular/cdk/a11y';
 // import { CookieService } from 'ngx-cookie-service';
 import { AuthGuard } from './Shared/Services/guards/authGuard.guard';
@@ -180,6 +181,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
   ],
   imports: [
     // DeleteModule,
+    
     BrowserModule,
     RouterModule,
     FormsModule,
@@ -195,9 +197,22 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
   FullCalendarModule,
   BrandsRoutingModule,
   BrandsModule,
+  // ChartModule,
+  MatCheckboxModule,
+  MatExpansionModule,
+  MatTabsModule,
+  MatNativeDateModule,
+  MatDatepickerModule,
+  MatFormFieldModule,
+  MatInputModule,
     // A11yModule,
     TableModule,
      NgxUiLoaderModule,
+     FileUploadModule,
+     DropdownModule,
+     FieldsetModule,
+     CarouselModule,
+     MatBadgeModule,
     // MatProgressSpinnerModule,
     TranslateModule.forRoot({
       loader: {
@@ -222,6 +237,11 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
     DashboardRoutingModule,
     MemberExcludesModule,
     MemberExcludesRoutingModule,
+    MatListModule,
+    MatMenuModule,
+    MatButtonModule,
+    MatIconModule,
+    BadgeModule,
     // RoleCategoriesModule,
     // RoleCategoriesRoutingModule,
 
@@ -253,7 +273,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
      DialogService,
-      // ConfirmationService, DatePipe, CookieService,
+       ConfirmationService, DatePipe,
        AuthGuard
   ],
   bootstrap: [AppComponent],

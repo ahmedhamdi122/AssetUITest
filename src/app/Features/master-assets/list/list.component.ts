@@ -23,6 +23,7 @@ import { ListSubCategoryVM } from 'src/app/Shared/Models/subCategoryVM';
 import { AuthenticationService } from 'src/app/Shared/Services/guards/authentication.service';
 import { Table } from 'primeng/table';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
+import { ConfirmationService } from 'primeng/api';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -61,7 +62,7 @@ export class ListComponent implements OnInit {
   @ViewChild('dt2') dataTable: Table;
   selectedMasterAssetName: any;
 
-  constructor(private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService, private route: Router,
+  constructor(private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService) { this.currentUser = this.authenticationService.currentUserValue; }
 
@@ -182,24 +183,33 @@ export class ListComponent implements OnInit {
     });
   }
   deleteMasterAsset(id: number) {
-    this.masterAssetService.GetMasterAssetById(id).subscribe((data) => {
-      this.selectedObj = data;
-      const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
+    // this.masterAssetService.GetMasterAssetById(id).subscribe((data) => {
+    //   this.selectedObj = data;
+    //   const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
 
-        autoFocus: true,
-        data: {
-          id: this.selectedObj.id,
-          name: this.selectedObj.name,
-          nameAr: this.selectedObj.nameAr,
-        },
-      });
+    //     autoFocus: true,
+    //     data: {
+    //       id: this.selectedObj.id,
+    //       name: this.selectedObj.name,
+    //       nameAr: this.selectedObj.nameAr,
+    //     },
+    //   });
 
-      dialogRef2.afterClosed().subscribe(deleted => {
-        // this.reload();
-              //when click delete only
-      });
+    //   dialogRef2.afterClosed().subscribe(deleted => {
+    //     // this.reload();
+    //           //when click delete only
+    //   });
 
-    });
+    // });
+    console.log("id :",id);
+
+    this.ConfirmationService.confirm({
+      message: 'Are you sure that you want to proceed?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {console.log("accept")},
+      reject: () => {console.log("reject")}
+  });
 
   }
   editMasterAsset(id: number) {

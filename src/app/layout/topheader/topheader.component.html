@@ -25,8 +25,8 @@
         <div [ngClass]="translate.currentLang === 'en' ? 'ul' :'ular' " class="col-5 d-flex flex-row">
             <div *ngFor="let breadcrumb of (breadcrumbs$ | async)">
                 <span [href]="breadcrumb.url">
-                    <i *ngIf="lang=='en'" class="fa-solid fa-chevron-right"></i>
-                    <i *ngIf="lang=='ar'" class="fa-solid fa-chevron-left"></i>
+                    <i *ngIf="lang=='en'" class="pi pi-chevron-right"></i>
+                    <i *ngIf="lang=='ar'" class="pi pi-chevron-right"></i>
                     {{ breadcrumb.label | translate}} &nbsp;&nbsp;</span>
             </div>
         </div>
@@ -484,44 +484,45 @@
                         <ul class="nav flex-column bg-light">
                             <li class="nav-item">
                                 <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/dashboard']" *ngIf="isDashboard">
-                                    <i class="fa-solid fa-house"></i> {{'Asset.DashBoard' | translate }}
+                                    <i class="pi pi-home"></i> {{'Asset.DashBoard' | translate }}
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link text-truncate" href="#" data-bs-toggle="collapse" data-bs-target="#org" aria-expanded="false" aria-controls="org" *ngIf="isAdmin">
                                     <i class="fa-solid fa-sitemap"></i> {{'Asset.heirarchicalstructure' | translate }}
-                                    <i class="fa fa-chevron-down float-end" [ngClass]="{'rotate-180': isCollapsed, 'rotate-0': !isCollapsed}"></i>
+                                    <i class="pi pi-chevron-down float-end" [ngClass]="{'rotate-180': isCollapsed, 'rotate-0': !isCollapsed}"></i>
                                 </a>
                                 <ul class="collapse" id="org">
                                     <li class="nav-item">
                                         <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/governorates']">
-                                            <i class="fa-solid fa-flag"></i> {{'Asset.Governorates' | translate }}
+                                            <i class="pi pi-flag-fill"></i> {{'Asset.Governorates' | translate }}
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/organizations']">
-                                            <i class="fa-solid fa-sitemap"></i> {{'Asset.Organizations' | translate }}
+                                            <i class="pi pi-sitemap"></i> {{'Asset.Organizations' | translate }}
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/hospitals']">
-                                            <i class="fa-solid fa-hospital"></i> {{'Asset.Hospitals' | translate }}
+                                            <i class="pi pi-warehouse"></i> {{'Asset.Hospitals' | translate }}
                                         </a>
                                     </li>
                                     
                                     <li class="nav-item">
                                         <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/buildings']">
-                                            <i class="fa-solid fa-building"></i> {{'Asset.Buildings' | translate }}
+                                            <i class="pi pi-building"></i> {{'Asset.Buildings' | translate }}
                                         </a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/departments']">
-                                            <i class="fa-brands fa-codepen"></i> {{'Asset.Departments' | translate }}
+                                            <i class="pi pi-sitemap"></i> {{'Asset.Departments' | translate }}
                                         </a>
                                     </li>
                                 </ul>
                             </li>
                         </ul>
+                        
                     </div>
                 </aside>
             </div>
