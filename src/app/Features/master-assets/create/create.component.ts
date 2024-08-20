@@ -30,6 +30,7 @@ import { Router } from '@angular/router';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateBrandComponent } from 'src/app/Features/brands/create-brand/create-brand.component';
 import { PMTimeService } from 'src/app/Shared/Services/pmtime.service';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-create',
@@ -49,12 +50,12 @@ export class CreateComponent implements OnInit {
   lstPMTimes: ListPMTimeVM[] = [];
   lstECRIs: ListECRIVM[] = [];
   masterAssetObj: CreateMasterAssetVM;
-
+  
   woTaskObj: CreateAssetWorkOrderTaskVM;
   lstWOTasks: CreateAssetWorkOrderTaskVM[] = [];
-
+  isInvalidBrand=true;
   masterAssetId: number;
-  radioPerioritySelected: string;
+  radioPerioritySelected: string='3';
   selectedFiles: FileList;
   progressInfos = [];
   message = '';
@@ -94,7 +95,7 @@ export class CreateComponent implements OnInit {
   imgVisible: boolean = false;
   btnHidden: boolean = true;
   fileToUpload: File;
-
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
   isAdmin: boolean = false;
   isHospitalManager: boolean = false;
   canAddBrand: boolean = false;
@@ -162,11 +163,6 @@ export class CreateComponent implements OnInit {
     this.masterAssetService.GenerateMasterAssetcode().subscribe(master => {
       this.masterAssetObj.code = master["code"];
     });
-
-
-
-
-    this.radioPerioritySelected = '1';
     this.getSelecteditem();
     this.selectedPMTime = 1;
     this.categoryTypeService.GetCategoryTypes().subscribe(types => { this.lstTypes = types })
@@ -175,6 +171,7 @@ export class CreateComponent implements OnInit {
 
   }
   getSelecteditem() {
+    
     this.masterAssetObj.periorityId = Number(this.radioPerioritySelected);
   }
   GetCategoriesByCategoryTypeId($event) {
@@ -213,14 +210,41 @@ export class CreateComponent implements OnInit {
     this.selectedPMTime = $event.value;
   }
   onSubmit() {
-
-    if (this.masterAssetObj.brandId == null) {
+    if(this.masterAssetObj.name=='')
+    {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "Please Insert Name";
+        this.tabGroup.selectedIndex=0;
+      }
+      else {
+        this.errorMessage = "من فضلك ادخل اسم";
+        this.tabGroup.selectedIndex=0;
+      }
+      return false;
+    }
+    if(this.masterAssetObj.nameAr=='')
+      {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please Insert Name In";
+          this.tabGroup.selectedIndex=0;
+        }
+        else {
+          this.errorMessage = "من فضلك ادخل اسم بالعربي";
+          this.tabGroup.selectedIndex=0;
+        }
+        return false;
+      }
+     if (this.masterAssetObj.brandId == null) {
       this.errorDisplay = true;
       if (this.lang == "en") {
         this.errorMessage = "Please select Brand";
+        this.tabGroup.selectedIndex=0;
       }
       else {
         this.errorMessage = "من فضلك اختر ماركة";
+        this.tabGroup.selectedIndex=0;
       }
       return false;
     }
@@ -368,6 +392,11 @@ export class CreateComponent implements OnInit {
       }
     }
   }
+  validateBrand()
+  {
+
+    this.isInvalidBrand=!this.masterAssetObj.brandId;
+  }
   resetFile() {
     this.upfile.nativeElement.value = "";
     this.imgVisible = true;
@@ -450,7 +479,7 @@ export class CreateComponent implements OnInit {
       });
     });
   }
-
+  
   uploadMultipleFile = (event: any) => {
     const files: FileList = event.target.files;
 

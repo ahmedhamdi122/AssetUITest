@@ -260,7 +260,6 @@ export class ListComponent implements OnInit {
     if (this.sortFilterObjects.searchObj.hospitalId != 0) {
       this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
     }
-
     this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
       this.lstStatuses = statuses.listStatus;
 

@@ -1,13 +1,13 @@
 <div class=" col-12" [dir]="textDir">
   <form #AddAssetForm="ngForm">
-    <mat-tab-group mat-align-tabs="start">
-      <mat-tab>
+    <mat-tab-group mat-align-tabs="start" #tabGroup>
+      <mat-tab >
         <ng-template mat-tab-label>
-          <i class="fa-solid fa-database"></i>
+          <i class="pi pi-database" style="font-size: 2.5rem;"></i>
           {{ "Asset.Identification" | translate }}
         </ng-template>
         <div class="row top-buffer">
-          <div class="col-12">
+          <div class="col-12 p-4">
             <div class="row">
               <div class="col-2">
                 <h5 for="Main">{{ "Asset.Main" | translate }}:</h5>
@@ -21,15 +21,19 @@
                   #name="ngModel" [class.is-invalid]=" (name.touched && name.errors) || AddAssetForm.submitted
                   " [class.is-valid]="name.valid && AddAssetForm.submitted" placeholder="{{'Asset.Name' | translate}}"
                   autofocus required />
+                  <!-- <p-floatLabel>
+                    <input pInputText id="username" [(ngModel)]="masterAssetObj.name" />
+                    <label for="username">{{'Asset.Name' | translate}}</label>
+                </p-floatLabel> -->
+                
               </div>
               <div class="col-2">
                 <input type="text" class="form-control" id="nameAr" name="nameAr" #nameAr="ngModel"
-                  [(ngModel)]="masterAssetObj.nameAr" autofocus required [class.is-invalid]=" (nameAr.touched && nameAr.errors) || AddAssetForm.submitted
-                " [class.is-valid]="nameAr.valid && AddAssetForm.submitted"
+                  [(ngModel)]="masterAssetObj.nameAr" autofocus required [class.is-invalid]="  nameAr.errors || AddAssetForm.submitted" [class.is-valid]="nameAr.valid && AddAssetForm.submitted"
                   placeholder="{{'Asset.ArabicName' | translate}}" />
               </div>
               <div class="col-2">
-                <select class="form-control" id="ecriId" name="ecriId" #ecriId="ngModel"
+                <select class="form-select" id="ecriId" name="ecriId" #ecriId="ngModel"  
                   [(ngModel)]="masterAssetObj.ecriId">
                   <option selected [value]="null">{{ "Asset.ECRI" | translate }}</option>
                   <option *ngFor="let ecri of lstECRIs" [value]="ecri.id">
@@ -43,7 +47,7 @@
         <div class="row top-buffer">
           <div class="col-2"></div>
           <div class="col-2">
-            <select class="form-control" id="categorytype" name="categorytype"
+            <select class="form-select" id="categorytype" name="categorytype"
               (change)="GetCategoriesByCategoryTypeId($event)">
               <option>{{ "Asset.Type" | translate }}</option>
               <option *ngFor="let item of lstTypes" [value]="item.id">
@@ -52,7 +56,7 @@
             </select>
           </div>
           <div class="col-2">
-            <select class="form-control" id="category" name="category" #category="ngModel" [value]="null"
+            <select class="form-select" id="category" name="category" #category="ngModel" [value]="null"
               [(ngModel)]="masterAssetObj.categoryId" (change)="GetSubCategoryByCategoryId($event)">
               <option value="null">{{ "Asset.Category" | translate }}</option>
               <option *ngFor="let cat of lstCategories" [value]="cat.id">
@@ -61,7 +65,7 @@
             </select>
           </div>
           <div class="col-2">
-            <select class="form-control" id="subCategory" name="subCategory" #subCategory="ngModel" [value]="null"
+            <select class="form-select" id="subCategory" name="subCategory" #subCategory="ngModel" [value]="null"
               [(ngModel)]="masterAssetObj.subCategoryId">
               <option value="null">{{ "Asset.SubCategory" | translate }}</option>
               <option *ngFor="let sub of lstSubCategories" [value]="sub.id">
@@ -100,16 +104,16 @@
               placeholder="{{'Asset.ArabicDescription' | translate}}"></textarea>
           </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row top-buffer mt-4">
           <div class="col-12">
             <div class="row">
               <div class="col-2">
                 <h5 for="IndustryData">{{ "Asset.IndustryData" | translate }}:</h5>
               </div>
               <div [ngClass]="(isHospitalManager && canAddBrand) == true ? 'col-1': 'col-2'">
-                <select class="form-control" id="brandId" #brandId="ngModel" name="brandId"
-                  [(ngModel)]="masterAssetObj.brandId" [value]="0">
-                  <option selected value="null">{{ "Asset.Brand" | translate }}</option>
+                <select class="form-select" id="brandId" #brandId="ngModel" name="brandId" [(ngModel)]="masterAssetObj.brandId"   (ngModelChange)="validateBrand()" [ngClass]="{'is-invalid': isInvalidBrand}"
+                  >
+                  <option selected [ngValue]="null">{{ "Asset.Brand" | translate }}</option>
                   <option *ngFor="let brand of lstBrands" [value]="brand.id">
                     {{ lang == "en" ? brand.name : brand.nameAr }}
                   </option>
@@ -122,7 +126,7 @@
                 </span>
               </div>
               <div class="col-2">
-                <select class="form-control" id="origin" #origin="ngModel" name="origin"
+                <select class="form-select" id="origin" #origin="ngModel" name="origin"
                   [(ngModel)]="masterAssetObj.originId">
                   <option selected value="null">{{ "Asset.Origin" | translate }} </option>
                   <option *ngFor="let orgn of lstOrigins" [value]="orgn.id">
@@ -148,7 +152,7 @@
             </div>
           </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row top-buffer mt-4">
           <div class="col-12">
             <div class="row">
               <div class="col-2">
@@ -180,7 +184,7 @@
             </div>
           </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row top-buffer mt-4">
           <div class="col-12">
             <div class="row">
               <div class="col-2">
@@ -207,7 +211,7 @@
 
         </div>
 
-        <div class="row top-buffer">
+        <div class="row top-buffer mt-4">
           <div class="col-2">
             <h5 for="priority">{{ "Asset.Periority" | translate }}:</h5>
           </div>
@@ -220,17 +224,17 @@
             </mat-radio-group>
           </div>
         </div>
-        <div class="row top-buffer">
+        <!-- <div class="row top-buffer">
           <div class="col-12">
 
           </div>
-        </div>
+        </div> -->
 
 
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
-          <i class="fa fa-paperclip" style="margin: 0px 20px"></i>
+          <i class="pi pi-paperclip" style="margin: 0px 20px;font-size: 2.5rem;"></i>
           {{ 'Asset.Attachments' | translate }}
         </ng-template>
 
@@ -287,7 +291,7 @@
       <mat-tab>
         <ng-template mat-tab-label>
 
-          <i class="fa-solid fa-wrench"></i>
+          <i class="pi pi-wrench" style="font-size: 2.5rem;"></i>
           {{'Asset.PreventiveMaintainance' | translate}}
         </ng-template>
         <div class="row top-buffer">
@@ -357,7 +361,7 @@
 
       <mat-tab>
         <ng-template mat-tab-label>
-          <i class="fa-solid fa-sitemap"></i>
+          <i class="pi pi-sitemap" style="font-size: 2.5rem;"></i>
           {{ "Asset.Components" | translate }}
         </ng-template>
         <div class="row top-buffer">
@@ -405,7 +409,7 @@
         <div class="row top-buffer">
           <div class="col-2">
             <span (click)="addComponentToList()" matTooltip="Add">
-              <i class="fa-solid fa-plus" style="color: #04527e;"></i>{{'Asset.AddComponent'
+              <i class="pi pi-plus-circle" style="color: #04527e;"></i>{{'Asset.AddComponent'
               |translate}}
             </span>
           </div>
@@ -445,7 +449,7 @@
 
       </mat-tab>
       <mat-tab>
-        <ng-template mat-tab-label> <i class="fa-solid fa-tasks"></i>{{ "Asset.WOTask" |
+        <ng-template mat-tab-label> <i class="pi pi-list-check" style="font-size: 2.5rem;"></i>{{ "Asset.WOTask" |
           translate }}</ng-template>
         <div class="row top-buffer">
           <div class="col-5">
@@ -464,7 +468,7 @@
 
           <div class="col-2">
             <span (click)="addWOTaskToList()" matTooltip="Add">
-              <i class="fa-solid fa-plus" style="margin-top: 30px;"></i>
+              <i class="pi pi-plus-circle" style="margin-top: 30px;font-size: 2rem;"></i>
             </span>
           </div>
         </div>
@@ -485,7 +489,7 @@
                   <td>{{ tsk.name }}</td>
                   <td>{{ tsk.nameAr }}</td>
                   <td>
-                    <span (click)="removeItemFromTasks(tsk)"><i class="fa-solid fa-times-circle"
+                    <span (click)="removeItemFromTasks(tsk)"><i class="pi pi-times-circle" style="font-size: 2rem;"
                         style="color: rgb(123, 9, 9);"></i></span>
                   </td>
                 </tr>

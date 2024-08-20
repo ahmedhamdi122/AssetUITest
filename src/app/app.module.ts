@@ -25,7 +25,7 @@ import { MatMenuModule } from '@angular/material/menu';
  import { MatExpansionModule } from '@angular/material/expansion';
  import { MatCheckboxModule } from '@angular/material/checkbox';
 //  import { ChartModule } from 'primeng/chart';
-
+import { FloatLabelModule } from 'primeng/floatlabel';
 // import { AvatarModule } from 'primeng/avatar';
  import { TableModule } from 'primeng/table';
 // import { ListboxModule } from 'primeng/listbox';
@@ -135,6 +135,7 @@ import { DepartmentsRoutingModule } from './Features/departments/departments-rou
 import { CarouselModule } from 'primeng/carousel';
 import { FieldsetModule } from "primeng/fieldset";
 import { BadgeModule } from 'primeng/badge';
+import { InputTextModule } from 'primeng/inputtext';
 // import { HospitalExecludesModule } from './Features/hospital-execludes/hospital-execludes.module';
 // import { HospitalExecludesRoutingModule } from './Features/hospital-execludes/hospital-execludes-routing.module';
 import { MemberExcludesModule } from './Features/member-excludes/member-excludes.module';
@@ -213,6 +214,8 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
      FieldsetModule,
      CarouselModule,
      MatBadgeModule,
+     InputTextModule,
+     FloatLabelModule,
     // MatProgressSpinnerModule,
     TranslateModule.forRoot({
       loader: {

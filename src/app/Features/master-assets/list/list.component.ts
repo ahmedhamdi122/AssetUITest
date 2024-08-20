@@ -170,7 +170,7 @@ export class ListComponent implements OnInit {
   addMasterAsset() {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Master Asset' : "بيان إضافة أصل جديد",
-      width: '70%',
+      width: '80%',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",

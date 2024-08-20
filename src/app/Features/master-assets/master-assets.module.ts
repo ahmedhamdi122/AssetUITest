@@ -9,7 +9,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 import { ListComponent } from './list/list.component';
 import { CreateComponent } from './create/create.component';
@@ -49,7 +50,9 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     TooltipModule,
     MasterAssetsRoutingModule,
     PaginatorModule,
-    AutoCompleteModule
+    AutoCompleteModule,
+    InputTextModule,
+    FloatLabelModule
   ]
 })
 export class MasterAssetsModule { }

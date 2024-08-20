@@ -1,5 +1,5 @@
 <div class="col-12 ">
-    <div class=" row top-buffer">
+    <div class=" row top-buffer p-3">
         <div class="col-2">
             <h4 class="card-title"> {{'Asset.MasterAssets' | translate }} </h4>
         </div>
@@ -14,15 +14,14 @@
         <div class="col-3">
         </div>
         <div class="col-2">
-            <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true"
-                aria-controls="collapseExample" class="filterbutton">
-                <!-- <i class="fa-solid fa-filter"></i>  --><i class="pi pi-filter-fill" style="font-size: 1.5rem"></i>
-                {{'Asset.Filter'|translate}}</a>
+            <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="btn btn-primary p-3">
+                <i class="pi pi-filter-fill" style="font-size: 1.5rem;"></i>
+                {{'Asset.Filter'|translate}}
+              </a>
         </div>
         <div class="col-2">
             <a class="addbutton" *ngIf="(isAdmin || isHospitalManager) || canAddMasterAsset" (click)="addMasterAsset()">
-                <i class="pi pi-plus-circle
-                "></i> {{'Asset.Create' | translate}}</a>
+                <i class="pi pi-plus-circle"></i> {{'Asset.Create' | translate}}</a>
         </div>
     </div>
 

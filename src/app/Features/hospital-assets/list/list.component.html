@@ -1,20 +1,21 @@
 <div class="col-12" id="non-printable">
-    <div class="row top-buffer">
+    <div class="row top-buffer p-3">
         <div class="col-3" *ngIf="showTitle">
             <h4 class="card-title"> {{'Asset.HospitalAssets' | translate }} </h4>
         </div>
+        <div class="col-2"></div>
+
         <div class="col-3">
-            <button class="btn excelIcon" (click)="exportExcel()" pTooltip="{{'Asset.ExportExcel'| translate}}"
-            tooltipPosition="top"><i class="pi pi-file-excel"></i>
+            <button class="btn" (click)="exportExcel()" pTooltip="{{'Asset.ExportExcel'| translate}}"
+            tooltipPosition="top"><i class="pi pi-file-excel" style="color:green;font-size: 2.5rem;"></i>
              <!-- <i class="pi pi-excel"></i> -->
             </button>
         <button class="btn pdfIcon" (click)="printSelectedColumns()" pTooltip="{{'Asset.ExportPdf'| translate}}"
-            tooltipPosition="top"><i class="pi pi-file-pdf"></i>
+            tooltipPosition="top"><i class="pi pi-file-pdf" style="color:red;font-size: 2.5rem;"></i>
              <!-- <i class="fa-solid fa-columns fa-2xl"></i> -->
             </button>
         </div>
         
-        <!-- <div class="col-4"></div> -->
         <div class="col-2">
             <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true"
                 aria-controls="collapseExample" class="filterbutton">
@@ -24,77 +25,74 @@
         <div class="col-2">
             <a class="addbutton" *ngIf="showAdd" (click)="addAsset()"> <i class="pi pi-plus-circle"> {{'Asset.Create'|translate}}</i></a>
         </div>
-
     </div>
     <div class="row top-buffer">
         <div class="col-10">
             <mat-list role="list" name="lstStatusItems">
                 <mat-list-item class="mat-list-item" role="listitem">
-                    <button mat-stroked-button name="btnAll" [matBadge]="totalCount" pBadge value="1000"
+                    <button mat-stroked-button name="btnAll" pBadge [value]="totalCount"
                         (click)="getHospitalAssetsByStatusId(0)" class="btnclicked">{{'Asset.All' | translate
                         }}</button>
                 </mat-list-item>
                 <mat-list-item class="mat-list-item" role="listitem" *ngFor="let sts of lstStatuses">
                     <button *ngIf="sts.id===1" mat-stroked-button name="btn{{sts.id}}" class="btnclicked" 
-                        [matBadge]="countNeedRepair" (click)="getHospitalAssetsByStatusId(sts.id)"
+                         pBadge [value]="countNeedRepair" (click)="getHospitalAssetsByStatusId(sts.id)"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
-                    <button *ngIf="sts.id === 2" mat-stroked-button [matBadge]="countInActive" class="btnclicked"
+                    <button *ngIf="sts.id === 2" mat-stroked-button   pBadge [value]="countInActive" class="btnclicked"
                         (click)="getHospitalAssetsByStatusId(sts.id)" [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
-
-                    <button *ngIf="sts.id === 3" mat-stroked-button [matBadge]="countWorking" class="btnclicked"
+                    <button *ngIf="sts.id === 3" mat-stroked-button   pBadge [value]="countWorking" class="btnclicked"
                         autofocus (click)="getHospitalAssetsByStatusId(sts.id)" [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
-
-                    <button *ngIf="sts.id === 4" mat-stroked-button [matBadge]="countUnderMaintenance"
+                    <button *ngIf="sts.id === 4" mat-stroked-button   pBadge [value]="countUnderMaintenance"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 5" mat-stroked-button [matBadge]="countUnderInstallation"
+                    <button *ngIf="sts.id === 5" mat-stroked-button  pBadge [value]="countUnderInstallation"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 6" mat-stroked-button [matBadge]="countNotWorking"
+                    <button *ngIf="sts.id === 6" mat-stroked-button   pBadge [value]="countNotWorking"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 7" mat-stroked-button [matBadge]="countShutdown"
+                    <button *ngIf="sts.id === 7" mat-stroked-button   pBadge [value]="countShutdown"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 8" mat-stroked-button [matBadge]="countExecluded"
+                    <button *ngIf="sts.id === 8" mat-stroked-button    pBadge [value]="countExecluded"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 9" mat-stroked-button [matBadge]="countHold"
+                    <button *ngIf="sts.id === 9" mat-stroked-button   pBadge [value]="countHold"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
-                    <button *ngIf="sts.id ===10" mat-stroked-button  [matBadge]="lstStatus10" (click)="getHospitalAssetsByStatusId(sts.id)"
+                    <button *ngIf="sts.id ===10" mat-stroked-button    pBadge [value]="lstStatus10" (click)="getHospitalAssetsByStatusId(sts.id)"
                         [ngStyle]="{'color': sts.color}" class="btnclicked">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
@@ -102,7 +100,7 @@
 
 
 
-                    <button *ngIf="sts.id ===11" mat-stroked-button [matBadge]="lstStatus11" (click)="getHospitalAssetsByStatusId(sts.id)"
+                    <button *ngIf="sts.id ===11" mat-stroked-button   pBadge [value]="lstStatus11" (click)="getHospitalAssetsByStatusId(sts.id)"
                         [ngStyle]="{'color': sts.color}" class="btnclicked">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
