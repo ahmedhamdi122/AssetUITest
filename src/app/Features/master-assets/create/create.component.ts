@@ -411,11 +411,42 @@ export class CreateComponent implements OnInit {
     this.lstMasterAssetDocuments.splice(index, 1);
   }
   addTaskToList() {
+    if(this.pmTaskObj.taskname=='')
+    {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "Please Insert taskname";
+    
+      }
+      else {
+        this.errorMessage = "من فضلك ادخل اسم";
+  
+      }
+      return false;
+    }
+    if(this.pmTaskObj.tasknameAr=='')
+      {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please Insert tasknameAr";
+      
+        }
+        else {
+          this.errorMessage = "من فضلك ادخل اسم بالعربي";
+    
+        }
+        return false;
+      }
     let pmObj = new CreatePMAssetTaskVM();
     pmObj.masterAssetId = Number(this.masterAssetId);
     pmObj.taskname = this.pmTaskObj.taskname;
     pmObj.tasknameAr = this.pmTaskObj.tasknameAr;
     this.lstPMTasks.push(pmObj);
+  }
+  removeTaskFromObjectArray(obj:any)
+  {
+    var index=this.lstPMTasks.indexOf(obj);
+    this.lstPMTasks.splice(index,1)
   }
   addComponentToList() {
 

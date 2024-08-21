@@ -23,6 +23,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     MatRadioModule,
     MatSnackBarModule,
     ConfirmDialogModule,
-    MatRadioModule,
     MatIconModule,
     TableModule,
     TooltipModule,
@@ -52,7 +52,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     PaginatorModule,
     AutoCompleteModule,
     InputTextModule,
-    FloatLabelModule
+    FloatLabelModule,
+    RadioButtonModule
   ]
 })
 export class MasterAssetsModule { }

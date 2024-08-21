@@ -6,8 +6,8 @@
           <i class="pi pi-database" style="font-size: 2.5rem;"></i>
           {{ "Asset.Identification" | translate }}
         </ng-template>
-        <div class="row top-buffer">
-          <div class="col-12 p-4">
+        <div class="container mt-3">
+    
             <div class="row">
               <div class="col-2">
                 <h5 for="Main">{{ "Asset.Main" | translate }}:</h5>
@@ -21,11 +21,6 @@
                   #name="ngModel" [class.is-invalid]=" (name.touched && name.errors) || AddAssetForm.submitted
                   " [class.is-valid]="name.valid && AddAssetForm.submitted" placeholder="{{'Asset.Name' | translate}}"
                   autofocus required />
-                  <!-- <p-floatLabel>
-                    <input pInputText id="username" [(ngModel)]="masterAssetObj.name" />
-                    <label for="username">{{'Asset.Name' | translate}}</label>
-                </p-floatLabel> -->
-                
               </div>
               <div class="col-2">
                 <input type="text" class="form-control" id="nameAr" name="nameAr" #nameAr="ngModel"
@@ -43,8 +38,10 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="row top-buffer">
+   
+
+      <div class="container mt-3">          
+      <div class="row">
           <div class="col-2"></div>
           <div class="col-2">
             <select class="form-select" id="categorytype" name="categorytype"
@@ -91,7 +88,9 @@
             </button>
           </div>
         </div>
-        <div class="row top-buffer mt-n4">
+        </div>
+        <div class="container">
+        <div class="row top-buffer">
           <div class="col-2"> </div>
           <div class="col-4">
             <textarea type="text" class="form-control" id="description" name="description"
@@ -103,8 +102,10 @@
               [(ngModel)]="masterAssetObj.descriptionAr"
               placeholder="{{'Asset.ArabicDescription' | translate}}"></textarea>
           </div>
+        </div> 
         </div>
-        <div class="row top-buffer mt-4">
+        <div class="container mt-4">
+        <div class="row">
           <div class="col-12">
             <div class="row">
               <div class="col-2">
@@ -151,8 +152,11 @@
               </div>
             </div>
           </div>
+        </div> 
         </div>
-        <div class="row top-buffer mt-4">
+
+        <div class="container mt-4">
+        <div class="row ">
           <div class="col-12">
             <div class="row">
               <div class="col-2">
@@ -184,7 +188,9 @@
             </div>
           </div>
         </div>
-        <div class="row top-buffer mt-4">
+        </div>
+        <div class="container mt-4">
+        <div class="row">
           <div class="col-12">
             <div class="row">
               <div class="col-2">
@@ -208,28 +214,33 @@
               </div>
             </div>
           </div>
-
         </div>
-
-        <div class="row top-buffer mt-4">
+        </div>
+        <div class="container mt-4">
+        <div class="row">
           <div class="col-2">
             <h5 for="priority">{{ "Asset.Periority" | translate }}:</h5>
           </div>
-          <div class="col-10"> <mat-radio-group [(ngModel)]="radioPerioritySelected" (change)="getSelecteditem()"
-              [ngModelOptions]="{ standalone: true }">
-              <mat-radio-button value="{{ item.id }}" name="priority{{ i }}"
-                *ngFor="let item of lstPeriorities; let i = index">
-                {{ lang == "en" ? item.name : item.nameAr }}
-              </mat-radio-button>
-            </mat-radio-group>
-          </div>
-        </div>
-        <!-- <div class="row top-buffer">
-          <div class="col-12">
-
-          </div>
-        </div> -->
-
+          <div class="col-10">
+            <div class="radio-group">
+              <div *ngFor="let item of lstPeriorities; let i = index">
+                <p-radioButton
+                  [inputId]="'priority' + i"
+                  name="pizza"
+                  [value]="item.id"
+                  [(ngModel)]="radioPerioritySelected"
+                  (change)="getSelecteditem()">
+                </p-radioButton>
+                <label [for]="'priority' + i" class="ml-2">
+                  {{ lang == 'en' ? item.name : item.nameAr }}
+                </label>
+              </div>
+            </div>
+                  </div>
+          </div> 
+        </div> 
+    
+  
 
       </mat-tab>
       <mat-tab>
@@ -237,64 +248,67 @@
           <i class="pi pi-paperclip" style="margin: 0px 20px;font-size: 2.5rem;"></i>
           {{ 'Asset.Attachments' | translate }}
         </ng-template>
-
-        <div class="row top-buffer" style="margin-top: 10px;">
-          <div class="col-9" style="display: none;">
+        <div class="container mt-4">
+        <div class="row ">
+          <!-- <div class="col-9" style="display: none;">
             <div class="p-inputgroup">
               <input #title="ngModel" class="form-control" type="text" name="title" placeholder="Document Name"
                 [(ngModel)]="masterAssetDocument.title">
             </div>
-          </div>
-          <div class="col-3">
+          </div> -->
+          <div class="col-3 mt-3">
             <input type="file" multiple #file placeholder="Choose file" (change)="uploadMultipleFile($event)"
               style="display: none;">
             <button type="button" name="btnUpload" class="btn btnUpload" style="margin:0px 10px" (click)="file.click()">
-              <i class="fa fa-upload"></i> {{'Asset.SelectUploadFiles' |translate }}
+              <i class="pi pi-upload"></i> {{'Asset.SelectUploadFiles' |translate }}
             </button>
           </div>
         </div>
         <div class="row">
           <div class="col-12 top-buffer">
-            <p-table [value]="lstMasterAssetDocuments" dataKey="id">
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>{{ 'Asset.FileName' | translate }}</th>
-                  <th>{{ 'Asset.Title' | translate }}</th>
-                  <th></th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-masterAssetDocument let-rowIndex="rowIndex" let-editing="editing">
-                <tr>
-                  <td>{{masterAssetDocument.fileName}}</td>
-                  <td [pEditableColumn]="masterAssetDocument.title" pEditableColumnField="title"
-                    [pEditableColumnRowIndex]="rowIndex">
-                    <p-cellEditor>
-                      <ng-template pTemplate="input">
-                        <input pInputText [(ngModel)]="masterAssetDocument.title"
-                          [ngModelOptions]="{standalone: true}" />
-                      </ng-template>
-                      <ng-template pTemplate="output">
-                        {{masterAssetDocument.title}}
-                      </ng-template>
-                    </p-cellEditor>
-                  </td>
-                  <td>
-                    <span (click)="removeFileFromObjectArray(rowIndex)"><i class="fa-solid fa-times-circle"
-                        style="color: rgb(123, 9, 9);"></i></span>
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
+            <div *ngIf="lstMasterAssetDocuments.length >0">
+              <p-table [value]="lstMasterAssetDocuments" dataKey="id">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>{{ 'Asset.FileName' | translate }}</th>
+                    <th>{{ 'Asset.Title' | translate }}</th>
+                    <th></th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-masterAssetDocument let-rowIndex="rowIndex" let-editing="editing">
+                  <tr>
+                    <td>{{masterAssetDocument.fileName}}</td>
+                    <td [pEditableColumn]="masterAssetDocument.title" pEditableColumnField="title"
+                      [pEditableColumnRowIndex]="rowIndex">
+                      <p-cellEditor>
+                        <ng-template pTemplate="input">
+                          <input pInputText [(ngModel)]="masterAssetDocument.title"
+                            [ngModelOptions]="{standalone: true}" />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                          {{masterAssetDocument.title}}
+                        </ng-template>
+                      </p-cellEditor>
+                    </td>
+                    <td>
+                      <span (click)="removeFileFromObjectArray(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+           
           </div>
+        </div>
         </div>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
-
           <i class="pi pi-wrench" style="font-size: 2.5rem;"></i>
           {{'Asset.PreventiveMaintainance' | translate}}
         </ng-template>
-        <div class="row top-buffer">
+        <div class="container mt-4">
+        <div class="row">
           <div class="col-12">
             <label for="pmtime" [translate]="'Asset.PMTime'"></label>
             <mat-radio-group [(ngModel)]="selectedPMTime" (change)="onTimeChange($event)" name="gcat" id="gcat"
@@ -310,38 +324,42 @@
           <div class="col-5">
 
             <label> {{ "Asset.Name" | translate }}</label>
-            <input class="form-control" #taskname="ngModel" [(ngModel)]="pmTaskObj.taskname" placeholder="task name"
+            <input class="form-control" #taskname="ngModel" [(ngModel)]="pmTaskObj.taskname"   [class.is-invalid]="pmTaskObj.taskname==''" placeholder="task name"
               [ngModelOptions]="{standalone: true}">
           </div>
           <div class="col-5">
 
 
             <label> {{ "Asset.ArabicName" | translate }}</label>
-            <input class="form-control" #tasknameAr="ngModel" [(ngModel)]="pmTaskObj.tasknameAr" placeholder="task name"
+            <input class="form-control" #tasknameAr="ngModel" [(ngModel)]="pmTaskObj.tasknameAr" placeholder="task name"  [class.is-invalid]="pmTaskObj.tasknameAr==''"
               [ngModelOptions]="{standalone: true}">
           </div>
 
           <div class="col-2">
             <span (click)="addTaskToList()" matTooltip="Add">
-              <i class="fa-solid fa-plus" style="margin-top: 30px;"></i>
+              <i class="pi pi-plus-circle add" style="font-size: 2rem;margin-top:20px;"></i>
             </span>
           </div>
         </div>
-
-
-        <div class="row top-buffer">
+        
+        <div *ngIf="lstPMTasks.length>0">
+        <div class="row mt-3">
           <div class="col-12">
             <table class="table table-stripped">
               <thead>
                 <tr>
                   <th>{{ "Asset.Name" | translate }}</th>
                   <th>{{ "Asset.ArabicName" | translate }}</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let i of lstPMTasks">
-                  <td>{{ i.taskname }}</td>
-                  <td>{{ i.tasknameAr }}</td>
+                <tr *ngFor="let obj of lstPMTasks">
+                  <td>{{ obj.taskname }}</td>
+                  <td>{{ obj.tasknameAr }}</td>
+                  <td>
+                    <span (click)="removeTaskFromObjectArray(obj)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
+                  </td>
                 </tr>
                 <tr *ngIf="lstPMTasks.length == 0">
                   <td colspan="4" style="color: rgb(102, 97, 23)" translate="No data found"></td>
@@ -355,7 +373,8 @@
             </button> -->
           </div>
         </div>
-
+        </div>
+        </div>
       </mat-tab>
 
 
@@ -468,7 +487,7 @@
 
           <div class="col-2">
             <span (click)="addWOTaskToList()" matTooltip="Add">
-              <i class="pi pi-plus-circle" style="margin-top: 30px;font-size: 2rem;"></i>
+              <i class="pi pi-plus-circle" style="font-size: 2rem;"></i>
             </span>
           </div>
         </div>
