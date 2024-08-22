@@ -162,6 +162,7 @@ export class CreateComponent implements OnInit {
 
     this.masterAssetService.GenerateMasterAssetcode().subscribe(master => {
       this.masterAssetObj.code = master["code"];
+      this.compObj.compCode=master["code"] + "-1";
     });
     this.getSelecteditem();
     this.selectedPMTime = 1;
@@ -407,8 +408,8 @@ export class CreateComponent implements OnInit {
     return num;
   }
   removeFileFromObjectArray(rowIndex) {
-    const index: number = this.lstMasterAssetDocuments.indexOf(rowIndex);
-    this.lstMasterAssetDocuments.splice(index, 1);
+
+    this.lstMasterAssetDocuments.splice(rowIndex, 1);
   }
   addTaskToList() {
     if(this.pmTaskObj.taskname=='')
@@ -437,15 +438,32 @@ export class CreateComponent implements OnInit {
         }
         return false;
       }
+      var exists=false;
+    this.lstPMTasks.forEach((task)=>{
+      if((task.taskname==this.pmTaskObj.taskname)&&(task.tasknameAr==this.pmTaskObj.tasknameAr))
+      exists=true
+    })
+    if(exists)
+    {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "A task with this name already exists. Please choose a different name.";
+    
+      }
+      else {
+        this.errorMessage = "هذا الاسم موجود بالفعل, من فضلك ادخل اسم مختلف";
+  
+      }
+      return false;
+    }
     let pmObj = new CreatePMAssetTaskVM();
     pmObj.masterAssetId = Number(this.masterAssetId);
     pmObj.taskname = this.pmTaskObj.taskname;
     pmObj.tasknameAr = this.pmTaskObj.tasknameAr;
     this.lstPMTasks.push(pmObj);
   }
-  removeTaskFromObjectArray(obj:any)
+  removeTaskFromObjectArray(index:any)
   {
-    var index=this.lstPMTasks.indexOf(obj);
     this.lstPMTasks.splice(index,1)
   }
   addComponentToList() {

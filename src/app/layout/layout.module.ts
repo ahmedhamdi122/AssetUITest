@@ -22,7 +22,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { LayoutComponent } from './layout.component';
 import { TopheaderComponent } from './topheader/topheader.component';
 import { LayoutRoutingModule } from './layout-routing.module';
-// import { BadgeModule } from 'primeng/badge';
+ import { BadgeModule } from 'primeng/badge';
 // import { MatBadgeModule } from '@angular/material/badge';
 
 // import { TooltipModule } from 'primeng/tooltip';
@@ -49,7 +49,7 @@ import { LayoutRoutingModule } from './layout-routing.module';
     LayoutRoutingModule,
     //TooltipModule,
     TranslateModule,
-    // BadgeModule,
+     BadgeModule,
     // MatBadgeModule
   ],
   exports: [

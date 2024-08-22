@@ -6,7 +6,7 @@
           <i class="pi pi-database" style="font-size: 2.5rem;"></i>
           {{ "Asset.Identification" | translate }}
         </ng-template>
-        <div class="container mt-3">
+        <div class="container mt-5">
     
             <div class="row">
               <div class="col-2">
@@ -40,7 +40,7 @@
           </div>
    
 
-      <div class="container mt-3">          
+      <div class="container mt-4">          
       <div class="row">
           <div class="col-2"></div>
           <div class="col-2">
@@ -267,11 +267,12 @@
         <div class="row">
           <div class="col-12 top-buffer">
             <div *ngIf="lstMasterAssetDocuments.length >0">
-              <p-table [value]="lstMasterAssetDocuments" dataKey="id">
+              <p-table    [paginator]="true"
+              [rows]="5"[totalRecords]="lstMasterAssetDocuments.length" [value]="lstMasterAssetDocuments" dataKey="id">
                 <ng-template pTemplate="header">
                   <tr>
-                    <th>{{ 'Asset.FileName' | translate }}</th>
-                    <th>{{ 'Asset.Title' | translate }}</th>
+                    <th class="text-center">{{ 'Asset.FileName' | translate }}</th>
+                    <th class="text-center">{{ 'Asset.Title' | translate }}</th>
                     <th></th>
                   </tr>
                 </ng-template>
@@ -320,24 +321,24 @@
 
           </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row mt-3">
           <div class="col-5">
 
             <label> {{ "Asset.Name" | translate }}</label>
-            <input class="form-control" #taskname="ngModel" [(ngModel)]="pmTaskObj.taskname"   [class.is-invalid]="pmTaskObj.taskname==''" placeholder="task name"
+            <input class="form-control mt-2" #taskname="ngModel" [(ngModel)]="pmTaskObj.taskname"   [class.is-invalid]="pmTaskObj.taskname==''" placeholder="task name"
               [ngModelOptions]="{standalone: true}">
           </div>
           <div class="col-5">
 
 
             <label> {{ "Asset.ArabicName" | translate }}</label>
-            <input class="form-control" #tasknameAr="ngModel" [(ngModel)]="pmTaskObj.tasknameAr" placeholder="task name"  [class.is-invalid]="pmTaskObj.tasknameAr==''"
+            <input class="form-control mt-2" #tasknameAr="ngModel" [(ngModel)]="pmTaskObj.tasknameAr" placeholder="task name"  [class.is-invalid]="pmTaskObj.tasknameAr==''"
               [ngModelOptions]="{standalone: true}">
           </div>
 
-          <div class="col-2">
+          <div class="col-2 mt-2">
             <span (click)="addTaskToList()" matTooltip="Add">
-              <i class="pi pi-plus-circle add" style="font-size: 2rem;margin-top:20px;"></i>
+              <i class="pi pi-plus-circle add " style="font-size: 2rem;margin-top:20px;"></i>
             </span>
           </div>
         </div>
@@ -345,32 +346,26 @@
         <div *ngIf="lstPMTasks.length>0">
         <div class="row mt-3">
           <div class="col-12">
-            <table class="table table-stripped">
-              <thead>
+            <p-table    [paginator]="true"
+            [rows]="3"[totalRecords]="lstPMTasks.length" [value]="lstPMTasks" dataKey="id">
+              <ng-template pTemplate="header">
                 <tr>
-                  <th>{{ "Asset.Name" | translate }}</th>
-                  <th>{{ "Asset.ArabicName" | translate }}</th>
+                  <th class="text-center">{{ "Asset.Name" | translate }}</th>
+                  <th class="text-center">{{ "Asset.ArabicName" | translate }}</th>
                   <th></th>
                 </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let obj of lstPMTasks">
-                  <td>{{ obj.taskname }}</td>
-                  <td>{{ obj.tasknameAr }}</td>
+              </ng-template>
+              <ng-template pTemplate="body" let-task let-rowIndex="rowIndex">
+                <tr>
+                  <td>{{ task.taskname }}</td>
+                  <td>{{ task.tasknameAr }}</td>
+                
                   <td>
-                    <span (click)="removeTaskFromObjectArray(obj)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
+                    <span (click)="removeTaskFromObjectArray(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
                   </td>
                 </tr>
-                <tr *ngIf="lstPMTasks.length == 0">
-                  <td colspan="4" style="color: rgb(102, 97, 23)" translate="No data found"></td>
-                </tr>
-              </tbody>
-            </table>
-
-            <!-- <button class="btn btn-primary pull-center btn-sm" [disabled]="lstPMTasks.length == 0"
-              (click)="saveTaskToDB()">
-              <i class="fa-solid fa-save"></i>{{ "Asset.Save" | translate }}
-            </button> -->
+              </ng-template>
+            </p-table>
           </div>
         </div>
         </div>
@@ -467,71 +462,16 @@
         </div>
 
       </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label> <i class="pi pi-list-check" style="font-size: 2.5rem;"></i>{{ "Asset.WOTask" |
-          translate }}</ng-template>
-        <div class="row top-buffer">
-          <div class="col-5">
-
-            <label> {{ "Asset.Name" | translate }}</label>
-            <input class="form-control" #name="ngModel" [(ngModel)]="woTaskObj.name" placeholder="task name"
-              [ngModelOptions]="{standalone: true}">
-          </div>
-          <div class="col-5">
-
-
-            <label> {{ "Asset.ArabicName" | translate }}</label>
-            <input class="form-control" #nameAr="ngModel" [(ngModel)]="woTaskObj.nameAr" placeholder="task name"
-              [ngModelOptions]="{standalone: true}">
-          </div>
-
-          <div class="col-2">
-            <span (click)="addWOTaskToList()" matTooltip="Add">
-              <i class="pi pi-plus-circle" style="font-size: 2rem;"></i>
-            </span>
-          </div>
-        </div>
-
-
-        <div class="row top-buffer">
-          <div class="col-12">
-            <table class="table table-stripped">
-              <thead>
-                <tr>
-                  <th>{{ "Asset.Name" | translate }}</th>
-                  <th>{{ "Asset.ArabicName" | translate }}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let tsk of lstWOTasks; let i= inedx">
-                  <td>{{ tsk.name }}</td>
-                  <td>{{ tsk.nameAr }}</td>
-                  <td>
-                    <span (click)="removeItemFromTasks(tsk)"><i class="pi pi-times-circle" style="font-size: 2rem;"
-                        style="color: rgb(123, 9, 9);"></i></span>
-                  </td>
-                </tr>
-                <tr *ngIf="lstWOTasks.length == 0">
-                  <td colspan="4" style="color: rgb(102, 97, 23)" [translate]="'Asset.NoData'"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </mat-tab>
+      
     </mat-tab-group>
-
-    <div class="row top-buffer">
-      <div class="col-12 text-center">
-        <button type="submit" (click)="onSubmit()" class="btn btn-success" value="save">
-          {{ "Asset.Save" | translate }}
-        </button>
-      </div>
+  <div class="row top-buffer fixed-button ">
+    <div class="col-12 text-center">
+      <button type="submit" (click)="onSubmit()" class="btn btn-success" value="save">
+        {{ "Asset.Save" | translate }}
+      </button>
     </div>
+  </div>
   </form>
-
-
 </div>
 <p-dialog appendTo="body" modal="true" [(visible)]="savedfilesdisplay">
   <ng-template pTemplate="header">
