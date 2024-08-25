@@ -9,7 +9,7 @@
   }
 
   .container {
-    max-height: 100vh; 
+    max-height: 150vh; 
     overflow-y: auto; 
   }
   .radio-group {
@@ -39,4 +39,6 @@
     left: 50%; 
     transform: translateX(-50%); 
   }
- 
+ i{
+  font-size: 1.5rem;
+ }

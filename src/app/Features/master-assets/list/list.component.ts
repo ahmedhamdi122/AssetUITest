@@ -62,7 +62,7 @@ export class ListComponent implements OnInit {
   @ViewChild('dt2') dataTable: Table;
   selectedMasterAssetName: any;
 
-  constructor(private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
+  constructor(    private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService) { this.currentUser = this.authenticationService.currentUserValue; }
 
@@ -171,7 +171,7 @@ export class ListComponent implements OnInit {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Master Asset' : "بيان إضافة أصل جديد",
       width: '80%',
-      height:'500px',
+      height:'650px',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",
@@ -203,13 +203,11 @@ export class ListComponent implements OnInit {
 
     // });
     console.log("id :",id);
-
-    this.ConfirmationService.confirm({
-      message: 'Are you sure that you want to proceed?',
-      header: 'Confirmation',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {console.log("accept")},
-      reject: () => {console.log("reject")}
+    this.confirmationService.confirm({
+      header: 'Are you sure?',
+      message: 'Please confirm to proceed.',
+      // accept: ,
+      // reject: 
   });
 
   }

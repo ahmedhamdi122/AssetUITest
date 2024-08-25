@@ -24,6 +24,7 @@ import { TableModule } from 'primeng/table';
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     ViewComponent
   ],
   imports: [
+    InputNumberModule,
     DeleteModule,
     CommonModule,
     FormsModule,

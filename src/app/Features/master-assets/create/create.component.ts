@@ -99,8 +99,8 @@ export class CreateComponent implements OnInit {
   isAdmin: boolean = false;
   isHospitalManager: boolean = false;
   canAddBrand: boolean = false;
-
   lstRoleNames: string[] = [];
+ 
 
   public taskForm: FormGroup;
   constructor(
@@ -162,7 +162,7 @@ export class CreateComponent implements OnInit {
 
     this.masterAssetService.GenerateMasterAssetcode().subscribe(master => {
       this.masterAssetObj.code = master["code"];
-      this.compObj.compCode=master["code"] + "-1";
+  
     });
     this.getSelecteditem();
     this.selectedPMTime = 1;
@@ -438,11 +438,10 @@ export class CreateComponent implements OnInit {
         }
         return false;
       }
-      var exists=false;
-    this.lstPMTasks.forEach((task)=>{
-      if((task.taskname==this.pmTaskObj.taskname)&&(task.tasknameAr==this.pmTaskObj.tasknameAr))
-      exists=true
-    })
+   
+      const exists = this.lstPMTasks.some((task) =>
+        task.taskname === this.pmTaskObj.taskname && task.tasknameAr === this.pmTaskObj.tasknameAr
+      );
     if(exists)
     {
       this.errorDisplay = true;
@@ -467,7 +466,14 @@ export class CreateComponent implements OnInit {
     this.lstPMTasks.splice(index,1)
   }
   addComponentToList() {
-
+    if (this.compObj.compCode == "") {
+      this.errorDisplay = true;
+      if (this.lang == "en")
+        this.errorMessage = "Please insert component code";
+      else
+        this.errorMessage = "ادخل كود المكون";
+      return false;
+    }
     if (this.compObj.compName == "") {
       this.errorDisplay = true;
       if (this.lang == "en")
@@ -484,15 +490,44 @@ export class CreateComponent implements OnInit {
         this.errorMessage = "ادخل اسم المكون بالعربي";
       return false;
     }
-    if (this.compObj.compCode == "") {
+ 
+    const compCodeexists = this.lstComponents.some((Component) =>
+      Component.compCode==this.compObj.compCode
+    );
+    if(compCodeexists)
+    {
       this.errorDisplay = true;
       if (this.lang == "en")
-        this.errorMessage = "Please insert component code";
+        this.errorMessage = "The component code already exists. Please enter a unique code.";
       else
-        this.errorMessage = "ادخل كود المكون";
-      return false;
+        this.errorMessage = "رمز المكون موجود بالفعل. يرجى إدخال رمز فريد";
+        return false;
     }
-    else {
+    const compNameexists = this.lstComponents.some((Component) =>
+      Component.compName==this.compObj.compName
+    );
+    if(compNameexists)
+    {
+      this.errorDisplay = true;
+      if (this.lang == "en")
+        this.errorMessage = "The component Name already exists. Please enter a unique NameAr.";
+      else
+        this.errorMessage = "اسم المكون موجود بالفعل. يرجى إدخال اسم فريد";
+        return false;
+    }
+  const compNameArexists = this.lstComponents.some((Component) =>
+      Component.compNameAr==this.compObj.compNameAr
+    );
+    if(compNameArexists)
+    {
+      this.errorDisplay = true;
+      if (this.lang == "en")
+        this.errorMessage = "The component NameAr already exists. Please enter a unique NameAr.";
+      else
+        this.errorMessage = "اسم المكون بالعربي موجود بالفعل. يرجى إدخال اسم فريد";
+        return false;
+    }
+  
       let componentObj = new CreateMasterAssetComponentVM();
       componentObj.masterAssetId = Number(this.masterAssetId);
       componentObj.compName = this.compObj.compName;
@@ -503,14 +538,12 @@ export class CreateComponent implements OnInit {
       componentObj.price = this.compObj.price;
       componentObj.partNo = this.compObj.partNo;
       this.lstComponents.push(componentObj);
-    }
+    
   }
-  removeComponentItem(doc) {
-    const index: number = this.lstComponents.indexOf(doc);
-    if (index !== -1) {
+  removeComponentItem(index) {
+
       this.lstComponents.splice(index, 1);
     }
-  }
   addBrand() {
     const dialogRef2 = this.dialogService.open(CreateBrandComponent, {
       width: '50%',

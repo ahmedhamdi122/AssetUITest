@@ -3,7 +3,7 @@
     <mat-tab-group mat-align-tabs="start" #tabGroup>
       <mat-tab >
         <ng-template mat-tab-label>
-          <i class="pi pi-database" style="font-size: 2.5rem;"></i>
+          <i class="pi pi-database"></i>
           {{ "Asset.Identification" | translate }}
         </ng-template>
         <div class="container mt-5">
@@ -245,17 +245,12 @@
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
-          <i class="pi pi-paperclip" style="margin: 0px 20px;font-size: 2.5rem;"></i>
+          <i class="pi pi-paperclip" style="margin: 0px 20px;"></i>
           {{ 'Asset.Attachments' | translate }}
         </ng-template>
         <div class="container mt-4">
         <div class="row ">
-          <!-- <div class="col-9" style="display: none;">
-            <div class="p-inputgroup">
-              <input #title="ngModel" class="form-control" type="text" name="title" placeholder="Document Name"
-                [(ngModel)]="masterAssetDocument.title">
-            </div>
-          </div> -->
+   
           <div class="col-3 mt-3">
             <input type="file" multiple #file placeholder="Choose file" (change)="uploadMultipleFile($event)"
               style="display: none;">
@@ -265,8 +260,8 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12 top-buffer">
-            <div *ngIf="lstMasterAssetDocuments.length >0">
+          <div class="col-12 mt-3">
+        
               <p-table    [paginator]="true"
               [rows]="5"[totalRecords]="lstMasterAssetDocuments.length" [value]="lstMasterAssetDocuments" dataKey="id">
                 <ng-template pTemplate="header">
@@ -296,16 +291,20 @@
                     </td>
                   </tr>
                 </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="3" class="text-center">No data available</td>
+                  </tr>
+                </ng-template>
               </p-table>
-            </div>
-           
+       
           </div>
         </div>
         </div>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
-          <i class="pi pi-wrench" style="font-size: 2.5rem;"></i>
+          <i class="pi pi-wrench" ></i>
           {{'Asset.PreventiveMaintainance' | translate}}
         </ng-template>
         <div class="container mt-4">
@@ -338,12 +337,12 @@
 
           <div class="col-2 mt-2">
             <span (click)="addTaskToList()" matTooltip="Add">
-              <i class="pi pi-plus-circle add " style="font-size: 2rem;margin-top:20px;"></i>
+              <i class="pi pi-plus-circle add " style="margin-top:30px;"></i>
             </span>
           </div>
         </div>
         
-        <div *ngIf="lstPMTasks.length>0">
+    
         <div class="row mt-3">
           <div class="col-12">
             <p-table    [paginator]="true"
@@ -365,50 +364,59 @@
                   </td>
                 </tr>
               </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="3" class="text-center">No data available</td>
+                </tr>
+              </ng-template>
             </p-table>
           </div>
         </div>
         </div>
-        </div>
+
       </mat-tab>
 
 
       <mat-tab>
         <ng-template mat-tab-label>
-          <i class="pi pi-sitemap" style="font-size: 2.5rem;"></i>
+          <i class="pi pi-sitemap"></i>
           {{ "Asset.Components" | translate }}
         </ng-template>
+        <div class="container">
         <div class="row top-buffer">
-          <div class="col-4">
+          <div class="col">
             <label> {{ "Asset.Code" | translate }}</label>
-            <input class="form-control" #compCode="ngModel" [(ngModel)]="compObj.compCode"
+            <input class="form-control" #compCode="ngModel" [(ngModel)]="compObj.compCode"  required=""  type="text" maxlength="5" [ngClass]="{'is-invalid':compCode.invalid}"
               placeholder="{{'Asset.Code' |  translate}}" [ngModelOptions]="{standalone: true}">
           </div>
-          <div class="col-4">
+          <div class="col">
             <label> {{ "Asset.Name" | translate }}</label>
-            <input class="form-control" #compname="ngModel" [(ngModel)]="compObj.compName"
+            <input class="form-control" #compname="ngModel" [(ngModel)]="compObj.compName"  [ngClass]="{'is-invalid': compObj.compName==''}"
               placeholder="{{'Asset.Name' |  translate}}" [ngModelOptions]="{standalone: true}">
           </div>
-          <div class="col-4">
+          <div class="col">
             <label> {{ "Asset.ArabicName" | translate }}</label>
-            <input class="form-control" #compnameAr="ngModel" [(ngModel)]="compObj.compNameAr"
+            <input class="form-control" #compnameAr="ngModel" [(ngModel)]="compObj.compNameAr" [ngClass]="{'is-invalid': compObj.compNameAr==''}" 
               placeholder="{{'Asset.ArabicName' |  translate}}" [ngModelOptions]="{standalone: true}">
           </div>
-
         </div>
-        <div class="row top-buffer">
-          <div class="col-6">
+        </div>
+        <div class="container">
+         <div class="row top-buffer">
+          <div class="col">
             <label> {{ "Asset.Price" | translate }}</label>
             <input class="form-control" #price="ngModel" [(ngModel)]="compObj.price"
               placeholder="{{'Asset.Price' |  translate}}" [ngModelOptions]="{standalone: true}">
           </div>
-          <div class="col-6">
+          <div class="col">
             <label> {{ "Asset.PartNo" | translate }}</label>
             <input class="form-control" #partNo="ngModel" [(ngModel)]="compObj.partNo"
               placeholder="{{'Asset.PartNo' |  translate}}" [ngModelOptions]="{standalone: true}">
           </div>
         </div>
-        <div class="row top-buffer">
+        </div>
+        <div class="container">
+       <div class="row top-buffer">
           <div class="col-6">
             <label> {{ "Asset.Description" | translate }}</label>
             <input class="form-control" #description="ngModel" [(ngModel)]="compObj.compDescription"
@@ -420,46 +428,54 @@
               placeholder="{{'Asset.ArabicDescription' |  translate}}" [ngModelOptions]="{standalone: true}">
           </div>
         </div>
-        <div class="row top-buffer">
-          <div class="col-2">
-            <span (click)="addComponentToList()" matTooltip="Add">
-              <i class="pi pi-plus-circle" style="color: #04527e;"></i>{{'Asset.AddComponent'
+ 
+        <div class="row">  
+      
+            <span (click)="addComponentToList()" >
+              <i class="pi pi-plus-circle add " style="margin-top:60px;"></i>  {{'Asset.AddComponent'
               |translate}}
             </span>
           </div>
+       
         </div>
-
-
-        <div class="row top-buffer">
+    
+        <div class="container">
+        <div class="row mt-3">
           <div class="col-12">
-            <table class="table table-stripped">
-              <thead>
+      
+            <p-table    [paginator]="true"
+            [rows]="2"[totalRecords]="lstComponents.length" [value]="lstComponents" dataKey="id">
+              <ng-template pTemplate="header">
                 <tr>
-                  <th>{{ "Asset.Name" | translate }}</th>
-                  <th>{{ "Asset.ArabicName" | translate }}</th>
-                  <th>{{ "Asset.Price" | translate }}</th>
-                  <th>{{ "Asset.PartNo" | translate }}</th>
+                  <th class="text-center">{{ "Asset.Name" | translate }}</th>
+                  <th class="text-center">{{ "Asset.ArabicName" | translate }}</th>
+                  <th class="text-center">{{ "Asset.Price" | translate }}</th>
+                  <th class="text-center">{{ "Asset.PartNo" | translate }}</th>
                   <th></th>
                 </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let i of lstComponents">
-                  <td>{{ i.compName }}</td>
-                  <td>{{ i.compNameAr }}</td>
-                  <td>{{ i.price }}</td>
-                  <td>{{ i.partNo }}</td>
+              </ng-template>
+              <ng-template pTemplate="body" let-Component let-rowIndex="rowIndex">
+                <tr>
+                  <td>{{ Component.compName }}</td>
+                  <td>{{ Component.compNameAr }}</td>
+                  <td>{{ Component.price }}</td>
+                  <td>{{ Component.partNo }}</td>
                   <td>
-                    <span (click)="removeComponentItem(i)"><i class="fa-solid fa-times-circle"
-                        style="color: rgb(123, 9, 9);"></i></span>
+                    <span (click)="removeComponentItem(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
                   </td>
+            
                 </tr>
-                <tr *ngIf="lstComponents.length == 0">
-                  <td colspan="4" style="color: rgb(102, 97, 23)" translate="No data found"></td>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="5" class="text-center">No data available</td>
                 </tr>
-              </tbody>
-            </table>
+              </ng-template>
+            </p-table>
           </div>
+        </div> 
         </div>
+  
 
       </mat-tab>
       

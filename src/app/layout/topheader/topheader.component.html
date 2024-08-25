@@ -39,43 +39,28 @@
 
         <div class="col-1"></div>
         <div class="col-1">
-            <ul class="nav">
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle"  id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false" data-bs-toggle="dropdown">
-                        <i class="pi pi-envelope deleteIcon" style="font-size: 2rem;color: green;" pBadge value="9"></i>
-                  
-
+            <li class="nav-item dropdown">
+               
+           
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
+                        <i class="pi pi-envelope" style="font-size: 1.5rem; color: green;" pBadge value="9"></i>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item">Message 1</a>
-                        <a class="dropdown-item">Message 2</a>
-                      
+                    <div class="dropdown-content">
+                        <a class="dropdown-item" href="#">Message 1</a>
+                        <a class="dropdown-item" href="#">Message 2</a>
                     </div>
-                </li> -->
-                <div class="dropdown">
-                    <i class="pi pi-envelope deleteIcon" 
-                       style="font-size: 2rem; color: green;" 
-                       pBadge value="9" 
-                       data-bs-toggle="dropdown" 
-                       aria-expanded="false">
-                    </i>
-                
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Message 1</a></li>
-                      <li><a class="dropdown-item" href="#">Message 2</a></li>
-                    </ul>
-                  </div>
-            </ul>
+              
+                </li>
         </div>
 <div class="col-1">
     <ul class="nav">
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
-                <i class="pi pi-bell"  style="font-size: 2rem;color: green;" pBadge value="23"></i>
+                <i class="pi pi-bell"  style="font-size: 1.5rem;color: green;" pBadge value="23"></i>
    
 
             </a>
-            <div class="dropdown-menu">
+            <div class="dropdown-content">
                 <a class="dropdown-item">Message 1</a>
                 <a class="dropdown-item">Message 2</a>
            
@@ -90,7 +75,7 @@
                 <img src="../../../assets/images/MHP.png" class="user-image" alt="User Image">
                 <span>{{userName}}</span>
             </a>
-            <div class="dropdown-menu">
+            <div class="dropdown-content">
                 <li class="dropdown-item" *ngIf="translate.currentLang ==='en'" (click)="selectLanguage('ar')">
                     {{ "Asset.Language" | translate }}</li>
                 <li class="dropdown-item" *ngIf="translate.currentLang ==='ar'" (click)="selectLanguage('en')">
