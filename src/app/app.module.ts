@@ -8,7 +8,7 @@ import { DatePipe, HashLocationStrategy, LocationStrategy } from '@angular/commo
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 // import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
+import { ToastModule } from 'primeng/toast';
 // import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // import { MatSidenavModule } from '@angular/material/sidenav';
  import { MatToolbarModule } from '@angular/material/toolbar';
@@ -34,7 +34,6 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 // import { DialogModule } from 'primeng/dialog';
  import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
  import { TooltipModule } from 'primeng/tooltip';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutRoutingModule } from './layout/layout-routing.module';
@@ -61,7 +60,7 @@ import { NgxBarcode6Module } from 'ngx-barcode6';
  import { MasterAssetsModule } from './Features/master-assets/master-assets.module';
  import { MasterAssetsRoutingModule } from './Features/master-assets/master-assets-routing.module';
 //  import { NgxMatFileInputModule } from '@angular-material-components/file-input';
- import { ConfirmationService } from 'primeng/api';
+ import { ConfirmationService, MessageService } from 'primeng/api';
  import { HospitalAssetsModule } from './Features/hospital-assets/hospital-assets.module';
  import { HospitalAssetsRoutingModule } from './Features/hospital-assets/hospital-assets-routing.module';
 import { MatInputModule } from '@angular/material/input';
@@ -198,6 +197,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
   FullCalendarModule,
   BrandsRoutingModule,
   BrandsModule,
+  ToastModule,
   // ChartModule,
   MatCheckboxModule,
   MatExpansionModule,
@@ -278,9 +278,10 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
      DialogService,
        ConfirmationService, DatePipe,
-       AuthGuard
+       AuthGuard,
   ],
   bootstrap: [AppComponent],
+
 })
 export class AppModule {
 

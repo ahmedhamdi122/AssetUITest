@@ -439,10 +439,10 @@ export class CreateComponent implements OnInit {
         return false;
       }
    
-      const exists = this.lstPMTasks.some((task) =>
-        task.taskname === this.pmTaskObj.taskname && task.tasknameAr === this.pmTaskObj.tasknameAr
+      const tasknameexists = this.lstPMTasks.some((task) =>
+        task.taskname === this.pmTaskObj.taskname
       );
-    if(exists)
+    if(tasknameexists)
     {
       this.errorDisplay = true;
       if (this.lang == "en") {
@@ -453,8 +453,26 @@ export class CreateComponent implements OnInit {
         this.errorMessage = "هذا الاسم موجود بالفعل, من فضلك ادخل اسم مختلف";
   
       }
+      this.pmTaskObj.taskname='';
       return false;
     }
+    const tasknameArexists = this.lstPMTasks.some((task) =>
+      task.tasknameAr === this.pmTaskObj.tasknameAr
+    );
+  if(tasknameArexists)
+  {
+    this.errorDisplay = true;
+    if (this.lang == "en") {
+      this.errorMessage = "A task with this nameAr already exists. Please choose a different nameAr.";
+  
+    }
+    else {
+      this.errorMessage = "هذا الاسم موجود بالفعل, من فضلك ادخل اسم مختلف";
+
+    }
+    this.pmTaskObj.tasknameAr='';
+    return false;
+  }
     let pmObj = new CreatePMAssetTaskVM();
     pmObj.masterAssetId = Number(this.masterAssetId);
     pmObj.taskname = this.pmTaskObj.taskname;

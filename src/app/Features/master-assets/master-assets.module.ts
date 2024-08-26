@@ -11,11 +11,11 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { ToastModule } from 'primeng/toast';
 
 import { ListComponent } from './list/list.component';
 import { CreateComponent } from './create/create.component';
 import { EditComponent } from './edit/edit.component';
-import { DeleteconfirmationComponent } from './deleteconfirmation/deleteconfirmation.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ViewComponent } from './view/view.component';
 import { TooltipModule } from 'primeng/tooltip';
@@ -25,13 +25,13 @@ import { DeleteModule } from 'src/app/Shared/delete/delete.module';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
     ListComponent,
     CreateComponent,
     EditComponent,
-    DeleteconfirmationComponent,
     ViewComponent
   ],
   imports: [
@@ -55,7 +55,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
     AutoCompleteModule,
     InputTextModule,
     FloatLabelModule,
-    RadioButtonModule
-  ]
+    RadioButtonModule,
+    ToastModule
+  ],
+  providers:[MessageService]
 })
 export class MasterAssetsModule { }

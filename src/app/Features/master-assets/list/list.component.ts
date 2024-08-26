@@ -13,7 +13,6 @@ import { ECRIService } from 'src/app/Shared/Services/ecri.service';
 import { MasterAssetService } from 'src/app/Shared/Services/masterAsset.service';
 import { OriginService } from 'src/app/Shared/Services/origin.service';
 import { CreateComponent } from '../create/create.component';
-import { DeleteconfirmationComponent } from '../deleteconfirmation/deleteconfirmation.component';
 import { EditComponent } from '../edit/edit.component';
 import { ViewComponent } from '../view/view.component';
 import { CategoryService } from 'src/app/Shared/Services/category.service';
@@ -23,26 +22,23 @@ import { ListSubCategoryVM } from 'src/app/Shared/Models/subCategoryVM';
 import { AuthenticationService } from 'src/app/Shared/Services/guards/authentication.service';
 import { Table } from 'primeng/table';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+  styleUrls: ['./list.component.css'],
+  providers:[MessageService]
 })
 export class ListComponent implements OnInit {
-
   lang = localStorage.getItem("lang");
   currentUser: LoggedUser;
-
   errorDisplay: boolean = false;
   errorMessage: string = "";
   page: Paging;
   count: number;
   first: number = 0;
   rows: number = 10;
-
   sortStatus: string = "ascending";
-
   lstOrigins: ListOriginVM[] = [];
   lstBrands: ListBrandVM[] = [];
   lstCategories: ListCategoryVM[] = [];
@@ -50,7 +46,6 @@ export class ListComponent implements OnInit {
   lstMasterAssets: ListMasterAssetVM[] = [];
   lstMasterAssetNames: ListMasterAssetVM[] = [];
   lstECRIS: ListECRIVM[] = [];
-
   selectedObj: MasterAssetVM;
   loading: boolean = false;
   lstRoleNames: string[] = [];
@@ -58,25 +53,19 @@ export class ListComponent implements OnInit {
   isHospitalManager: boolean = false;
   canAddMasterAsset: boolean = false;
   sortFilterObjects: SortAndFilterMasterAssetVM;
-
   @ViewChild('dt2') dataTable: Table;
   selectedMasterAssetName: any;
 
   constructor(    private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
-    private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService) { this.currentUser = this.authenticationService.currentUserValue; }
+    private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
 
 
 
   ngOnInit(): void {
-
-
     const translationKeys = ['Asset.Assets', 'Asset.MasterAssets']; // Array of translation keys
     const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
     this.breadcrumbService.addBreadcrumb(this.activateRoute.snapshot, parentUrlArray, translationKeys);
-
-
-
     this.currentUser["roleNames"].forEach(element => {
       this.lstRoleNames.push(element["name"]);
     });
@@ -122,12 +111,8 @@ export class ListComponent implements OnInit {
       }
     };
   }
-  clicktbl(event) {
-    this.lstMasterAssets = [];
-    this.page.pagenumber = (event.first + 10) / 10;
-    this.page.pagesize = event.rows;
-    this.page.pagenumber = (event.first + 10) / 10;
-    this.page.pagesize = event.rows;
+  LoadMasterAssets(event) {
+    console.log("event :",event)
     this.masterAssetService.GetListMasterAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe((items) => {
       this.lstMasterAssets = items.results;
       this.count = items.count;
@@ -148,25 +133,25 @@ export class ListComponent implements OnInit {
       this.loading = false;
     });
   }
-  sort(field) {
+  // sort(field) {
 
-    if (this.sortStatus == "descending") {
-      this.sortStatus = "ascending";
-      this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    }
-    else {
-      this.sortStatus = "descending";
-      this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    }
+  //   if (this.sortStatus == "descending") {
+  //     this.sortStatus = "ascending";
+  //     this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
+  //   }
+  //   else {
+  //     this.sortStatus = "descending";
+  //     this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
+  //   }
 
-    this.sortFilterObjects.sortObj.sortBy = field.currentTarget.id;
-    this.masterAssetService.GetListMasterAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe((items) => {
-      this.lstMasterAssets = items.results;
-      this.count = items.count;
-      this.loading = false;
-    });
+  //   this.sortFilterObjects.sortObj.sortBy = field.currentTarget.id;
+  //   this.masterAssetService.GetListMasterAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe((items) => {
+  //     this.lstMasterAssets = items.results;
+  //     this.count = items.count;
+  //     this.loading = false;
+  //   });
 
-  }
+  // }
   addMasterAsset() {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Master Asset' : "بيان إضافة أصل جديد",
@@ -186,30 +171,24 @@ export class ListComponent implements OnInit {
   deleteMasterAsset(id: number) {
     // this.masterAssetService.GetMasterAssetById(id).subscribe((data) => {
     //   this.selectedObj = data;
-    //   const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
-
-    //     autoFocus: true,
-    //     data: {
-    //       id: this.selectedObj.id,
-    //       name: this.selectedObj.name,
-    //       nameAr: this.selectedObj.nameAr,
-    //     },
-    //   });
-
-    //   dialogRef2.afterClosed().subscribe(deleted => {
-    //     // this.reload();
-    //           //when click delete only
-    //   });
-
-    // });
-    console.log("id :",id);
+   
+    var masterAsset=this.lstMasterAssets.find((obj)=>{ return obj.id==id});
     this.confirmationService.confirm({
-      header: 'Are you sure?',
-      message: 'Please confirm to proceed.',
-      // accept: ,
-      // reject: 
-  });
-
+      header:`${this.lang == 'en' ? 'Delete Confirmation':'تأكيد المسح'}`,
+     message: `${this.lang == 'en' ? `Are you sure that you want to delete ${masterAsset.name}?` : `هل أنت متأكد أنك تريد حذف ${masterAsset.nameAr}؟`}`,
+      accept: ()=>{
+        this.masterAssetService.DeleteMasterAsset(id).subscribe(deleted => {
+          this.MessageService.add({severity:'success',summary:'Success',detail:'Deleted Successfully'})
+          //delete from front
+        
+          console.log("lsmasterasset : ",this.lstMasterAssets)
+        },
+          (error) => {
+            this.MessageService.add({severity:'error',summary:`${this.lang == 'en'?'Error':'خطأ'}`,detail:`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`
+            })
+   
+      },)}})
+    
   }
   editMasterAsset(id: number) {
     const ref = this.dialogService.open(EditComponent, {
@@ -280,10 +259,10 @@ export class ListComponent implements OnInit {
       this.loading = false;
     });
   }
-  onPageChange(event: any) {
-    this.page.pagenumber = (event.first + 10) / 10;
-    this.page.pagesize = event.rows;
-  }
+  // onPageChange(event: any) {
+  //   this.page.pagenumber = (event.first + 10) / 10;
+  //   this.page.pagesize = event.rows;
+  // }
   onMasterAssetSelectionChanged(event) {
     this.masterAssetService.DistinctAutoCompleteMasterAssetName(event.query).subscribe(masters => {
       this.lstMasterAssetNames = masters;
@@ -295,6 +274,7 @@ export class ListComponent implements OnInit {
       }
     });
   }
+
   getMasterAssetObject(event) {
     if (this.lang == 'en')
       this.sortFilterObjects.searchObj.assetName = event["name"];
