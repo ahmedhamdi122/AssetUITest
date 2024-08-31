@@ -26,13 +26,15 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService } from 'primeng/api';
+import { LoadingSpinnerComponent } from 'src/app/Shared/loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
     ListComponent,
     CreateComponent,
     EditComponent,
-    ViewComponent
+    ViewComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     InputNumberModule,
@@ -56,8 +58,9 @@ import { MessageService } from 'primeng/api';
     InputTextModule,
     FloatLabelModule,
     RadioButtonModule,
-    ToastModule
+    ToastModule,
   ],
   providers:[MessageService]
 })
 export class MasterAssetsModule { }
+

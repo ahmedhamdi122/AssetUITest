@@ -1,4 +1,5 @@
 <div class="col-12 ">
+ 
     <div class=" row top-buffer p-3">
         <div class="col-2">
             <h4 class="card-title"> {{'Asset.MasterAssets' | translate }} </h4>
@@ -32,7 +33,7 @@
                     <div class="row">
                         <div class="col-2">
                             <label for="brandId" [translate]="'Asset.Brands'">Brands</label>
-                            <select class="form-control" id="brandId" [ngModelOptions]="{standalone: true}"
+                            <select class="form-select" id="brandId" [ngModelOptions]="{standalone: true}"
                                 name="brandId" [(ngModel)]="sortFilterObjects.searchObj.brandId" [value]="0">
                                 <option value="0"> </option>
                                 <option *ngFor="let brnd of lstBrands" [value]="brnd.id">
@@ -42,7 +43,7 @@
                         </div>
                         <div class="col-2">
                             <label for="orginId" [translate]="'Asset.Origins'">Origins</label>
-                            <select class="form-control" id="orginId" [ngModelOptions]="{standalone: true}"
+                            <select class="form-select" id="orginId" [ngModelOptions]="{standalone: true}"
                                 name="orginId" [(ngModel)]="sortFilterObjects.searchObj.originId" [value]="0">
                                 <option value="0"></option>
                                 <option *ngFor="let orgn of lstOrigins" [value]="orgn.id">
@@ -52,7 +53,7 @@
                         </div>
                         <div class="col-2">
                             <label for="orginId" [translate]="'Asset.Categories'"></label>
-                            <select class="form-control" id="categoryId" name="categoryId" name="categoryId"
+                            <select class="form-select" id="categoryId" name="categoryId" name="categoryId"
                                 [(ngModel)]="sortFilterObjects.searchObj.categoryId" [value]="0"
                                 (change)="GetSubCategoryByCategoryId($event)" [ngModelOptions]="{standalone: true}">
                                 <option value="0"></option>
@@ -63,7 +64,7 @@
                         </div>
                         <div class="col-2">
                             <label for="subCategoryId" [translate]="'Asset.SubCategories'"></label>
-                            <select class="form-control" id="subCategoryId" name="subCategoryId" name="subCategoryId"
+                            <select class="form-select" id="subCategoryId" name="subCategoryId" name="subCategoryId"
                                 [(ngModel)]="sortFilterObjects.searchObj.subCategoryId" [value]="0"
                                 [ngModelOptions]="{standalone: true}">
                                 <option value="0"> </option>
@@ -97,11 +98,11 @@
                     <div class="row top-buffer">
                         <div class="col-10"></div>
                         <div class="col-1"> <button class="btn searchIcon" value="save" type="submit">
-                                <i class="fa-solid fa-magnifying-glass fa-2xl"></i>
+                                <i class="pi pi-search"></i>
                             </button></div>
                         <div class="col-1"> <button class="btn reset" value="Reset" type="button"
                                 (click)="clearSearch()">
-                                <i class="fa-solid fa-circle-xmark  fa-2xl"></i>
+                                <i class="pi pi-times-circle"></i>
                             </button></div>
                     </div>
                 </form>
@@ -110,29 +111,30 @@
     </div>
     <div class="row ">
         <div class="col-12">
-            <p-table #dt2 [value]="lstMasterAssets" id="masterTbl" name="masterTbl"     
-                [rowHover]="true" [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" [scrollable]="true"
-                (onLazyLoad)="LoadMasterAssets($event)">
+      
+            <p-table #dt2 [value]="lstMasterAssets" id="masterTbl" name="masterTbl" 
+                [rowHover]="true" [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" [scrollable]="true"  [loading]="isLoading"
+                (onLazyLoad)="LoadMasterAssets($event)" [customSort]="true" (sortFunction)="LoadMasterAssets($event)">
                 <ng-template pTemplate="header">
 
                     <tr>
-                        <th style="text-align: inherit;" [sortable]="true">{{'Asset.Code' | translate }}
-                            <p-sortIcon id="{{ 'Asset.Code' | translate}}" (click)="sort($event)"></p-sortIcon>
+                        <th style="text-align: inherit;" pSortableColumn="Code">{{'Asset.Code' | translate }}
+                            <p-sortIcon id="{{ 'Asset.Code' | translate}}" field="Code"/>
                         </th>
-                        <th style="text-align: inherit;" [sortable]="true">{{'Asset.Name' | translate }}
-                            <p-sortIcon id="{{ 'Asset.Name' | translate}}" (click)="sort($event)"></p-sortIcon>
+                        <th style="text-align: inherit;" pSortableColumn="Name">{{'Asset.Name' | translate }}
+                            <p-sortIcon id="{{ 'Asset.Name' | translate}}" field="Name"/>
                         </th>
-                        <th style="text-align: inherit;" [sortable]="true">{{'Asset.Origin' | translate}}
-                            <p-sortIcon id="{{ 'Asset.Origin' | translate}}" (click)="sort($event)"></p-sortIcon>
+                        <th style="text-align: inherit;" pSortableColumn="Origin">{{'Asset.Origin' | translate}}
+                            <p-sortIcon id="{{ 'Asset.Origin' | translate}}"field=Origin />
                         </th>
-                        <th style="text-align: inherit;" [sortable]="true">{{'Asset.Brand' | translate}}
-                            <p-sortIcon id="{{ 'Asset.Brand' | translate}}" (click)="sort($event)"></p-sortIcon>
+                        <th style="text-align: inherit;" pSortableColumn="Brand">{{'Asset.Brand' | translate}}
+                            <p-sortIcon id="{{ 'Asset.Brand' | translate}}" field="Brand"/>
                         </th>
-                        <th style="text-align: inherit;" [sortable]="true">{{'Asset.ECRI' |translate}}
-                            <p-sortIcon id="{{ 'Asset.ECRI' | translate}}" (click)="sort($event)"></p-sortIcon>
+                        <th style="text-align: inherit;" pSortableColumn="ECRI">{{'Asset.ECRI' |translate}}
+                            <p-sortIcon id="{{ 'Asset.ECRI' | translate}}" field="ECRI"/>
                         </th>
-                        <th style="text-align: inherit;" [sortable]="true">{{'Asset.ModelNumber' |translate}}
-                            <p-sortIcon id="{{ 'Asset.ModelNumber' | translate}}" (click)="sort($event)"></p-sortIcon>
+                        <th style="text-align: inherit;" pSortableColumn="ModelNumber">{{'Asset.ModelNumber' |translate}}
+                            <p-sortIcon id="{{ 'Asset.ModelNumber' | translate}}" field="ModelNumber"/>
                         </th>
                         <th style="text-align: inherit;">{{ 'Asset.Actions' | translate }}</th>
                     </tr>
@@ -146,12 +148,12 @@
                         <td style="text-align: inherit;">{{lang =="en" ? item.ecriName:item.ecriNameAr}}</td>
                         <td style="text-align: inherit;">{{item.model}}</td>
                         <td style="text-align: inherit;">
-                            <span class="viewIcon" (click)="viewMasterAsset(item.id)"><i class="pi pi-eye"style="color: green"></i>
+                            <span class="viewIcon" (click)="viewMasterAsset(item.id)"><i class="pi pi-eye"style="color: green" pTooltip="Show Details"></i>
                             </span>
-                            <span class="editIcon" (click)="editMasterAsset(item.id)"><i class="pi pi-pen-to-square" style="color: purple"></i>
+                            <span class="editIcon" (click)="editMasterAsset(item.id)"><i class="pi pi-pen-to-square" style="color: purple" pTooltip="Edit"></i>
                             </span>
                             <span class="deleteIcon" (click)="deleteMasterAsset(item.id)"><i
-                                    class="pi pi-trash" style="color: red"></i>
+                                    class="pi pi-trash" style="color: red" pTooltip="Delete"></i>
                             </span>
                         </td>
                     </tr>
@@ -171,8 +173,10 @@
                     {{'Asset.Entries' | translate }}
                 </ng-template>
             </p-table>
+            
+            </div>
         </div>
-    </div>
+    
 
 </div>
 
@@ -186,3 +190,4 @@
         {{ errorMessage }}</span>
 </p-dialog>
 <p-toast />
+

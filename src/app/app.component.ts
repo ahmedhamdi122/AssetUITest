@@ -29,16 +29,16 @@ export class AppComponent implements OnInit {
 
   selectedLang: string;
 
-  @HostListener('window:beforeunload')
-  unloadHandler(event) {
-    if (localStorage.getItem('rememberCurrentUser') == 'true') {
-      this.currentUser = this.authenticationService.currentUserValue;
-      this.router.navigate(['/dashboard']);
-    }
-    else {
-    this.authenticationService.logout();
-    }
-  }
+  // @HostListener('window:beforeunload')
+  // unloadHandler(event) {
+  //   if (localStorage.getItem('rememberCurrentUser') == 'true') {
+  //     this.currentUser = this.authenticationService.currentUserValue;
+  //     this.router.navigate(['/dashboard']);
+  //   }
+  //   else {
+  //   this.authenticationService.logout();
+  //   }
+  // }
 
   constructor(private authenticationService: AuthenticationService, private router: Router) {
     addEventListener('keydown', event => {

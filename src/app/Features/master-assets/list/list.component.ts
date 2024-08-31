@@ -47,7 +47,7 @@ export class ListComponent implements OnInit {
   lstMasterAssetNames: ListMasterAssetVM[] = [];
   lstECRIS: ListECRIVM[] = [];
   selectedObj: MasterAssetVM;
-  loading: boolean = false;
+  isLoading: boolean = true;
   lstRoleNames: string[] = [];
   isAdmin: boolean = false;
   isHospitalManager: boolean = false;
@@ -55,14 +55,18 @@ export class ListComponent implements OnInit {
   sortFilterObjects: SortAndFilterMasterAssetVM;
   @ViewChild('dt2') dataTable: Table;
   selectedMasterAssetName: any;
-
   constructor(    private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
-
-
-
   ngOnInit(): void {
+    this.sortFilterObjects = {
+      searchObj: { assetNameAr: '', assetName: '', brandId: 0, ecriId: 0, modelNumber: '', originId: 0, categoryId: 0, subCategoryId: 0, code: '' },
+      sortObj: {
+        assetNameAr: '', assetName: '', brandName: '', brandNameAr: '', ecriName: '', ecriNameAr: '', sortBy: '',
+        modelNumber: '', originName: '', originNameAr: '', categoryName: '', categoryNameAr: '', subCategoryName: '', subCategoryNameAr: '', code: '', sortStatus: ''
+      }
+    };
+  
     const translationKeys = ['Asset.Assets', 'Asset.MasterAssets']; // Array of translation keys
     const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
     this.breadcrumbService.addBreadcrumb(this.activateRoute.snapshot, parentUrlArray, translationKeys);
@@ -103,34 +107,38 @@ export class ListComponent implements OnInit {
   
 
 
-    this.sortFilterObjects = {
-      searchObj: { assetNameAr: '', assetName: '', brandId: 0, ecriId: 0, modelNumber: '', originId: 0, categoryId: 0, subCategoryId: 0, code: '' },
-      sortObj: {
-        assetNameAr: '', assetName: '', brandName: '', brandNameAr: '', ecriName: '', ecriNameAr: '', sortBy: '',
-        modelNumber: '', originName: '', originNameAr: '', categoryName: '', categoryNameAr: '', subCategoryName: '', subCategoryNameAr: '', code: '', sortStatus: ''
-      }
-    };
+ 
   }
   LoadMasterAssets(event) {
     console.log("event :",event)
-    this.masterAssetService.GetListMasterAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe((items) => {
-      this.lstMasterAssets = items.results;
+    console.log(" fisrt :",event.first);
+      console.log("rows :", event.rows);
+      console.log("sortField: ",event.sortField);                                                                              
+      console.log("sortField: ",event.sortOrder);    
+       
+    
+      this.masterAssetService.GetListMasterAssets(event.first, event.rows,event.sortField ,event.sortOrder,this.sortFilterObjects.searchObj).subscribe((items) => {
+      this.lstMasterAssets = items.results;     
+      console.log("list : ",items.results)                                               
       this.count = items.count;
-      this.loading = false;
-    });
-  }
+       this.isLoading = false;
+    },error=>{
+      this.isLoading = false;
+    }
+    );
+  
+}
   onSearch() {
     this.lstMasterAssets = [];
     this.count = 0;
-    this.dataTable.first = 1;
-    if (this.page.pagenumber !== 1) {
-      this.page.pagenumber = 1;
-    }
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    this.masterAssetService.GetListMasterAssets(this.sortFilterObjects, 1, 10).subscribe((items) => {
+    this.first = 1;
+   
+   // this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
+   this.isLoading = true;
+    this.masterAssetService.GetListMasterAssets(this.first,this.rows,null,1,this.sortFilterObjects.searchObj).subscribe((items) => {
       this.lstMasterAssets = items.results;
       this.count = items.count;
-      this.loading = false;
+      this.isLoading = false;
     });
   }
   // sort(field) {
@@ -253,11 +261,11 @@ export class ListComponent implements OnInit {
     this.lstMasterAssets = [];
     this.count = 0;
     //this.dataTable.first = 1;
-    this.masterAssetService.GetListMasterAssets(this.sortFilterObjects, 1, 10).subscribe((items) => {
-      this.lstMasterAssets = items.results;
-      this.count = items.count;
-      this.loading = false;
-    });
+    // this.masterAssetService.GetListMasterAssets(this.sortFilterObjects, 1, 10).subscribe((items) => {
+    //   this.lstMasterAssets = items.results;
+    //   this.count = items.count;
+    //   this.loading = false;
+    // });
   }
   // onPageChange(event: any) {
   //   this.page.pagenumber = (event.first + 10) / 10;

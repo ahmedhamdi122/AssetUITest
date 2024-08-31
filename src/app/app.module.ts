@@ -178,6 +178,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
     //  EditFloorComponent, EditRoomComponent, CreateRoomComponent, 
      ViewComponent,
     
+    
   ],
   imports: [
     // DeleteModule,

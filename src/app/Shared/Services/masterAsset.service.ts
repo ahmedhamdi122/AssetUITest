@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { first, Observable } from 'rxjs';
 import { CountMasterAssetByBrandVM, CountMasterAssetBySupplierVM, CreateMasterAssetAttachmentVM, CreateMasterAssetVM, CreatePMAssetTaskVM, EditMasterAssetVM, ListMasterAssetVM, ListPMAssetTaskVM, MainClass, MasterAssetAttachmentVM, SearchMasterAssetVM, SortAndFilterMasterAssetVM, SortMasterAssetVM, ViewMasterAssetVM } from '../Models/masterAssetVM';
 import { environment } from 'src/environments/environment';
 import { ListPMTimeVM } from '../Models/pmTimeVM';
@@ -66,8 +66,10 @@ export class MasterAssetService {
     return this.httpClient.get<ListMasterAssetVM[]>(`${environment.ListMasterAssetsByHospitalUserId}${hospitalId}/${userId}`, this.httpHeader);
   }
 
-  GetListMasterAssets(data: SortAndFilterMasterAssetVM, pageNumber: number, pageSize: number): Observable<MainClass> {
-    return this.httpClient.post<MainClass>(`${environment.GetListMasterAsset}${pageNumber}/${pageSize}`, data, this.httpHeader);
+  GetListMasterAssets(first:number,rows:number,SortFiled:string ,sortOrder:number,searchObj:any): Observable<MainClass> {
+
+    var searchSortObj={SortFiled,sortOrder,searchObj};
+    return this.httpClient.post<MainClass>(`${environment.GetListMasterAsset}${first}/${rows}`, searchSortObj, this.httpHeader);
   }
 
   CountMasterAssets(): Observable<number> {
