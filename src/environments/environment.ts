@@ -17,6 +17,7 @@ export const environment = {
   GetRoleCategoryById: "http://localhost:24813/api/RoleCategory/GetById/",
   UpdateRoleCategory: "http://localhost:24813/api/RoleCategory/UpdateRoleCategory",
   DeleteRoleCategory: "http://localhost:24813/api/RoleCategory/DeleteRoleCategory/",
+  GetMasterAssetIdByNameBrandModel: "http://localhost:24813/api/MasterAsset/GetMasterAssetIdByNameBrandModel/",
 
   SortRoleCategories: "http://localhost:24813/api/RoleCategory/SortRoleCategories/",
   GenerateRoleCategoryOrderId: "http://localhost:24813/api/RoleCategory/GenerateRoleCategoryOrderId",

@@ -31,7 +31,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 // import { ListboxModule } from 'primeng/listbox';
 // import { MultiSelectModule } from 'primeng/multiselect';
 // import { PickListModule } from 'primeng/picklist';
-// import { DialogModule } from 'primeng/dialog';
+ import { DialogModule } from 'primeng/dialog';
  import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
  import { TooltipModule } from 'primeng/tooltip';
 import { AppRoutingModule } from './app-routing.module';
@@ -104,8 +104,6 @@ import { BrandsRoutingModule } from './Features/brands/brands-routing.module';
 // import { RequestTypesRoutingModule } from './Features/request-types/request-types-routing.module';
 // import { ProblemsModule } from './Features/problems/problems.module';
 // import { ProblemsRoutingModule } from './Features/problems/problems-routing.module';
-import { SuppliersModule } from './Features/suppliers/suppliers.module';
-import { SuppliersRoutingModule } from './Features/suppliers/suppliers-routing.module';
 import { DepartmentsModule } from './Features/departments/departments.module';
 import { DepartmentsRoutingModule } from './Features/departments/departments-routing.module';
 // import { RequestStatusModule } from './Features/request-status/request-status.module';
@@ -137,8 +135,6 @@ import { BadgeModule } from 'primeng/badge';
 import { InputTextModule } from 'primeng/inputtext';
 // import { HospitalExecludesModule } from './Features/hospital-execludes/hospital-execludes.module';
 // import { HospitalExecludesRoutingModule } from './Features/hospital-execludes/hospital-execludes-routing.module';
-import { MemberExcludesModule } from './Features/member-excludes/member-excludes.module';
-import { MemberExcludesRoutingModule } from './Features/member-excludes/member-excludes-routing.module';
 import { DropdownModule } from 'primeng/dropdown';
 import { FileUploadModule } from 'primeng/fileupload';
 // import { A11yModule } from '@angular/cdk/a11y';
@@ -209,6 +205,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
   MatInputModule,
     // A11yModule,
     TableModule,
+    DynamicDialogModule ,
      NgxUiLoaderModule,
      FileUploadModule,
      DropdownModule,
@@ -217,7 +214,8 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
      MatBadgeModule,
      InputTextModule,
      FloatLabelModule,
-
+     DynamicDialogModule,
+     DialogModule,
     // MatProgressSpinnerModule,
     TranslateModule.forRoot({
       loader: {
@@ -232,16 +230,12 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
     // }),
     DepartmentsRoutingModule,
     DepartmentsModule,
-    SuppliersRoutingModule,
-    SuppliersModule,
      AuthenticateModule,
      AuthenticateRoutingModule,
     LayoutModule,
     LayoutRoutingModule,
     DashboardModule,
     DashboardRoutingModule,
-    MemberExcludesModule,
-    MemberExcludesRoutingModule,
     MatListModule,
     MatMenuModule,
     MatButtonModule,
@@ -279,7 +273,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
      DialogService,
        ConfirmationService, DatePipe,
-       AuthGuard,
+       AuthGuard 
   ],
   bootstrap: [AppComponent],
 

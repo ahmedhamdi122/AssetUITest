@@ -1,8 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+
+import { ChangeDetectorRef,Component , Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { DialogService, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { AssetDetailVM, MainClass, EditAssetDetailVM, ListAssetDetailVM, SearchHospitalAssetVM, SortAssetDetailVM, SortAndFilterVM } from 'src/app/Shared/Models/assetDetailVM';
 import { ListBrandVM } from 'src/app/Shared/Models/brandVM';
 import { ListDepartmentVM } from 'src/app/Shared/Models/departmentVM';
@@ -18,33 +20,32 @@ import { LoggedUser } from 'src/app/Shared/Models/userVM';
 import { AssetDetailService } from 'src/app/Shared/Services/assetDetail.service';
 import { BrandService } from 'src/app/Shared/Services/brand.service';
 import { CityService } from 'src/app/Shared/Services/city.service';
+import { GovernorateService } from 'src/app/Shared/Services/governorate.service';
+import { HospitalService } from 'src/app/Shared/Services/hospital.service';
 import { OrganizationService } from 'src/app/Shared/Services/organization.service';
 import { OriginService } from 'src/app/Shared/Services/origin.service';
 import { SubOrganizationService } from 'src/app/Shared/Services/subOrganization.service';
 import { SupplierService } from 'src/app/Shared/Services/supplierService.service';
-import { CreateComponent } from '../create/create.component';
-import { DeleteconfirmationComponent } from '../deleteconfirmation/deleteconfirmation.component';
-import { EditComponent } from '../edit/edit.component';
-import { ViewComponent } from '../view/view.component';
-//  import pdfMake from 'pdfmake/build/pdfmake';
-//  import pdfFonts from 'pdfmake/build/vfs_fonts';
-//  pdfMake.vfs = pdfFonts.pdfMake.vfs;
- import * as fs from 'file-saver';
+// import { CreateComponent } from '../create/create.component';
+// import { DeleteconfirmationComponent } from '../deleteconfirmation/deleteconfirmation.component';
+// import { EditComponent } from '../edit/edit.component';
+// import { ViewComponent } from '../view/view.component';
+// import pdfMake from 'pdfmake/build/pdfmake';
+// import pdfFonts from 'pdfmake/build/vfs_fonts';
+// pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { AuthenticationService } from 'src/app/Shared/Services/guards/authentication.service';
+// import { CreaterequestComponent } from '../../requests/createrequest/createrequest.component';
 import { ListAssetStatusVM } from 'src/app/Shared/Models/assetStatusVM';
 import { AssetStatusService } from 'src/app/Shared/Services/assetStatus.service';
 import { Workbook } from 'exceljs';
 import { DatePipe } from '@angular/common';
+import * as fs from 'file-saver';
 import { DepartmentService } from 'src/app/Shared/Services/department.service';
 import { ListMasterAssetVM } from 'src/app/Shared/Models/masterAssetVM';
 import { MasterAssetService } from 'src/app/Shared/Services/masterAsset.service';
 import { Table } from 'primeng/table';
-import { DetailsComponent } from '../details/details.component';
+// import { DetailsComponent } from '../details/details.component';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
-import { GovernorateService } from 'src/app/Shared/Services/governorate.service';
-import { HospitalService } from 'src/app/Shared/Services/hospital.service';
-import { ConfirmationService } from 'primeng/api';
-import { DialogService } from 'primeng/dynamicdialog';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -188,8 +189,8 @@ export class ListComponent implements OnInit {
 
   showTitle: boolean = false;
 
-  constructor(public dialogService: DialogService, private dialog: MatDialog, private masterAssetService: MasterAssetService,private confirmationService:ConfirmationService
-   , private authenticationService: AuthenticationService, private assetStatusService: AssetStatusService,
+  constructor(public dialogService: DialogService, private dialog: MatDialog, private masterAssetService: MasterAssetService,
+    private authenticationService: AuthenticationService, private assetStatusService: AssetStatusService,
     private activeRoute: ActivatedRoute, private cdr: ChangeDetectorRef,
     private assetDetailService: AssetDetailService, private governorateService: GovernorateService, private cityService: CityService,
     private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService,
@@ -260,11 +261,12 @@ export class ListComponent implements OnInit {
     if (this.sortFilterObjects.searchObj.hospitalId != 0) {
       this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
     }
+
     this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
       this.lstStatuses = statuses.listStatus;
 
 
-      console.log("statuses",statuses)
+ 
       this.countNeedRepair = statuses.countNeedRepair
       this.countInActive = statuses.countInActive;
       this.countWorking = statuses.countWorking;
@@ -919,22 +921,23 @@ export class ListComponent implements OnInit {
   //   }
   // }
   viewAsset(id: number) {
-    const ref = this.dialogService.open(ViewComponent, {
-      header: this.lang == "en" ? 'View Hospital Asset' : "بيانات أصل في المستشفى",
-      data: {
-        id: id
-      },
-      width: '70%',
-      style: {
-        'dir': this.lang == "en" ? 'ltr' : "rtl",
-        "text-align": this.lang == "en" ? 'left' : "right",
-        "direction": this.lang == "en" ? 'ltr' : "rtl"
-      }
-    });
 
-    ref.onClose.subscribe(res => {
-      this.reset();
-    });
+    // const ref = this.dialogService.open(ViewComponent, {
+    //   header: this.lang == "en" ? 'View Hospital Asset' : "بيانات أصل في المستشفى",
+    //   data: {
+    //     id: id
+    //   },
+    //   width: '70%',
+    //   style: {
+    //     'dir': this.lang == "en" ? 'ltr' : "rtl",
+    //     "text-align": this.lang == "en" ? 'left' : "right",
+    //     "direction": this.lang == "en" ? 'ltr' : "rtl"
+    //   }
+    // });
+
+    // ref.onClose.subscribe(res => {
+    //   this.reset();
+    // });
   }
   onSearch() {
 
@@ -988,67 +991,60 @@ export class ListComponent implements OnInit {
     });
   }
   addAsset() {
-    const dialogRef2 = this.dialogService.open(CreateComponent, {
-      header: this.lang == "en" ? 'Add Hospital Asset' : "إضافة أصل في المستشفى",
-      width: '70%',
-      style: {
-        'dir': this.lang == "en" ? 'ltr' : "rtl",
-        "text-align": this.lang == "en" ? 'left' : "right",
-        "direction": this.lang == "en" ? 'ltr' : "rtl"
-      }
-    });
-    dialogRef2.onClose.subscribe((res) => {
-      this.reset();
-    });
+
+    // const dialogRef2 = this.dialogService.open(CreateComponent, {
+    //   header: this.lang == "en" ? 'Add Hospital Asset' : "إضافة أصل في المستشفى",
+    //   width: '70%',
+    //   style: {
+    //     'dir': this.lang == "en" ? 'ltr' : "rtl",
+    //     "text-align": this.lang == "en" ? 'left' : "right",
+    //     "direction": this.lang == "en" ? 'ltr' : "rtl"
+    //   }
+    // });
+    // dialogRef2.onClose.subscribe((res) => {
+    //   this.reset();
+    // });
   }
   deleteAsset(id: number) {
-    // this.assetDetailService.GetAssetById(id).subscribe((data) => {
-    //   this.selectedObj = data;
-    console.log("id :",id);
-      // const dialogRef2 = this.dialogService.open(DeleteconfirmationComponent, {
+    this.assetDetailService.GetAssetById(id).subscribe((data) => {
+      this.selectedObj = data;
+
+      // const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
       //   width: '30%',
-    
+      //   autoFocus: true,
       //   data: {
       //     id: this.selectedObj.id,
       //     name: this.selectedObj.assetName,
       //     nameAr: this.selectedObj.assetNameAr,
       //   },
       // });
-      
 
-      // dialogRef2.onClose.subscribe(deleted => {
+      // dialogRef2.afterClosed().subscribe(deleted => {
       //   this.reset();
       // });
 
-      this.confirmationService.confirm({
-        message: 'Are you sure that you want to proceed?',
-        header: 'Confirmation',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => { console.log("accept");},
-        reject: () => { console.log("reject")}
     });
-
-    // });
 
   }
   editAsset(id: number) {
-    const ref = this.dialogService.open(EditComponent, {
-      header: this.lang == "en" ? 'Edit Hospital Asset' : "تعديل الأصل في المستشفى",
-      closable: true,
-      width: '70%',
-      data: {
-        id: id,
-        pageNumber: this.page.pagenumber,
-        pageSize: this.page.pagesize
-      },
-      style: {
-        'dir': this.lang == "en" ? 'ltr' : "rtl",
-        "text-align": this.lang == "en" ? 'left' : "right",
-        "direction": this.lang == "en" ? 'ltr' : "rtl"
-      }
-    });
-    ref.onClose.subscribe((page) => {
-    });
+    //const ref = this.dialogService.open(EditComponent, {
+    //   header: this.lang == "en" ? 'Edit Hospital Asset' : "تعديل الأصل في المستشفى",
+    //   closable: true,
+    //   width: '70%',
+    //   data: {
+    //     id: id,
+    //     pageNumber: this.page.pagenumber,
+    //     pageSize: this.page.pagesize
+    //   },
+    //   style: {
+    //     'dir': this.lang == "en" ? 'ltr' : "rtl",
+    //     "text-align": this.lang == "en" ? 'left' : "right",
+    //     "direction": this.lang == "en" ? 'ltr' : "rtl"
+    //   }
+    // });
+    // ref.onClose.subscribe((page) => {
+    //   this.reset();
+    // });
   }
   sort(event) {
 
@@ -1074,6 +1070,24 @@ export class ListComponent implements OnInit {
       this.loading = false;
     });
 
+  }
+  addServiceRequest(assetId: number) {
+
+    // const dialogRef2 = this.dialogService.open(CreaterequestComponent, {
+    //   data: {
+    //     assetId: assetId
+    //   },
+    //   width: '50%',
+    //   style: {
+    //     'dir': this.lang == "en" ? 'ltr' : "rtl",
+    //     "text-align": this.lang == "en" ? 'left' : "right",
+    //     "direction": this.lang == "en" ? 'ltr' : "rtl"
+    //   }
+    // });
+
+    // dialogRef2.onClose.subscribe((res) => {
+    //   this.reset();
+    // });
   }
   addExcludeHoldAsset(assetId: number) {
     this.router.navigate(['/dash/hospitalexecludes/addhospitalassetexeclude', assetId])
@@ -1556,24 +1570,25 @@ export class ListComponent implements OnInit {
     this.warrantyTypeRadio = false;
   }
   viewDetail(id: number) {
-    const dialogRef2 = this.dialogService.open(DetailsComponent, {
-      header: this.lang == "en" ? "Asset Details" : "بيانات الأصل",
-      data: {
-        id: id
-      },
-      width: '75%',
-      style: {
-        'dir': this.lang == "en" ? 'ltr' : "rtl",
-        "text-align": this.lang == "en" ? 'left' : "right",
-        "direction": this.lang == "en" ? 'ltr' : "rtl",
-        "font-family": "sans-serif",
-        "font-size": 40
-      }
-    });
 
-    dialogRef2.onClose.subscribe((res) => {
-      // this.reload();
-    });
+    // const dialogRef2 = this.dialogService.open(DetailsComponent, {
+    //   header: this.lang == "en" ? "Asset Details" : "بيانات الأصل",
+    //   data: {
+    //     id: id
+    //   },
+    //   width: '75%',
+    //   style: {
+    //     'dir': this.lang == "en" ? 'ltr' : "rtl",
+    //     "text-align": this.lang == "en" ? 'left' : "right",
+    //     "direction": this.lang == "en" ? 'ltr' : "rtl",
+    //     "font-family": "sans-serif",
+    //     "font-size": 40
+    //   }
+    // });
+
+    // dialogRef2.onClose.subscribe((res) => {
+    //   // this.reload();
+    // });
 
   }
   reload() {

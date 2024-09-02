@@ -207,45 +207,23 @@ export class CountMasterAssetBySupplierVM {
 }
 
 
-
-export class SearchMasterAssetVM {
-
-    originId: number;
-    brandId: number;
-    ecriId: number;
-    categoryId: number;
-    subCategoryId: number;
+export class SearchSortMasterAssetVM {
+    sortOrder: number;
+    sortFiled: string;
+    eCRIId?: number;
+    originId?: number;
+    brandId?: number;
+    categoryId?: number;
+    subCategoryId?: number;
+    code: string;
+    modelNumber: string;
     assetName: string;
     assetNameAr: string;
-    modelNumber: string;
-    code: string;
-}
+  }
 
-export class SortMasterAssetVM {
 
-    originName: string;
-    originNameAr: string;
-    brandName: string;
-    brandNameAr: string;
-    ecriName: string;
-    ecriNameAr: string;
-    categoryName: string;
-    categoryNameAr: string;
-    subCategoryName: string;
-    subCategoryNameAr: string;
-    assetName: string;
-    assetNameAr: string;
-    modelNumber: string;
-    code: string;
-    sortStatus: string;
-    sortBy: string;
-}
 export class MainClass {
     results: ListMasterAssetVM[];
     count: number;
 }
 
-export class SortAndFilterMasterAssetVM {
-    sortObj: SortMasterAssetVM;
-    searchObj: SearchMasterAssetVM;
-}

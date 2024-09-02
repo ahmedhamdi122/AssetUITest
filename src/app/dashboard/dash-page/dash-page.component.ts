@@ -16,12 +16,8 @@ export class DashPageComponent implements OnInit {
   lang = localStorage.getItem('lang');
   currentUser: LoggedUser;
   textDir: string = 'rtl';
-
-
   constructor(private authenticationService: AuthenticationService, private router: Router) {
-
     this.currentUser = this.authenticationService.currentUserValue;
-
     if (localStorage.getItem('lang') == null) {
       // this.lang == 'en';
       // this.textDir = 'ltr';

@@ -12,7 +12,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ToastModule } from 'primeng/toast';
-
 import { ListComponent } from './list/list.component';
 import { CreateComponent } from './create/create.component';
 import { EditComponent } from './edit/edit.component';
@@ -27,6 +26,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageService } from 'primeng/api';
 import { LoadingSpinnerComponent } from 'src/app/Shared/loading-spinner/loading-spinner.component';
+import { DialogService ,DynamicDialogModule} from 'primeng/dynamicdialog'; // Import DynamicDialogService
 
 @NgModule({
   declarations: [
@@ -60,7 +60,7 @@ import { LoadingSpinnerComponent } from 'src/app/Shared/loading-spinner/loading-
     RadioButtonModule,
     ToastModule,
   ],
-  providers:[MessageService]
+  providers:[MessageService,DialogService]
 })
 export class MasterAssetsModule { }
 

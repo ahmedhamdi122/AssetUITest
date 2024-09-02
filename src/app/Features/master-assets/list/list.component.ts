@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ListBrandVM } from 'src/app/Shared/Models/brandVM';
 import { ListECRIVM } from 'src/app/Shared/Models/ecriVM';
-import { ListMasterAssetVM, MasterAssetVM, SortAndFilterMasterAssetVM } from 'src/app/Shared/Models/masterAssetVM';
+import { ListMasterAssetVM, MasterAssetVM, SearchSortMasterAssetVM } from 'src/app/Shared/Models/masterAssetVM';
 import { ListOriginVM } from 'src/app/Shared/Models/originVM';
 import { Paging } from 'src/app/Shared/Models/paging';
 import { LoggedUser } from 'src/app/Shared/Models/userVM';
@@ -23,6 +23,7 @@ import { AuthenticationService } from 'src/app/Shared/Services/guards/authentica
 import { Table } from 'primeng/table';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -52,19 +53,26 @@ export class ListComponent implements OnInit {
   isAdmin: boolean = false;
   isHospitalManager: boolean = false;
   canAddMasterAsset: boolean = false;
-  sortFilterObjects: SortAndFilterMasterAssetVM;
+  SearchSortMasterAsset: SearchSortMasterAssetVM;
   @ViewChild('dt2') dataTable: Table;
   selectedMasterAssetName: any;
   constructor(    private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
-    private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
+    private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService,private ngxService:NgxUiLoaderService) { this.currentUser = this.authenticationService.currentUserValue; }
   ngOnInit(): void {
-    this.sortFilterObjects = {
-      searchObj: { assetNameAr: '', assetName: '', brandId: 0, ecriId: 0, modelNumber: '', originId: 0, categoryId: 0, subCategoryId: 0, code: '' },
-      sortObj: {
-        assetNameAr: '', assetName: '', brandName: '', brandNameAr: '', ecriName: '', ecriNameAr: '', sortBy: '',
-        modelNumber: '', originName: '', originNameAr: '', categoryName: '', categoryNameAr: '', subCategoryName: '', subCategoryNameAr: '', code: '', sortStatus: ''
-      }
+    this.SearchSortMasterAsset = {
+        sortOrder: 0,
+        sortFiled: null,
+        eCRIId: 0,
+        originId: 0,
+        brandId:0, 
+        categoryId: 0,
+        subCategoryId: 0,
+        code: null,
+        modelNumber:null,
+        assetName: null,
+        assetNameAr: null
+      
     };
   
     const translationKeys = ['Asset.Assets', 'Asset.MasterAssets']; // Array of translation keys
@@ -103,25 +111,23 @@ export class ListComponent implements OnInit {
     this.brandService.GetBrands().subscribe(brands => {
       this.lstBrands = brands;
     });
-
-  
-
-
- 
   }
   LoadMasterAssets(event) {
+    this.ngxService.start('loading');
     console.log("event :",event)
     console.log(" fisrt :",event.first);
       console.log("rows :", event.rows);
       console.log("sortField: ",event.sortField);                                                                              
       console.log("sortField: ",event.sortOrder);    
-       
-    
-      this.masterAssetService.GetListMasterAssets(event.first, event.rows,event.sortField ,event.sortOrder,this.sortFilterObjects.searchObj).subscribe((items) => {
+    this.SearchSortMasterAsset.sortOrder=event.sortOrder;
+    this.SearchSortMasterAsset.sortFiled=event.sortField;
+    console.log("SearchSortMasterAsset:",this.SearchSortMasterAsset)
+      this.masterAssetService.GetListMasterAssets(event.first, event.rows,this.SearchSortMasterAsset).subscribe((items) => {
       this.lstMasterAssets = items.results;     
       console.log("list : ",items.results)                                               
       this.count = items.count;
        this.isLoading = false;
+       this.ngxService.stop('loading');
     },error=>{
       this.isLoading = false;
     }
@@ -129,37 +135,34 @@ export class ListComponent implements OnInit {
   
 }
   onSearch() {
-    this.lstMasterAssets = [];
-    this.count = 0;
-    this.first = 1;
-   
-   // this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-   this.isLoading = true;
-    this.masterAssetService.GetListMasterAssets(this.first,this.rows,null,1,this.sortFilterObjects.searchObj).subscribe((items) => {
+    if( this.SearchSortMasterAsset.brandId === 0 &&
+      this.SearchSortMasterAsset.originId === 0 &&
+      this.SearchSortMasterAsset.categoryId === 0 &&
+      this.SearchSortMasterAsset.subCategoryId === 0 &&
+      (this.SearchSortMasterAsset.modelNumber === "" || this.SearchSortMasterAsset.modelNumber === null) &&
+      (this.SearchSortMasterAsset.assetName === "" || this.SearchSortMasterAsset.assetName === null))
+    {
+      this.errorDisplay=true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please enter a search term before clicking 'Search'.";
+        }
+        else {
+          this.errorMessage = "'يرجى الادخال قبل النقر على 'بحث";
+        }
+        return ;
+     }
+    this.first = 0;
+    this.rows=10;
+   this.ngxService.start('loading');
+   console.log("SearchSortMasterAsset :",this.SearchSortMasterAsset)
+   this.SearchSortMasterAsset.modelNumber=this.SearchSortMasterAsset.modelNumber?.trim() ?? ''
+   this.SearchSortMasterAsset.assetName=this.SearchSortMasterAsset.assetName?.trim() ?? ''
+   this.masterAssetService.GetListMasterAssets(this.first,this.rows,this.SearchSortMasterAsset).subscribe((items) => {
       this.lstMasterAssets = items.results;
       this.count = items.count;
-      this.isLoading = false;
+      this.ngxService.stop('loading');
     });
   }
-  // sort(field) {
-
-  //   if (this.sortStatus == "descending") {
-  //     this.sortStatus = "ascending";
-  //     this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-  //   }
-  //   else {
-  //     this.sortStatus = "descending";
-  //     this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-  //   }
-
-  //   this.sortFilterObjects.sortObj.sortBy = field.currentTarget.id;
-  //   this.masterAssetService.GetListMasterAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe((items) => {
-  //     this.lstMasterAssets = items.results;
-  //     this.count = items.count;
-  //     this.loading = false;
-  //   });
-
-  // }
   addMasterAsset() {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Master Asset' : "بيان إضافة أصل جديد",
@@ -236,10 +239,10 @@ export class ListComponent implements OnInit {
     });
   }
   reload() {
-    let currentUrl = this.route.url;
-    this.route.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.route.onSameUrlNavigation = 'reload';
-    this.route.navigate([currentUrl]);
+    const currentUrl = this.route.url;
+    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.route.navigate([currentUrl]);
+    });
   }
   GetSubCategoryByCategoryId($event) {
     this.subCategoryService
@@ -249,23 +252,35 @@ export class ListComponent implements OnInit {
       });
   }
   clearSearch() {
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    this.sortFilterObjects.searchObj.originId = 0;
-    this.sortFilterObjects.searchObj.brandId = 0;
-    this.sortFilterObjects.searchObj.categoryId = 0;
-    this.sortFilterObjects.searchObj.subCategoryId = 0;
-    this.sortFilterObjects.searchObj.modelNumber = '';
-    this.sortFilterObjects.searchObj.assetName = "";
-    this.sortFilterObjects.searchObj.assetNameAr = "";
-    this.selectedMasterAssetName = null;
+    console.log("search obj :",this.SearchSortMasterAsset)
+  
+    if( this.SearchSortMasterAsset.brandId === 0 &&
+      this.SearchSortMasterAsset.originId === 0 &&
+      this.SearchSortMasterAsset.categoryId === 0 &&
+      this.SearchSortMasterAsset.subCategoryId === 0 &&
+      (this.SearchSortMasterAsset.modelNumber === "" || this.SearchSortMasterAsset.modelNumber === null) &&
+      (this.SearchSortMasterAsset.assetName === "" || this.SearchSortMasterAsset.assetName === null))
+      {
+        this.errorDisplay=true;
+          if (this.lang == "en") {
+            this.errorMessage = "No data to clear.";
+          }
+          else {
+            this.errorMessage = ".لا يوجد بيانات للحذف";
+          }
+          return ;
+       }
+    this.SearchSortMasterAsset.originId = 0;
+    this.SearchSortMasterAsset.brandId = 0;
+    this.SearchSortMasterAsset.categoryId = 0;
+    this.SearchSortMasterAsset.subCategoryId = 0;
+    this.SearchSortMasterAsset.modelNumber = '';
+    this.SearchSortMasterAsset.assetName = "";
+    this.SearchSortMasterAsset.assetNameAr = "";
+    this.SearchSortMasterAsset = null;
     this.lstMasterAssets = [];
     this.count = 0;
-    //this.dataTable.first = 1;
-    // this.masterAssetService.GetListMasterAssets(this.sortFilterObjects, 1, 10).subscribe((items) => {
-    //   this.lstMasterAssets = items.results;
-    //   this.count = items.count;
-    //   this.loading = false;
-    // });
+    this.reload();
   }
   // onPageChange(event: any) {
   //   this.page.pagenumber = (event.first + 10) / 10;
@@ -285,15 +300,15 @@ export class ListComponent implements OnInit {
 
   getMasterAssetObject(event) {
     if (this.lang == 'en')
-      this.sortFilterObjects.searchObj.assetName = event["name"];
+      this.SearchSortMasterAsset.assetName = event["name"];
     else
-      this.sortFilterObjects.searchObj.assetNameAr = event["nameAr"];
+      this.SearchSortMasterAsset.assetNameAr = event["nameAr"];
 
   }
   clearAutoCompelete(event) {
     this.selectedMasterAssetName = null;
-    this.sortFilterObjects.searchObj.assetName = "";
-    this.sortFilterObjects.searchObj.assetNameAr = "";
+    this.SearchSortMasterAsset.assetName = "";
+    this.SearchSortMasterAsset.assetNameAr = "";
   }
 }
 

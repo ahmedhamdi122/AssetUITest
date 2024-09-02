@@ -1,9 +1,0 @@
-.mat-list-test {
-  display: flex !important;
-  flex-flow: row wrap;
-}
-
-.mat-list-base .mat-list-item.mat-list-item-test {
-  display: initial;
-  width: auto;
-}

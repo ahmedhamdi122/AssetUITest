@@ -8,14 +8,14 @@ import { LoggedUser } from 'src/app/Shared/Models/userVM';
 import { BrandService } from 'src/app/Shared/Services/brand.service';
 import { AuthenticationService } from 'src/app/Shared/Services/guards/authentication.service';
 import { DeleteBrandConfirmationComponent } from '../delete-brand-confirmation/delete-brand-confirmation.component';
-import { Workbook } from 'exceljs';
+// import { Workbook } from 'exceljs';
 import { DatePipe } from '@angular/common';
 import * as fs from 'file-saver';
 import { environment } from 'src/environments/environment';
 import { CreateComponent } from '../create/create.component';
 import { EditComponent } from '../edit/edit.component';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
-import { ListComponent } from '../../hospital-assets/list/list.component';
+// import { ListComponent } from '../../hospital-assets/list/list.component';
 
 @Component({
   selector: 'app-list-brand',
@@ -140,65 +140,65 @@ export class ListBrandComponent implements OnInit {
     });
   }
   viewBrandAssets(brandId: number) {
-    this.brandService.GetBrandById(brandId).subscribe(brandObj => {
-      this.brandName = this.lang == "en" ? brandObj["name"] : brandObj["nameAr"];
-      const ref = this.dialogService.open(ListComponent, {
-        header: this.lang == "en" ? 'Assets for this Brand' + " - " + this.brandName : "الأصول لهذه الماركة" + " - " + this.brandName,
-        data: {
-          brandId: brandId
-        },
-        style: {
-          'dir': this.lang == "en" ? 'ltr' : "rtl",
-          "text-align": this.lang == "en" ? 'left' : "right",
-          "direction": this.lang == "en" ? 'ltr' : "rtl"
-        }
-      });
-      ref.onClose.subscribe(res => {
-        this.reload();
-      });
-    });
+    // this.brandService.GetBrandById(brandId).subscribe(brandObj => {
+    //   this.brandName = this.lang == "en" ? brandObj["name"] : brandObj["nameAr"];
+    //   const ref = this.dialogService.open(ListComponent, {
+    //     header: this.lang == "en" ? 'Assets for this Brand' + " - " + this.brandName : "الأصول لهذه الماركة" + " - " + this.brandName,
+    //     data: {
+    //       brandId: brandId
+    //     },
+    //     style: {
+    //       'dir': this.lang == "en" ? 'ltr' : "rtl",
+    //       "text-align": this.lang == "en" ? 'left' : "right",
+    //       "direction": this.lang == "en" ? 'ltr' : "rtl"
+    //     }
+    //   });
+    //   ref.onClose.subscribe(res => {
+    //     this.reload();
+    //   });
+    // });
   }
   exportExcel() {
-    let workbook = new Workbook();
-    let worksheet = workbook.addWorksheet('Assets Statuses');
-    if (this.lang == "en") {
-      worksheet.columns = [
-        { header: 'Code', key: 'code' },
-        { header: 'name', key: 'name' },
-        { header: 'nameAr', key: 'nameAr' }
-      ];
-      this.allBrands.forEach(e => {
-        worksheet.addRow({
-          code: e.code,
-          name: e.name,
-          nameAr: e.nameAr
-        }, "n");
-      });
-      workbook.xlsx.writeBuffer().then((lstBrands) => {
-        let blob = new Blob([lstBrands], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        var today = this.datePipe.transform(new Date(), "dd/MM/yyyy_HH:mm:ss");
-        fs.saveAs(blob, 'Brands_' + today + '.xlsx');
-      });
-    }
-    else {
-      worksheet.columns = [
-        { header: 'الكود', key: 'code', width: 50 },
-        { header: 'الاسم', key: 'name', width: 15 },
-        { header: 'الاسم بالعربي', key: 'nameAr', width: 20 }
-      ];
-      this.allBrands.forEach(e => {
-        worksheet.addRow({
-          code: e.code,
-          name: e.name,
-          nameAr: e.nameAr
-        }, "n");
-      });
-      workbook.xlsx.writeBuffer().then((lstBrands) => {
-        let blob = new Blob([lstBrands], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        var today = this.datePipe.transform(new Date(), "dd/MM/yyyy_HH:mm:ss");
-        fs.saveAs(blob, 'Brands_' + today + '.xlsx');
-      });
-    }
+    // let workbook = new Workbook();
+    // let worksheet = workbook.addWorksheet('Assets Statuses');
+    // if (this.lang == "en") {
+    //   worksheet.columns = [
+    //     { header: 'Code', key: 'code' },
+    //     { header: 'name', key: 'name' },
+    //     { header: 'nameAr', key: 'nameAr' }
+    //   ];
+    //   this.allBrands.forEach(e => {
+    //     worksheet.addRow({
+    //       code: e.code,
+    //       name: e.name,
+    //       nameAr: e.nameAr
+    //     }, "n");
+    //   });
+    //   workbook.xlsx.writeBuffer().then((lstBrands) => {
+    //     let blob = new Blob([lstBrands], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //     var today = this.datePipe.transform(new Date(), "dd/MM/yyyy_HH:mm:ss");
+    //     fs.saveAs(blob, 'Brands_' + today + '.xlsx');
+    //   });
+    // }
+    // else {
+    //   worksheet.columns = [
+    //     { header: 'الكود', key: 'code', width: 50 },
+    //     { header: 'الاسم', key: 'name', width: 15 },
+    //     { header: 'الاسم بالعربي', key: 'nameAr', width: 20 }
+    //   ];
+    //   this.allBrands.forEach(e => {
+    //     worksheet.addRow({
+    //       code: e.code,
+    //       name: e.name,
+    //       nameAr: e.nameAr
+    //     }, "n");
+    //   });
+    //   workbook.xlsx.writeBuffer().then((lstBrands) => {
+    //     let blob = new Blob([lstBrands], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //     var today = this.datePipe.transform(new Date(), "dd/MM/yyyy_HH:mm:ss");
+    //     fs.saveAs(blob, 'Brands_' + today + '.xlsx');
+    //   });
+    // }
   }
   exportPDF() {
     this.brandService.CreateBrandPDF(this.lang).subscribe(list => {

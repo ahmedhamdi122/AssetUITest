@@ -1,98 +1,97 @@
 <div class="col-12" id="non-printable">
-    <div class="row top-buffer p-3">
+    <div class="row mt-3">
         <div class="col-3" *ngIf="showTitle">
             <h4 class="card-title"> {{'Asset.HospitalAssets' | translate }} </h4>
         </div>
-        <div class="col-2"></div>
-
         <div class="col-3">
-            <button class="btn" (click)="exportExcel()" pTooltip="{{'Asset.ExportExcel'| translate}}"
-            tooltipPosition="top"><i class="pi pi-file-excel" style="color:green;font-size: 2.5rem;"></i>
-             <!-- <i class="pi pi-excel"></i> -->
-            </button>
+            <button class="btn excelIcon" (click)="exportExcel()" pTooltip="{{'Asset.ExportExcel'| translate}}"
+            tooltipPosition="top"> <i class="pi pi-file-excel"></i></button>
         <button class="btn pdfIcon" (click)="printSelectedColumns()" pTooltip="{{'Asset.ExportPdf'| translate}}"
-            tooltipPosition="top"><i class="pi pi-file-pdf" style="color:red;font-size: 2.5rem;"></i>
-             <!-- <i class="fa-solid fa-columns fa-2xl"></i> -->
-            </button>
+            tooltipPosition="top"> <i class="pi pi-file-pdf"></i></button>
         </div>
-        
+
+        <div class="col-2"></div>
         <div class="col-2">
             <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true"
                 aria-controls="collapseExample" class="filterbutton">
-                <i class="pi pi-filter-fill" style="font-size: 1.5rem"></i>
-                 {{'Asset.Filter'|translate}}</a>
+                <i class="fa-solid fa-filter"></i> {{'Asset.Filter'|translate}}</a>
         </div>
         <div class="col-2">
-            <a class="addbutton" *ngIf="showAdd" (click)="addAsset()"> <i class="pi pi-plus-circle"> {{'Asset.Create'|translate}}</i></a>
+            <a class="addbutton" *ngIf="showAdd" (click)="addAsset()"><i class="fa-solid fa-plus"></i> {{'Asset.Create'|
+                translate}}</a>
         </div>
+
     </div>
     <div class="row top-buffer">
+
         <div class="col-10">
-            <mat-list role="list" name="lstStatusItems">
+            <!-- <mat-list role="list" name="lstStatusItems">
                 <mat-list-item class="mat-list-item" role="listitem">
-                    <button mat-stroked-button name="btnAll" pBadge [value]="totalCount"
+                    <button mat-stroked-button name="btnAll" [matBadge]="totalCount"
                         (click)="getHospitalAssetsByStatusId(0)" class="btnclicked">{{'Asset.All' | translate
                         }}</button>
                 </mat-list-item>
                 <mat-list-item class="mat-list-item" role="listitem" *ngFor="let sts of lstStatuses">
-                    <button *ngIf="sts.id===1" mat-stroked-button name="btn{{sts.id}}" class="btnclicked" 
-                         pBadge [value]="countNeedRepair" (click)="getHospitalAssetsByStatusId(sts.id)"
+                    <button *ngIf="sts.id===1" mat-stroked-button name="btn{{sts.id}}" class="btnclicked"
+                        [matBadge]="countNeedRepair" (click)="getHospitalAssetsByStatusId(sts.id)"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
-                    <button *ngIf="sts.id === 2" mat-stroked-button   pBadge [value]="countInActive" class="btnclicked"
+                    <button *ngIf="sts.id === 2" mat-stroked-button [matBadge]="countInActive" class="btnclicked"
                         (click)="getHospitalAssetsByStatusId(sts.id)" [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
-                    <button *ngIf="sts.id === 3" mat-stroked-button   pBadge [value]="countWorking" class="btnclicked"
+
+                    <button *ngIf="sts.id === 3" mat-stroked-button [matBadge]="countWorking" class="btnclicked"
                         autofocus (click)="getHospitalAssetsByStatusId(sts.id)" [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
-                    <button *ngIf="sts.id === 4" mat-stroked-button   pBadge [value]="countUnderMaintenance"
+
+                    <button *ngIf="sts.id === 4" mat-stroked-button [matBadge]="countUnderMaintenance"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 5" mat-stroked-button  pBadge [value]="countUnderInstallation"
+                    <button *ngIf="sts.id === 5" mat-stroked-button [matBadge]="countUnderInstallation"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 6" mat-stroked-button   pBadge [value]="countNotWorking"
+                    <button *ngIf="sts.id === 6" mat-stroked-button [matBadge]="countNotWorking"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 7" mat-stroked-button   pBadge [value]="countShutdown"
+                    <button *ngIf="sts.id === 7" mat-stroked-button [matBadge]="countShutdown"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 8" mat-stroked-button    pBadge [value]="countExecluded"
+                    <button *ngIf="sts.id === 8" mat-stroked-button [matBadge]="countExecluded"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
 
-                    <button *ngIf="sts.id === 9" mat-stroked-button   pBadge [value]="countHold"
+                    <button *ngIf="sts.id === 9" mat-stroked-button [matBadge]="countHold"
                         (click)="getHospitalAssetsByStatusId(sts.id)" class="btnclicked"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
-                    <button *ngIf="sts.id ===10" mat-stroked-button    pBadge [value]="lstStatus10" (click)="getHospitalAssetsByStatusId(sts.id)"
+                    <button *ngIf="sts.id ===10" mat-stroked-button  [matBadge]="lstStatus10" (click)="getHospitalAssetsByStatusId(sts.id)"
                         [ngStyle]="{'color': sts.color}" class="btnclicked">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
@@ -100,7 +99,7 @@
 
 
 
-                    <button *ngIf="sts.id ===11" mat-stroked-button   pBadge [value]="lstStatus11" (click)="getHospitalAssetsByStatusId(sts.id)"
+                    <button *ngIf="sts.id ===11" mat-stroked-button [matBadge]="lstStatus11" (click)="getHospitalAssetsByStatusId(sts.id)"
                         [ngStyle]="{'color': sts.color}" class="btnclicked">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
@@ -154,7 +153,7 @@
                         {{lang=="en"?sts.name:sts.nameAr}}
                     </button>
                 </mat-list-item>
-            </mat-list>
+            </mat-list> -->
         </div>
 
         <div class="col-2">
@@ -319,13 +318,13 @@
                         <h5>{{ "Asset.Contract" | translate }}:</h5>
                     </div>
                     <div class="col-4" *ngIf="contractTypeRadio">
-                        <div class="form-check form-check-inline" *ngFor="let cntrct of lstContractTypes">
+                        <!-- <div class="form-check form-check-inline" *ngFor="let cntrct of lstContractTypes">
                             <p-radioButton class="form-check-input" name="grpContractType" [value]="cntrct.id"
                                 [(ngModel)]="selectedContractType" (onClick)="onContractTypeChanged($event)">
                             </p-radioButton>
                             <label [for]="cntrct.id" class="form-check-label">{{lang == "en"
                                 ?cntrct.name:cntrct.nameAr}}</label>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-3 " *ngIf="contractDateSearch">
                         <label for="contractStart">{{'Asset.From' | translate }}</label>
@@ -348,13 +347,13 @@
                         <h5>{{ "Asset.Warranty" | translate }}:</h5>
                     </div>
                     <div class="col-4" *ngIf="warrantyTypeRadio">
-                        <div class="form-check form-check-inline" *ngFor="let wrnty of lstWarrantyType">
+                        <!-- <div class="form-check form-check-inline" *ngFor="let wrnty of lstWarrantyType">
                             <p-radioButton class="form-check-input" name="grpWrntyType" [value]="wrnty.id"
                                 (onClick)="onWarrantyTypeChanged($event)" [(ngModel)]="selectedWarrantyType">
                             </p-radioButton>
                             <label [for]="wrnty.id" class="form-check-label">{{lang == "en"
                                 ?wrnty.name:wrnty.nameAr}}</label>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-3" *ngIf="warrantyEndSearch">
                         <label for="start">{{'Asset.From' | translate }}</label>
@@ -377,11 +376,11 @@
                 <div class="row top-buffer">
                     <div class="col-10"></div>
                     <div class="col-1"> <button class="btn searchIcon" value="save" type="submit">
-                            <i class="fa-solid fa-magnifying-glass fa-2xl"></i>
+                            <i class="pi pi-search"></i>
                         </button></div>
                     <div class="col-1">
                         <button class="btn reset" value="Reset" type="button" (click)="clearSearch()">
-                            <i class="fa-solid fa-circle-xmark  fa-2xl"></i>
+                            <i class="pi pi-times-circle"></i>
                         </button>
                     </div>
                 </div>
@@ -476,13 +475,13 @@
                         </ng-container>
                         <td style="text-align: inherit;">
                             <span class="viewIcon" (click)="viewAsset(item.id)">
-                                <i class="fa-solid fa-eye"></i>
+                                <i class="pi pi-eye"style="color: green" pTooltip="Show Details"></i>
                             </span>
                             <span class="editIcon" (click)="editAsset(item.id)">
-                                <i class="fa-solid fa-edit"></i>
+                                <i  class="pi pi-pen-to-square" style="color: purple" pTooltip="Edit"></i>
                             </span>
                             <span class="deleteIcon" (click)="deleteAsset(item.id)">
-                                <i class="fa-solid fa-trash"></i>
+                                <i  class="pi pi-trash" style="color: red" pTooltip="Delete"></i>
                             </span>
                         </td>
                     </tr>

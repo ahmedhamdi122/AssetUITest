@@ -182,6 +182,7 @@ export class CreateAssetDetailVM {
     createdBy: string;
 }
 export class EditAssetDetailVM {
+    brandId:number;
     id: number;
     code: string;
     assetName: string;
@@ -191,6 +192,7 @@ export class EditAssetDetailVM {
     purchaseDate: string;
     remarks: string;
     barcode: string;
+    model:string;
     // purchaseDateString: string;
     // installationDateString: string;
     installationDate: string;

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { first, Observable } from 'rxjs';
-import { CountMasterAssetByBrandVM, CountMasterAssetBySupplierVM, CreateMasterAssetAttachmentVM, CreateMasterAssetVM, CreatePMAssetTaskVM, EditMasterAssetVM, ListMasterAssetVM, ListPMAssetTaskVM, MainClass, MasterAssetAttachmentVM, SearchMasterAssetVM, SortAndFilterMasterAssetVM, SortMasterAssetVM, ViewMasterAssetVM } from '../Models/masterAssetVM';
+import { CountMasterAssetByBrandVM, CountMasterAssetBySupplierVM, CreateMasterAssetAttachmentVM, CreateMasterAssetVM, CreatePMAssetTaskVM, EditMasterAssetVM, ListMasterAssetVM, ListPMAssetTaskVM, MainClass, MasterAssetAttachmentVM, SearchSortMasterAssetVM, ViewMasterAssetVM } from '../Models/masterAssetVM';
 import { environment } from 'src/environments/environment';
 import { ListPMTimeVM } from '../Models/pmTimeVM';
 import { Paging } from '../Models/paging';
 import { ListBrandVM } from '../Models/brandVM';
+import { searchObjMasterAssetVM } from '../Models/searchObjMasterAssetVM';
 
 
 
@@ -38,21 +39,14 @@ export class MasterAssetService {
   //   return this.httpClient.put<ListMasterAssetVM[]>(`${environment.getMasterAssetWithPaging}`, page, this.httpHeader);
   // }
 
+  GetMasterAssetIdByNameBrandModel(name: string,brandId: number,model:string): Observable<ListMasterAssetVM[]> {
+    return this.httpClient.get<ListMasterAssetVM[]>(`${environment.GetMasterAssetIdByNameBrandModel}${name}/${brandId}/${model}`, this.httpHeader);
+  }
   GetMasterAssetsWithPagingAndOrder(page: Paging): Observable<ListMasterAssetVM[]> {
     return this.httpClient.put<ListMasterAssetVM[]>(`${environment.GetMasterAssetsWithPagingAndOrder}`, page, this.httpHeader);
   }
 
 
-  SearchInMasterAssets(pagenumber: number, pagesize: number, searchObj: SearchMasterAssetVM): Observable<ListMasterAssetVM[]> {
-    return this.httpClient.post<ListMasterAssetVM[]>(`${environment.SearchInMasterAssets}${pagenumber}/${pagesize}`, searchObj, this.httpHeader);
-  }
-
-  // SearchInMasterAssetsCount(searchObj: SearchMasterAssetVM): Observable<number> {
-  //   return this.httpClient.post<number>(`${environment.SearchInMasterAssetsCount}`, searchObj, this.httpHeader);
-  // };
-  sortMasterAsset(pagenumber: number, pagesize: number, sortObj: SortMasterAssetVM): Observable<ListMasterAssetVM[]> {
-    return this.httpClient.post<ListMasterAssetVM[]>(`${environment.SortMasterAssets}${pagenumber}/${pagesize}`, sortObj, this.httpHeader);
-  }
 
   getCount(): Observable<number> {
     return this.httpClient.get<number>(`${environment.getMasterAssetCount}`);
@@ -60,32 +54,22 @@ export class MasterAssetService {
   ListMasterAssetsByHospitalId(hospitalId: number): Observable<ListMasterAssetVM[]> {
     return this.httpClient.get<ListMasterAssetVM[]>(`${environment.ListMasterAssetsByHospitalId}${hospitalId}`, this.httpHeader);
   }
-
-
   ListMasterAssetsByHospitalUserId(hospitalId: number, userId: string): Observable<ListMasterAssetVM[]> {
     return this.httpClient.get<ListMasterAssetVM[]>(`${environment.ListMasterAssetsByHospitalUserId}${hospitalId}/${userId}`, this.httpHeader);
   }
-
-  GetListMasterAssets(first:number,rows:number,SortFiled:string ,sortOrder:number,searchObj:any): Observable<MainClass> {
-
-    var searchSortObj={SortFiled,sortOrder,searchObj};
-    return this.httpClient.post<MainClass>(`${environment.GetListMasterAsset}${first}/${rows}`, searchSortObj, this.httpHeader);
+  GetListMasterAssets(first:number,rows:number,SearchSortMasterAsset:SearchSortMasterAssetVM): Observable<MainClass> {
+    console.log("searchSortObj service :",SearchSortMasterAsset);
+    return this.httpClient.post<MainClass>(`${environment.GetListMasterAsset}${first}/${rows}`, SearchSortMasterAsset, this.httpHeader);
   }
-
   CountMasterAssets(): Observable<number> {
     return this.httpClient.get<number>(`${environment.CountMasterAssets}`, this.httpHeader);
   }
-
-
   GetTop10MasterAssetCount(hospitalId: number): Observable<number> {
     return this.httpClient.get<number>(`${environment.GetTop10MasterAssetCount}${hospitalId}`, this.httpHeader);
   }
-
   CountMasterAssetsByBrand(hospitalId: number): Observable<CountMasterAssetByBrandVM[]> {
     return this.httpClient.get<CountMasterAssetByBrandVM[]>(`${environment.CountMasterAssetsByBrand}${hospitalId}`, this.httpHeader);
   }
-
-
   CountMasterAssetsBySupplier(hospitalId: number): Observable<CountMasterAssetBySupplierVM[]> {
     return this.httpClient.get<CountMasterAssetBySupplierVM[]>(`${environment.CountMasterAssetsBySupplier}${hospitalId}`, this.httpHeader);
   }

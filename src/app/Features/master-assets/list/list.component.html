@@ -34,7 +34,7 @@
                         <div class="col-2">
                             <label for="brandId" [translate]="'Asset.Brands'">Brands</label>
                             <select class="form-select" id="brandId" [ngModelOptions]="{standalone: true}"
-                                name="brandId" [(ngModel)]="sortFilterObjects.searchObj.brandId" [value]="0">
+                                name="brandId" [(ngModel)]="SearchSortMasterAsset.brandId" [value]="0">
                                 <option value="0"> </option>
                                 <option *ngFor="let brnd of lstBrands" [value]="brnd.id">
                                     {{ lang == "en" ? brnd.name : brnd.nameAr }}
@@ -44,7 +44,7 @@
                         <div class="col-2">
                             <label for="orginId" [translate]="'Asset.Origins'">Origins</label>
                             <select class="form-select" id="orginId" [ngModelOptions]="{standalone: true}"
-                                name="orginId" [(ngModel)]="sortFilterObjects.searchObj.originId" [value]="0">
+                                name="orginId" [(ngModel)]="SearchSortMasterAsset.originId" [value]="0">
                                 <option value="0"></option>
                                 <option *ngFor="let orgn of lstOrigins" [value]="orgn.id">
                                     {{ lang == "en" ? orgn.name : orgn.nameAr }}
@@ -54,7 +54,7 @@
                         <div class="col-2">
                             <label for="orginId" [translate]="'Asset.Categories'"></label>
                             <select class="form-select" id="categoryId" name="categoryId" name="categoryId"
-                                [(ngModel)]="sortFilterObjects.searchObj.categoryId" [value]="0"
+                                [(ngModel)]="SearchSortMasterAsset.categoryId" [value]="0"
                                 (change)="GetSubCategoryByCategoryId($event)" [ngModelOptions]="{standalone: true}">
                                 <option value="0"></option>
                                 <option *ngFor="let cat of lstCategories" [value]="cat.id">
@@ -65,7 +65,7 @@
                         <div class="col-2">
                             <label for="subCategoryId" [translate]="'Asset.SubCategories'"></label>
                             <select class="form-select" id="subCategoryId" name="subCategoryId" name="subCategoryId"
-                                [(ngModel)]="sortFilterObjects.searchObj.subCategoryId" [value]="0"
+                                [(ngModel)]="SearchSortMasterAsset.subCategoryId" [value]="0"
                                 [ngModelOptions]="{standalone: true}">
                                 <option value="0"> </option>
                                 <option *ngFor="let sub of lstSubCategories" [value]="sub.id">
@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-2">
                             <label for="assetName"> {{'Asset.AssetName' | translate}}</label>
-                            <p-autoComplete #auto [(ngModel)]="selectedMasterAssetName"
+                            <p-autoComplete #auto [(ngModel)]="SearchSortMasterAsset.assetName"
                                 [suggestions]="lstMasterAssetNames" type="search" name="masterAssetId"
                                 id="masterAssetId" (completeMethod)="onMasterAssetSelectionChanged($event)"
                                 (onSelect)="getMasterAssetObject($event)" field="name"
@@ -91,7 +91,7 @@
                         <div class="col-2">
                             <label for="modelNumber"> {{'Asset.Model' | translate }}</label>
                             <input type="text" class="form-control"
-                                [(ngModel)]="sortFilterObjects.searchObj.modelNumber"
+                                [(ngModel)]="SearchSortMasterAsset.modelNumber"
                                 [ngModelOptions]="{standalone: true}" />
                         </div>
                     </div>
@@ -172,6 +172,11 @@
                     {{(count)?.toLocaleString('ar-EG')}}
                     {{'Asset.Entries' | translate }}
                 </ng-template>
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="8" class="text-center">No data available</td>
+                    </tr>
+                  </ng-template>
             </p-table>
             
             </div>

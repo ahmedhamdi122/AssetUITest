@@ -428,16 +428,18 @@
               placeholder="{{'Asset.ArabicDescription' |  translate}}" [ngModelOptions]="{standalone: true}">
           </div>
         </div>
- 
-        <div class="row">  
-      
-            <span (click)="addComponentToList()" >
-              <i class="pi pi-plus-circle add " style="margin-top:60px;"></i>  {{'Asset.AddComponent'
+      </div>
+      <div class="container">
+        <div class="row top-buffer">  
+          <div class="col">
+            <div (click)="addComponentToList()" >
+              <i class="pi pi-plus-circle add " style="margin-top:10px;"></i>  {{'Asset.AddComponent'
               |translate}}
-            </span>
+            </div>
+            </div>
           </div>
+       </div>
        
-        </div>
     
         <div class="container">
         <div class="row mt-3">
@@ -456,10 +458,10 @@
               </ng-template>
               <ng-template pTemplate="body" let-Component let-rowIndex="rowIndex">
                 <tr>
-                  <td>{{ Component.compName }}</td>
-                  <td>{{ Component.compNameAr }}</td>
-                  <td>{{ Component.price }}</td>
-                  <td>{{ Component.partNo }}</td>
+                  <td class="text-center">{{ Component.compName }}</td>
+                  <td class="text-center">{{ Component.compNameAr }}</td>
+                  <td class="text-center">{{ Component.price }}</td>
+                  <td class="text-center">{{ Component.partNo }}</td>
                   <td>
                     <span (click)="removeComponentItem(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
                   </td>
