@@ -100,8 +100,10 @@ export class CreateComponent implements OnInit {
   isHospitalManager: boolean = false;
   canAddBrand: boolean = false;
   lstRoleNames: string[] = [];
- 
-
+  invalidAssetName=false;
+  invalidAssetNameAr=false;
+  invalidModelNumber=false;
+  invalidVersionNumber=false;
   public taskForm: FormGroup;
   constructor(
     private authenticationService: AuthenticationService, private masterAssetService: MasterAssetService, private masterAssetComponentService: MasterAssetComponentService, private uploadService: UploadFilesService, private categoryTypeService: CategoryTypeService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private originService: OriginService,
@@ -191,14 +193,14 @@ export class CreateComponent implements OnInit {
       this.lstWOTasks.splice(index, 1);
     }
   }
-  addWOTaskToList() {
-    let woObj = new CreateAssetWorkOrderTaskVM();
-    woObj.masterAssetId = Number(this.masterAssetId);
-    woObj.name = this.woTaskObj.name;
-    woObj.nameAr = this.woTaskObj.nameAr;
-    woObj.code = '';
-    this.lstWOTasks.push(woObj);
-  }
+  // addWOTaskToList() {
+  //   let woObj = new CreateAssetWorkOrderTaskVM();
+  //   woObj.masterAssetId = Number(this.masterAssetId);
+  //   woObj.name = this.woTaskObj.name;
+  //   woObj.nameAr = this.woTaskObj.nameAr;
+  //   woObj.code = '';
+  //   this.lstWOTasks.push(woObj);
+  // }
   // saveWOTaskToDB() {
   //   this.lstWOTasks.forEach((elemnt) => {
   //     this.assetWorkOrderTaskService.CreateAssetWorkOrderTask(elemnt)
@@ -249,7 +251,7 @@ export class CreateComponent implements OnInit {
       }
       return false;
     }
-
+    console.log("masterAssetObj:",this.masterAssetObj);
     this.masterAssetService.CreateMasterAsset(this.masterAssetObj).subscribe(assetObj => {
       this.masterAssetId = assetObj;
       if (this.file) {
@@ -277,9 +279,9 @@ export class CreateComponent implements OnInit {
           this.masterAssetService.CreateMasterAssetAttachments(elemnt).subscribe(lstfiles => {
             this.uploadService.uploadMasterAssetFiles(elemnt.masterFile, elemnt.fileName).subscribe(
               (event) => {
-                this.isSaved = true;
-                this.display = true;
-                this.reload();
+                // this.isSaved = true;
+                // this.display = true;
+                // this.reload();
               },
               (err) => {
                 if (this.lang == "en") {
@@ -301,7 +303,7 @@ export class CreateComponent implements OnInit {
 
           this.masterAssetComponentService.CreateMasterAssetComponent(elemnt)
             .subscribe(() => {
-              this.display = true;
+              // this.display = true;
             }, error => {
               this.errorDisplay = true;
               if (this.lang == "en") {
@@ -326,18 +328,13 @@ export class CreateComponent implements OnInit {
             });
         });
       }
-      if (this.lstWOTasks.length > 0) {
-        this.lstWOTasks.forEach((elemnt) => {
-          elemnt.masterAssetId = this.masterAssetId;
-          this.assetWorkOrderTaskService.CreateAssetWorkOrderTask(elemnt)
-            .subscribe(() => {
-            });
-        });
-      }
-      this.display = true;
-      this.ref.close();
+    
+      var created='Created';
+      this.ref.close(created)
+
     },
       error => {
+        console.log("error :",error)
         this.errorDisplay = true;
         if (this.lang == 'en') {
           if (error.error.status == 'brnd') {
@@ -346,35 +343,48 @@ export class CreateComponent implements OnInit {
           if (error.error.status == 'codelen') {
             this.errorMessage = error.error.message;
           }
-          if (error.error.status == 'code') {
+          if (error.error.status == 'CodeRequired') {
             this.errorMessage = error.error.message;
           }
-          if (error.error.status == 'name') {
+          if (error.error.status == 'nameRequired') {
             this.errorMessage = error.error.message;
           }
-          if (error.error.status == 'nameAr') {
+          if(error.error.status=='codelen')
+          {
+            this.errorMessage=error.error.message;
+          }
+          if (error.error.status == 'nameRequired') {
+            this.errorMessage = error.error.message;
+          }
+          if (error.error.status == 'ExistsByNameModelAndVersion') {
+            this.errorMessage = error.error.message;
+          }
+          if (error.error.status == '"ExistsByNameArModelAndVersion"') {
             this.errorMessage = error.error.message;
           }
         } if (this.lang == 'ar') {
-          if (error.error.status == 'brnd') {
+          if (error.error.status == 'brand') {
             this.errorMessage = error.error.messageAr;
           }
           if (error.error.status == 'codelen') {
             this.errorMessage = error.error.messageAr;
           }
-          if (error.error.status == 'code') {
+          if (error.error.status == 'codeExists') {
             this.errorMessage = error.error.messageAr;
           }
-          if (error.error.status == 'name') {
+          if (error.error.status == 'ExistsByNameModelAndVersion') {
             this.errorMessage = error.error.messageAr;
           }
-          if (error.error.status == 'nameAr') {
+          if (error.error.status == "ExistsByNameArModelAndVersion") {
             this.errorMessage = error.error.messageAr;
           }
         }
+        this.tabGroup.selectedIndex=0;
+
         return false;
       });
-  }
+
+  } 
   reload() {
     let currentUrl = this.route.url;
     this.route.routeReuseStrategy.shouldReuseRoute = () => false;

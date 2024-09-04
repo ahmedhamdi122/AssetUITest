@@ -5,12 +5,6 @@
             <h4 class="card-title"> {{'Asset.MasterAssets' | translate }} </h4>
         </div>
         <div class="col-3">
-            <!-- <form>
-                <div class="input-group">
-                    <input pInputText type="search" class="form-control" placeholder="{{'Asset.Search' | translate}}"
-                        (input)="dt2.filterGlobal($event.target.value, 'global')">
-                </div>
-            </form> -->
         </div>
         <div class="col-3">
         </div>
@@ -25,7 +19,6 @@
                 <i class="pi pi-plus-circle"></i> {{'Asset.Create' | translate}}</a>
         </div>
     </div>
-
     <div class="top-buffer">
         <div class="col-12">
             <div class="collapse row card-filter" id="filter">
@@ -185,9 +178,7 @@
 
 </div>
 
-<p-confirmDialog >
-  
-</p-confirmDialog>
+<p-confirmDialog></p-confirmDialog>
 
 <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
     <p-header style="color: rgb(181, 4, 4)"> {{ 'Asset.Error' | translate }} </p-header>
@@ -196,3 +187,21 @@
 </p-dialog>
 <p-toast />
 
+<p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessCreate" [style]="{ width: '350px' }">
+    <ng-template pTemplate="header">
+      <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
+        {{ "Asset.Save" | translate }}
+      </h6>
+    </ng-template>
+    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
+      {{ "Asset.SavedSuccess" | translate }}</span>
+  </p-dialog>
+  <p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessDelete" [style]="{ width: '350px' }">
+    <ng-template pTemplate="header">
+      <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
+        {{ "Asset.Delete" | translate }}
+      </h6>
+    </ng-template>
+    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
+      {{ "Asset.DeletedSuccess" | translate }}</span>
+  </p-dialog>

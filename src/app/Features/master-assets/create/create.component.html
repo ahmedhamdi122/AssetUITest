@@ -18,13 +18,12 @@
               </div>
               <div class="col-2">
                 <input type="text" class="form-control" id="name" name="name" [(ngModel)]="masterAssetObj.name"
-                  #name="ngModel" [class.is-invalid]=" (name.touched && name.errors) || AddAssetForm.submitted
-                  " [class.is-valid]="name.valid && AddAssetForm.submitted" placeholder="{{'Asset.Name' | translate}}"
+                  #name="ngModel" [class.is-invalid]=" (name.touched && name.errors)"  placeholder="{{'Asset.Name' | translate}}"
                   autofocus required />
               </div>
               <div class="col-2">
                 <input type="text" class="form-control" id="nameAr" name="nameAr" #nameAr="ngModel"
-                  [(ngModel)]="masterAssetObj.nameAr" autofocus required [class.is-invalid]="  nameAr.errors || AddAssetForm.submitted" [class.is-valid]="nameAr.valid && AddAssetForm.submitted"
+                  [(ngModel)]="masterAssetObj.nameAr" autofocus required [class.is-invalid]="  nameAr.errors" 
                   placeholder="{{'Asset.ArabicName' | translate}}" />
               </div>
               <div class="col-2">
@@ -123,7 +122,7 @@
               <div [ngClass]="(isHospitalManager && canAddBrand) == true ? 'col-1': ''"
                 *ngIf="(isHospitalManager && canAddBrand)" style="margin-top: 25px;">
                 <span (click)="addBrand()">
-                  <i class="fa fa-plus" style="margin-top: 30px;"></i>
+                  <i class="pi pi-plus-circle add" style="margin-top: 30px;"></i>
                 </span>
               </div>
               <div class="col-2">
@@ -273,8 +272,8 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-masterAssetDocument let-rowIndex="rowIndex" let-editing="editing">
                   <tr>
-                    <td>{{masterAssetDocument.fileName}}</td>
-                    <td [pEditableColumn]="masterAssetDocument.title" pEditableColumnField="title"
+                    <td class="text-center">{{masterAssetDocument.fileName}}</td>
+                    <td class="text-center" [pEditableColumn]="masterAssetDocument.title" pEditableColumnField="title"
                       [pEditableColumnRowIndex]="rowIndex">
                       <p-cellEditor>
                         <ng-template pTemplate="input">
@@ -286,7 +285,7 @@
                         </ng-template>
                       </p-cellEditor>
                     </td>
-                    <td>
+                    <td class="text-center">
                       <span (click)="removeFileFromObjectArray(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
                     </td>
                   </tr>
@@ -356,10 +355,10 @@
               </ng-template>
               <ng-template pTemplate="body" let-task let-rowIndex="rowIndex">
                 <tr>
-                  <td>{{ task.taskname }}</td>
-                  <td>{{ task.tasknameAr }}</td>
+                  <td class="text-center">{{ task.taskname }}</td>
+                  <td class="text-center">{{ task.tasknameAr }}</td>
                 
-                  <td>
+                  <td class="text-center">
                     <span (click)="removeTaskFromObjectArray(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
                   </td>
                 </tr>
@@ -501,17 +500,9 @@
     }}</span>
 </p-dialog>
 
-<p-dialog appendTo="body" modal="true" [(visible)]="display" [style]="{ width: '350px' }">
-  <ng-template pTemplate="header">
-    <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
-      {{ "Asset.Save" | translate }}
-    </h6>
-  </ng-template>
-  <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
-    {{ "Asset.SavedSuccess" | translate }}</span>
-</p-dialog>
 
-<p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
+
+<p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '450px' }">
   <p-header style="color: rgb(181, 4, 4)">
     {{ "Asset.Error" | translate }}
   </p-header>

@@ -54,10 +54,6 @@ export class EditComponent implements OnInit {
   pmTaskObj: CreatePMAssetTaskVM;
   lstPMTasks: CreatePMAssetTaskVM[] = [];
   lstTasks: CreatePMAssetTaskVM[] = [];
-
-
-
-
   lstWOTaskItems: IndexAssetWorkOrderTaskVM[] = [];
   woTaskObj: CreateAssetWorkOrderTaskVM;
   lstWOTasks: CreateAssetWorkOrderTaskVM[] = [];
@@ -83,7 +79,6 @@ export class EditComponent implements OnInit {
   createTask: CreatePMAssetTaskVM;
   fileName = '';
   imgURL: string = "";
-
   itmIndex: any[] = [];
   formData = new FormData();
   public file: File;
@@ -97,6 +92,7 @@ export class EditComponent implements OnInit {
   uploadFileName: string;
   fileToUpload: File;
   incremant: number = 0;
+  isInvalidBrand=true;
   constructor(
     private authenticationService: AuthenticationService, private masterAssetService: MasterAssetService, private masterAssetComponentService: MasterAssetComponentService, private uploadService: UploadFilesService, private categoryTypeService: CategoryTypeService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private originService: OriginService, private brandService: BrandService, private ecriService: ECRIService, private assetPeriorityService: AssetPeriorityService,
     private pmTimeService: PMTimeService, private config: DynamicDialogConfig, private ref: DynamicDialogRef, private assetWorkOrderTaskService: AssetWorkOrderTaskService,
@@ -104,7 +100,6 @@ export class EditComponent implements OnInit {
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
   }
-
   ngOnInit(): void {
     if (this.lang == 'en') {
       this.textDir = 'ltr';
@@ -137,6 +132,7 @@ export class EditComponent implements OnInit {
     let id = this.config.data.id;
     this.masterId = id;
     this.masterAssetService.GetMasterAssetById(id).subscribe((data) => {
+      console.log("masterObj :",data);
       this.masterAssetObj = data;
       this.masterAssetId = this.masterAssetObj.id;
 
@@ -164,10 +160,7 @@ export class EditComponent implements OnInit {
         this.categoryService.GetCategoryById(this.masterAssetObj.categoryId).subscribe(categoryObj => {
           this.masterAssetObj.categoryTypeId = categoryObj["categoryTypeId"]
         })
-
-
       }
-
       this.masterAssetService
         .GetAttachmentByMasterAssetId(this.masterId)
         .subscribe(
@@ -537,6 +530,11 @@ export class EditComponent implements OnInit {
         },
       });
     }
+  }
+  validateBrand()
+  {
+
+    this.isInvalidBrand=!this.masterAssetObj.brandId;
   }
   downloadFile(fileName) {
     var filePath = `${environment.Domain}UploadedAttachments/`;

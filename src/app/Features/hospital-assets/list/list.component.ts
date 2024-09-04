@@ -26,10 +26,10 @@ import { OrganizationService } from 'src/app/Shared/Services/organization.servic
 import { OriginService } from 'src/app/Shared/Services/origin.service';
 import { SubOrganizationService } from 'src/app/Shared/Services/subOrganization.service';
 import { SupplierService } from 'src/app/Shared/Services/supplierService.service';
-// import { CreateComponent } from '../create/create.component';
+ import { CreateComponent } from '../create/create.component';
 // import { DeleteconfirmationComponent } from '../deleteconfirmation/deleteconfirmation.component';
 // import { EditComponent } from '../edit/edit.component';
-// import { ViewComponent } from '../view/view.component';
+ import { ViewComponent } from '../view/view.component';
 // import pdfMake from 'pdfmake/build/pdfmake';
 // import pdfFonts from 'pdfmake/build/vfs_fonts';
 // pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -46,6 +46,7 @@ import { MasterAssetService } from 'src/app/Shared/Services/masterAsset.service'
 import { Table } from 'primeng/table';
 // import { DetailsComponent } from '../details/details.component';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -196,7 +197,7 @@ export class ListComponent implements OnInit {
     private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService,
     private supplierService: SupplierService, private originService: OriginService, private brandService: BrandService,
     private departmentService: DepartmentService, private breadcrumbService: BreadcrumbService, private route: ActivatedRoute,
-    private hospitalService: HospitalService, private router: Router, public translate: TranslateService, private datePipe: DatePipe) {
+    private hospitalService: HospitalService, private router: Router, public translate: TranslateService, private datePipe: DatePipe,private ngxService:NgxUiLoaderService) {
     this.currentUser = this.authenticationService.currentUserValue;
     if (this.currentUser.hospitalId > 0) {
       this.statusId = 3;
@@ -294,6 +295,8 @@ export class ListComponent implements OnInit {
       this.totalCount = statuses.totalCount;
     });
 
+
+    
   }
   onLoad() {
     this.page = {
@@ -792,8 +795,6 @@ export class ListComponent implements OnInit {
       this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
     }
     this.sortFilterObjects.searchObj.hospitalId = this.hospitalId;
-
-
     this.sortFilterObjects.searchObj.statusId = this.statusId;
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
@@ -816,11 +817,13 @@ export class ListComponent implements OnInit {
       this.sortFilterObjects.searchObj.brandId = 0;
       this.showTitle = true;
     }
-
+    this.ngxService.start('loading');
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
       this.lstAssets = items.results;
       this.count = items.count;
       this.loading = false;
+      this.ngxService.stop('loading');
+
     });
 
     this.cdr.detectChanges();
@@ -876,11 +879,13 @@ export class ListComponent implements OnInit {
       this.sortFilterObjects.searchObj.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
     }
 
-
+    this.ngxService.start();
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
       this.lstAssets = items.results;
       this.count = items.count;
       this.loading = false;
+      this.ngxService.stop();
+
     });
 
 
@@ -922,22 +927,22 @@ export class ListComponent implements OnInit {
   // }
   viewAsset(id: number) {
 
-    // const ref = this.dialogService.open(ViewComponent, {
-    //   header: this.lang == "en" ? 'View Hospital Asset' : "بيانات أصل في المستشفى",
-    //   data: {
-    //     id: id
-    //   },
-    //   width: '70%',
-    //   style: {
-    //     'dir': this.lang == "en" ? 'ltr' : "rtl",
-    //     "text-align": this.lang == "en" ? 'left' : "right",
-    //     "direction": this.lang == "en" ? 'ltr' : "rtl"
-    //   }
-    // });
+    const ref = this.dialogService.open(ViewComponent, {
+      header: this.lang == "en" ? 'View Hospital Asset' : "بيانات أصل في المستشفى",
+      data: {
+        id: id
+      },
+      width: '70%',
+      style: {
+        'dir': this.lang == "en" ? 'ltr' : "rtl",
+        "text-align": this.lang == "en" ? 'left' : "right",
+        "direction": this.lang == "en" ? 'ltr' : "rtl"
+      }
+    });
 
-    // ref.onClose.subscribe(res => {
-    //   this.reset();
-    // });
+    ref.onClose.subscribe(res => {
+      //this.reset();
+    });
   }
   onSearch() {
 
@@ -992,18 +997,18 @@ export class ListComponent implements OnInit {
   }
   addAsset() {
 
-    // const dialogRef2 = this.dialogService.open(CreateComponent, {
-    //   header: this.lang == "en" ? 'Add Hospital Asset' : "إضافة أصل في المستشفى",
-    //   width: '70%',
-    //   style: {
-    //     'dir': this.lang == "en" ? 'ltr' : "rtl",
-    //     "text-align": this.lang == "en" ? 'left' : "right",
-    //     "direction": this.lang == "en" ? 'ltr' : "rtl"
-    //   }
-    // });
-    // dialogRef2.onClose.subscribe((res) => {
-    //   this.reset();
-    // });
+    const dialogRef2 = this.dialogService.open(CreateComponent, {
+      header: this.lang == "en" ? 'Add Hospital Asset' : "إضافة أصل في المستشفى",
+      width: '70%',
+      style: {
+        'dir': this.lang == "en" ? 'ltr' : "rtl",
+        "text-align": this.lang == "en" ? 'left' : "right",
+        "direction": this.lang == "en" ? 'ltr' : "rtl"
+      }
+    });
+    dialogRef2.onClose.subscribe((res) => {
+      // this.reset();
+    });
   }
   deleteAsset(id: number) {
     this.assetDetailService.GetAssetById(id).subscribe((data) => {

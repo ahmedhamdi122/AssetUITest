@@ -3,14 +3,16 @@
         <div class="col-3" *ngIf="showTitle">
             <h4 class="card-title"> {{'Asset.HospitalAssets' | translate }} </h4>
         </div>
-        <div class="col-3">
-            <button class="btn excelIcon" (click)="exportExcel()" pTooltip="{{'Asset.ExportExcel'| translate}}"
-            tooltipPosition="top"> <i class="pi pi-file-excel"></i></button>
-        <button class="btn pdfIcon" (click)="printSelectedColumns()" pTooltip="{{'Asset.ExportPdf'| translate}}"
-            tooltipPosition="top"> <i class="pi pi-file-pdf"></i></button>
-        </div>
-
         <div class="col-2"></div>
+        <div class="col-3 ">
+            <!-- <span  class="m" style="color: green;cursor: pointer;font-size: 18px;">Export Current Page  <i class="pi pi-file-excel"></i></span>
+            <span style="color: green;cursor: pointer;font-size: 18px;">Export All Data <i class="pi pi-file-excel"></i></span> -->
+            
+            <button class="btn excelIcon" (click)="exportExcel()" pTooltip="{{'Asset.ExportAllColumns'| translate}}"
+            tooltipPosition="top"> <i class="pi pi-file-excel" style="font-size: 2rem;color: green;"></i></button>
+        <button class="btn pdfIcon" (click)="printSelectedColumns()" pTooltip="{{'Asset.printSelectedColumns'| translate}}"
+            tooltipPosition="top"> <i class="pi pi-file-excel" style="font-size: 2rem;color: green;"></i></button>
+        </div>
         <div class="col-2">
             <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true"
                 aria-controls="collapseExample" class="filterbutton">
@@ -251,7 +253,6 @@
                                 {{assetBarCodeObj.barCode}}
                             </ng-template>
                         </p-autoComplete>
-
                     </div>
                     <div class="col-2">
                         <p-autoComplete [(ngModel)]="assetSerailNumberObj" [ngModelOptions]="{standalone: true}"

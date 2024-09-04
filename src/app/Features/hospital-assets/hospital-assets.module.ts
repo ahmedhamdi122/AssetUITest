@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { HospitalAssetsRoutingModule } from './hospital-assets-routing.module';
 import { ListComponent } from './list/list.component';
-// import { CreateComponent } from './create/create.component';
+ import { CreateComponent } from './create/create.component';
 // import { EditComponent } from './edit/edit.component';
 // import { DeleteconfirmationComponent } from './deleteconfirmation/deleteconfirmation.component';
 
@@ -30,7 +30,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSelectModule } from '@angular/material/select';
-// import { ViewComponent } from './view/view.component';
+ import { ViewComponent } from './view/view.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -53,14 +53,16 @@ import { AuthGuard } from '../../../.././src/app/Shared/Services/guards/authGuar
 import { CalendarModule } from 'primeng/calendar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DeleteModule } from '../../../../src/app/Shared/delete/delete.module';
+import { NgxUiLoaderModule } from 'ngx-ui-loader';
+
 @NgModule({
   declarations: [
-    ListComponent
-    // CreateComponent,
+    ListComponent,
+     CreateComponent,
     // EditComponent,
     // DeleteconfirmationComponent,
     // DetailsComponent,
-    // ViewComponent,
+     ViewComponent,
     // PmcalendarComponent,
     // PrintQrListComponent,
     // ListhorizontalComponent,
@@ -69,12 +71,13 @@ import { DeleteModule } from '../../../../src/app/Shared/delete/delete.module';
   ],
   imports: [
     // DeleteModule,
+    NgxUiLoaderModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
     DialogModule,
-    // MatTabsModule,
+     MatTabsModule,
     // MatInputModule,
     TranslateModule,
     // MatRadioModule,

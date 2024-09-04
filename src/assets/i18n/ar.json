@@ -1,5 +1,7 @@
 {
         "Asset": {
+                "ExportAllColumns":"استخراج جميع الأعمدة",
+                "printSelectedColumns":"استخراج للأعمدةالمحددة",
                 "Color": "اللون",
                 "Home": "الصفحة الرئيسة",
                 "Id": "م",
@@ -115,6 +117,7 @@
                 "HospitalType": "تصنيف المستشفى",
                 "Select": "اختر",
                 "SavedSuccess": "تم حفظ البيانات بنجاح",
+                "DeletedSuccess":"تم مسح البيانات بنجاح",
                 "Error": "خطأ",
                 "DirectorName": "اسم المسؤول",
                 "ArabicDirectorName": "اسم المسؤول بالعربي",

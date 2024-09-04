@@ -54,8 +54,12 @@ export class ListComponent implements OnInit {
   isHospitalManager: boolean = false;
   canAddMasterAsset: boolean = false;
   SearchSortMasterAsset: SearchSortMasterAssetVM;
+  displaySuccess=false;
   @ViewChild('dt2') dataTable: Table;
   selectedMasterAssetName: any;
+  displaySuccessCreate=false;
+  displaySuccessDelete =false;
+  reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
   constructor(    private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService,private ngxService:NgxUiLoaderService) { this.currentUser = this.authenticationService.currentUserValue; }
@@ -72,9 +76,7 @@ export class ListComponent implements OnInit {
         modelNumber:null,
         assetName: null,
         assetNameAr: null
-      
     };
-  
     const translationKeys = ['Asset.Assets', 'Asset.MasterAssets']; // Array of translation keys
     const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
     this.breadcrumbService.addBreadcrumb(this.activateRoute.snapshot, parentUrlArray, translationKeys);
@@ -89,6 +91,7 @@ export class ListComponent implements OnInit {
       pagenumber: 1,
       pagesize: 10
     }
+
 
 
 
@@ -114,17 +117,10 @@ export class ListComponent implements OnInit {
   }
   LoadMasterAssets(event) {
     this.ngxService.start('loading');
-    console.log("event :",event)
-    console.log(" fisrt :",event.first);
-      console.log("rows :", event.rows);
-      console.log("sortField: ",event.sortField);                                                                              
-      console.log("sortField: ",event.sortOrder);    
     this.SearchSortMasterAsset.sortOrder=event.sortOrder;
     this.SearchSortMasterAsset.sortFiled=event.sortField;
-    console.log("SearchSortMasterAsset:",this.SearchSortMasterAsset)
       this.masterAssetService.GetListMasterAssets(event.first, event.rows,this.SearchSortMasterAsset).subscribe((items) => {
       this.lstMasterAssets = items.results;     
-      console.log("list : ",items.results)                                               
       this.count = items.count;
        this.isLoading = false;
        this.ngxService.stop('loading');
@@ -132,7 +128,6 @@ export class ListComponent implements OnInit {
       this.isLoading = false;
     }
     );
-  
 }
   onSearch() {
     if( this.SearchSortMasterAsset.brandId === 0 &&
@@ -154,7 +149,6 @@ export class ListComponent implements OnInit {
     this.first = 0;
     this.rows=10;
    this.ngxService.start('loading');
-   console.log("SearchSortMasterAsset :",this.SearchSortMasterAsset)
    this.SearchSortMasterAsset.modelNumber=this.SearchSortMasterAsset.modelNumber?.trim() ?? ''
    this.SearchSortMasterAsset.assetName=this.SearchSortMasterAsset.assetName?.trim() ?? ''
    this.masterAssetService.GetListMasterAssets(this.first,this.rows,this.SearchSortMasterAsset).subscribe((items) => {
@@ -174,32 +168,30 @@ export class ListComponent implements OnInit {
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-
-    dialogRef2.onClose.subscribe((res) => {
-     // this.reload();
-    });
+    dialogRef2.onClose.subscribe((Created) => {
+     if(Created){
+       this.LoadMasterAssets(this.reloadTableObj);
+       this.dataTable.first=0;
+      this.displaySuccessCreate  =true;
+    }});
   }
   deleteMasterAsset(id: number) {
-    // this.masterAssetService.GetMasterAssetById(id).subscribe((data) => {
-    //   this.selectedObj = data;
-   
     var masterAsset=this.lstMasterAssets.find((obj)=>{ return obj.id==id});
     this.confirmationService.confirm({
-      header:`${this.lang == 'en' ? 'Delete Confirmation':'تأكيد المسح'}`,
-     message: `${this.lang == 'en' ? `Are you sure that you want to delete ${masterAsset.name}?` : `هل أنت متأكد أنك تريد حذف ${masterAsset.nameAr}؟`}`,
+       header:`${this.lang == 'en' ? 'Delete Confirmation':'تأكيد المسح'}`,
+      message: `${this.lang == 'en' ? `Are you sure that you want to delete ${masterAsset.name}?` : `هل أنت متأكد أنك تريد حذف ${masterAsset.nameAr}؟`}`,
       accept: ()=>{
         this.masterAssetService.DeleteMasterAsset(id).subscribe(deleted => {
-          this.MessageService.add({severity:'success',summary:'Success',detail:'Deleted Successfully'})
-          //delete from front
-        
-          console.log("lsmasterasset : ",this.lstMasterAssets)
+          this.LoadMasterAssets(this.reloadTableObj);
+          this.dataTable.first=0;
+        this.displaySuccessDelete=true;
         },
           (error) => {
-            this.MessageService.add({severity:'error',summary:`${this.lang == 'en'?'Error':'خطأ'}`,detail:`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`
-            })
-   
+            this.errorDisplay=true;
+            this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;
+            //this.MessageService.add({severity:'error',summary:`${this.lang == 'en'?'Error':'خطأ'}`,detail:`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`})
+            
       },)}})
-    
   }
   editMasterAsset(id: number) {
     const ref = this.dialogService.open(EditComponent, {
@@ -214,7 +206,6 @@ export class ListComponent implements OnInit {
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-
     ref.onClose.subscribe(() => {
       //   this.reload();
       //when click edit only
@@ -251,9 +242,7 @@ export class ListComponent implements OnInit {
         this.lstSubCategories = subs;
       });
   }
-  clearSearch() {
-    console.log("search obj :",this.SearchSortMasterAsset)
-  
+  clearSearch() {  
     if( this.SearchSortMasterAsset.brandId === 0 &&
       this.SearchSortMasterAsset.originId === 0 &&
       this.SearchSortMasterAsset.categoryId === 0 &&

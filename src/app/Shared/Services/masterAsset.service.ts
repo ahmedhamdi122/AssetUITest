@@ -58,7 +58,6 @@ export class MasterAssetService {
     return this.httpClient.get<ListMasterAssetVM[]>(`${environment.ListMasterAssetsByHospitalUserId}${hospitalId}/${userId}`, this.httpHeader);
   }
   GetListMasterAssets(first:number,rows:number,SearchSortMasterAsset:SearchSortMasterAssetVM): Observable<MainClass> {
-    console.log("searchSortObj service :",SearchSortMasterAsset);
     return this.httpClient.post<MainClass>(`${environment.GetListMasterAsset}${first}/${rows}`, SearchSortMasterAsset, this.httpHeader);
   }
   CountMasterAssets(): Observable<number> {

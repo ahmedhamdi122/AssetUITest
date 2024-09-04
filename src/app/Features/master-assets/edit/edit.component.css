@@ -1,3 +1,47 @@
 label{
     font-size: smaller;
 }
+.btnUpload {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .container {
+    max-height: 150vh; 
+    overflow-y: auto; 
+  }
+  .radio-group {
+    display: flex;
+    flex-direction: row;
+  }
+  
+
+  .ml-2 {
+    margin-left: 0.5rem; 
+  }
+
+  .add{
+    cursor: pointer;
+    background-color:white ;
+    color: #007bff;
+  }
+
+  .add:hover{
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+  }
+  .fixed-button {
+    position: fixed;
+    bottom: 16px;
+    left: 50%; 
+    transform: translateX(-50%); 
+  }
+ i{
+  font-size: 1.5rem;
+ }

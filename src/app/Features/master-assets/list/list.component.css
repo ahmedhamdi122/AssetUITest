@@ -1,8 +1,4 @@
-.ui-confirmdialog .ui-button {
-    /* Any other styles you want to apply globally */
- 
-    margin-left:200px !important;
-}
+
 .p-table .p-datatable-loading {
     background: rgba(255, 255, 255, 0.8); /* Optional: semi-transparent background */
     display: flex;
