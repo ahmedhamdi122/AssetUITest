@@ -143,6 +143,7 @@ body {
   padding: 10px;
   background: #F8F9FA;
 }
+
 .form-control {
   border-radius: 10px !important;
   padding-left: 5px !important;
@@ -665,4 +666,35 @@ aside ::-webkit-scrollbar {
 .mat-expansion-panel-header-description {
   justify-content: space-between !important;
   align-items: center !important;
+}
+
+.p-paginator-page,
+.p-paginator-next,
+.p-paginator-last,
+.p-paginator-first,
+.p-paginator-prev,
+.p-paginator-current {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  -webkit-user-select: none;
+  user-select: none;
+  overflow: hidden;
+  position: relative;
+
+  /* Default spacing for LTR */
+  margin-inline-end: 8px;
+  /* Space to the right */
+}
+
+
+[dir="rtl"] .p-paginator-next,
+[dir="rtl"] .p-paginator-last,
+[dir="rtl"] .p-paginator-first,
+[dir="rtl"] .p-paginator-prev {
+  /* Adjust spacing for RTL */
+  transform: scaleX(-1) !important;
+
 }
