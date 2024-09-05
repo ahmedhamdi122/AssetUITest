@@ -80,11 +80,11 @@ export class ViewComponent implements OnInit {
           this.lstPMTaskItems = tasks;
         });
 
-      this.assetWorkOrderTaskService
-        .GetAllAssetWorkOrderTasksByMasterAssetId(id)
-        .subscribe((tasks) => {
-          this.lstWOTasks = tasks;
-        });
+      // this.assetWorkOrderTaskService
+      //   .GetAllAssetWorkOrderTasksByMasterAssetId(id)
+      //   .subscribe((tasks) => {
+      //     this.lstWOTasks = tasks;
+      //   });
     });
   }
 

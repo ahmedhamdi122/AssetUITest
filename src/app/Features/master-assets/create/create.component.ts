@@ -50,7 +50,6 @@ export class CreateComponent implements OnInit {
   lstPMTimes: ListPMTimeVM[] = [];
   lstECRIs: ListECRIVM[] = [];
   masterAssetObj: CreateMasterAssetVM;
-  
   woTaskObj: CreateAssetWorkOrderTaskVM;
   lstWOTasks: CreateAssetWorkOrderTaskVM[] = [];
   isInvalidBrand=true;

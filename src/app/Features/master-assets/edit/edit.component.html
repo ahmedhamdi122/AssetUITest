@@ -7,7 +7,6 @@
                 {{ "Asset.Identification" | translate }}
               </ng-template>
               <div class="container mt-5">
-          
                   <div class="row">
                     <div class="col-2">
                       <h5 for="Main">{{ "Asset.Main" | translate }}:</h5>
@@ -37,8 +36,6 @@
                     </div>
                   </div>
                 </div>
-         
-      
             <div class="container mt-4">          
             <div class="row">
                 <div class="col-2"></div>
@@ -119,12 +116,12 @@
                         </option>
                       </select>
                     </div>
-                    <div [ngClass]="(isHospitalManager && canAddBrand) == true ? 'col-1': ''"
-                      *ngIf="(isHospitalManager && canAddBrand)" style="margin-top: 25px;">
+                    <!-- <div [ngClass]="(isHospitalManager && canAddBrand) == true ? 'col-1': ''"
+                      *ngIf="(isHospitalManager && canAddBrand)" style="margin-top: 25px;"> -->
                       <span (click)="addBrand()">
-                        <i class="pi pi-plus-circle add" style="margin-top: 30px;"></i>
+                        <i pTooltip="{{'Asset.AddBrand'|translate}}" class="pi pi-plus-circle add" style="margin-top: 30px;"></i>
                       </span>
-                    </div>
+                    <!-- </div> -->
                     <div class="col-2">
                       <select class="form-select" id="origin" #origin="ngModel" name="origin"
                         [(ngModel)]="masterAssetObj.originId">
@@ -262,7 +259,7 @@
                 <div class="col-12 mt-3">
               
                     <p-table    [paginator]="true"
-                    [rows]="5"[totalRecords]="lstMasterAssetDocuments.length" [value]="lstMasterAssetDocuments" dataKey="id">
+                    [rows]="5"[totalRecords]="lstAttachment.length" [value]="lstAttachment" dataKey="id">
                       <ng-template pTemplate="header">
                         <tr>
                           <th class="text-center">{{ 'Asset.FileName' | translate }}</th>
@@ -345,7 +342,7 @@
               <div class="row mt-3">
                 <div class="col-12">
                   <p-table    [paginator]="true"
-                  [rows]="3"[totalRecords]="lstPMTasks.length" [value]="lstPMTasks" dataKey="id">
+                  [rows]="3"[totalRecords]="lstPMTaskItems.length" [value]="lstPMTaskItems" dataKey="id">
                     <ng-template pTemplate="header">
                       <tr>
                         <th class="text-center">{{ "Asset.Name" | translate }}</th>
@@ -445,7 +442,7 @@
                 <div class="col-12">
             
                   <p-table    [paginator]="true"
-                  [rows]="2"[totalRecords]="lstComponents.length" [value]="lstComponents" dataKey="id">
+                  [rows]="2"[totalRecords]="lstSavedComponents.length" [value]="lstSavedComponents" dataKey="id">
                     <ng-template pTemplate="header">
                       <tr>
                         <th class="text-center">{{ "Asset.Name" | translate }}</th>
@@ -457,10 +454,10 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-Component let-rowIndex="rowIndex">
                       <tr>
-                        <td class="text-center">{{ Component.compName }}</td>
-                        <td class="text-center">{{ Component.compNameAr }}</td>
+                        <td class="text-center">{{ Component.assetName }}</td>
+                        <td class="text-center">{{ Component.assetNameAr }}</td>
                         <td class="text-center">{{ Component.price }}</td>
-                        <td class="text-center">{{ Component.partNo }}</td>
+                        <td class="text-center">{{ Component.partNo}}</td>
                         <td>
                           <span (click)="removeComponentItem(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
                         </td>

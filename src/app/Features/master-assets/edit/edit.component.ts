@@ -92,7 +92,7 @@ export class EditComponent implements OnInit {
   uploadFileName: string;
   fileToUpload: File;
   incremant: number = 0;
-  isInvalidBrand=true;
+  isInvalidBrand=false;
   constructor(
     private authenticationService: AuthenticationService, private masterAssetService: MasterAssetService, private masterAssetComponentService: MasterAssetComponentService, private uploadService: UploadFilesService, private categoryTypeService: CategoryTypeService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private originService: OriginService, private brandService: BrandService, private ecriService: ECRIService, private assetPeriorityService: AssetPeriorityService,
     private pmTimeService: PMTimeService, private config: DynamicDialogConfig, private ref: DynamicDialogRef, private assetWorkOrderTaskService: AssetWorkOrderTaskService,
@@ -145,12 +145,8 @@ export class EditComponent implements OnInit {
       else {
         this.imgURL = `${environment.Domain}UploadedAttachments/MasterAssets/UploadMasterAssetImage/` + data["assetImg"];
       }
-
       this.selectedPMTime = Number(data['pmTimeId']);
-
-
       this.radioPerioritySelected = this.masterAssetObj.periorityId;//.toString();
-
       if (this.masterAssetObj.categoryId != null) {
         this.subCategoryService
           .GetSubCategoriesByCategoryId(this.masterAssetObj.categoryId)
@@ -177,10 +173,6 @@ export class EditComponent implements OnInit {
         });
 
 
-      this.assetWorkOrderTaskService.GetAllAssetWorkOrderTasksByMasterAssetId(this.masterId)
-        .subscribe((tasks) => {
-          this.lstWOTasks = tasks;
-        });
 
       this.masterAssetComponentService.ListMasterAssetComponentsByMasterAssetId(this.masterId)
         .subscribe((components) => {
@@ -203,22 +195,16 @@ export class EditComponent implements OnInit {
       .GetAssetPeriorities()
       .subscribe((periorities) => {
         this.lstPeriorities = periorities;
-
-
       });
     this.brandService.GetBrands().subscribe((brands) => {
       this.lstBrands = brands;
     });
-
     this.ecriService.GetECRIS().subscribe((ecris) => {
       this.lstECRIs = ecris;
     });
-
-
     this.pmTimeService.GetPMTimes().subscribe((pmtimes) => {
       this.lstPMTimes = pmtimes;
     });
-
     this.categoryTypeService.GetCategoryTypes().subscribe(types => { this.lstTypes = types })
   }
   GetCategoriesByCategoryTypeId($event) {
@@ -549,6 +535,14 @@ export class EditComponent implements OnInit {
     return num;
   }
   addComponentToList() {
+    if (this.compObj.compCode == "") {
+      this.errorDisplay = true;
+      if (this.lang == "en")
+        this.errorMessage = "Please insert component code";
+      else
+        this.errorMessage = "ادخل كود المكون";
+      return false;
+    }
     if (this.compObj.compName == "") {
       this.errorDisplay = true;
       if (this.lang == "en")
@@ -565,49 +559,82 @@ export class EditComponent implements OnInit {
         this.errorMessage = "ادخل اسم المكون بالعربي";
       return false;
     }
-    if (this.compObj.compCode == "") {
+    
+    const compCodeexists = this.lstSavedComponents.some((Component) =>
+      Component.code==this.compObj.compCode
+    );
+    if(compCodeexists)
+    {
       this.errorDisplay = true;
       if (this.lang == "en")
-        this.errorMessage = "Please insert component code";
+        this.errorMessage = "The component code already exists. Please enter a unique code.";
       else
-        this.errorMessage = "ادخل كود المكون";
-      return false;
+        this.errorMessage = "رمز المكون موجود بالفعل. يرجى إدخال رمز فريد";
+        return false;
     }
-    else {
-      let componentObj = new CreateMasterAssetComponentVM();
-      componentObj.masterAssetId = Number(this.masterId);
-      componentObj.compName = this.compObj.compName;
-      componentObj.compNameAr = this.compObj.compNameAr;
-      componentObj.compDescription = this.compObj.compDescription;
-      componentObj.compDescriptionAr = this.compObj.compDescriptionAr;
-      componentObj.compCode = this.compObj.compCode;
-      componentObj.price = this.compObj.price;
-      componentObj.partNo = this.compObj.partNo;
-      this.lstComponents.push(componentObj);
+    const compNameexists = this.lstComponents.some((Component) =>
+      Component.compName==this.compObj.compName
+    );
+    if(compNameexists)
+    {
+      this.errorDisplay = true;
+      if (this.lang == "en")
+        this.errorMessage = "The component Name already exists. Please enter a unique NameAr.";
+      else
+        this.errorMessage = "اسم المكون موجود بالفعل. يرجى إدخال اسم فريد";
+        return false;
     }
+  const compNameArexists = this.lstComponents.some((Component) =>
+      Component.compNameAr==this.compObj.compNameAr
+    );
+    if(compNameArexists)
+    {
+      this.errorDisplay = true;
+      if (this.lang == "en")
+        this.errorMessage = "The component NameAr already exists. Please enter a unique NameAr.";
+      else
+        this.errorMessage = "اسم المكون بالعربي موجود بالفعل. يرجى إدخال اسم فريد";
+        return false;
+    }
+  
+      // let componentObj = new CreateMasterAssetComponentVM();
+      // componentObj.masterAssetId = Number(this.masterAssetId);
+      // componentObj.compName = this.compObj.compName;
+      // componentObj.compNameAr = this.compObj.compNameAr;
+      // componentObj.compDescription = this.compObj.compDescription;
+      // componentObj.compDescriptionAr = this.compObj.compDescriptionAr;
+      // componentObj.compCode = this.compObj.compCode;
+      // componentObj.price = this.compObj.price;
+      // componentObj.partNo = this.compObj.partNo;
+      // this.lstSavedComponents.push(componentObj);
+    
   }
+  removeComponentItem(index) {
+
+      this.lstSavedComponents.splice(index, 1);
+    }
   saveComponentToDB() {
-    this.lstComponents.forEach((elemnt) => {
-      this.masterAssetComponentService.CreateMasterAssetComponent(elemnt)
-        .subscribe(() => {
-          this.display = true;
-          this.ref.close();
-          this.route.navigate(['/dash/assets']);
-        }, error => {
-          this.errorDisplay = true;
-          if (this.lang == "en") {
-            if (error.error.status == 'code') {
-              this.errorMessage = error.error.message;
-            }
-          }
-          else {
-            if (error.error.status == 'code') {
-              this.errorMessage = error.error.messageAr;
-            }
-          }
-          return false;
-        });
-    });
+    // this.lstSavedComponents.forEach((elemnt) => {
+    //   this.masterAssetComponentService.CreateMasterAssetComponent(elemnt)
+    //     .subscribe(() => {
+    //       this.display = true;
+    //       this.ref.close();
+    //       this.route.navigate(['/dash/assets']);
+    //     }, error => {
+    //       this.errorDisplay = true;
+    //       if (this.lang == "en") {
+    //         if (error.error.status == 'code') {
+    //           this.errorMessage = error.error.message;
+    //         }
+    //       }
+    //       else {
+    //         if (error.error.status == 'code') {
+    //           this.errorMessage = error.error.messageAr;
+    //         }
+    //       }
+    //       return false;
+    //     });
+    // });
   }
   deleteComponent(id: number) {
     this.lstSavedComponents.forEach((element) => {
@@ -653,12 +680,7 @@ export class EditComponent implements OnInit {
       }
     });
   }
-  removeComponentItem(doc) {
-    const index: number = this.lstComponents.indexOf(doc);
-    if (index !== -1) {
-      this.lstComponents.splice(index, 1);
-    }
-  }
+ 
   addBrand() {
     const dialogRef2 = this.dialogService.open(CreateBrandComponent, {
       width: '50%',

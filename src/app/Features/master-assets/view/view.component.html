@@ -123,66 +123,50 @@
         <div class="col-2"><img src="{{ imgURL }}" width="100" height="100" /></div>
     </div>
 
-    
-    <div class="row top-buffer">
+    <div class="row mt-3"  *ngIf="lstAttachment.length>0">
+        <div style="font-size: 1rem;">    <i class="pi pi-paperclip"></i>
+            {{ 'Asset.Attachments' | translate }}</div>
         <div class="col-12">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>{{ "Asset.Id" | translate }}</th>
-                        <th>{{ "Asset.FileName" | translate }}</th>
-                        <th>{{ "Asset.Title" | translate }}</th>
-                        <th>{{ "Asset.Download" | translate }} </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let item of lstAttachment">
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.fileName }} </td>
-                        <td>{{ item.title }} </td>
-                        <td pTooltip="Download File" tooltipPosition="top">
-                            <a (click)="downloadFile(item.fileName)">
-                                <i class="fa-solid fa fa-download" style="color: #61bb20"></i></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row top-buffer">
-        <div class="col-12">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>{{ "Asset.Name" | translate }}</th>
-                        <th>{{ "Asset.ArabicName" | translate }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let i of lstPMTaskItems">
-                        <td>{{ i.name }}</td>
-                        <td>{{ i.nameAr }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row top-buffer">
-        <div class="col-12">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>{{ "Asset.Name" | translate }}</th>
-                        <th>{{ "Asset.ArabicName" | translate }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let tsk of lstWOTasks">
-                        <td>{{ tsk.name }}</td>
-                        <td>{{ tsk.nameAr }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <p-table    [paginator]="true"
+            [rows]="3"[totalRecords]="lstAttachment.length" [value]="lstAttachment" dataKey="id">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th class="text-center">{{ 'Asset.FileName' | translate }}</th>
+                  <th class="text-center">{{ 'Asset.Title' | translate }}</th>
+                  <th></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-masterAssetDocument let-rowIndex="rowIndex">
+                <tr>
+                  <td class="text-center">{{masterAssetDocument.fileName}}</td>
+                  <td class="text-center">{{masterAssetDocument.title}}</td>
+                  <td class="text-center"><i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download" style="color: #61bb20"></i>
+                  </td>        
+                </tr>
+                      </ng-template>
+            </p-table>
         </div>
     </div>
 </div>
+    <div class="row mt-3"  *ngIf="lstPMTaskItems.length>0">
+        <div style="font-size: 1rem;">   <i class="pi pi-wrench" ></i>
+            {{'Asset.PreventiveMaintainance' | translate}}
+        <div class="col-12">
+            <p-table    [paginator]="true"
+            [rows]="3"[totalRecords]="lstPMTaskItems.length" [value]="lstPMTaskItems" dataKey="id">
+              <ng-template pTemplate="header">
+                <tr>
+                    <th class="text-center">{{ "Asset.Name" | translate }}</th>
+                    <th class="text-center">{{ "Asset.ArabicName" | translate }}</th>
+                  <th></th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-PMTaskItem let-rowIndex="rowIndex">
+                <tr>
+                    <td class="text-center">{{ PMTaskItem.name}}</td>
+                    <td class="text-center">{{ PMTaskItem.nameAr}}</td>
+                </tr>
+                      </ng-template>
+            </p-table>
+        </div>
+    </div>
