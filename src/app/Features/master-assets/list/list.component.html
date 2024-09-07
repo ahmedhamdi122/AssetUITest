@@ -141,12 +141,12 @@
                         <td style="text-align: inherit;">{{lang =="en" ? item.ecriName:item.ecriNameAr}}</td>
                         <td style="text-align: inherit;">{{item.model}}</td>
                         <td style="text-align: inherit;">
-                            <span class="viewIcon" (click)="viewMasterAsset(item.id)"><i class="pi pi-eye"style="color: green" pTooltip="Show Details"></i>
+                            <span class="viewIcon" (click)="viewMasterAsset(item.id)"><i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i>
                             </span>
-                            <span class="editIcon" (click)="editMasterAsset(item.id)"><i class="pi pi-pen-to-square" style="color: purple" pTooltip="Edit"></i>
+                            <span class="editIcon" (click)="editMasterAsset(item.id)"><i class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i>
                             </span>
                             <span class="deleteIcon" (click)="deleteMasterAsset(item.id)"><i
-                                    class="pi pi-trash" style="color: red" pTooltip="Delete"></i>
+                                    class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i>
                             </span>
                         </td>
                     </tr>

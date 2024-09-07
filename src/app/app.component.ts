@@ -40,22 +40,28 @@ export class AppComponent implements OnInit {
   //   }
   // }
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) {
+  constructor(private authenticationService: AuthenticationService, private router: Router,private translate:TranslateService) {
+    translate.setDefaultLang('en');
+    translate.use('en');
     addEventListener('keydown', event => {
       if (event.key == 'r' || event.key == 'F5') this.isRefreshed = true;
     });
 
-
-
+    localStorage.removeItem("lang");
+    localStorage.removeItem("dir");
     if (localStorage.getItem("lang") == null) {
-      this.lang == 'ar'
-      this.direction = 'rtl';
-    }
-    else if (this.lang == 'en') {
+
+  
+      this.lang = 'en'
       this.direction = 'ltr';
-    } else if (this.lang == 'ar') {
-      this.direction = 'rtl';
+      localStorage.setItem("lang",this.lang);
+
     }
+    // else if (this.lang == 'en') {
+    //   this.direction = 'ltr';
+    // } else if (this.lang == 'ar') {
+    //   this.direction = 'rtl';
+    // }
 
   }
   ngOnInit(): void {

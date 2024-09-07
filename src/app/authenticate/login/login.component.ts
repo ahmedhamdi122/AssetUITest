@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from '../../Shared/Services/guards/authentication.service';
 import { AuthGuard } from '../../Shared/Services/guards/authGuard.guard';
 import { LoggedUser, User } from '../../Shared/Models/userVM';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 
 @Component({
@@ -18,10 +19,12 @@ export class LoginComponent implements OnInit {
   userCookieObj: LoggedUser;
   display: boolean = false;
   displayerror: string = "";
+  errorDisplay=false;
+  errorMessage:string='';
   lang = localStorage.getItem("lang");
   textDir: string = 'ltr';
   cookieValue: string = "";
-  constructor(private router: Router, private authenticationService: AuthenticationService,
+  constructor(private router: Router, private authenticationService: AuthenticationService,private ngxService:NgxUiLoaderService,
    private activateRoute: ActivatedRoute, private Authguardservice: AuthGuard) {
   }
   ngOnInit(): void {
@@ -40,25 +43,58 @@ export class LoginComponent implements OnInit {
       governorateId: 0, cityId: 0, organizationId: 0, subOrganizationId: 0, hospitalId: 0, supplierId: 0, commetieeMemberId: 0, canAdd: false,
       cityName: '', govName: '', subOrgName: '', orgName: '', cityNameAr: '', govNameAr: '', subOrgNameAr: '', orgNameAr: '', hospitalName: '', hospitalNameAr: ''
     }
-    this.lang = "en";
-    this.textDir = "ltr";
+
 
 
   }
   login() {
+    if(this.loggingUserObj.userName=='')
+      {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please Insert User Name";
+        }
+        else {
+          this.errorMessage = " من فضلك ادخل اسم المستخدم";
+          
+        }
+        return false;
+      }
+
+      if(this.loggingUserObj.passwordHash=='')
+        {
+          this.errorDisplay = true;
+          if (this.lang == "en") {
+            this.errorMessage = "Please Insert Your Password";
+          }
+          else {
+            this.errorMessage = " من فضلك أدخل كلمة السر";
+            
+          }
+          return false;
+        }
+  this.ngxService.start();
     this.authenticationService.login(this.loggingUserObj).subscribe(
       data => {
+
         this.userObj = this.authenticationService.currentUserValue;
         this.userObj.isRemembered = this.loggingUserObj.isRemembered;
 
-        this.lang = "ar";
-        this.textDir = "rtl";
+        this.ngxService.stop();
         this.router.navigate(['/dash']);
       },
       error => {
-        this.display = true;
-        this.displayerror = error.error.message;
+     
+        if (this.lang == "en") {
+            this.errorMessage = error.error.message;
+          }
+        else {
+            this.errorMessage = error.error.messageAr;
+        }
+        this.ngxService.stop();
+        this.errorDisplay = true;
         return false;
+     
       });
   }
 

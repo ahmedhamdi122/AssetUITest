@@ -294,7 +294,7 @@ ul.checkbox li.focus {
 .radio-inline input[type="radio"],
 .checkbox input[type="checkbox"],
 .checkbox-inline input[type="checkbox"] {
-  float: right;
+  float: left;
   margin-left: 10px !important;
 }
 

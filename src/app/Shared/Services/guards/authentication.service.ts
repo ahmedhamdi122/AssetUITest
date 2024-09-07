@@ -103,13 +103,13 @@ export class AuthenticationService {
     logout() {
         localStorage.removeItem('currentUser');
         localStorage.setItem('rememberCurrentUser', 'false');
-        localStorage.clear();
+        // localStorage.clear();
         this.userName = "";
         this.currentUserSubject.next(null);
         // this.cookieService.delete('usercookie');
         // this.cookieService.deleteAll();
-        localStorage.setItem('lang', "en");
-        localStorage.setItem('dir', "ltr");
+        // localStorage.setItem('lang', "en");
+        // localStorage.setItem('dir', "ltr");
         this.router.navigate(['/']);
 
     }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, viewChild } from '@angular/core';
 import { ListOriginVM } from 'src/app/Shared/Models/originVM';
 import { ListSubCategoryVM } from 'src/app/Shared/Models/subCategoryVM';
 import { LoggedUser } from 'src/app/Shared/Models/userVM';
@@ -93,6 +93,11 @@ export class EditComponent implements OnInit {
   fileToUpload: File;
   incremant: number = 0;
   isInvalidBrand=false;
+  imgVisible=true;
+  btnHidden: boolean = true;
+  @ViewChild('fileUpload',{static:false})
+  upfile: ElementRef;
+  imagePath: any = "";
   constructor(
     private authenticationService: AuthenticationService, private masterAssetService: MasterAssetService, private masterAssetComponentService: MasterAssetComponentService, private uploadService: UploadFilesService, private categoryTypeService: CategoryTypeService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private originService: OriginService, private brandService: BrandService, private ecriService: ECRIService, private assetPeriorityService: AssetPeriorityService,
     private pmTimeService: PMTimeService, private config: DynamicDialogConfig, private ref: DynamicDialogRef, private assetWorkOrderTaskService: AssetWorkOrderTaskService,
@@ -211,7 +216,18 @@ export class EditComponent implements OnInit {
     this.categoryService.GetCategoryByCategoryTypeId($event.target.value).subscribe(categories => { this.lstCategories = categories })
   }
   onFileSelected(event) {
+    console.log("event :",event.target.files)
     this.file = event.target.files[0];
+    if (this.file) {
+      var reader = new FileReader();
+      reader.readAsDataURL(this.file);
+      reader.onload = (event) => {
+        this.imagePath = event.target.result;
+        this.imgVisible = false;
+        this.btnHidden = false;
+        console.log("imagePath :",this.imagePath)
+      }
+    }
   }
   deleteFile(id: number) {
     this.masterAssetService.DeleteMasterAssetImage(id).subscribe((saved) => {
@@ -228,6 +244,12 @@ export class EditComponent implements OnInit {
       .subscribe((subs) => {
         this.lstSubCategories = subs;
       });
+  }
+  resetFile() {
+    console.log("upfile.nativeElement",this.upfile )
+    this.upfile.nativeElement.value = "";
+    this.imgVisible = true;
+    this.btnHidden = true;
   }
   onTimeChange($event) {
     this.selectedPMTime = $event.value;

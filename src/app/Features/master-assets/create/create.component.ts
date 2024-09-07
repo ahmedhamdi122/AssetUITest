@@ -91,7 +91,7 @@ export class CreateComponent implements OnInit {
   incremant: number = 0;
   @ViewChild('fileUpload', { static: false })
   upfile: ElementRef;
-  imgVisible: boolean = false;
+  imgVisible: boolean = true;
   btnHidden: boolean = true;
   fileToUpload: File;
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
@@ -358,7 +358,7 @@ export class CreateComponent implements OnInit {
           if (error.error.status == 'ExistsByNameModelAndVersion') {
             this.errorMessage = error.error.message;
           }
-          if (error.error.status == '"ExistsByNameArModelAndVersion"') {
+          if (error.error.status == "ExistsByNameArModelAndVersion") {
             this.errorMessage = error.error.message;
           }
         } if (this.lang == 'ar') {
@@ -391,15 +391,18 @@ export class CreateComponent implements OnInit {
     this.route.navigate([currentUrl]);
   }
   onFileSelected(event) {
+    console.log("event :",event.target.files)
     this.file = event.target.files[0];
     if (this.file) {
       var reader = new FileReader();
       reader.readAsDataURL(this.file);
-      reader.onload = (_event) => {
-        this.imagePath = reader.result;
+      reader.onload = (event) => {
+        this.imagePath = event.target.result;
         this.imgVisible = false;
         this.btnHidden = false;
+        console.log("imagePath :",this.imagePath)
       }
+     
     }
   }
   validateBrand()
@@ -408,6 +411,7 @@ export class CreateComponent implements OnInit {
     this.isInvalidBrand=!this.masterAssetObj.brandId;
   }
   resetFile() {
+    console.log("upfile.nativeElement",this.upfile.nativeElement)
     this.upfile.nativeElement.value = "";
     this.imgVisible = true;
     this.btnHidden = true;

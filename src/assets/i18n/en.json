@@ -1,5 +1,8 @@
 {
         "Asset": {
+                "add":"add",
+                "showDetails":"show Details",
+                "Login":"Login",
                 "printSelectedColumns":"Export Selected Columns",
                 "ExportAllColumns":"Export All Columns",
                 "Color": "Color",

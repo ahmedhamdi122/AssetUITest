@@ -149,8 +149,8 @@ export class ListComponent implements OnInit {
     this.first = 0;
     this.rows=10;
    this.ngxService.start('loading');
-   this.SearchSortMasterAsset.modelNumber=this.SearchSortMasterAsset.modelNumber?.trim() ?? ''
-   this.SearchSortMasterAsset.assetName=this.SearchSortMasterAsset.assetName?.trim() ?? ''
+  //  this.SearchSortMasterAsset.modelNumber=this.SearchSortMasterAsset.modelNumber?.trim() ?? ''
+  //  this.SearchSortMasterAsset.assetName=this.SearchSortMasterAsset.assetName?.trim() ?? ''
    this.masterAssetService.GetListMasterAssets(this.first,this.rows,this.SearchSortMasterAsset).subscribe((items) => {
       this.lstMasterAssets = items.results;
       this.count = items.count;
@@ -161,7 +161,7 @@ export class ListComponent implements OnInit {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Master Asset' : "بيان إضافة أصل جديد",
       width: '80%',
-      height:'650px',
+   
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",

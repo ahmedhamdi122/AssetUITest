@@ -115,7 +115,6 @@ export class TopheaderComponent implements OnInit {
 
       this.lang = 'ar';
       this.textDir = 'rtl';
-      this.translate.setDefaultLang('ar');
       localStorage.setItem('lang', 'ar');
       localStorage.setItem('dir', this.direction);
     }
@@ -154,7 +153,13 @@ export class TopheaderComponent implements OnInit {
 
     let currentUrl = this.route.url;
     localStorage.setItem('lang', lang);
-    localStorage.setItem('dir', this.direction);
+    if(lang=='en')
+    {
+      localStorage.setItem('dir', 'ltr');
+    }
+    else{
+    localStorage.setItem('dir', 'rtl');
+    }
     this.translate.use(lang);
     this.route.routeReuseStrategy.shouldReuseRoute = () => false;
     this.route.onSameUrlNavigation = 'reload';

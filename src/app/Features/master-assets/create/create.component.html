@@ -79,11 +79,11 @@
             <input id="upFile" type="file" class="file-input" style="visibility:hidden;"
               (change)="onFileSelected($event)" #fileUpload />
           </div>
-          <div class="col-2 mt-n5 text-center" *ngIf="imagePath.includes('png') || imagePath.includes('jpg')">
+          <div class="col-2 mt-n5 text-center">
             <img src="{{imagePath}}" width="80" height="80" [hidden]="imgVisible" />
 
-            <button type="button" class="btn reset " (click)="resetFile()" [hidden]="btnHidden">
-              <i class="fa-solid fa-circle-xmark  "></i>
+            <button type="button" class="btn reset "  (click)="resetFile()" [hidden]="btnHidden" >
+              <i class="pi pi-times-circle"  pTooltip="{{'Asset.Delete' | translate}}"></i>
             </button>
           </div>
         </div>
@@ -480,7 +480,7 @@
       </mat-tab>
       
     </mat-tab-group>
-  <div class="row top-buffer fixed-button ">
+  <div class="row top-buffer">
     <div class="col-12 text-center">
       <button type="submit" (click)="onSubmit()" class="btn btn-success" value="save">
         {{ "Asset.Save" | translate }}

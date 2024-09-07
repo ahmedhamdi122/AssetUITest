@@ -1,5 +1,8 @@
 {
         "Asset": {
+                "add":"اضافة",
+                "showDetails":"عرض التفاصيل",
+                "Login":"تسجيل الدخول",
                 "ExportAllColumns":"استخراج جميع الأعمدة",
                 "printSelectedColumns":"استخراج للأعمدةالمحددة",
                 "Color": "اللون",

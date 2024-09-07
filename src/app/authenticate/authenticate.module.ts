@@ -8,6 +8,8 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
 import { ForgetPasswordComponent } from './forget-password/forget-password.component';
 import { TranslateModule } from '@ngx-translate/core';
  import { MatToolbarModule } from '@angular/material/toolbar';
+ import { DialogModule } from 'primeng/dialog';
+
 // import { MatSidenavModule } from '@angular/material/sidenav';
 // import { MatListModule } from '@angular/material/list';
 import { TooltipModule } from 'primeng/tooltip';
@@ -26,6 +28,7 @@ import { TooltipModule } from 'primeng/tooltip';
     ReactiveFormsModule,
     TranslateModule,
      MatToolbarModule,
+     DialogModule,
     // MatSidenavModule,
     // MatListModule,
     AuthenticateRoutingModule,

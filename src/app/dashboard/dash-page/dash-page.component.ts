@@ -22,10 +22,6 @@ export class DashPageComponent implements OnInit {
       // this.lang == 'en';
       // this.textDir = 'ltr';
       // localStorage.setItem('lang', this.lang);
-      // this.lang = localStorage.getItem('lang');
-
-
-
       this.lang == 'ar'
       this.textDir = 'rtl';
       localStorage.setItem('lang', this.lang);
@@ -33,6 +29,7 @@ export class DashPageComponent implements OnInit {
     }
     else {
       this.lang = localStorage.getItem('lang');
+      this.textDir = localStorage.getItem('dir');
     }
   }
 

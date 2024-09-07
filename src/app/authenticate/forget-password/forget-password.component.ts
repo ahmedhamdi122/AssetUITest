@@ -43,6 +43,7 @@ export class ForgetPasswordComponent implements OnInit {
     this.userObj = this.authenticationService.currentUserValue;
     if (localStorage.getItem("lang") == null) {
       localStorage.setItem("lang", "ar");
+
     }
     if (this.lang == 'en') {
       this.textDir = 'ltr';

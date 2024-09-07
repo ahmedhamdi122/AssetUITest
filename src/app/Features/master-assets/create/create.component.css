@@ -33,12 +33,7 @@
     color: white;
     border-radius: 50%;
   }
-  .fixed-button {
-    position: fixed;
-    bottom: 16px;
-    left: 50%; 
-    transform: translateX(-50%); 
-  }
+
  i{
   font-size: 1.5rem;
  }

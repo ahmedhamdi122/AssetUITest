@@ -4,21 +4,29 @@
         <div class="col-4 text-center" style="margin-top: 30px;">
             <div class=""> <img src="assets/images/logo.png" alt="Asset Management Sysytem" width="300" height="300">
             </div>
-            <div class="card-body">
-                <form #form="ngForm" (ngSubmit)="form.valid && login()" >
+            <div class="card-body mt-1">
+                <form #form="ngForm">
                     <div class="row top-buffer">
-                        <input type="text" class="form-control" id="userName" name="userName" #userName="ngModel"
-                            [(ngModel)]="loggingUserObj.userName" placeholder="Username"
-                            [class.is-invalid]="(userName.touched && userName.errors) || form.submitted"
-                            [class.is-valid]="userName.valid && form.submitted"/>
-                        
-                    </div>
+                        <input type="text" 
+                        class="form-control" 
+                        id="userName" 
+                        name="userName" 
+                        #userName="ngModel" 
+                        [(ngModel)]="loggingUserObj.userName" 
+                        placeholder="Username"
+                        required
+                        [ngClass]="{
+                            'is-invalid': true,
+                            'is-valid': userName.touched && userName.valid
+                        }"/>
+                    </div>  
+              
                     <div class="row top-buffer"></div>
-                    <div class="row top-buffer">
-                        <input type="password" class="form-control" id="passwordHash" name="passwordHash"
+                    <div class="row top-buffer mt-3">
+                        <input type="password" class="form-control" id="passwordHash" name="passwordHash" required
                             placeholder="Password" #passwordHash="ngModel" [(ngModel)]="loggingUserObj.passwordHash"
-                            [class.is-invalid]="(passwordHash.touched && passwordHash.errors) || (passwordHash.untouched && passwordHash.errors) || form.submitted"
-                            [class.is-valid]="passwordHash.valid && form.submitted"/>
+                            [class.is-invalid]="true"
+                            [class.is-valid]="passwordHash.valid"/>
                            
                     </div>
                     <br/>
@@ -34,7 +42,7 @@
                     </div>
                     <div class="row">
                         <div class="text-center col-md-12">
-                            <input type="submit" name="signin" id="signin" class="btn " value="Login" />
+                             <div class="btn btn-primary" (click)="login()">{{"Asset.Login" | translate}}</div>
                         </div>
                     </div>
                 </form>
@@ -43,3 +51,12 @@
         <div class="col-4"></div>
     </div>
 </div>
+
+<p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '450px' }">
+    <p-header style="color: rgb(181, 4, 4)">
+      {{ "Asset.Error" | translate }}
+    </p-header>
+    <span style="color: rgb(181, 4, 4); font-weight: bold">
+      {{ errorMessage }}</span>
+  </p-dialog>
+  
