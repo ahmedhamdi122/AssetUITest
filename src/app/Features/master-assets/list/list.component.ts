@@ -161,7 +161,6 @@ export class ListComponent implements OnInit {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Master Asset' : "بيان إضافة أصل جديد",
       width: '80%',
-   
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",
@@ -199,7 +198,7 @@ export class ListComponent implements OnInit {
         id: id,
       },
       header: this.lang == "en" ? 'Edit Master Asset' : "تعديل في البيان الرئيسي للأصل",
-      width: '70%',
+      width: '80%',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",
@@ -217,7 +216,7 @@ export class ListComponent implements OnInit {
         id: id,
       },
       header: this.lang == "en" ? 'View Master Asset' : "البيان الرئيسي للأصل",
-      width: '70%',
+      width: '80%',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",

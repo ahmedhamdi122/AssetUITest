@@ -2,10 +2,12 @@
     <form #AddAssetForm="ngForm">
         <mat-tab-group mat-align-tabs="start">
             <mat-tab>
-                <ng-template mat-tab-label>
-                    <i class="fa-solid fa-database" style="margin: 0px 20px"></i>
-                    {{ 'Asset.Identification' | translate }}
+                <ng-template mat-tab-label >
+                    <span style="color: black;font-weight: bold;"><i class="pi pi-database" style="margin: 0px 20px;"></i>
+                        {{ 'Asset.Identification' | translate }}</span>
+            
                 </ng-template>
+                <div  class="container mt-5">
                 <div class="row top-buffer">
                     <div class="col-3">
                         <label for="code" [translate]="'Asset.Code'">Code</label>
@@ -32,7 +34,7 @@
                     </div>
                     <div class="col-3">
                         <label for="brand" [translate]="'Asset.Brand'">Brand</label>
-                        <select class="form-control" id="assetBrand" name="assetBrand" [value]="0"
+                        <select class="form-select" id="assetBrand" name="assetBrand" [value]="0"
                             (change)="getModel($event)">
                             <option value="0"> </option>
                             <option *ngFor="let brnd of lstBrands" [value]="brnd.id">
@@ -43,7 +45,7 @@
                     <div class="col-3">
 
                         <label for="model" [translate]="'Asset.Model'">Model</label>
-                        <select class="form-control" id="assetModel" name="assetModel" [value]="0"   (change)="getMasterAssetId($event)">
+                        <select class="form-select" id="assetModel" name="assetModel" [value]="0"   (change)="getMasterAssetId($event)">
                             <option value="0"> </option>
                             <option *ngFor="let mdls of lstModels" [value]="mdls">
                                 {{ mdls }}
@@ -52,11 +54,11 @@
 
                     </div>
                 </div>
-
-                <div class="row top-buffer">
+            
+                <div class="row mt-3">
                     <div class="col-4">
                         <label for="assetStatus" [translate]="'Asset.Status'"></label>
-                        <select class="form-control" id="assetStatus" name="assetStatus" #assetStatus="ngModel"
+                        <select class="form-select" id="assetStatus" name="assetStatus" #assetStatus="ngModel"
                             [value]="0" [(ngModel)]="selectedAssetStatusId">
                             <option value="0"> </option>
                             <option *ngFor="let sts of lstAssetStatus" [value]="sts.id">
@@ -75,7 +77,10 @@
                             [(ngModel)]="assetObj.barcode" #barcode="ngModel">
                     </div>
                 </div>
-                <div class="row top-buffer">
+            
+           
+             
+                <div class="row mt-3">
                     <div class="col-12">
                         <label for="remarks" [translate]="'Asset.Remarks'">Remarks</label>
                         <textarea type="text" class="form-control" id="remarks" name="remarks"
@@ -84,33 +89,33 @@
                     </div>
                 </div>
 
-                <div class="row top-buffer">
+                <div class="row mt-3">
                     <div class="col-12">
                         <input type="file" multiple #file placeholder="Choose file"
                             (change)="uploadMultipleFile($event)" style="display: none;">
                         <button type="button" name="btnUpload" class="btn btnUpload" style="margin:0px 10px"
                             (click)="file.click()">
-                            <i class="fa fa-upload"></i> {{'Asset.SelectUploadFiles' |
+                            <i class="pi pi-upload"></i> {{'Asset.SelectUploadFiles' |
                             translate }}
                         </button>
                     </div>
                 </div>
-                <div class="row top-buffer">
+                <div class="row mt-3">
                     <div class="col-12">
-                        <p-table [value]="lstAssetDetailDocument" dataKey="id"
+                        <p-table [value]="lstAssetDetailDocument" dataKey="id"     [rowHover]="true" [paginator]="true" [rows]="3" [totalRecords]="lstAssetDetailDocument.length" [scrollable]="true" 
                             styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th style="text-align: inherit;">{{ 'Asset.FileName' | translate }}</th>
-                                    <th style="text-align: inherit;">{{ 'Asset.Title' | translate }}</th>
-                                    <th style="text-align: inherit;"></th>
+                                    <th style="text-align: center;">{{ 'Asset.FileName' | translate }}</th>
+                                    <th style="text-align: center;">{{ 'Asset.Title' | translate }}</th>
+                                    <th></th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-assetDetailDocument let-rowIndex="rowIndex"
                                 let-editing="editing">
                                 <tr>
-                                    <td style="text-align: inherit;">{{assetDetailDocument.fileName}}</td>
-                                    <td style="text-align: inherit;" [pEditableColumn]="assetDetailDocument.title"
+                                    <td style="text-align: center;">{{assetDetailDocument.fileName}}</td>
+                                    <td style="text-align: center;" [pEditableColumn]="assetDetailDocument.title"
                                         pEditableColumnField="title" [pEditableColumnRowIndex]="rowIndex">
                                         <p-cellEditor>
                                             <ng-template pTemplate="input">
@@ -122,26 +127,34 @@
                                             </ng-template>
                                         </p-cellEditor>
                                     </td>
-                                    <td style="text-align: inherit;">
-                                        <span (click)="removeFileFromObjectArray(rowIndex)"><i
-                                                class="fa-solid fa-times-circle"
-                                                style="color: rgb(123, 9, 9);"></i></span>
+                                    <td style="text-align: center;">
+                                        <span (click)="removeFileFromObjectArray(rowIndex)" class="deleteIcon"><i
+                                            style="color: red" class="pi pi-trash" pTooltip="{{'Asset.Delete' | translate}}"
+                                            ></i></span>
                                     </td>
                                 </tr>
                             </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                  <td colspan="8" class="text-center">No data available</td>
+                                </tr>
+                              </ng-template>
                         </p-table>
+                    
                     </div>
-                </div>
+                </div> 
+            </div>
             </mat-tab>
             <mat-tab>
                 <ng-template mat-tab-label>
-                    <i class="fa fa-map-marker" style="margin: 0px 20px"></i>
-                    {{ 'Asset.Location' | translate }}
+                    <span style="color: black;font-weight: bold;">      <i class="pi pi-map-marker" style="margin: 0px 20px"></i>
+                        {{ 'Asset.Location' | translate }}</span>
+              
                 </ng-template>
                 <div class="row top-buffer">
                     <div class="col-3">
                         <label for="governorate" [translate]="'Asset.Governorate'"></label>
-                        <select class="form-control" id="governorate" pTooltip="{{'Asset.Governorate' | translate}}"
+                        <select class="form-select" id="governorate" pTooltip="{{'Asset.Governorate' | translate}}"
                             tooltipPosition=" bottom" name="governorate" #governorateId="ngModel" [disabled]="isGov"
                             (change)="getCitiesByGovId($event)" [value]="0" [(ngModel)]="selectedGovernorateId">
                             <option value="0">{{ 'Asset.Select' | translate }} {{'Asset.Governorate' |
@@ -156,7 +169,7 @@
                     </div>
                     <div class="col-3">
                         <label for="cityId" [translate]="'Asset.City'"></label>
-                        <select class="form-control" id="city" pTooltip="{{'Asset.City' | translate}}"
+                        <select class="form-select" id="city" pTooltip="{{'Asset.City' | translate}}"
                             tooltipPosition="bottom" name="city" [value]="0" [disabled]="isCity"
                             [(ngModel)]="selectedCityId" #cityId="ngModel">
                             <option value="0">{{ 'Asset.Select' | translate }} {{ 'Asset.City' | translate }}
@@ -169,7 +182,7 @@
 
                     <div class="col-3">
                         <label for="organization" [translate]="'Asset.Organization'"></label>
-                        <select class="form-control" id="organization" pTooltip="{{'Asset.Organization' | translate}}"
+                        <select class="form-select" id="organization" pTooltip="{{'Asset.Organization' | translate}}"
                             tooltipPosition="bottom" name="organization" (change)="getSubOrgByOrgId($event)" [value]="0"
                             [disabled]="isOrg" #organizationId="ngModel" [(ngModel)]="assetObj.organizationId">
                             <option value="0">{{ 'Asset.Select' | translate }} {{ 'Asset.Organization' |
@@ -182,7 +195,7 @@
 
                     <div class="col-3">
                         <label for="organization" [translate]="'Asset.SubOrganization'"></label>
-                        <select class="form-control" id="suborganization"
+                        <select class="form-select" id="suborganization"
                             pTooltip="{{'Asset.SubOrganization' | translate}}" tooltipPosition="bottom"
                             name="suborganization" [value]="0" [disabled]="isSubOrg"
                             (change)="getHospitalsBySubOrgId($event)" #subOrganizationId="ngModel"
@@ -198,7 +211,7 @@
                 <div class="row top-buffer">
                     <div class="col-4">
                         <label for="hospitalId" [translate]="'Asset.Hospitals'">Hospitals</label>
-                        <select class="form-control" id="hospital" name="hospital" #hospitalId="ngModel"
+                        <select class="form-select" id="hospital" name="hospital" #hospitalId="ngModel"
                             [(ngModel)]="assetObj.hospitalId" pTooltip="{{'Asset.Hospital' | translate}}"
                             tooltipPosition="bottom" (change)="getDepartmentsofHospital($event)" [disabled]="isDisabled"
                             [disabled]="isHospital">
@@ -219,7 +232,7 @@
                     </div>
                     <div [ngClass]="(isHospitalManager && canAddDepartment) == true ? 'col-2': 'col-3'">
                         <label for="departmentId" [translate]="'Asset.Departments'">Departments</label>
-                        <select class="form-control" id="departmentId" name="departmentId" #departmentId="ngModel"
+                        <select class="form-select" id="departmentId" name="departmentId" #departmentId="ngModel"
                             [value]="0" [(ngModel)]="assetObj.departmentId"
                             pTooltip="{{'Asset.Department' | translate}}" tooltipPosition="bottom">
                             <option value="0">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Department' |
@@ -243,7 +256,7 @@
                 <div class="row top-buffer">
                     <div class="col-4">
                         <label for="building" [translate]="'Asset.Buildings'">Buildings</label>
-                        <select class="form-control" id="buildingId" name="buildingId" #buildingId="ngModel"
+                        <select class="form-slecet" id="buildingId" name="buildingId" #buildingId="ngModel"
                             [value]="null" [(ngModel)]="assetObj.buildingId" pTooltip="{{'Asset.BUilding' | translate}}"
                             tooltipPosition="bottom" (change)="getFloorsByBuildId($event)">
                             <option value="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Building' | translate
@@ -256,7 +269,7 @@
                     </div>
                     <div class="col-4">
                         <label for="floor" [translate]="'Asset.Floors'">Floors</label>
-                        <select class="form-control" id="floorId" name="floorId" #floorId="ngModel" [value]="null"
+                        <select class="form-select" id="floorId" name="floorId" #floorId="ngModel" [value]="null"
                             [(ngModel)]="assetObj.floorId" pTooltip="{{'Asset.Floor' | translate}}"
                             tooltipPosition="bottom" (change)="getRoomsByfloorId($event)">
                             <option value="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Floor' | translate }}
@@ -270,7 +283,7 @@
 
                     <div class="col-4">
                         <label for="room" [translate]="'Asset.Rooms'">Rooms</label>
-                        <select class="form-control" id="roomId" name="roomId" #roomId="ngModel" [value]="null"
+                        <select class="form-select" id="roomId" name="roomId" #roomId="ngModel" [value]="null"
                             [(ngModel)]="assetObj.roomId" pTooltip="{{'Asset.Room' | translate}}"
                             tooltipPosition="bottom">
                             <option value="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Room' | translate }}
@@ -284,9 +297,9 @@
                 </div>
             </mat-tab>
             <mat-tab>
-                <ng-template mat-tab-label>
-                    <i class="fa-solid fa-code-branch" style="margin: 0px 20px"></i>
-                    {{ 'Asset.Purchase' | translate }}
+                <ng-template mat-tab-label>  <span style="color: black;font-weight: bold;">     <i class="pi pi-tag" style="margin: 0px 20px"></i>
+                    {{ 'Asset.Purchase' | translate }}</span>
+               
                 </ng-template>
                 <div class="row top-buffer">
 
@@ -311,7 +324,7 @@
                     </div>
                     <div [ngClass]="(isHospitalManager && canAddSupplier) == true ? 'col-2': 'col-3'">
                         <label for="supplier" [translate]="'Asset.Suppliers'">Suppliers</label>
-                        <select type="text" id="supplierId" class="form-control" name="supplierId"
+                        <select type="text" id="supplierId" class="form-select" name="supplierId"
                             [(ngModel)]="assetObj.supplierId" #supplierId="ngModel" [value]="null"
                             pTooltip="{{'Asset.Supplier' | translate}}" tooltipPosition="bottom">
                             <option [value]="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Supplier' |
@@ -327,7 +340,7 @@
                         [ngClass]="(isAdmin || isHospitalManager || canAddSupplier) == true ? 'col-1': ''"
                         *ngIf="isAdmin || isHospitalManager ||  canAddSupplier">
                         <span (click)="addSupplier()">
-                            <i class="fa fa-plus"></i>
+                            <i class="pi pi-plus-circle"></i>
                         </span>
                     </div>
                     <div class="col-2">
@@ -368,8 +381,9 @@
             </mat-tab>
             <mat-tab>
                 <ng-template mat-tab-label>
-                    <i class="fa-solid fa-info" style="margin: 0px 20px"></i>
-                    {{ 'Asset.Warranty' | translate }}
+                    <span style="color: black;font-weight: bold;">     <i class="pi pi-shield" style="margin: 0px 20px"></i>
+                        {{ 'Asset.Warranty' | translate }}</span>
+               
                 </ng-template>
                 <div class="row top-buffer">
                     <div class="col-6">

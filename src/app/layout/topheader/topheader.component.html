@@ -471,9 +471,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-truncate" href="#" data-bs-toggle="collapse" data-bs-target="#org" aria-expanded="false" aria-controls="org" *ngIf="isAdmin">
-                                    <i class="fa-solid fa-sitemap"></i> {{'Asset.heirarchicalstructure' | translate }}
-                                    <i class="pi pi-chevron-down float-end" [ngClass]="{'rotate-180': isCollapsed, 'rotate-0': !isCollapsed}"></i>
+                                <a class="nav-link text-truncate" href="#" data-bs-toggle="collapse" data-bs-target="#org" aria-expanded="false" aria-controls="org" *ngIf="isAdmin"  (click)="toggleCollapse('org')" >
+                                    <i class="pi pi-sitemap"></i> {{'Asset.heirarchicalstructure' | translate }}
+                                    <i class="pi pi-chevron-right float-end" [ngClass]="{'rotate-180': isCollapsed('org'), 'rotate-0': !isCollapsed('org')}"></i>
                                 </a>
                                 <ul class="collapse" id="org">
                                     <li class="nav-item">
@@ -505,36 +505,38 @@
                                 </ul>
                             </li>
 
-                            <li> <a class="text-truncate" href="#" data-bs-toggle="collapse" data-bs-target="#assets"
-                                class="collapsed active" *ngIf="isHospitalAsset || isAdmin"> <span class="nav-label"><i class="fa-solid fa-building"></i>
-                                    {{'Asset.Assets' | translate
-                                    }}</span> <span *ngIf="lang=='en'" class="fa fa-chevron-down pull-right"></span>
-                                <span *ngIf="lang=='ar'" class="pi pi-chevron-down pull-left"></span>
+                            <li> <a class="text-truncate" href="#" data-bs-toggle="collapse" data-bs-target="#assets" (click)="toggleCollapse('assets')"
+                                class="collapsed active" *ngIf="isHospitalAsset || isAdmin">
+
+                                <i class="pi pi-building"></i>{{'Asset.Assets' | translate }} 
+                                <i class="pi pi-chevron-right float-end" [ngClass]="{'rotate-180': isCollapsed('assets'), 'rotate-0': !isCollapsed('assets')}"></i>
+                                <!-- <span *ngIf="lang=='en'" class="pi pi-chevron-down float-end pull-right"></span>
+                                <span *ngIf="lang=='ar'" class="pi pi-chevron-down pull-left"></span> -->
                             </a>
                             <ul class="collapse" id="assets">
                                 <li class="active"><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/assets']" *ngIf="isMasterAsset || isAdmin || isHospitalManager">
+                                        [routerLink]="['/dash/assets']" *ngIf="isMasterAsset || isAdmin || isHospitalManager"><i class="pi pi-building-columns"></i>  
                                         {{
                                         'Asset.MasterAssets' | translate }}</a></li>
                                 <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/hospitalassets']" *ngIf="isHospitalAsset"> {{
+                                        [routerLink]="['/dash/hospitalassets']" *ngIf="isHospitalAsset"><i class="pi pi-building"></i>  {{
                                         'Asset.HospitalAssets' | translate }}</a> </li>
                                 <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/AssetStatus']" *ngIf="isAdmin"><i class="fa-solid fa-chart-simple"></i> {{
+                                        [routerLink]="['/dash/AssetStatus']" *ngIf="isAdmin"><i class="pi pi-chart-line"></i> {{
                                         'Asset.AssetStatus' | translate }}</a></li>
                                 <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/origins']" *ngIf="isAdmin"><i class="fa-solid fa-globe"></i>
+                                        [routerLink]="['/dash/origins']" *ngIf="isAdmin"><i class="pi pi-globe"></i>
                                         {{'Asset.Origins' |
                                         translate }}</a></li>
                                 <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/brands']" *ngIf="isAdmin"><i class="fa-solid fa-award"></i> {{
+                                        [routerLink]="['/dash/brands']" *ngIf="isAdmin"><i class="pi pi-briefcase"></i> {{
                                         'Asset.Brands' |
                                         translate }}</a></li>
                                 <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/suppliers']" *ngIf="isAdmin"><i class="fa-solid fa-warehouse"></i> {{
+                                        [routerLink]="['/dash/suppliers']" *ngIf="isAdmin"><i class="pi-warehouse"></i> {{
                                         'Asset.Suppliers' | translate }}</a></li>
                                 <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/categories']" *ngIf="isAdmin"><i class="fa-solid fa-code-branch"></i> {{
+                                        [routerLink]="['/dash/categories']" *ngIf="isAdmin"><i class="pi pi-bars"></i> {{
                                         'Asset.Categories' | translate }}</a></li>
                             </ul>
                         </li>

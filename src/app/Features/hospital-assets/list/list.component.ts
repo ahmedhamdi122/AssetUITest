@@ -343,7 +343,6 @@ export class ListComponent implements OnInit {
     };
 
     this.hideShowControls();
-
     // if (this.activeRoute.snapshot != null) {
     //   let supplierId = this.activeRoute.snapshot.params['supplierId'];
     //   this.sortFilterObjects.searchObj.supplierId = supplierId;
@@ -932,7 +931,7 @@ export class ListComponent implements OnInit {
       data: {
         id: id
       },
-      width: '70%',
+      width: '80%',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",
@@ -996,10 +995,9 @@ export class ListComponent implements OnInit {
     });
   }
   addAsset() {
-
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Hospital Asset' : "إضافة أصل في المستشفى",
-      width: '70%',
+      width: '80%',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",

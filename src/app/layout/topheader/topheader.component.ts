@@ -96,6 +96,7 @@ export class TopheaderComponent implements OnInit {
   showATSchedule: boolean = false;
   showAssetST: boolean = false;
   arrayLength: number = 0;
+  collapseStates = new Map<string, boolean>();
   constructor(public translate: TranslateService, private route: Router,
     private authenticationService: AuthenticationService,
     private requestService: RequestService, private masterContractService: MasterContractService,
@@ -148,6 +149,14 @@ export class TopheaderComponent implements OnInit {
     }
 
 
+  }
+  toggleCollapse(sectionId: string) {
+    const currentState = this.collapseStates.get(sectionId) || false;
+    this.collapseStates.set(sectionId, !currentState);
+  }
+
+  isCollapsed(sectionId: string): boolean {
+    return this.collapseStates.get(sectionId) || false;
   }
   selectLanguage(lang: string) {
 

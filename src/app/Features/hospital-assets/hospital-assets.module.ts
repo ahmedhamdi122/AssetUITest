@@ -54,6 +54,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { DeleteModule } from '../../../../src/app/Shared/delete/delete.module';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @NgModule({
   declarations: [
@@ -107,11 +108,11 @@ import { NgxUiLoaderModule } from 'ngx-ui-loader';
     MatBadgeModule,
     MatListModule,
     MatButtonModule,
-     CalendarModule,
+     CalendarModule,DialogModule
     // RadioButtonModule,
     // MatProgressSpinnerModule,
     // MatInputModule
   ],
-  providers: [MessageService, ConfirmationService, AuthGuard],
+  providers: [MessageService, ConfirmationService, AuthGuard,DialogService],
 })
 export class HospitalAssetsModule { }

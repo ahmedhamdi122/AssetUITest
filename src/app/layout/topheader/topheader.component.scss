@@ -11019,3 +11019,12 @@ a.text-gray-dark:hover {
 
  
 }
+.rotate-180 {
+    transform: rotate(90deg); /* Adjust the degree if needed */
+    transition: transform 0.3s ease;
+  }
+  
+  .rotate-0 {
+    transform: rotate(0deg);
+    transition: transform 0.3s ease;
+  }

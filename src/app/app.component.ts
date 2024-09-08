@@ -57,11 +57,11 @@ export class AppComponent implements OnInit {
       localStorage.setItem("lang",this.lang);
 
     }
-    // else if (this.lang == 'en') {
-    //   this.direction = 'ltr';
-    // } else if (this.lang == 'ar') {
-    //   this.direction = 'rtl';
-    // }
+    else if (this.lang == 'en') {
+      this.direction = 'ltr';
+    } else if (this.lang == 'ar') {
+      this.direction = 'rtl';
+    }
 
   }
   ngOnInit(): void {
