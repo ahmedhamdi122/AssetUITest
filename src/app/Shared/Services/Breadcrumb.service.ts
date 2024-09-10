@@ -41,9 +41,8 @@ export class BreadcrumbService {
                 });
             }
         }
-
     }
-
+    
     private createBreadcrumbUrl(route: ActivatedRouteSnapshot, parentUrl: string[]): string {
         const urlSegments: string[] = route.pathFromRoot
             .filter((snapshot: ActivatedRouteSnapshot) => snapshot.url.length > 0)

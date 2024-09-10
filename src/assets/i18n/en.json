@@ -31,6 +31,7 @@
                 "Roles": "Roles",
                 "Role": "Role",
                 "Settings": "Settings",
+                "PermissionSettings":"Permission Settings",
                 "Organizations": "Organizations",
                 "Organization": "Organization",
                 "AddOrganization": "Add Organization",

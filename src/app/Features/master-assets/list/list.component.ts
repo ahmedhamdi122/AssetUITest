@@ -86,19 +86,13 @@ export class ListComponent implements OnInit {
     this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
     this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
     this.canAddMasterAsset = (['AddMasterAsset'].some(r => this.lstRoleNames.includes(r)));
-
     this.page = {
       pagenumber: 1,
       pagesize: 10
     }
-
-
-
-
     this.onLoad();
   }
   onLoad() {
-
     this.ecriService.GetECRIS().subscribe(ecris => {
       this.lstECRIS = ecris;
     });

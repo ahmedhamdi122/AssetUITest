@@ -278,7 +278,7 @@ export class ListComponent implements OnInit {
       this.countExecluded = statuses.countExecluded;
       this.countHold = statuses.countHold;
 
-
+      console.log("status :",statuses)
       this.lstStatus10 = statuses.lstStatus10;
       this.lstStatus11 = statuses.lstStatus11;
       this.lstStatus12 = statuses.lstStatus12;
@@ -957,10 +957,10 @@ export class ListComponent implements OnInit {
 
     this.page.pagenumber = 1;
     this.page.pagesize = 10;
-
+    console.log("statusId :",this.statusId);
     this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
       this.lstStatuses = statuses.listStatus;
-
+      console.log("res :",statuses)
       this.countNeedRepair = statuses.countNeedRepair
       this.countInActive = statuses.countInActive;
       this.countWorking = statuses.countWorking;
@@ -1050,7 +1050,6 @@ export class ListComponent implements OnInit {
     // });
   }
   sort(event) {
-
     if (this.sortStatus == "descending") {
       this.sortStatus = "ascending";
       this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
@@ -1072,7 +1071,6 @@ export class ListComponent implements OnInit {
       this.count = items.count;
       this.loading = false;
     });
-
   }
   addServiceRequest(assetId: number) {
 
@@ -1095,7 +1093,7 @@ export class ListComponent implements OnInit {
   addExcludeHoldAsset(assetId: number) {
     this.router.navigate(['/dash/hospitalexecludes/addhospitalassetexeclude', assetId])
   }
-
+  
   getHospitalAssetsByStatusId(id: number) {
     this.page.pagenumber = 1;
     this.statusId = id;
@@ -1105,8 +1103,6 @@ export class ListComponent implements OnInit {
     this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
     this.sortFilterObjects.searchObj.warrantyTypeId = this.selectedWarrantyType;
     this.sortFilterObjects.searchObj.contractTypeId = this.selectedContractType;
-
-
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
       this.lstAssets = items.results;
       this.count = items.count;

@@ -43,8 +43,8 @@ import { AuthenticateModule } from './authenticate/authenticate.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { DashboardRoutingModule } from './dashboard/dashboard-routing.module';
 import { NgxBarcode6Module } from 'ngx-barcode6';
-// import { RoleCategoriesModule } from './Features/role-categories/role-categories.module';
-// import { RoleCategoriesRoutingModule } from './Features/role-categories/role-categories-routing.module';
+import { RoleCategoriesModule } from './Features/role-categories/role-categories.module';
+import { RoleCategoriesRoutingModule } from './Features/role-categories/role-categories-routing.module';
 // import { OrganizationsModule } from './Features/organizations/organizations.module';
 // import { OrganizationsRoutingModule } from './Features/organizations/organizations-routing.module';
 // import { SubOrganizationsModule } from './Features/sub-organizations/sub-organizations.module';
@@ -241,8 +241,8 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
     MatButtonModule,
     MatIconModule,
     BadgeModule,
-    // RoleCategoriesModule,
-    // RoleCategoriesRoutingModule,
+     RoleCategoriesModule,
+     RoleCategoriesRoutingModule,
 
     // OrganizationsModule,
     // OrganizationsRoutingModule,

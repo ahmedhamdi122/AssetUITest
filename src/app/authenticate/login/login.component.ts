@@ -4,8 +4,6 @@ import { AuthenticationService } from '../../Shared/Services/guards/authenticati
 import { AuthGuard } from '../../Shared/Services/guards/authGuard.guard';
 import { LoggedUser, User } from '../../Shared/Models/userVM';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
-
-
 @Component({
   selector: 'app-login',
   templateUrl:
@@ -13,7 +11,6 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
   loggingUserObj: User;
   userObj: LoggedUser;
   userCookieObj: LoggedUser;
@@ -28,8 +25,6 @@ export class LoginComponent implements OnInit {
    private activateRoute: ActivatedRoute, private Authguardservice: AuthGuard) {
   }
   ngOnInit(): void {
-
-
     this.loggingUserObj = { userName: '', passwordHash: '', isRemembered: false }
     this.userObj = {
       hospitalTypeNum: 0, email: '', userNameAr: '', strInsitute: '', strInsituteAr: '', strLogo: '', isAgency: false, isScrap: false, isVisit: false, isExternalFix: false, isOpenRequest: false,

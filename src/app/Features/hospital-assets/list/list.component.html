@@ -29,13 +29,13 @@
         <div class="col-10">
             <!-- <mat-list role="list" name="lstStatusItems">
                 <mat-list-item class="mat-list-item" role="listitem">
-                    <button mat-stroked-button name="btnAll" [matBadge]="totalCount"
+                    <button mat-stroked-button name="btnAll" pBadge  [value]="totalCount"
                         (click)="getHospitalAssetsByStatusId(0)" class="btnclicked">{{'Asset.All' | translate
                         }}</button>
                 </mat-list-item>
                 <mat-list-item class="mat-list-item" role="listitem" *ngFor="let sts of lstStatuses">
                     <button *ngIf="sts.id===1" mat-stroked-button name="btn{{sts.id}}" class="btnclicked"
-                        [matBadge]="countNeedRepair" (click)="getHospitalAssetsByStatusId(sts.id)"
+                    pBadge  [value]="countNeedRepair" (click)="getHospitalAssetsByStatusId(sts.id)"
                         [ngStyle]="{'color': sts.color}">
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
@@ -318,7 +318,7 @@
                     <div class="col-2">
                         <h5>{{ "Asset.Contract" | translate }}:</h5>
                     </div>
-                    <div class="col-4" *ngIf="contractTypeRadio">
+                    <!-- <div class="col-4" *ngIf="contractTypeRadio">
                         <div class="form-check form-check-inline" *ngFor="let cntrct of lstContractTypes">
                             <p-radioButton class="form-check-input" name="grpContractType" [value]="cntrct.id"
                                 [(ngModel)]="selectedContractType" (onClick)="onContractTypeChanged($event)">
@@ -326,7 +326,7 @@
                             <label [for]="cntrct.id" class="form-check-label">{{lang == "en"
                                 ?cntrct.name:cntrct.nameAr}}</label>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-3 " *ngIf="contractDateSearch">
                         <label for="contractStart">{{'Asset.From' | translate }}</label>
                         <p-calendar [(ngModel)]="sortFilterObjects.searchObj.contractStartDate" name="contractStart"
@@ -348,13 +348,13 @@
                         <h5>{{ "Asset.Warranty" | translate }}:</h5>
                     </div>
                     <div class="col-4" *ngIf="warrantyTypeRadio">
-                        <div class="form-check form-check-inline" *ngFor="let wrnty of lstWarrantyType">
+                        <!-- <div class="form-check form-check-inline" *ngFor="let wrnty of lstWarrantyType">
                             <p-radioButton class="form-check-input" name="grpWrntyType" [value]="wrnty.id"
                                 (onClick)="onWarrantyTypeChanged($event)" [(ngModel)]="selectedWarrantyType">
                             </p-radioButton>
                             <label [for]="wrnty.id" class="form-check-label">{{lang == "en"
                                 ?wrnty.name:wrnty.nameAr}}</label>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-3" *ngIf="warrantyEndSearch">
                         <label for="start">{{'Asset.From' | translate }}</label>
@@ -391,7 +391,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <p-table #dtAssets [rowHover]="true" [value]="lstAssets"
+            <p-table #dtAssets [rowHover]="true" [value]="lstAssets"  
                 styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [paginator]="true" [lazy]="true"
                 [rows]="10" [rowsPerPageOptions]="[10,25,50]" [totalRecords]="count" pageLinks="10"
                 (onLazyLoad)="clicktbl($event)" [loading]="loading" [columns]="selectedColumns"
@@ -477,13 +477,13 @@
                         </ng-container>
                         <td style="text-align: inherit;">
                             <span class="viewIcon" (click)="viewAsset(item.id)">
-                                <i class="pi pi-eye"style="color: green" pTooltip="Show Details"></i>
+                                <i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i>
                             </span>
                             <span class="editIcon" (click)="editAsset(item.id)">
-                                <i  class="pi pi-pen-to-square" style="color: purple" pTooltip="Edit"></i>
+                                <i  class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i>
                             </span>
                             <span class="deleteIcon" (click)="deleteAsset(item.id)">
-                                <i  class="pi pi-trash" style="color: red" pTooltip="Delete"></i>
+                                <i  class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i>
                             </span>
                         </td>
                     </tr>
