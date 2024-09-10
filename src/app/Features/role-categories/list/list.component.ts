@@ -43,21 +43,7 @@ export class ListComponent implements OnInit {
       this.ngxService.stop();
     });
 
-    if (this.lang == "en") {
-      this.cols = [
-        { field: 'id', header: 'Id' },
-        { field: 'name', header: 'Name' },
-        { field: 'orderId', header: 'OrderId' }
-      ];
-    }
-    else if (this.lang == "ar") {
-      this.cols = [
-        { field: 'id', header: 'م' },
-        { field: 'nameAr', header: 'الاسم' },
-        { field: 'orderId', header: 'الترتيب' }
-      ];
-
-    }
+ 
   }
   deleteRoleCategory(id: number) {
     this.rolecategoryService.GetRoleCategoryById(id).subscribe((data) => {
