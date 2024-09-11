@@ -11,8 +11,9 @@ import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.servic
   styleUrls: ['./edit.component.css']
 })
 export class EditComponent implements OnInit {
-
-
+  lang = localStorage.getItem('lang');
+  errorMessage='';
+  errorDisplay=false;
   frm: FormGroup;
   roleCategoryObj: EditRoleCategoryVM;
   selectedlang: string = '';
@@ -21,27 +22,53 @@ export class EditComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.frm = this.formBuilder.group({
-      name: [null, Validators.required],
-      nameAr: [null, Validators.required],
-      orderId: [null, Validators.required]
-    });
+  
 
     if (this.config.data != null || this.config.data != undefined) {
-      let id = this.config.data.id;
-      this.roleCategoryService.GetRoleCategoryById(id).subscribe(
-        (data => {
-          this.roleCategoryObj = data;
-        }), (error => console.log(error)));
-    }
+      this.roleCategoryObj = this.config.data.roleCategoryObj;
   }
-
+  }
   onSubmit() {
-    if (this.frm.valid) {
+ 
+
+    if(this.roleCategoryObj.orderId==null)
+      {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please Insert order";
+        }
+        else {
+          this.errorMessage = "من فضلك أدخل الترتيب"
+        }
+        return false;
+      }
+      if(this.roleCategoryObj.name=='')
+        {
+          this.errorDisplay = true;
+          if (this.lang == "en") {
+            this.errorMessage = "Please Insert name";
+          }
+          else {
+            this.errorMessage = "من فضلك أدخل الاسم"
+          }
+          return false;
+        }
+        if(this.roleCategoryObj.nameAr=='')
+          {
+            this.errorDisplay = true;
+            if (this.lang == "en") {
+              this.errorMessage = "Please Insert NameAr";
+            }
+            else {
+              this.errorMessage = "من فضلك أدخل الاسم بالعربي"
+            }
+            return false;
+          }
       this.roleCategoryService.UpdateRoleCategory(this.roleCategoryObj).subscribe(() => {
-        this.ref.close();
+
+        this.ref.close("updated");
       });
-    }
+    
   }
 
   reset() {

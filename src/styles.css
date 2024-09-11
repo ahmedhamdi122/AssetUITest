@@ -698,3 +698,7 @@ aside ::-webkit-scrollbar {
   transform: scaleX(-1) !important;
 
 }
+.p-dialog .p-dialog-content {
+   border-bottom-left-radius: 0px !important; 
+   border-bottom-right-radius: 0px !important
+}

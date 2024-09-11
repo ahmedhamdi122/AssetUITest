@@ -2,7 +2,7 @@ export class ListRoleCategoriesVM {
     id: number = 0;
     name: string = "";
     nameAr: string = "";
-    orderId: number;
+    orderId: number=0;
 
 }
 export class CreateRoleCategoryVM {
@@ -10,7 +10,6 @@ export class CreateRoleCategoryVM {
     nameAr: string;
     orderId: number;
 }
-
 
 export class EditRoleCategoryVM {
     id: number = 0;
@@ -21,14 +20,13 @@ export class EditRoleCategoryVM {
 
 
 export class SortRoleCategoryVM {
-    id: number = 0;
-    name: string = "";
-    nameAr: string = "";
-    orderId: number;
-    sortStatus: string;
+    SortField: string = "";
+    SortOrder: number;
+
 }
 
-export class MainClass {
+export class RoleCategoriesResult
+{
     results: ListRoleCategoriesVM[];
     count: number;
 }

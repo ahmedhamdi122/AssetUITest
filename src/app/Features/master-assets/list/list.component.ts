@@ -168,13 +168,18 @@ export class ListComponent implements OnInit {
       this.displaySuccessCreate  =true;
     }});
   }
-  deleteMasterAsset(id: number) {
-    var masterAsset=this.lstMasterAssets.find((obj)=>{ return obj.id==id});
+  deleteMasterAsset(masterAsset:any) {
+    console.log("masterasset :",masterAsset)
     this.confirmationService.confirm({
        header:`${this.lang == 'en' ? 'Delete Confirmation':'تأكيد المسح'}`,
       message: `${this.lang == 'en' ? `Are you sure that you want to delete ${masterAsset.name}?` : `هل أنت متأكد أنك تريد حذف ${masterAsset.nameAr}؟`}`,
+      rejectButtonStyleClass:"p-button-text style='margin:0 10'",
+      rejectLabel: this.lang === 'en' ? 'No' : 'لا', 
+      acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+      acceptIcon:"none",
+      rejectIcon:"none",
       accept: ()=>{
-        this.masterAssetService.DeleteMasterAsset(id).subscribe(deleted => {
+        this.masterAssetService.DeleteMasterAsset(masterAsset.id).subscribe(deleted => {
           this.LoadMasterAssets(this.reloadTableObj);
           this.dataTable.first=0;
         this.displaySuccessDelete=true;
@@ -182,8 +187,6 @@ export class ListComponent implements OnInit {
           (error) => {
             this.errorDisplay=true;
             this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;
-            //this.MessageService.add({severity:'error',summary:`${this.lang == 'en'?'Error':'خطأ'}`,detail:`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`})
-            
       },)}})
   }
   editMasterAsset(id: number) {

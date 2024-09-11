@@ -162,6 +162,7 @@ import { AuthGuard } from './Shared/Services/guards/authGuard.guard';
 import { ViewComponent } from './Features/errors/view/view.component';
 import { AuthenticationService } from './Shared/Services/guards/authentication.service';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 // FullCalendarModule.registerPlugins([
 //   interactionPlugin,
@@ -241,6 +242,7 @@ import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
     MatButtonModule,
     MatIconModule,
     BadgeModule,
+    ConfirmDialogModule,
      RoleCategoriesModule,
      RoleCategoriesRoutingModule,
 

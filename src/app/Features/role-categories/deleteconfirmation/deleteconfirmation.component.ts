@@ -34,9 +34,8 @@ export class DeleteconfirmationComponent implements OnInit {
       this.name = this.roleCategoryObj.nameAr;
     }
   }
-
+  confirmDelete(){}
   ngOnInit(): void {
-
     if (this.lang == 'en') {
       this.textDir = 'ltr';
     } else if (this.lang == 'ar') {

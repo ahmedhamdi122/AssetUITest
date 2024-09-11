@@ -17,6 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TooltipModule } from 'primeng/tooltip';
 import { TableModule } from 'primeng/table';
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
 @NgModule({
   declarations: [
     ListComponent,
@@ -26,6 +28,7 @@ import { DeleteModule } from 'src/app/Shared/delete/delete.module';
     ViewComponent,
   ],
   imports: [
+    ConfirmDialogModule,
     DeleteModule,
      CommonModule,
     FormsModule,

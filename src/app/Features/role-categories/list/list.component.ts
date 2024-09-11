@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Paging } from 'src/app/Shared/Models/paging';
-import { EditRoleCategoryVM, ListRoleCategoriesVM, SortRoleCategoryVM } from 'src/app/Shared/Models/rolecategoryVM';
+import { EditRoleCategoryVM, ListRoleCategoriesVM, RoleCategoriesResult, SortRoleCategoryVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
 import { DeleteconfirmationComponent } from '../deleteconfirmation/deleteconfirmation.component';
 import { CreateComponent } from '../create/create.component';
@@ -10,6 +10,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { EditComponent } from '../edit/edit.component';
 import { ViewComponent } from '../view/view.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { Table } from 'primeng/table';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-list',
@@ -20,49 +22,65 @@ export class ListComponent implements OnInit {
   public lang = localStorage.getItem("lang");
   page: Paging;
   count: number;
-  sortStatus: string = "ascending";
   sortObj: SortRoleCategoryVM;
   loading: boolean = true;
-  lstRoleCategories: ListRoleCategoriesVM[] = [];
+  lstRoleCategories:ListRoleCategoriesVM[];
+  RoleCategoriesResult: RoleCategoriesResult;
   selectedObj: EditRoleCategoryVM;
   cols: any[];
-
-  constructor(private rolecategoryService: RoleCategoryService, private dialog: MatDialog, private route: Router, public dialogService: DialogService,private ngxService:NgxUiLoaderService) { }
+  roleCategoryObj: EditRoleCategoryVM;
+  errorDisplay=false;
+  errorMessage='';
+  displaySuccessCreate=false;
+  displaySuccessDelete=false;
+  @ViewChild('table') dataTable: Table;
+  reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
+  constructor(private rolecategoryService: RoleCategoryService, private dialog: MatDialog, private route: Router, public dialogService: DialogService,private ngxService:NgxUiLoaderService,private confirmationService:ConfirmationService) { }
   ngOnInit(): void {
-
-    this.sortObj = { name: '', nameAr: '', sortStatus: '', id: 0, orderId: 0 }
-
-    this.page = { pagenumber: 1, pagesize: 10 }
-    this.ngxService.start();
-    this.rolecategoryService.GetRoleCategories().subscribe(items => {
-   
-      this.lstRoleCategories = items;
-      console.log("list :",this.lstRoleCategories)
-      this.count=this.lstRoleCategories.length;
-      this.loading = false;
-      this.ngxService.stop();
-    });
-
- 
   }
-  deleteRoleCategory(id: number) {
-    this.rolecategoryService.GetRoleCategoryById(id).subscribe((data) => {
-      this.selectedObj = data;
 
-      const dialogRef2 = this.dialog
-        .open(DeleteconfirmationComponent, {
-          width: '30%',
-          autoFocus: true,
-          data: {
-            id: this.selectedObj.id,
-            name: this.lang == this.selectedObj.name,
-            nameAr: this.selectedObj.nameAr,
-          },
-        });
-      dialogRef2.afterClosed().subscribe(() => {
-        this.reload();
-      })
-    });
+  deleteRoleCategory(item: any) {
+      this.selectedObj = item;
+      this.confirmationService.confirm({
+        message: `${this.lang === 'en' ? `Are you sure that you want to delete ${this.selectedObj.name}?` : `هل أنت متأكد أنك تريد حذف ${this.selectedObj.nameAr}؟`}`,
+        header: `${this.lang === 'en' ? 'Delete Confirmation' : 'تأكيد المسح'}`,
+        icon: 'pi pi-exclamation-triangle',
+        acceptIcon: 'none', 
+        rejectIcon: 'none', 
+        acceptButtonStyleClass: 'btn btn-primary m-2', 
+        rejectButtonStyleClass: 'btn btn-light m-2',
+        rejectLabel: this.lang === 'en' ? 'No' : 'لا',
+        acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+        accept: () => {
+          this.rolecategoryService.DeleteRoleCategory(item.id).subscribe(
+            deleted => {
+              this.displaySuccessDelete=true;
+
+            },
+            error => {
+              console.error('Error deleting Role Category:', error);
+            }
+          );
+        },
+        reject: () => {
+          console.log('Deletion rejected.');
+        }
+      });
+      // const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
+      //     width: '30%',
+      //     data: {
+      //       id: this.selectedObj.id,
+      //       name: this.selectedObj.name,
+      //       nameAr: this.selectedObj.nameAr,
+      //     },
+      //   });
+      // dialogRef2.afterClosed().subscribe((deleted) => {
+      //   if(deleted)
+      //   {
+      //     // this.reload();
+      //   }
+      // })
+    
   }
 
 
@@ -76,59 +94,85 @@ export class ListComponent implements OnInit {
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-    dialogRef2.onClose.subscribe((res) => {
-      this.reload();
+    dialogRef2.onClose.subscribe((created) => {
+      if(created)
+      {
+        this.displaySuccessCreate=true;
+        const lastPageIndex = Math.max(0, Math.floor((this.count - 1) / 10) * 10);
+        this.reloadTableObj.first=lastPageIndex;
+        this.LoadRoleCategories(this.reloadTableObj);
+        this.dataTable.first=lastPageIndex;
+      }
+     
     });
   }
 
 
   editRoleCategory(id: number) {
-    const ref = this.dialogService.open(EditComponent, {
-      header: this.lang == "en" ? 'Edit Role Category' : "تعديل  فئة الأدوار",
-      width: '50%',
-      data: {
-        id: id
-      },
-      style: {
-        'dir': this.lang == "en" ? 'ltr' : "rtl",
-        "text-align": this.lang == "en" ? 'left' : "right",
-        "direction": this.lang == "en" ? 'ltr' : "rtl"
-      }
-    });
-    ref.onClose.subscribe((page) => {
-      this.reload();
-    });
+    this.ngxService.start();
+    this.rolecategoryService.GetRoleCategoryById(id).subscribe(
+      (data => {
+        this.roleCategoryObj = data;
+        this.ngxService.stop()
+        const ref = this.dialogService.open(EditComponent, {
+          header: this.lang == "en" ? 'Edit Role Category' : "تعديل  فئة الأدوار",
+          width: '50%',
+          data: {
+            roleCategoryObj:  this.roleCategoryObj 
+          },
+          style: {
+            'dir': this.lang == "en" ? 'ltr' : "rtl",
+            "text-align": this.lang == "en" ? 'left' : "right",
+            "direction": this.lang == "en" ? 'ltr' : "rtl"
+          }
+        });
+        ref.onClose.subscribe((updated) => {
+          if(updated)
+          {
+           this.LoadRoleCategories(this.reloadTableObj);
+           this.dataTable.first=0;
+          }
+        });
+      }), (error => {console.log(error); this.ngxService.stop()}));
   }
-
-
   viewRoleCategory(id: number) {
-    const ref = this.dialogService.open(ViewComponent, {
-      header: this.lang == "en" ? 'View Role Category' : "بيان  فئة الأدوار",
-      width: '50%',
-      data: {
-        id: id
-      },
-      style: {
-        'dir': this.lang == "en" ? 'ltr' : "rtl",
-        "text-align": this.lang == "en" ? 'left' : "right",
-        "direction": this.lang == "en" ? 'ltr' : "rtl"
-      }
-    });
-    // ref.onClose.subscribe((page) => {
-    //   this.reload();
-    // });
+    this.ngxService.start();
+    this.rolecategoryService.GetRoleCategoryById(id).subscribe(
+      (data => {
+        this.roleCategoryObj = data;
+        this.ngxService.stop();
+        const ref = this.dialogService.open(ViewComponent, {
+          header: this.lang == "en" ? 'View Role Category' : "بيان  فئة الأدوار",
+          width: '50%',
+          data: {
+            roleCategoryObj: this.roleCategoryObj
+          },
+          style: {
+            'dir': this.lang == "en" ? 'ltr' : "rtl",
+            "text-align": this.lang == "en" ? 'left' : "right",
+            "direction": this.lang == "en" ? 'ltr' : "rtl"
+          }
+        });
+      }), (error =>{ console.log(error);     
+         this.ngxService.stop()}
+    ));
+    
   }
 
 
-  GetRoleCategories(event) {
-    this.page.pagenumber = (event.first + 10) / 10;
-    this.page.pagesize = event.rows;
-
-    this.rolecategoryService.GetRoleCategories().subscribe(items => {
-      this.lstRoleCategories = items;
+  LoadRoleCategories(event) {
+    console.log("event :",event);
+    
+    this.ngxService.start();
+    this.sortObj = { SortField: event.sortField, SortOrder: event.sortOrder }
+    this.rolecategoryService.LoadRoleCategories(event.first,event.rows, this.sortObj).subscribe(items => {
+      this.RoleCategoriesResult = items;
+     //  this.count=this.lstRoleCategories;
+     this.lstRoleCategories=this.RoleCategoriesResult.results;
+      this.count=this.RoleCategoriesResult.count;
+      this.ngxService.stop();
     });
   }
-
   reload() {
     let currentUrl = this.route.url;
     this.route.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -136,3 +180,4 @@ export class ListComponent implements OnInit {
     this.route.navigate([currentUrl]);
   }
 }
+
