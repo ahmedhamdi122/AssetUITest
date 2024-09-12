@@ -9,7 +9,7 @@ const routes: Routes = [
 
       // { path: 'dashboard', component: ChartdashboardComponent, data: { breadcrumb: 'Asset.DashBoard' } },
        { path: 'rolecategories', loadChildren: () => import('src/app/Features/role-categories/role-categories.module').then(m => m.RoleCategoriesModule) },
-      // { path: 'roles', loadChildren: () => import('src/app/Features/roles/roles.module').then(m => m.RolesModule) },
+      { path: 'roles', loadChildren: () => import('src/app/Features/roles/roles.module').then(m => m.RolesModule) },
       // { path: 'organizations', loadChildren: () => import('src/app/Features/organizations/organizations.module').then(m => m.OrganizationsModule) },
       // { path: 'governorates', loadChildren: () => import('src/app/Features/governorates/governorates.module').then(m => m.GovernoratesModule) },
       // { path: 'hospitals', loadChildren: () => import('src/app/Features/hospitals/hospitals.module').then(m => m.HospitalsModule) },

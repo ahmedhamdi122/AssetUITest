@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { Paging } from 'src/app/Shared/Models/paging';
 import { EditRoleCategoryVM, ListRoleCategoriesVM, RoleCategoriesResult, SortRoleCategoryVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
-import { DeleteconfirmationComponent } from '../deleteconfirmation/deleteconfirmation.component';
 import { CreateComponent } from '../create/create.component';
 import { DialogService } from 'primeng/dynamicdialog';
 import { EditComponent } from '../edit/edit.component';
@@ -39,7 +38,7 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  deleteRoleCategory(item: any) {
+  deleteRoleCategory(item: any,rowIndex:any) {
       this.selectedObj = item;
       this.confirmationService.confirm({
         message: `${this.lang === 'en' ? `Are you sure that you want to delete ${this.selectedObj.name}?` : `هل أنت متأكد أنك تريد حذف ${this.selectedObj.nameAr}؟`}`,
@@ -55,7 +54,10 @@ export class ListComponent implements OnInit {
           this.rolecategoryService.DeleteRoleCategory(item.id).subscribe(
             deleted => {
               this.displaySuccessDelete=true;
-
+              const first = (Math.floor(rowIndex / 10))*10;
+              this.reloadTableObj.first=first;
+              this.LoadRoleCategories( this.reloadTableObj);
+              this.dataTable.first=first;
             },
             error => {
               console.error('Error deleting Role Category:', error);
@@ -66,20 +68,7 @@ export class ListComponent implements OnInit {
           console.log('Deletion rejected.');
         }
       });
-      // const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
-      //     width: '30%',
-      //     data: {
-      //       id: this.selectedObj.id,
-      //       name: this.selectedObj.name,
-      //       nameAr: this.selectedObj.nameAr,
-      //     },
-      //   });
-      // dialogRef2.afterClosed().subscribe((deleted) => {
-      //   if(deleted)
-      //   {
-      //     // this.reload();
-      //   }
-      // })
+
     
   }
 
@@ -87,7 +76,7 @@ export class ListComponent implements OnInit {
   addRoleCategory() {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Role Category' : "إضافة  فئة الأدوار",
-      width: '50%',
+      width: '70%',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",
@@ -98,18 +87,16 @@ export class ListComponent implements OnInit {
       if(created)
       {
         this.displaySuccessCreate=true;
-        const lastPageIndex = Math.max(0, Math.floor((this.count - 1) / 10) * 10);
+         const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
         this.reloadTableObj.first=lastPageIndex;
         this.LoadRoleCategories(this.reloadTableObj);
-        this.dataTable.first=lastPageIndex;
+        this.dataTable.first=this.count;
       }
-     
     });
   }
+  editRoleCategory(id: number,rowIndex) {
 
 
-  editRoleCategory(id: number) {
-    this.ngxService.start();
     this.rolecategoryService.GetRoleCategoryById(id).subscribe(
       (data => {
         this.roleCategoryObj = data;
@@ -129,8 +116,10 @@ export class ListComponent implements OnInit {
         ref.onClose.subscribe((updated) => {
           if(updated)
           {
+            var first=Math.floor(rowIndex/10)*10;
+           this.reloadTableObj.first=first;
            this.LoadRoleCategories(this.reloadTableObj);
-           this.dataTable.first=0;
+           this.dataTable.first=first;
           }
         });
       }), (error => {console.log(error); this.ngxService.stop()}));
@@ -160,8 +149,7 @@ export class ListComponent implements OnInit {
   }
 
 
-  LoadRoleCategories(event) {
-    console.log("event :",event);
+  LoadRoleCategories(event) {    
     
     this.ngxService.start();
     this.sortObj = { SortField: event.sortField, SortOrder: event.sortOrder }
@@ -170,6 +158,7 @@ export class ListComponent implements OnInit {
      //  this.count=this.lstRoleCategories;
      this.lstRoleCategories=this.RoleCategoriesResult.results;
       this.count=this.RoleCategoriesResult.count;
+
       this.ngxService.stop();
     });
   }

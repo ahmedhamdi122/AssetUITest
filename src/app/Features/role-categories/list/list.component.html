@@ -17,7 +17,7 @@
     <div class="col-12 ">
       <p-table #table [value]="lstRoleCategories" styleClass="p-datatable-striped  p-datatable-sm p-datatable-gridlines"
         responsiveLayout="scroll" [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" pageLinks="10" [rowHover]="true"
-        (onLazyLoad)="LoadRoleCategories($event)" [customSort]="true" (sortFunction)="LoadRoleCategories($event)">
+        (onLazyLoad)="LoadRoleCategories($event)" [customSort]="true" (sortFunction)="LoadRoleCategories($event)" >
         <ng-template pTemplate="header">
           <tr>
               <th style="text-align: center;" pSortableColumn="id">{{'Asset.Id' | translate }}
@@ -32,16 +32,16 @@
             <th style="text-align: center;">{{ 'Asset.Actions' | translate }}</th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-item>
+        <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
           <tr>
             <td style="text-align: center;">{{ item.id }}</td>
             <td style="text-align: center;">{{lang == "en" ?item.name:item.nameAr}}</td>
             <td style="text-align: center;">{{item.orderId}}</td>
             <td style="text-align: center;">
               <span class="viewIcon" (click)="viewRoleCategory(item.id)"> <i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i></span>
-              <a class="editIcon" (click)="editRoleCategory(item.id)" [routerLinkActive]="['active']"><i
-                class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i></a>
-            </td>
+              <span class="editIcon" (click)="editRoleCategory(item.id,rowIndex)" [routerLinkActive]="['active']"><i class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i></span>
+              <span class="deleteIcon" (click)="deleteRoleCategory(item,rowIndex)"><i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i></span>       
+                 </td>
           </tr>
         </ng-template>
       </p-table>

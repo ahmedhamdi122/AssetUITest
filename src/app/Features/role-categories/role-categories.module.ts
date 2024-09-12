@@ -9,7 +9,6 @@ import { RoleCategoriesRoutingModule } from './role-categories-routing.module';
 import { ListComponent } from './list/list.component';
 import { CreateComponent } from './create/create.component';
 import { EditComponent } from './edit/edit.component';
-import { DeleteconfirmationComponent } from './deleteconfirmation/deleteconfirmation.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ViewComponent } from './view/view.component';
@@ -24,7 +23,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ListComponent,
     CreateComponent,
     EditComponent,
-    DeleteconfirmationComponent,
     ViewComponent,
   ],
   imports: [

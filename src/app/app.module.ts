@@ -163,6 +163,7 @@ import { ViewComponent } from './Features/errors/view/view.component';
 import { AuthenticationService } from './Shared/Services/guards/authentication.service';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { RolesModule } from './Features/roles/roles.module';
 
 // FullCalendarModule.registerPlugins([
 //   interactionPlugin,
@@ -179,7 +180,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   ],
   imports: [
     // DeleteModule,
-    
+
     BrowserModule,
     RouterModule,
     FormsModule,
@@ -217,6 +218,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
      FloatLabelModule,
      DynamicDialogModule,
      DialogModule,
+     RolesModule,
     // MatProgressSpinnerModule,
     TranslateModule.forRoot({
       loader: {
@@ -268,8 +270,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
     HospitalAssetsModule,
     HospitalAssetsRoutingModule,
-    
-
   ],
   providers: [{ provide: LocationStrategy, useClass: HashLocationStrategy },
    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },

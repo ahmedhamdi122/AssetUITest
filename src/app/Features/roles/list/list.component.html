@@ -1,0 +1,74 @@
+<div class="row p-2">
+
+
+  <div class="col-12">
+    <div class="row top-buffer">
+      <div class="col-10">
+        <h1 class="card-title"> {{ 'Asset.Roles' | translate }} </h1>
+      </div>
+      <div class="col-2">
+  
+        <a class="addbutton" (click)="addRole()">
+          <i class="pi pi-plus-circle"></i> {{ 'Asset.Create' | translate }}</a>
+  
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12 ">
+        <p-table #table [value]="lstRoles" styleClass="p-datatable-striped  p-datatable-sm p-datatable-gridlines"
+          responsiveLayout="scroll" [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" pageLinks="10" [rowHover]="true"
+          (onLazyLoad)="LoadRole($event)" [customSort]="true" (sortFunction)="LoadRole($event)" >
+          <ng-template pTemplate="header">
+            <tr>
+                <th style="text-align: center;" pSortableColumn="id">{{'Asset.Name' | translate }}
+                  <p-sortIcon id="{{ 'Asset.Name' | translate}}" field="id"/>
+              </th>
+              <th style="text-align: center;" pSortableColumn="name">{{'Asset.DisplayName' | translate }}
+                <p-sortIcon id="{{ 'Asset.DisplayName' | translate}}" field="name"/>
+            </th>
+            <th style="text-align: center;" pSortableColumn="orderId">{{'Asset.CategoryName' | translate }}
+              <p-sortIcon id="{{'Asset.CategoryName' | translate }}" field="orderId"/>
+          </th>
+              <th style="text-align: center;">{{ 'Asset.Actions' | translate }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+            <tr>
+              <td style="text-align: center;">{{ item.Name }}</td>
+              <td style="text-align: center;">{{lang == "en" ?item.DisplayName:item.DisplayName}}</td>
+              <td style="text-align: center;">{{item.CategoryName}}</td>
+              <td style="text-align: center;">
+                <span class="viewIcon" (click)="viewRole(item.id)"> <i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i></span>
+                <span class="editIcon" (click)="editRole(item.id,rowIndex)" [routerLinkActive]="['active']"><i class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i></span>
+                <span class="deleteIcon" (click)="deleteRole(item,rowIndex)"><i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i></span>       
+                   </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+  
+  
+  <p-confirmDialog></p-confirmDialog>
+  
+  <p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessCreate" [style]="{ width: '350px' }">
+      <ng-template pTemplate="header">
+        <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
+          {{ "Asset.Save" | translate }}
+        </h6>
+      </ng-template>
+      <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
+        {{ "Asset.SavedSuccess" | translate }}</span>
+    </p-dialog>
+    <p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessDelete" [style]="{ width: '350px' }">
+      <ng-template pTemplate="header">
+        <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
+          {{ "Asset.Delete" | translate }}
+        </h6>
+      </ng-template>
+      <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
+        {{ "Asset.DeletedSuccess" | translate }}</span>
+    </p-dialog>

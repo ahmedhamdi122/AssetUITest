@@ -61,7 +61,6 @@ export class CreateComponent implements OnInit {
           }
           return false;
         }
-        console.log("data :",this.roleCategoryObj)
         this.roleCategoryService.AddRoleCategories(this.roleCategoryObj).subscribe(()=>{
           this.ref.close("created");
         }
