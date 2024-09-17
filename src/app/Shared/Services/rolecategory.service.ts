@@ -2,7 +2,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { CreateRoleCategoryVM, EditRoleCategoryVM, ListRoleCategoriesVM, RoleCategoriesResult, SortRoleCategoryVM } from '../Models/rolecategoryVM';
+import { CreateRoleCategoryVM, EditRoleCategoryVM, ListRoleCategoriesVM, RoleCategoriesResult, SortSearchVM } from '../Models/rolecategoryVM';
 
 
 @Injectable({
@@ -39,8 +39,8 @@ export class RoleCategoryService {
   DeleteRoleCategory(id: number): Observable<any> {
     return this.httpClient.delete<any>(`${environment.DeleteRoleCategory}${id}`, this.httpHeader);
   }
-  LoadRoleCategories(first: number, rows: number, sortObj: SortRoleCategoryVM): Observable<RoleCategoriesResult> {
-    return this.httpClient.post<RoleCategoriesResult>(`${environment.LoadRoleCategories}${first}/${rows}`, sortObj, this.httpHeader);
+  LoadRoleCategories(first: number, rows: number, SortSearchObj: SortSearchVM): Observable<RoleCategoriesResult> {
+    return this.httpClient.post<RoleCategoriesResult>(`${environment.LoadRoleCategories}${first}/${rows}`, SortSearchObj, this.httpHeader);
   }
   GenerateRoleCategoryOrderId(): Observable<any> {
     return this.httpClient.get<any>(`${environment.GenerateRoleCategoryOrderId}`, this.httpHeader);

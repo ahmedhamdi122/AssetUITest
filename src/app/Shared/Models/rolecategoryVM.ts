@@ -19,10 +19,10 @@ export class EditRoleCategoryVM {
 }
 
 
-export class SortRoleCategoryVM {
+export class SortSearchVM {
     SortField: string = "";
     SortOrder: number;
-
+    search:string='';
 }
 
 export class RoleCategoriesResult

@@ -17,7 +17,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { ColumnFilter, TableModule } from 'primeng/table';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-
+import { CheckboxModule } from 'primeng/checkbox';
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
 @NgModule({
   declarations: [
@@ -26,6 +26,7 @@ import { DeleteModule } from 'src/app/Shared/delete/delete.module';
     EditComponent,
   ],
   imports: [
+    CheckboxModule,
     DeleteModule,
     CommonModule,
   

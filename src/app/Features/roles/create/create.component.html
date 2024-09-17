@@ -31,7 +31,31 @@
                         [class.is-valid]="displayName.valid && form.submitted">
                 </div>
             </div>
-            <div class="row top-buffer">
+            <div class="row mt-3">
+                <p-table [value]="permissions" [tableStyle]="{ 'min-width': '50rem' }">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="text-align: center;">Module</th>
+                            <th style="text-align: center;">Add</th>
+                            <th style="text-align: center;">Edit</th>
+                            <th style="text-align: center;">Delete</th>
+                            <th style="text-align: center;">Export Data Excel</th>
+                            <th style="text-align: center;">Export Data Pdf</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+                        <tr>
+                            <td style="text-align: center;">{{ rowData.moduleName }}</td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.add" (ngModelChange)="onCheckboxChange($event, rowIndex, 'add')" [binary]="true" inputId="add-{{rowIndex}}" /></td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.edit" (ngModelChange)="onCheckboxChange($event, rowIndex, 'edit')" [binary]="true" inputId="edit-{{rowIndex}}" /></td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.delete" (ngModelChange)="onCheckboxChange($event, rowIndex, 'delete')" [binary]="true" inputId="delete-{{rowIndex}}" /></td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.exportExcel" (ngModelChange)="onCheckboxChange($event, rowIndex, 'exportExcel')" [binary]="true" inputId="exportExcel-{{rowIndex}}" /></td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.exportPdf" (ngModelChange)="onCheckboxChange($event, rowIndex, 'exportPdf')" [binary]="true" inputId="exportPdf-{{rowIndex}}" /></td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="row mt-3">
                 <div class="col-12 text-center">
                     <button class="btn btn-success" value="save" (click)="onSubmit()"> {{ 'Asset.Save' | translate }}
                     </button>

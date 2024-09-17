@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Paging } from 'src/app/Shared/Models/paging';
-import { EditRoleCategoryVM, ListRoleCategoriesVM, RoleCategoriesResult, SortRoleCategoryVM } from 'src/app/Shared/Models/rolecategoryVM';
+import { EditRoleCategoryVM, ListRoleCategoriesVM, RoleCategoriesResult, SortSearchVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
 import { CreateComponent } from '../create/create.component';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -21,7 +21,7 @@ export class ListComponent implements OnInit {
   public lang = localStorage.getItem("lang");
   page: Paging;
   count: number;
-  sortObj: SortRoleCategoryVM;
+  sortObj: SortSearchVM;
   loading: boolean = true;
   lstRoleCategories:ListRoleCategoriesVM[];
   RoleCategoriesResult: RoleCategoriesResult;
@@ -51,8 +51,10 @@ export class ListComponent implements OnInit {
         rejectLabel: this.lang === 'en' ? 'No' : 'لا',
         acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
         accept: () => {
+          this.ngxService.start();
           this.rolecategoryService.DeleteRoleCategory(item.id).subscribe(
             deleted => {
+              this.ngxService.stop();
               this.displaySuccessDelete=true;
               const first = (Math.floor(rowIndex / 10))*10;
               this.reloadTableObj.first=first;
@@ -60,7 +62,10 @@ export class ListComponent implements OnInit {
               this.dataTable.first=first;
             },
             error => {
+              this.ngxService.stop();
               console.error('Error deleting Role Category:', error);
+              this.errorDisplay=true;
+              this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;
             }
           );
         },
@@ -150,15 +155,12 @@ export class ListComponent implements OnInit {
 
 
   LoadRoleCategories(event) {    
-    
     this.ngxService.start();
-    this.sortObj = { SortField: event.sortField, SortOrder: event.sortOrder }
+    this.sortObj = { SortField: event.sortField, SortOrder: event.sortOrder ,search:''}
     this.rolecategoryService.LoadRoleCategories(event.first,event.rows, this.sortObj).subscribe(items => {
       this.RoleCategoriesResult = items;
-     //  this.count=this.lstRoleCategories;
      this.lstRoleCategories=this.RoleCategoriesResult.results;
       this.count=this.RoleCategoriesResult.count;
-
       this.ngxService.stop();
     });
   }

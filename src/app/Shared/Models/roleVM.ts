@@ -18,3 +18,8 @@ export class EditRoleVM {
     name: string = "";
     displayName: string = "";
 }
+export class RolesResult
+{
+    results: ListRolesVM[];
+    count: number;
+}

@@ -2,11 +2,12 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
-import { ListRoleCategoriesVM } from 'src/app/Shared/Models/rolecategoryVM';
-import { EditRoleVM, ListRolesVM } from 'src/app/Shared/Models/roleVM';
+import { ListRoleCategoriesVM, SortSearchVM } from 'src/app/Shared/Models/rolecategoryVM';
+import { EditRoleVM, ListRolesVM, RolesResult } from 'src/app/Shared/Models/roleVM';
 import { RoleService } from 'src/app/Shared/Services/role.service';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
 import { CreateComponent } from '../create/create.component';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 
 @Component({
   selector: 'app-list',
@@ -21,30 +22,35 @@ export class ListComponent implements OnInit {
   lstRoles: ListRolesVM[] = [];
   selectedObj: EditRoleVM;
   lstRoleCategories: ListRoleCategoriesVM[];
+  RolesResult:RolesResult;
   displaySuccessDelete=false;
   displaySuccessCreate=false;
   count=0;
+  SearchSortRoleObj:SortSearchVM;
+  errorDisplay=false;
+  errorMessage='';
   constructor(
     private roleService: RoleService,
     private rolecategoryService: RoleCategoryService,
-    private route: Router ,private dialogService:DialogService
+    private route: Router ,private dialogService:DialogService,private ngxService:NgxUiLoaderService
   ) { }
   ngOnInit(): void {
-    this.roleService.GetRoles().subscribe((items) => {
-      this.lstRoles = items;
-      this.loading = false;
-      console.log("data :",this.lstRoles);
-    });
-
-
-    this.rolecategoryService.GetRoleCategories().subscribe((items) => {
-      this.lstRoleCategories = items;
-    });
+    this.SearchSortRoleObj = { SortField:'', SortOrder: 1 ,search:''}
   }
-
   LoadRole(event:any)
   {
-
+    this.ngxService.start();
+    this.SearchSortRoleObj={ SortField:event.sortField, SortOrder: event.sortOrder ,search:''};
+      this.roleService.GetRoles(event.first, event.rows,this.SearchSortRoleObj).subscribe((items) => {
+      this.lstRoles = items.results;           
+      this.count = items.count;
+       this.ngxService.stop();
+    },error=>{
+      this.errorDisplay=true;
+      this.errorMessage="error when delete";
+      this.ngxService.stop();
+    }
+    );
   }
   addRole()
   {

@@ -20,7 +20,7 @@ export const environment = {
   GetMasterAssetIdByNameBrandModel: "http://localhost:25813/api/MasterAsset/GetMasterAssetIdByNameBrandModel/",
   LoadRoleCategories: "http://localhost:25813/api/RoleCategory/LoadRoleCategories/",
   GenerateRoleCategoryOrderId: "http://localhost:25813/api/RoleCategory/GenerateRoleCategoryOrderId",
-  ListRoles: "http://localhost:25813/api/Role/ListRoles",
+  ListRoles: "http://localhost:25813/api/Role/Roles/",
   ListRolesWithPaging: "http://localhost:25813/api/Role/ListRolesWithPages/",
   getRolescount: "http://localhost:25813/api/Role/getcount/",
   AddRole: "http://localhost:25813/api/Role/AddRole",

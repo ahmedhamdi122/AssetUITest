@@ -20,23 +20,23 @@
           (onLazyLoad)="LoadRole($event)" [customSort]="true" (sortFunction)="LoadRole($event)" >
           <ng-template pTemplate="header">
             <tr>
-                <th style="text-align: center;" pSortableColumn="id">{{'Asset.Name' | translate }}
-                  <p-sortIcon id="{{ 'Asset.Name' | translate}}" field="id"/>
+                <th style="text-align: center;" pSortableColumn="name">{{'Asset.Name' | translate }}
+                  <p-sortIcon id="{{ 'Asset.Name' | translate}}" field="name"/>
               </th>
-              <th style="text-align: center;" pSortableColumn="name">{{'Asset.DisplayName' | translate }}
-                <p-sortIcon id="{{ 'Asset.DisplayName' | translate}}" field="name"/>
+              <th style="text-align: center;" pSortableColumn="displayName">{{'Asset.DisplayName' | translate }}
+                <p-sortIcon id="{{ 'Asset.DisplayName' | translate}}" field="displayName"/>
             </th>
-            <th style="text-align: center;" pSortableColumn="orderId">{{'Asset.CategoryName' | translate }}
-              <p-sortIcon id="{{'Asset.CategoryName' | translate }}" field="orderId"/>
+            <th style="text-align: center;" pSortableColumn="categoryName">{{'Asset.CategoryName' | translate }}
+              <p-sortIcon id="{{'Asset.CategoryName' | translate }}" field="categoryName"/>
           </th>
               <th style="text-align: center;">{{ 'Asset.Actions' | translate }}</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
             <tr>
-              <td style="text-align: center;">{{ item.Name }}</td>
-              <td style="text-align: center;">{{lang == "en" ?item.DisplayName:item.DisplayName}}</td>
-              <td style="text-align: center;">{{item.CategoryName}}</td>
+              <td style="text-align: center;">{{ item.name }}</td>
+              <td style="text-align: center;">{{item.displayName}}</td>
+              <td style="text-align: center;">{{item.categoryName}}</td>
               <td style="text-align: center;">
                 <span class="viewIcon" (click)="viewRole(item.id)"> <i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i></span>
                 <span class="editIcon" (click)="editRole(item.id,rowIndex)" [routerLinkActive]="['active']"><i class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i></span>
@@ -53,7 +53,11 @@
   
   
   <p-confirmDialog></p-confirmDialog>
-  
+  <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
+    <p-header style="color: rgb(181, 4, 4)"> {{ 'Asset.Error' | translate }} </p-header>
+    <span style="color: rgb(181, 4, 4); font-weight: bold">
+        {{ errorMessage }}</span>
+  </p-dialog>
   <p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessCreate" [style]="{ width: '350px' }">
       <ng-template pTemplate="header">
         <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">

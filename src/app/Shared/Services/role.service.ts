@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { CreateRoleVM, EditRoleVM, ListRolesVM } from '../Models/roleVM';
+import { CreateRoleVM, EditRoleVM, ListRolesVM, RolesResult } from '../Models/roleVM';
 import { Paging } from '../Models/paging';
+import { SortSearchVM } from '../Models/rolecategoryVM';
 
 
 
@@ -23,9 +24,9 @@ export class RoleService {
 
     })
   };
-
-  GetRoles(): Observable<ListRolesVM[]> {
-    return this.httpClient.get<ListRolesVM[]>(`${environment.ListRoles}`, this.httpHeader);
+ 
+  GetRoles(first: number, rows: number, SortSearchObj: SortSearchVM): Observable<RolesResult> {
+    return this.httpClient.post<RolesResult>(`${environment.ListRoles}${first}/${rows}`,SortSearchObj, this.httpHeader);
   }
   GetRolesWithPaging(pageInfo: Paging): Observable<ListRolesVM[]> {
     return this.httpClient.put<ListRolesVM[]>(`${environment.ListRolesWithPaging}`, pageInfo, this.httpHeader);

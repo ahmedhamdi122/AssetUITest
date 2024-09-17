@@ -41,25 +41,27 @@ export class AppComponent implements OnInit {
   // }
 
   constructor(private authenticationService: AuthenticationService, private router: Router,private translate:TranslateService) {
-    translate.setDefaultLang('en');
-    translate.use('en');
+    // translate.setDefaultLang('en');
+    // translate.use('en');
     addEventListener('keydown', event => {
       if (event.key == 'r' || event.key == 'F5') this.isRefreshed = true;
     });
 
-    localStorage.removeItem("lang");
-    localStorage.removeItem("dir");
+    // localStorage.removeItem("lang");
+    // localStorage.removeItem("dir");
     if (localStorage.getItem("lang") == null) {
 
   
       this.lang = 'en'
       this.direction = 'ltr';
       localStorage.setItem("lang",this.lang);
-
+      translate.use('en');
     }
     else if (this.lang == 'en') {
+      translate.use('en');
       this.direction = 'ltr';
     } else if (this.lang == 'ar') {
+      translate.use('ar');
       this.direction = 'rtl';
     }
 

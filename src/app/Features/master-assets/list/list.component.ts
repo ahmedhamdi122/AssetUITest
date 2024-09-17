@@ -169,7 +169,6 @@ export class ListComponent implements OnInit {
     }});
   }
   deleteMasterAsset(masterAsset:any) {
-    console.log("masterasset :",masterAsset)
     this.confirmationService.confirm({
        header:`${this.lang == 'en' ? 'Delete Confirmation':'تأكيد المسح'}`,
       message: `${this.lang == 'en' ? `Are you sure that you want to delete ${masterAsset.name}?` : `هل أنت متأكد أنك تريد حذف ${masterAsset.nameAr}؟`}`,
