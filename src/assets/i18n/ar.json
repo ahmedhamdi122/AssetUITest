@@ -1,5 +1,6 @@
 {
         "Asset": {
+                "Module":"الوحدة",
                 "add":"اضافة",
                 "showDetails":"عرض التفاصيل",
                 "Login":"تسجيل الدخول",
@@ -483,6 +484,9 @@
                 "heirarchicalstructure": "الهيكل الهرمي",
                 "ReportCertificate": "تقرير الشهادات",
                 "CountAssets": "عدد الأصول",
-                "SumPrices": "إجمالي التكلفة"
+                "SumPrices": "إجمالي التكلفة",
+                "SelectRolCategory":"اختر فئة الدور",
+                "addPermissions":"إضافة صلاحيات",
+                "viewDetails":"عرض التفاصيل"
         }
 }

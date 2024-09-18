@@ -16,6 +16,7 @@
                 "Edit": "Edit",
                 "Filter": "Filter",
                 "View": "View",
+                "viewDetails":"view Details",
                 "Name": "Name",
                 "ArabicName": "Arabic Name",
                 "StartDate": "Start Date",
@@ -478,7 +479,9 @@
                 "ReportCertificate": "Report Certificate",
                 "WarrantyExpiresEnd": "Warranty Period",
                 "CountAssets": "Count Assets",
-                "SumPrices": "Total Price"
+                "SumPrices": "Total Price",
+                "SelectRolCategory":"Select Rol Category",
+                "addPermissions":"Add Permissions"
                 
         }
 }

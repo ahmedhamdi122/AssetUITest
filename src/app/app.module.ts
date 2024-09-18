@@ -55,8 +55,8 @@ import { RoleCategoriesRoutingModule } from './Features/role-categories/role-cat
 // import { CitiesRoutingModule } from './Features/cities/cities-routing.module';
 // import { HospitalsModule } from './Features/hospitals/hospitals.module';
 // import { HospitalsRoutingModule } from './Features/hospitals/hospitals-routing.module';
-// import { UsersModule } from './Features/users/users.module';
-// import { UsersRoutingModule } from './Features/users/users-routing.module';
+import { UsersModule } from './Features/users/users.module';
+import { UsersRoutingModule } from './Features/users/users-routing.module';
  import { MasterAssetsModule } from './Features/master-assets/master-assets.module';
  import { MasterAssetsRoutingModule } from './Features/master-assets/master-assets-routing.module';
 //  import { NgxMatFileInputModule } from '@angular-material-components/file-input';
@@ -262,8 +262,8 @@ import { RolesModule } from './Features/roles/roles.module';
 
 
 
-    // UsersModule,
-    // UsersRoutingModule,
+    UsersModule,
+    UsersRoutingModule,
 
     MasterAssetsModule,
     MasterAssetsRoutingModule,

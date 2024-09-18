@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subject } from 'rxjs';
 import { ListRoleCategoriesVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { CreateRoleVM } from 'src/app/Shared/Models/roleVM';
@@ -29,43 +30,26 @@ export class CreateComponent implements OnInit {
   errorMessage: string ;
   errorDisplay: boolean = false;
   checked=false;
-  // Initialize the rows with sample data
-  permissions:Permission [] = [
-    {
-      moduleName: 'Master Asset',
-      add: false,
-      edit: false,
-      delete: false,
-      exportExcel: false,
-      exportPdf: false
-    },
-    {
-      moduleName: 'Hospital Asset',
-      add: false,
-      edit: false,
-      delete: false,
-      exportExcel: false,
-      exportPdf: false
-    },
-    {
-      moduleName: 'Employees',
-      add: false,
-      edit: false,
-      delete: false,
-      exportExcel: false,
-      exportPdf: false
-    }
-  ];
-  onCheckboxChange(event: any, rowIndex: number, permissionType: string) {
-    // this.permissions[rowIndex][permissionType] = event.target.checked;
-  }
-  constructor(private roleService: RoleService, private rolecategoryService: RoleCategoryService,private route: Router, private formBuilder: FormBuilder) {
+  isInvalidRoleCategory=false;
+  permissions = [
+    { moduleName: 'Master Asset',moduleNameAr:'الأصول الرئيسية', add: false, edit: false, delete: false,viewDetails:false, exportExcel: false, exportPdf: false },
+    { moduleName: 'Hospital Asset',moduleNameAr:'أصول المستشفى', add: false, edit: false, delete: false, viewDetails:false,exportExcel: false, exportPdf: false },
+    { moduleName: 'Brands', moduleNameAr:'الماركة',add: false, edit: false, delete: false, exportExcel: false,viewDetails:false, exportPdf: false },
+    { moduleName: 'Role', moduleNameAr:'الدور',add: false, edit: false, delete: false, exportExcel: false, viewDetails:false,exportPdf: false },
+    { moduleName: 'Category Role',moduleNameAr:'فئة الدور', add: false, edit: false, delete: false, exportExcel: false,viewDetails:false, exportPdf: false },
+];
+
+  constructor(private roleService: RoleService, private rolecategoryService: RoleCategoryService,private route: Router, private formBuilder: FormBuilder, private ref: DynamicDialogRef) {
 
     this.roleObj = {name: '', displayName: '',roleCategoryId:0  }
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       displayName:[null, Validators.required],
     });
+  }
+  validateRoleCategory()
+  {
+      this.isInvalidRoleCategory=!this.roleObj.roleCategoryId;
   }
   ngOnInit(): void {
 
@@ -79,30 +63,64 @@ export class CreateComponent implements OnInit {
     this.roleObj.roleCategoryId = Number($event.target.value);
   }
 
-
+  anyPermissionChecked(): boolean
+  {
+    return this.permissions.some(p => 
+      p.add || p.delete || p.edit || p.exportExcel || p.exportPdf || p.viewDetails
+    );
+  }
   onSubmit() {
+   
     if(this.roleObj.roleCategoryId == 0)
     {
+      this.errorDisplay = true;
       if(this.lang == "en")
       {
-        this.errorDisplay = true;
      this.errorMessage ="Please select category";
      return false;
       }
-
-      if(this.lang == "ar")
+      else if(this.lang == "ar")
       {
-        this.errorDisplay = true;
         this.errorMessage ="من فضلك اختر فئة";
         return false;
       }
     }
-    else
-    {
-        this.roleService.AddRole(this.roleObj).subscribe(result => {
-        this.route.navigate(['/dash/roles']);
-      });
-    }
+    else if(this.roleObj.name == '')
+      {
+        this.errorDisplay = true;
+        if(this.lang == "en")
+        {
+       this.errorMessage ="Please insert Name";
+       return false;
+        }
+        else if(this.lang == "ar")
+        {
+          this.errorMessage ="من فضلك ادخل اسم";
+          return false;
+        }
+      }
+    else if(this.roleObj.displayName == '')
+      {
+        this.errorDisplay = true;
+        if(this.lang == "en")
+        {
+       this.errorMessage ="Please select displayName";
+       return false;
+        }
+        else if(this.lang == "ar")
+        {
+          this.errorMessage ="من فضلك اختر اسم العرض";
+          return false;
+        }
+      }
+    else if(!this.anyPermissionChecked())
+      {
+        this.errorDisplay=true;
+        if(this.lang=='en'){this.errorMessage='Please select at least one permission'}
+        else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
+        return false;
+      }
+      this.ref.close();
   }
 
   reset(){  this.roleObj = { name: '',roleCategoryId:0,displayName:'' }}

@@ -54,7 +54,7 @@ export class ListComponent implements OnInit {
   }
   addRole()
   {
-    const dialogRef2 = this.dialogService.open(CreateComponent, {
+    const dialogRef = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
       width: '70%',
       style: {
@@ -63,16 +63,20 @@ export class ListComponent implements OnInit {
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-    // dialogRef2.onClose.subscribe((created) => {
+    // dialogRef.onClose.subscribe((created) => {
     //   if(created)
     //   {
-    //     this.displaySuccessCreate=true;
-    //      const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
-    //     this.reloadTableObj.first=lastPageIndex;
-    //     this.LoadRoleCategories(this.reloadTableObj);
-    //     this.dataTable.first=this.count;
+    //     // this.displaySuccessCreate=true;
     //   }
+    //   console.log("res :",created);
     // });
+    dialogRef.onClose.subscribe(() => {
+      // if(created)
+      // {
+      //   // this.displaySuccessCreate=true;
+      // }
+      console.log("res :");
+    });
   }
   viewRole(id:number)
   {
@@ -80,6 +84,9 @@ export class ListComponent implements OnInit {
   }
   deleteRole(item:any,rowIndex:number)
   {
+      //check in backEnd before delete role that is exists first 
+      //and no user have this role 
+
 
   }
   editRole(item:any,rowIndex:number)

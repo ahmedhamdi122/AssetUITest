@@ -400,7 +400,6 @@ export class CreateComponent implements OnInit {
         this.imagePath = event.target.result;
         this.imgVisible = false;
         this.btnHidden = false;
-        console.log("imagePath :",this.imagePath)
       }
      
     }

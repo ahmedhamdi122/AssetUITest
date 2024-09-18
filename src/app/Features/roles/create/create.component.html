@@ -1,38 +1,34 @@
 <div class="col-12">
     <div class="card-body">
-        <form class="form-horizontal" (ngSubmit)="form.valid" #form="ngForm">
+        <form class="form-horizontal" #form="ngForm">
 
             <div class="row top-buffer">
                 <div class="col-4">
-                    <label for="name" [translate]="'Asset.RoleCategory'"></label>
-                    <select class="form-control" name="roleCategoryId" id="roleCategoryId"
-                        class="form-control ng-dirty ng-invalid p-mr-2" [value]="0"
-                        (change)="changeRoleCategoryId($event)" [value]="0" [(ngModel)]="roleObj.roleCategoryId">
-                        <option value="0">
-                        </option>
-                        <option *ngFor="let item of lstRoleCategories" [value]="item.id">
-                            {{ item.name }}
-                        </option>
+                    <label for="RoleCategory" [translate]="'Asset.RoleCategory'"></label>
+                    <select class="form-select" name="RoleCategory" id="RoleCategory"
+                        (change)="changeRoleCategoryId($event)"  [(ngModel)]="roleObj.roleCategoryId"   (ngModelChange)="validateRoleCategory()" [ngClass]="{'is-invalid': isInvalidRoleCategory}">
+                        <option selected [ngValue]="0">{{'Asset.SelectRolCategory' | translate}}</option>
+                        <option *ngFor="let item of lstRoleCategories" [value]="item.id">{{ item.name }}</option>
                     </select>
                 </div>
                 <div class="col-4">
-                    <label for="name" class="control-label required" [translate]="'Asset.Name'"></label>
+                    <label for="AssetName" class="control-label required" [translate]="'Asset.Name'"></label>
                     <input type="text" class="form-control" pTooltip="Enter  name" tooltipPosition="bottom" id="name"
-                        name="name" #name="ngModel" [(ngModel)]="roleObj.name" autofocus required
+                        name="AssetName" #name="ngModel" [(ngModel)]="roleObj.name" autofocus required
                         [class.is-invalid]="(name.touched && name.errors) || (name.untouched && name.errors) || form.submitted"
                         [class.is-valid]="name.valid && form.submitted">
                 </div>
                 <div class="col-4">
-                    <label for="name" class="control-label required" [translate]="'Asset.DisplayName'"></label>
+                    <label for="displayName" class="control-label required" [translate]="'Asset.DisplayName'"></label>
                     <input type="text" class="form-control" pTooltip="Enter display name" tooltipPosition="bottom"
                         id="displayName" name="displayName" #displayName="ngModel" [(ngModel)]="roleObj.displayName"
-                        autofocus required
                         [class.is-invalid]="(displayName.touched && displayName.errors) || (displayName.untouched && displayName.errors) || form.submitted"
                         [class.is-valid]="displayName.valid && form.submitted">
                 </div>
             </div>
-            <div class="row mt-3">
-                <p-table [value]="permissions" [tableStyle]="{ 'min-width': '50rem' }">
+            <div class="row mt-3"><h5>{{'Asset.addPermissions' | translate }}</h5></div>
+            <div class="row">
+                <!-- <p-table [value]="permissions" [tableStyle]="{ 'min-width': '50rem' }">
                     <ng-template pTemplate="header">
                         <tr>
                             <th style="text-align: center;">Module</th>
@@ -43,17 +39,40 @@
                             <th style="text-align: center;">Export Data Pdf</th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex">
+                    <ng-template pTemplate="body" let-permission let-rowIndex="rowIndex">
                         <tr>
-                            <td style="text-align: center;">{{ rowData.moduleName }}</td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.add" (ngModelChange)="onCheckboxChange($event, rowIndex, 'add')" [binary]="true" inputId="add-{{rowIndex}}" /></td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.edit" (ngModelChange)="onCheckboxChange($event, rowIndex, 'edit')" [binary]="true" inputId="edit-{{rowIndex}}" /></td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.delete" (ngModelChange)="onCheckboxChange($event, rowIndex, 'delete')" [binary]="true" inputId="delete-{{rowIndex}}" /></td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.exportExcel" (ngModelChange)="onCheckboxChange($event, rowIndex, 'exportExcel')" [binary]="true" inputId="exportExcel-{{rowIndex}}" /></td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="rowData.exportPdf" (ngModelChange)="onCheckboxChange($event, rowIndex, 'exportPdf')" [binary]="true" inputId="exportPdf-{{rowIndex}}" /></td>
+                            <td style="text-align: center;">{{ permission.moduleName }}</td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.add"  [binary]="true" inputId="" /></td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.edit"  [binary]="true" inputId="" /></td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.delete" [binary]="true" inputId="" /></td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.exportExcel"  [binary]="true" inputId="" /></td>
+                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.exportPdf"  [binary]="true" inputId="" /></td>
                         </tr>
                     </ng-template>
-                </p-table>
+                </p-table> -->
+                <table class="table table-hover mt-3">
+                    <tr>
+                        <th style="text-align: center;">{{'Asset.Name' | translate}}</th>
+                        <th style="text-align: center;">{{'Asset.add' | translate}}</th>
+                        <th style="text-align: center;">{{'Asset.Edit' | translate}}</th>
+                        <th style="text-align: center;">{{'Asset.Delete' | translate}}</th>
+                        <th style="text-align: center;">{{'Asset.viewDetails' | translate}}</th>
+                        <th style="text-align: center;">{{'Asset.ExportExcel' | translate}}</th>
+                        <th style="text-align: center;">{{'Asset.ExportPdf' | translate}}</th>
+                    </tr>
+                    <tbody>
+                        <tr *ngFor="let permission of permissions">
+                            <td style="text-align: center;">{{lang=='en' ? permission.moduleName : permission.moduleNameAr}}</td>
+                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.add"  [ngModelOptions]="{standalone: true}">
+                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.edit"  [ngModelOptions]="{standalone: true}">
+                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.delete"  [ngModelOptions]="{standalone: true}">
+                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.viewDetails"  [ngModelOptions]="{standalone: true}">
+                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.exportExcel"  [ngModelOptions]="{standalone: true}">
+                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.exportPdf"  [ngModelOptions]="{standalone: true}">
+                        </tr>
+                      
+                    </tbody>
+                </table>
             </div>
             <div class="row mt-3">
                 <div class="col-12 text-center">

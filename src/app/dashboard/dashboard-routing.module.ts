@@ -13,7 +13,7 @@ const routes: Routes = [
       // { path: 'organizations', loadChildren: () => import('src/app/Features/organizations/organizations.module').then(m => m.OrganizationsModule) },
       // { path: 'governorates', loadChildren: () => import('src/app/Features/governorates/governorates.module').then(m => m.GovernoratesModule) },
       // { path: 'hospitals', loadChildren: () => import('src/app/Features/hospitals/hospitals.module').then(m => m.HospitalsModule) },
-      // { path: 'users', loadChildren: () => import('src/app/Features/users/users.module').then(m => m.UsersModule) },
+       { path: 'users', loadChildren: () => import('src/app/Features/users/users.module').then(m => m.UsersModule) },
        { path: 'assets', loadChildren: () => import('src/app/Features/master-assets/master-assets.module').then(m => m.MasterAssetsModule) },
         { path: 'hospitalassets', loadChildren: () => import('src/app/Features/hospital-assets/hospital-assets.module').then(m => m.HospitalAssetsModule) },
       // { path: 'hospitalcontract', loadChildren: () => import('src/app/Features/contracts/contracts.module').then(m => m.ContractsModule) },
