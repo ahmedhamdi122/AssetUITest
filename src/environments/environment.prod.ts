@@ -17,6 +17,7 @@ export const environment = {
 
   SortRoleCategories: "http://localhost/NewDesignAssetAPI/api/RoleCategory/SortRoleCategories/",
   GenerateRoleCategoryOrderId: "http://localhost/NewDesignAssetAPI/api/RoleCategory/GenerateRoleCategoryOrderId",
+  GetModulesWithPermissions:"http://localhost/NewDesignAssetAPI/api/module",
   ListRoles: "http://localhost/NewDesignAssetAPI/api/Role/ListRoles",
   ListRolesWithPaging: "http://localhost/NewDesignAssetAPI/api/Role/ListRolesWithPages/",
   getRolescount: "http://localhost/NewDesignAssetAPI/api/Role/getcount/",
