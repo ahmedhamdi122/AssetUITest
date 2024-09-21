@@ -12,6 +12,7 @@ export const environment = {
   getMacAddress: 'http://localhost:25813/api/Error/GetMacAddress',
   getMBSerial: 'http://localhost:25813/api/Error/GetMBSerial',
   FilePath: 'http://localhost:25813/',
+  GetModulesWithPermissions:"http://localhost:25813/api/module",
   ListRoleCategories: "http://localhost:25813/api/RoleCategory/ListRoleCategories",
   AddRoleCategory: "http://localhost:25813/api/RoleCategory/AddRoleCategory",
   GetRoleCategoryById: "http://localhost:25813/api/RoleCategory/GetById/",

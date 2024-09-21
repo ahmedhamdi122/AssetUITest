@@ -61,14 +61,15 @@
                         <th style="text-align: center;">{{'Asset.ExportPdf' | translate}}</th>
                     </tr>
                     <tbody>
-                        <tr *ngFor="let permission of permissions">
-                            <td style="text-align: center;">{{lang=='en' ? permission.moduleName : permission.moduleNameAr}}</td>
-                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.add"  [ngModelOptions]="{standalone: true}">
-                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.edit"  [ngModelOptions]="{standalone: true}">
-                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.delete"  [ngModelOptions]="{standalone: true}">
-                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.viewDetails"  [ngModelOptions]="{standalone: true}">
-                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.exportExcel"  [ngModelOptions]="{standalone: true}">
-                            <td style="text-align: center;"> <input type="checkbox" [(ngModel)]="permission.exportPdf"  [ngModelOptions]="{standalone: true}">
+                        <tr *ngFor="let ModuleWithPermission of lstModuleWithPermssions">
+                            <td style="text-align: center;">{{lang=='en' ? ModuleWithPermission.name : ModuleWithPermission.nameAr}}</td>
+                            <td style="text-align: center;"> <input type="checkbox" *ngIf="ModuleWithPermission.permissions[0]?.name=='Add'"   [ngModelOptions]="{standalone: true}">
+                            <td style="text-align: center;"> <input type="checkbox"  *ngIf="ModuleWithPermission.permissions[2]?.name=='Edit'" [ngModelOptions]="{standalone: true}">
+                            <td style="text-align: center;"> <input type="checkbox"  *ngIf="ModuleWithPermission.permissions[2]?.name=='Delete'"  [ngModelOptions]="{standalone: true}">
+                            <td  style="text-align: center;"> <input type="checkbox"  *ngIf="ModuleWithPermission.permissions[3]?.name=='Show Details'"  [ngModelOptions]="{standalone: true}">
+                            <td  style="text-align: center;"> <input  type="checkbox" *ngIf="ModuleWithPermission.permissions[4]?.name=='ExportExcel'"    [ngModelOptions]="{standalone: true}">
+                            <td style="text-align: center;"> <input type="checkbox"   [ngModelOptions]="{standalone: true}">
+                            
                         </tr>
                       
                     </tbody>

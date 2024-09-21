@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Subject } from 'rxjs';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ModulesWithPermissionsVM } from 'src/app/Shared/Models/Module';
 import { ListRoleCategoriesVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { CreateRoleVM } from 'src/app/Shared/Models/roleVM';
 import { RoleService } from 'src/app/Shared/Services/role.service';
@@ -27,6 +27,7 @@ export class CreateComponent implements OnInit {
   form: FormGroup;
   roleObj: CreateRoleVM;
   lstRoleCategories: ListRoleCategoriesVM[] = [];
+  lstModuleWithPermssions:ModulesWithPermissionsVM[];
   errorMessage: string ;
   errorDisplay: boolean = false;
   checked=false;
@@ -39,7 +40,7 @@ export class CreateComponent implements OnInit {
     { moduleName: 'Category Role',moduleNameAr:'فئة الدور', add: false, edit: false, delete: false, exportExcel: false,viewDetails:false, exportPdf: false },
 ];
 
-  constructor(private roleService: RoleService, private rolecategoryService: RoleCategoryService,private route: Router, private formBuilder: FormBuilder, private ref: DynamicDialogRef) {
+  constructor(private roleService: RoleService, private rolecategoryService: RoleCategoryService,private route: Router, private formBuilder: FormBuilder, private ref: DynamicDialogRef,private conf:DynamicDialogConfig) {
 
     this.roleObj = {name: '', displayName: '',roleCategoryId:0  }
     this.form = this.formBuilder.group({
@@ -53,11 +54,12 @@ export class CreateComponent implements OnInit {
   }
   ngOnInit(): void {
 
-    this.rolecategoryService.GetRoleCategories().subscribe(items => {
-      this.lstRoleCategories = items;
-    });
-  }
+   this.lstRoleCategories=this.conf.data.rolecategoryRes;
+   this.lstModuleWithPermssions=this.conf.data.ModuleWithPermissionRes;
+   console.log("lstModuleWithPermssions :",this.lstModuleWithPermssions);
+   
 
+  }
   changeRoleCategoryId($event:any)
   {
     this.roleObj.roleCategoryId = Number($event.target.value);
@@ -120,7 +122,7 @@ export class CreateComponent implements OnInit {
         else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
         return false;
       }
-      this.ref.close();
+      this.ref.close("craeted");
   }
 
   reset(){  this.roleObj = { name: '',roleCategoryId:0,displayName:'' }}

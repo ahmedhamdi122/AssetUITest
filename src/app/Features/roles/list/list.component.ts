@@ -8,6 +8,8 @@ import { RoleService } from 'src/app/Shared/Services/role.service';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
 import { CreateComponent } from '../create/create.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ModuleService } from 'src/app/Shared/Services/module.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -31,7 +33,7 @@ export class ListComponent implements OnInit {
   errorMessage='';
   constructor(
     private roleService: RoleService,
-    private rolecategoryService: RoleCategoryService,
+    private rolecategoryService: RoleCategoryService,private ModuleService:ModuleService,
     private route: Router ,private dialogService:DialogService,private ngxService:NgxUiLoaderService
   ) { }
   ngOnInit(): void {
@@ -54,29 +56,43 @@ export class ListComponent implements OnInit {
   }
   addRole()
   {
-    const dialogRef = this.dialogService.open(CreateComponent, {
-      header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
-      width: '70%',
-      style: {
-        'dir': this.lang == "en" ? 'ltr' : "rtl",
-        "text-align": this.lang == "en" ? 'left' : "right",
-        "direction": this.lang == "en" ? 'ltr' : "rtl"
+    this.ngxService.start()
+    var rolecategoryReq=this.rolecategoryService.GetRoleCategories();
+    var ModuleWithPermissionReq=this.ModuleService.GetModulesWithPermissions();
+    forkJoin([rolecategoryReq,ModuleWithPermissionReq]).subscribe(
+      {
+        next:([rolecategoryRes,ModuleWithPermissionRes])=>{
+          this.ngxService.stop();
+          const dialogRef = this.dialogService.open(CreateComponent, {
+            header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
+            width: '70%',
+            data:{"rolecategoryRes":rolecategoryRes,"ModuleWithPermissionRes":ModuleWithPermissionRes},
+            style: {
+              'dir': this.lang == "en" ? 'ltr' : "rtl",
+              "text-align": this.lang == "en" ? 'left' : "right",
+              "direction": this.lang == "en" ? 'ltr' : "rtl"
+            }
+          });
+              dialogRef.onClose.subscribe((created) => {
+            if(created)
+            {
+               this.displaySuccessCreate=true;
+               console.log("res from close:",created);
+            }
+          });
+          
+        },
+        error:(err)=>{
+          console.log("some error  : ",err);
+          
+        }
       }
-    });
-    // dialogRef.onClose.subscribe((created) => {
-    //   if(created)
-    //   {
-    //     // this.displaySuccessCreate=true;
-    //   }
-    //   console.log("res :",created);
-    // });
-    dialogRef.onClose.subscribe(() => {
-      // if(created)
-      // {
-      //   // this.displaySuccessCreate=true;
-      // }
-      console.log("res :");
-    });
+    )
+     
+
+
+
+
   }
   viewRole(id:number)
   {
