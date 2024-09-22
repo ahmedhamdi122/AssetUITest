@@ -31,18 +31,10 @@ export class CreateComponent implements OnInit {
   errorMessage: string ;
   errorDisplay: boolean = false;
   checked=false;
-  isInvalidRoleCategory=false;
-  permissions = [
-    { moduleName: 'Master Asset',moduleNameAr:'الأصول الرئيسية', add: false, edit: false, delete: false,viewDetails:false, exportExcel: false, exportPdf: false },
-    { moduleName: 'Hospital Asset',moduleNameAr:'أصول المستشفى', add: false, edit: false, delete: false, viewDetails:false,exportExcel: false, exportPdf: false },
-    { moduleName: 'Brands', moduleNameAr:'الماركة',add: false, edit: false, delete: false, exportExcel: false,viewDetails:false, exportPdf: false },
-    { moduleName: 'Role', moduleNameAr:'الدور',add: false, edit: false, delete: false, exportExcel: false, viewDetails:false,exportPdf: false },
-    { moduleName: 'Category Role',moduleNameAr:'فئة الدور', add: false, edit: false, delete: false, exportExcel: false,viewDetails:false, exportPdf: false },
-];
-
-  constructor(private roleService: RoleService, private rolecategoryService: RoleCategoryService,private route: Router, private formBuilder: FormBuilder, private ref: DynamicDialogRef,private conf:DynamicDialogConfig) {
-
-    this.roleObj = {name: '', displayName: '',roleCategoryId:0  }
+  dir=this.lang=='en'?'ltr':'rtl';
+  isInvalidRoleCategory=true;
+  lsCheckedModulesWithPermissions:ModulesWithPermissionsVM[];
+  constructor(private roleService: RoleService, private rolecategoryService: RoleCategoryService, private formBuilder: FormBuilder, private ref: DynamicDialogRef,private conf:DynamicDialogConfig) {
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       displayName:[null, Validators.required],
@@ -53,24 +45,39 @@ export class CreateComponent implements OnInit {
       this.isInvalidRoleCategory=!this.roleObj.roleCategoryId;
   }
   ngOnInit(): void {
-
+    this.roleObj={roleCategoryId:null,name:'',displayName:'',ModulesWithPermissionsVM:[]};
    this.lstRoleCategories=this.conf.data.rolecategoryRes;
-   this.lstModuleWithPermssions=this.conf.data.ModuleWithPermissionRes;
-   console.log("lstModuleWithPermssions :",this.lstModuleWithPermssions);
+   this.lstModuleWithPermssions=this.conf.data.ModuleWithPermissionRes;   
    
-
+  }
+  getPermissionValue(ModulesWithPermissions:ModulesWithPermissionsVM,permission:string)
+  {
+    var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
+    if(per)return per.value;
+    return false;
+  }
+  updatePermissionValue(ModulesWithPermissions:ModulesWithPermissionsVM,permission:string,value:boolean)
+  {
+    var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
+    if(per)return per.value=value;
+  
+  }
+  hasPermission(rowIndex:number,permission:string)
+  {
+    return this.lstModuleWithPermssions[rowIndex].permissions.some(p=>p.name===permission);
   }
   changeRoleCategoryId($event:any)
   {
-    this.roleObj.roleCategoryId = Number($event.target.value);
+    this.roleObj.roleCategoryId = $event.target.value!==null?Number($event.target.value):null;
+    console.log("roleCategoryId:",this.roleObj.roleCategoryId);
+
   }
 
-  anyPermissionChecked(): boolean
-  {
-    return this.permissions.some(p => 
-      p.add || p.delete || p.edit || p.exportExcel || p.exportPdf || p.viewDetails
+  anyPermissionChecked(): boolean {
+    return this.lstModuleWithPermssions.some(module => 
+        module.permissions.some(permission => permission.value === true)
     );
-  }
+}
   onSubmit() {
    
     if(this.roleObj.roleCategoryId == 0)
@@ -123,10 +130,16 @@ export class CreateComponent implements OnInit {
         return false;
       }
       this.ref.close("craeted");
-  }
 
-  reset(){  this.roleObj = { name: '',roleCategoryId:0,displayName:'' }}
+  //   this.lsCheckedModulesWithPermissions = this.lstModuleWithPermssions.map(module => ({
+  //     ...module, // Copies all properties of the module
+  //     permissions: module.permissions.filter(permission => permission.value === true) // Filters permissions
+  // })).filter(module => module.permissions.length > 0);
+  //    console.log("lsCheckedModulesWithPermissions :",this.lsCheckedModulesWithPermissions);
+  //   console.log("lstModuleWithPermssions :",this.lsCheckedModulesWithPermissions.forEach(mp=>mp.permissions.filter(p=>p.value===true)));
+  // }
+
   
-  back(){  this.route.navigate(['/dash/roles']);}
+}
   
 }

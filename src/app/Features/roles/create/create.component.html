@@ -1,26 +1,25 @@
 <div class="col-12">
     <div class="card-body">
         <form class="form-horizontal" #form="ngForm">
-
             <div class="row top-buffer">
                 <div class="col-4">
                     <label for="RoleCategory" [translate]="'Asset.RoleCategory'"></label>
-                    <select class="form-select" name="RoleCategory" id="RoleCategory"
-                        (change)="changeRoleCategoryId($event)"  [(ngModel)]="roleObj.roleCategoryId"   (ngModelChange)="validateRoleCategory()" [ngClass]="{'is-invalid': isInvalidRoleCategory}">
-                        <option selected [ngValue]="0">{{'Asset.SelectRolCategory' | translate}}</option>
+                    <select class="form-select" #roleCategoryId="ngModel" name="RoleCategory" id="RoleCategory"
+                         [(ngModel)]="roleObj.roleCategoryId"   (ngModelChange)="validateRoleCategory()" [ngClass]="{'is-invalid': isInvalidRoleCategory}">
+                        <option selected [ngValue]="null">{{'Asset.SelectRolCategory' | translate}}</option>
                         <option *ngFor="let item of lstRoleCategories" [value]="item.id">{{ item.name }}</option>
                     </select>
                 </div>
                 <div class="col-4">
-                    <label for="AssetName" class="control-label required" [translate]="'Asset.Name'"></label>
-                    <input type="text" class="form-control" pTooltip="Enter  name" tooltipPosition="bottom" id="name"
-                        name="AssetName" #name="ngModel" [(ngModel)]="roleObj.name" autofocus required
+                    <label for="roleName" class="control-label required" [translate]="'Asset.Name'"></label>
+                    <input type="text" class="form-control"  id="roleName"
+                        name="AssetName" #name="ngModel" [(ngModel)]="roleObj.name"  
                         [class.is-invalid]="(name.touched && name.errors) || (name.untouched && name.errors) || form.submitted"
                         [class.is-valid]="name.valid && form.submitted">
                 </div>
                 <div class="col-4">
                     <label for="displayName" class="control-label required" [translate]="'Asset.DisplayName'"></label>
-                    <input type="text" class="form-control" pTooltip="Enter display name" tooltipPosition="bottom"
+                    <input type="text" class="form-control" 
                         id="displayName" name="displayName" #displayName="ngModel" [(ngModel)]="roleObj.displayName"
                         [class.is-invalid]="(displayName.touched && displayName.errors) || (displayName.untouched && displayName.errors) || form.submitted"
                         [class.is-valid]="displayName.valid && form.submitted">
@@ -28,56 +27,32 @@
             </div>
             <div class="row mt-3"><h5>{{'Asset.addPermissions' | translate }}</h5></div>
             <div class="row">
-                <!-- <p-table [value]="permissions" [tableStyle]="{ 'min-width': '50rem' }">
+                <p-table [dir]="dir"  [value]="lstModuleWithPermssions" scrollable="true" [totalRecords]="lstModuleWithPermssions.length" scrollHeight="400px" [paginator]="true" [rows]="5">
                     <ng-template pTemplate="header">
-                        <tr>
-                            <th style="text-align: center;">Module</th>
-                            <th style="text-align: center;">Add</th>
-                            <th style="text-align: center;">Edit</th>
-                            <th style="text-align: center;">Delete</th>
-                            <th style="text-align: center;">Export Data Excel</th>
-                            <th style="text-align: center;">Export Data Pdf</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-permission let-rowIndex="rowIndex">
-                        <tr>
-                            <td style="text-align: center;">{{ permission.moduleName }}</td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.add"  [binary]="true" inputId="" /></td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.edit"  [binary]="true" inputId="" /></td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.delete" [binary]="true" inputId="" /></td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.exportExcel"  [binary]="true" inputId="" /></td>
-                            <td style="text-align: center;"><p-checkbox [(ngModel)]="permission.exportPdf"  [binary]="true" inputId="" /></td>
-                        </tr>
-                    </ng-template>
-                </p-table> -->
-                <table class="table table-hover mt-3">
-                    <tr>
+                        <tr>                
                         <th style="text-align: center;">{{'Asset.Name' | translate}}</th>
                         <th style="text-align: center;">{{'Asset.add' | translate}}</th>
                         <th style="text-align: center;">{{'Asset.Edit' | translate}}</th>
                         <th style="text-align: center;">{{'Asset.Delete' | translate}}</th>
                         <th style="text-align: center;">{{'Asset.viewDetails' | translate}}</th>
                         <th style="text-align: center;">{{'Asset.ExportExcel' | translate}}</th>
-                        <th style="text-align: center;">{{'Asset.ExportPdf' | translate}}</th>
                     </tr>
-                    <tbody>
-                        <tr *ngFor="let ModuleWithPermission of lstModuleWithPermssions">
+                    </ng-template>
+                    <ng-template pTemplate="body" let-ModuleWithPermission let-rowIndex="rowIndex">
+                        <tr>
                             <td style="text-align: center;">{{lang=='en' ? ModuleWithPermission.name : ModuleWithPermission.nameAr}}</td>
-                            <td style="text-align: center;"> <input type="checkbox" *ngIf="ModuleWithPermission.permissions[0]?.name=='Add'"   [ngModelOptions]="{standalone: true}">
-                            <td style="text-align: center;"> <input type="checkbox"  *ngIf="ModuleWithPermission.permissions[2]?.name=='Edit'" [ngModelOptions]="{standalone: true}">
-                            <td style="text-align: center;"> <input type="checkbox"  *ngIf="ModuleWithPermission.permissions[2]?.name=='Delete'"  [ngModelOptions]="{standalone: true}">
-                            <td  style="text-align: center;"> <input type="checkbox"  *ngIf="ModuleWithPermission.permissions[3]?.name=='Show Details'"  [ngModelOptions]="{standalone: true}">
-                            <td  style="text-align: center;"> <input  type="checkbox" *ngIf="ModuleWithPermission.permissions[4]?.name=='ExportExcel'"    [ngModelOptions]="{standalone: true}">
-                            <td style="text-align: center;"> <input type="checkbox"   [ngModelOptions]="{standalone: true}">
-                            
+                            <td style="text-align: center;"> <input  type="checkbox" *ngIf="hasPermission(rowIndex,'Add')"  [checked]="getPermissionValue(ModuleWithPermission, 'Add')" (change)="updatePermissionValue(ModuleWithPermission, 'Add', $event.target.checked)"  id="addPermission-{{ rowIndex }}"></td>
+                            <td style="text-align: center;"> <input type="checkbox"  *ngIf="hasPermission(rowIndex,'Edit')" [checked]="getPermissionValue(ModuleWithPermission, 'Edit')" (change)="updatePermissionValue(ModuleWithPermission, 'Edit', $event.target.checked)"  id="editPermission-{{ rowIndex }}"></td> 
+                             <td style="text-align: center;"> <input type="checkbox"  *ngIf="hasPermission(rowIndex,'Delete')"  [checked]="getPermissionValue(ModuleWithPermission, 'Delete')" (change)="updatePermissionValue(ModuleWithPermission, 'Delete', $event.target.checked)"  id="deletePermission-{{ rowIndex }}"></td>
+                            <td  style="text-align: center;"> <input type="checkbox"  *ngIf="hasPermission(rowIndex,'View Details')"  [checked]="getPermissionValue(ModuleWithPermission, 'View Details')" (change)="updatePermissionValue(ModuleWithPermission, 'View Details', $event.target.checked)"  id="ViewDetailsPermission-{{ rowIndex }}"></td>
+                            <td  style="text-align: center;"> <input  type="checkbox" *ngIf="hasPermission(rowIndex,'ExportExcel')"   [checked]="getPermissionValue(ModuleWithPermission, 'ExportExcel')" (change)="updatePermissionValue(ModuleWithPermission, 'ExportExcel', $event.target.checked)"  id="ExportExcelPermission-{{ rowIndex }}"></td> 
                         </tr>
-                      
-                    </tbody>
-                </table>
+                    </ng-template>
+              </p-table>
             </div>
             <div class="row mt-3">
                 <div class="col-12 text-center">
-                    <button class="btn btn-success" value="save" (click)="onSubmit()"> {{ 'Asset.Save' | translate }}
+                    <button type="button"class="btn btn-success" value="save" (click)="onSubmit()"> {{ 'Asset.Save' | translate }}
                     </button>
                 </div>
             </div>

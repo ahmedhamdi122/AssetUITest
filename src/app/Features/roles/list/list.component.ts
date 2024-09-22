@@ -77,7 +77,7 @@ export class ListComponent implements OnInit {
             if(created)
             {
                this.displaySuccessCreate=true;
-               console.log("res from close:",created);
+    
             }
           });
           

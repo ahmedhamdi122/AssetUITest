@@ -1,5 +1,5 @@
-export class PermissionsVM{
+export class PermissionVM{
     ID:number;
-    Name:string;
-    Value:boolean;
+    name:string;
+    value:boolean;
 }
