@@ -33,6 +33,7 @@ export class CreateComponent implements OnInit {
   checked=false;
   dir=this.lang=='en'?'ltr':'rtl';
   isInvalidRoleCategory=true;
+  noCheckedAnyPermissions=false;
   lsCheckedModulesWithPermissions:ModulesWithPermissionsVM[];
   constructor(private roleService: RoleService, private rolecategoryService: RoleCategoryService, private formBuilder: FormBuilder, private ref: DynamicDialogRef,private conf:DynamicDialogConfig) {
     this.form = this.formBuilder.group({
@@ -59,29 +60,24 @@ export class CreateComponent implements OnInit {
   updatePermissionValue(ModulesWithPermissions:ModulesWithPermissionsVM,permission:string,value:boolean)
   {
     var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
-    if(per)return per.value=value;
-  
+    if(per) per.value=value;
+    this.noCheckedAnyPermissions=!this.anyPermissionChecked();
+
   }
   hasPermission(rowIndex:number,permission:string)
   {
     return this.lstModuleWithPermssions[rowIndex].permissions.some(p=>p.name===permission);
   }
-  changeRoleCategoryId($event:any)
-  {
-    this.roleObj.roleCategoryId = $event.target.value!==null?Number($event.target.value):null;
-    console.log("roleCategoryId:",this.roleObj.roleCategoryId);
-
-  }
-
+ 
   anyPermissionChecked(): boolean {
     return this.lstModuleWithPermssions.some(module => 
         module.permissions.some(permission => permission.value === true)
     );
 }
   onSubmit() {
-   
-    if(this.roleObj.roleCategoryId == 0)
+    if(this.roleObj.roleCategoryId == null)
     {
+      this.isInvalidRoleCategory=true;
       this.errorDisplay = true;
       if(this.lang == "en")
       {
@@ -124,20 +120,20 @@ export class CreateComponent implements OnInit {
       }
     else if(!this.anyPermissionChecked())
       {
+        this.noCheckedAnyPermissions=true;
         this.errorDisplay=true;
         if(this.lang=='en'){this.errorMessage='Please select at least one permission'}
         else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
         return false;
       }
-      this.ref.close("craeted");
+    //  this.ref.close("craeted");
 
-  //   this.lsCheckedModulesWithPermissions = this.lstModuleWithPermssions.map(module => ({
-  //     ...module, // Copies all properties of the module
-  //     permissions: module.permissions.filter(permission => permission.value === true) // Filters permissions
-  // })).filter(module => module.permissions.length > 0);
-  //    console.log("lsCheckedModulesWithPermissions :",this.lsCheckedModulesWithPermissions);
-  //   console.log("lstModuleWithPermssions :",this.lsCheckedModulesWithPermissions.forEach(mp=>mp.permissions.filter(p=>p.value===true)));
-  // }
+    this.lsCheckedModulesWithPermissions = this.lstModuleWithPermssions.map(module => ({...module,
+      permissions: module.permissions.filter(permission => permission.value === true) // Filters permissions
+  })).filter(module => module.permissions.length > 0);
+     console.log("lsCheckedModulesWithPermissions :",this.lsCheckedModulesWithPermissions);
+   // console.log("lstModuleWithPermssions :",this.lsCheckedModulesWithPermissions.forEach(mp=>mp.permissions.filter(p=>p.value===true)));
+  
 
   
 }

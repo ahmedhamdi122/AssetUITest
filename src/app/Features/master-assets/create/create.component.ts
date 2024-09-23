@@ -163,14 +163,10 @@ export class CreateComponent implements OnInit {
 
     this.masterAssetService.GenerateMasterAssetcode().subscribe(master => {
       this.masterAssetObj.code = master["code"];
-  
     });
     this.getSelecteditem();
     this.selectedPMTime = 1;
     this.categoryTypeService.GetCategoryTypes().subscribe(types => { this.lstTypes = types })
-
-
-
   }
   getSelecteditem() {
     
