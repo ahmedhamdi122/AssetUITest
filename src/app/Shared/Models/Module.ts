@@ -1,8 +1,8 @@
 import { PermissionVM } from "./Permissions";
 
 export class ModulesWithPermissionsVM{
-    Id:number;
-    Name:string;
-    NameAr:string;
+    id:number;
+    name:string;
+    nameAr:string;
     permissions:PermissionVM[];
 }
