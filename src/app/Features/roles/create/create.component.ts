@@ -27,7 +27,7 @@ export class CreateComponent implements OnInit {
   form: FormGroup;
   CreateRole: CreateRoleVM;
   lstRoleCategories: ListRoleCategoriesVM[] = [];
-  lstModuleWithPermssions:ModulesWithPermissionsVM[];
+  ModuleWithPermssions:any;
   errorMessage: string ;
   errorDisplay: boolean = false;
   checked=false;
@@ -48,17 +48,17 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
     this.CreateRole={roleCategoryId:null,name:'',displayName:'',ModuleIdsWithPermissions:[]};
    this.lstRoleCategories=this.conf.data.rolecategoryRes;
-   this.lstModuleWithPermssions=this.conf.data.ModuleWithPermissionRes;   
-   console.log(" this.lstModuleWithPermssions",this.lstModuleWithPermssions);
-   
+  // this.ModuleWithPermssions=this.conf.data.ModuleWithPermissionRes; 
+  this.ModuleWithPermssions=this.conf.data.ModuleWithPermissionRes.map(mwp=>({...mwp,permissions:mwp.permissions.map(p=>({...p,value:false}))}));   
+   console.log(" this.ModuleWithPermssions",this.ModuleWithPermssions);
   }
-  getPermissionValue(ModulesWithPermissions:ModulesWithPermissionsVM,permission:string)
+  getPermissionValue(ModulesWithPermissions:any,permission:string)
   {
     var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
     if(per)return per.value;
-    return false;
+    return false;    
   }
-  updatePermissionValue(ModulesWithPermissions:ModulesWithPermissionsVM,permission:string,value:boolean)
+  updatePermissionValue(ModulesWithPermissions:any,permission:string,value:boolean)
   {
     var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
     if(per) per.value=value;
@@ -67,11 +67,11 @@ export class CreateComponent implements OnInit {
   }
   hasPermission(rowIndex:number,permission:string)
   {
-    return this.lstModuleWithPermssions[rowIndex].permissions.some(p=>p.name===permission);
+    return this.ModuleWithPermssions[rowIndex].permissions.some(p=>p.name===permission);
   }
  
   anyPermissionChecked(): boolean {
-    return this.lstModuleWithPermssions.some(module => 
+    return this.ModuleWithPermssions.some(module => 
         module.permissions.some(permission => permission.value === true)
     );
 }
@@ -127,10 +127,12 @@ export class CreateComponent implements OnInit {
         else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
         return false;
       }
-    this.CreateRole.ModuleIdsWithPermissions = this.lstModuleWithPermssions.map(module => ({
+    this.CreateRole.ModuleIdsWithPermissions = this.ModuleWithPermssions.map(module => ({
       moduleId:module.id,
       permissionIDs: module.permissions.filter(permission => permission.value === true).map(p=>p.id)
   })).filter(module => module.permissionIDs.length > 0);
+  console.log("this.CreateRole.ModuleIdsWithPermissions :",this.CreateRole.ModuleIdsWithPermissions);
+  
       this.ref.close(this.CreateRole);
 
 }

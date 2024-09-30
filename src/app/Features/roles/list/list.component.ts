@@ -83,6 +83,8 @@ export class ListComponent implements OnInit {
             if(CreateRole)
             {
               this.ngxService.start();
+              console.log("crearee obj :",CreateRole);
+              
               this.roleService.AddRole(CreateRole).subscribe(res=>{
                 this.ngxService.stop();
                 this.reloadTableObj.first=Math.max(0, Math.floor((this.count) / 10) * 10);;
