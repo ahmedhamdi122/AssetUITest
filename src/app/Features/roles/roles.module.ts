@@ -19,11 +19,13 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
+import { ViewComponent } from './view/view.component';
 @NgModule({
   declarations: [
     ListComponent,
     CreateComponent,
     EditComponent,
+    ViewComponent,
   ],
   imports: [
     CheckboxModule,

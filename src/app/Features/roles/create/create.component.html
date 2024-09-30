@@ -5,7 +5,7 @@
                 <div class="col-4">
                     <label for="RoleCategory" [translate]="'Asset.RoleCategory'"></label>
                     <select class="form-select" #roleCategoryId="ngModel" name="RoleCategory" id="RoleCategory"
-                         [(ngModel)]="roleObj.roleCategoryId"   (ngModelChange)="validateRoleCategory()" [ngClass]="{'is-invalid': isInvalidRoleCategory}">
+                         [(ngModel)]="CreateRole.roleCategoryId"   (ngModelChange)="validateRoleCategory()" [ngClass]="{'is-invalid': isInvalidRoleCategory}">
                         <option selected [ngValue]="null">{{'Asset.SelectRolCategory' | translate}}</option>
                         <option *ngFor="let item of lstRoleCategories" [value]="item.id">{{ item.name }}</option>
                     </select>
@@ -13,13 +13,13 @@
                 <div class="col-4">
                     <label for="roleName" class="control-label required" [translate]="'Asset.Name'"></label>
                     <input type="text" class="form-control"  id="roleName" required
-                        name="AssetName" #name="ngModel" [(ngModel)]="roleObj.name"  
+                        name="AssetName" #name="ngModel" [(ngModel)]="CreateRole.name"  
                         [class.is-invalid]=" name.errors">
                 </div>
                 <div class="col-4">
                     <label for="displayName" class="control-label required" [translate]="'Asset.DisplayName'"></label>
                     <input type="text" class="form-control" 
-                        id="displayName" name="displayName" #displayName="ngModel" [(ngModel)]="roleObj.displayName" required
+                        id="displayName" name="displayName" #displayName="ngModel" [(ngModel)]="CreateRole.displayName" required
                         [class.is-invalid]="displayName.errors">
                 </div>
             </div>
@@ -37,13 +37,22 @@
                     </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-ModuleWithPermission let-rowIndex="rowIndex">
-                        <tr>
+                        <!-- <tr>
                             <td style="text-align: center;">{{lang=='en' ? ModuleWithPermission.name : ModuleWithPermission.nameAr}}</td>
                             <td style="text-align: center;"> <input  type="checkbox" *ngIf="hasPermission(rowIndex,'Add')"  [checked]="getPermissionValue(ModuleWithPermission, 'Add')" (change)="updatePermissionValue(ModuleWithPermission, 'Add', $event.target.checked)"  id="addPermission-{{ rowIndex }}"></td>
                             <td style="text-align: center;"> <input type="checkbox"  *ngIf="hasPermission(rowIndex,'Edit')" [checked]="getPermissionValue(ModuleWithPermission, 'Edit')" (change)="updatePermissionValue(ModuleWithPermission, 'Edit', $event.target.checked)"  id="editPermission-{{ rowIndex }}"></td> 
                              <td style="text-align: center;"> <input type="checkbox"  *ngIf="hasPermission(rowIndex,'Delete')"  [checked]="getPermissionValue(ModuleWithPermission, 'Delete')" (change)="updatePermissionValue(ModuleWithPermission, 'Delete', $event.target.checked)"  id="deletePermission-{{ rowIndex }}"></td>
                             <td  style="text-align: center;"> <input type="checkbox"  *ngIf="hasPermission(rowIndex,'View Details')"  [checked]="getPermissionValue(ModuleWithPermission, 'View Details')" (change)="updatePermissionValue(ModuleWithPermission, 'View Details', $event.target.checked)"  id="ViewDetailsPermission-{{ rowIndex }}"></td>
                             <td  style="text-align: center;"> <input  type="checkbox" *ngIf="hasPermission(rowIndex,'ExportExcel')"   [checked]="getPermissionValue(ModuleWithPermission, 'ExportExcel')" (change)="updatePermissionValue(ModuleWithPermission, 'ExportExcel', $event.target.checked)"  id="ExportExcelPermission-{{ rowIndex }}"></td> 
+                        </tr> -->
+
+                        <tr>
+                            <td style="text-align: center;">{{lang=='en' ? ModuleWithPermission.name : ModuleWithPermission.nameAr}}</td>
+                            <td style="text-align: center;"> <input  type="checkbox" *ngIf="hasPermission(rowIndex,'Add')"  id="addPermission-{{ rowIndex }}"></td>
+                            <td style="text-align: center;"> <input type="checkbox"  *ngIf="hasPermission(rowIndex,'Edit')"  id="editPermission-{{ rowIndex }}"></td> 
+                             <td style="text-align: center;"> <input type="checkbox"  *ngIf="hasPermission(rowIndex,'Delete')"     id="deletePermission-{{ rowIndex }}"></td>
+                            <td  style="text-align: center;"> <input type="checkbox"  *ngIf="hasPermission(rowIndex,'View Details')" id="ViewDetailsPermission-{{ rowIndex }}"></td>
+                            <td  style="text-align: center;"> <input  type="checkbox" *ngIf="hasPermission(rowIndex,'ExportExcel')"  id="ExportExcelPermission-{{ rowIndex }}"></td> 
                         </tr>
                     </ng-template>
               </p-table>

@@ -1,4 +1,4 @@
-import { ModulesWithPermissionsVM } from "./Module";
+import { ModuleIdsWithPermissionsVM } from "./Module";
 
 export class ListRolesVM {
     id: string = "";
@@ -10,7 +10,7 @@ export class CreateRoleVM {
     name: string = "";
     roleCategoryId: number ;
     displayName: string = "";
-    ModulesWithPermissionsVM:ModulesWithPermissionsVM[];
+    ModuleIdsWithPermissions:ModuleIdsWithPermissionsVM[];
 }
 export class EditRoleVM {
     id: string = "";

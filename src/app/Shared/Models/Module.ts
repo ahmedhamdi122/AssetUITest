@@ -6,3 +6,8 @@ export class ModulesWithPermissionsVM{
     nameAr:string;
     permissions:PermissionVM[];
 }
+export class ModuleIdsWithPermissionsVM
+{
+    moduleId:number;
+    permissionIDs:number[]
+}

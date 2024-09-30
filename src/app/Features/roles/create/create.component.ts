@@ -25,7 +25,7 @@ interface Permission {
 export class CreateComponent implements OnInit {
   public lang = localStorage.getItem("lang");
   form: FormGroup;
-  roleObj: CreateRoleVM;
+  CreateRole: CreateRoleVM;
   lstRoleCategories: ListRoleCategoriesVM[] = [];
   lstModuleWithPermssions:ModulesWithPermissionsVM[];
   errorMessage: string ;
@@ -35,7 +35,7 @@ export class CreateComponent implements OnInit {
   isInvalidRoleCategory=true;
   noCheckedAnyPermissions=false;
   lsCheckedModulesWithPermissions:ModulesWithPermissionsVM[];
-  constructor(private roleService: RoleService, private rolecategoryService: RoleCategoryService, private formBuilder: FormBuilder, private ref: DynamicDialogRef,private conf:DynamicDialogConfig) {
+  constructor( private formBuilder: FormBuilder, private ref: DynamicDialogRef,private conf:DynamicDialogConfig) {
     this.form = this.formBuilder.group({
       name: [null, Validators.required],
       displayName:[null, Validators.required],
@@ -43,12 +43,13 @@ export class CreateComponent implements OnInit {
   }
   validateRoleCategory()
   {
-      this.isInvalidRoleCategory=!this.roleObj.roleCategoryId;
+      this.isInvalidRoleCategory=!this.CreateRole.roleCategoryId;
   }
   ngOnInit(): void {
-    this.roleObj={roleCategoryId:null,name:'',displayName:'',ModulesWithPermissionsVM:[]};
+    this.CreateRole={roleCategoryId:null,name:'',displayName:'',ModuleIdsWithPermissions:[]};
    this.lstRoleCategories=this.conf.data.rolecategoryRes;
    this.lstModuleWithPermssions=this.conf.data.ModuleWithPermissionRes;   
+   console.log(" this.lstModuleWithPermssions",this.lstModuleWithPermssions);
    
   }
   getPermissionValue(ModulesWithPermissions:ModulesWithPermissionsVM,permission:string)
@@ -75,7 +76,7 @@ export class CreateComponent implements OnInit {
     );
 }
   onSubmit() {
-    if(this.roleObj.roleCategoryId == null)
+    if(this.CreateRole.roleCategoryId == null)
     {
       this.isInvalidRoleCategory=true;
       this.errorDisplay = true;
@@ -90,7 +91,7 @@ export class CreateComponent implements OnInit {
         return false;
       }
     }
-    else if(this.roleObj.name == '')
+    else if(this.CreateRole.name == '')
       {
         this.errorDisplay = true;
         if(this.lang == "en")
@@ -104,7 +105,7 @@ export class CreateComponent implements OnInit {
           return false;
         }
       }
-    else if(this.roleObj.displayName == '')
+    else if(this.CreateRole.displayName == '')
       {
         this.errorDisplay = true;
         if(this.lang == "en")
@@ -126,16 +127,12 @@ export class CreateComponent implements OnInit {
         else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
         return false;
       }
-    //  this.ref.close("craeted");
+    this.CreateRole.ModuleIdsWithPermissions = this.lstModuleWithPermssions.map(module => ({
+      moduleId:module.id,
+      permissionIDs: module.permissions.filter(permission => permission.value === true).map(p=>p.id)
+  })).filter(module => module.permissionIDs.length > 0);
+      this.ref.close(this.CreateRole);
 
-    this.lsCheckedModulesWithPermissions = this.lstModuleWithPermssions.map(module => ({...module,
-      permissions: module.permissions.filter(permission => permission.value === true) // Filters permissions
-  })).filter(module => module.permissions.length > 0);
-     console.log("lsCheckedModulesWithPermissions :",this.lsCheckedModulesWithPermissions);
-   // console.log("lstModuleWithPermssions :",this.lsCheckedModulesWithPermissions.forEach(mp=>mp.permissions.filter(p=>p.value===true)));
-  
-
-  
 }
   
 }

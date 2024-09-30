@@ -52,7 +52,7 @@ export class RoleService {
   UpdateRole(editRoleObj: EditRoleVM): Observable<EditRoleVM> {
     return this.httpClient.put<EditRoleVM>(`${environment.UpdateRole}`, editRoleObj, this.httpHeader);
   }
-  AddRole(createRoleObj: CreateRoleVM): Observable<CreateRoleVM> {
+  AddRole(createRoleObj: CreateRoleVM) {
     return this.httpClient.post<CreateRoleVM>(`${environment.AddRole}`, createRoleObj, this.httpHeader);
   }
 
