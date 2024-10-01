@@ -1,4 +1,4 @@
-<!-- <div class="col-12"></div>
+<div class="col-12">
     <div class="card-body">
         <form class="form-horizontal" #form="ngForm">
             <div class="row top-buffer">
@@ -19,13 +19,13 @@
                 <div class="col-4">
                     <label for="displayName" class="control-label required" [translate]="'Asset.DisplayName'"></label>
                     <input type="text" class="form-control" 
-                        id="displayName" name="displayName" #displayName="ngModel" [(ngModel)]="CreateRole.displayName" required
+                        id="displayName" name="displayName" #displayName="ngModel" [(ngModel)]="EditRole.displayName" required
                         [class.is-invalid]="displayName.errors">
                 </div>
             </div>
             <div class="row mt-3"><span class="fs-4">{{'Asset.addPermissions' | translate }} <i *ngIf="noCheckedAnyPermissions" class="pi pi-asterisk"style="color:red"></i></span></div>
             <div class="row">
-                <p-table [dir]="dir"  [value]="lstModuleWithPermssions" scrollable="true" [totalRecords]="lstModuleWithPermssions.length" scrollHeight="400px" [paginator]="true" [rows]="5">
+                <p-table [dir]="dir"  [value]="ModulesWithPermssions" scrollable="true" [totalRecords]="ModulesWithPermssions.length" scrollHeight="400px" [paginator]="true" [rows]="5">
                     <ng-template pTemplate="header">
                         <tr>                
                         <th style="text-align: center;">{{'Asset.Name' | translate}}</th>
@@ -62,4 +62,4 @@
 <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{width: '350px'}">
     <p-header style="color: rgb(181, 4, 4);"> {{ 'Asset.Error' | translate }} </p-header>
     <span style="color: rgb(181, 4, 4);font-weight: bold;"> {{errorMessage}}</span>
-</p-dialog> -->
+</p-dialog>
