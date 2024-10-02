@@ -5,4 +5,9 @@ export class PermissionVM{
 export class PermissionWithValueVM{
     id:number;
     name:string;
+    value:boolean;
+}
+export class PermissionWithVM{
+    id:number;
+    name:string;
 }

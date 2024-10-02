@@ -42,13 +42,11 @@ export class AppComponent implements OnInit {
 
   constructor(private authenticationService: AuthenticationService, private router: Router,private translate:TranslateService) {
     // translate.setDefaultLang('en');
-    // translate.use('en');
+ 
     addEventListener('keydown', event => {
       if (event.key == 'r' || event.key == 'F5') this.isRefreshed = true;
     });
 
-    // localStorage.removeItem("lang");
-    // localStorage.removeItem("dir");
     if (localStorage.getItem("lang") == null) {
 
   

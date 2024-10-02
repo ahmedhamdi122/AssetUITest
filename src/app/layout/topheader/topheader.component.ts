@@ -204,18 +204,18 @@ export class TopheaderComponent implements OnInit {
     this.onLoad();
   }
   onLoad() {
-    this.requestService.GetTotalOpenRequest(this.currentUser.id).subscribe(c => {
-      this.countRequests = c;
-    });
+    // this.requestService.GetTotalOpenRequest(this.currentUser.id).subscribe(c => {
+    //   this.countRequests = c;
+    // });
 
-    this.requestService.ListNewRequests(this.currentUser.hospitalId).subscribe(requests => {
-      this.lstOpenRequests = requests;
-    });
+    // this.requestService.ListNewRequests(this.currentUser.hospitalId).subscribe(requests => {
+    //   this.lstOpenRequests = requests;
+    // });
 
 
-    this.requestService.ListOpenRequestTracks(this.currentUser.hospitalId).subscribe(requestTracks => {
-      this.lstRequestTracks = requestTracks;
-    });
+    // this.requestService.ListOpenRequestTracks(this.currentUser.hospitalId).subscribe(requestTracks => {
+    //   this.lstRequestTracks = requestTracks;
+    // });
 
 
     if (this.currentUser) {
