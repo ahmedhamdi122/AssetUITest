@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ModulesWithPermissionsVM } from 'src/app/Shared/Models/Module';
+import { ModulesPermissionsResult, ModuleWithPermissionsVM, SearchSortModuleVM } from 'src/app/Shared/Models/Module';
 import { ListRoleCategoriesVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { CreateRoleVM } from 'src/app/Shared/Models/roleVM';
+import { ModuleService } from 'src/app/Shared/Services/module.service';
 import { RoleService } from 'src/app/Shared/Services/role.service';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
 interface Permission {
@@ -27,30 +29,50 @@ export class CreateComponent implements OnInit {
   form: FormGroup;
   CreateRole: CreateRoleVM;
   lstRoleCategories: ListRoleCategoriesVM[] = [];
-  ModuleWithPermssions:any;
+  ModulesWithPermssionsResult:ModulesPermissionsResult;
   errorMessage: string ;
   errorDisplay: boolean = false;
   checked=false;
   dir=this.lang=='en'?'ltr':'rtl';
   isInvalidRoleCategory=true;
   noCheckedAnyPermissions=false;
-  lsCheckedModulesWithPermissions:ModulesWithPermissionsVM[];
-  constructor( private formBuilder: FormBuilder, private ref: DynamicDialogRef,private conf:DynamicDialogConfig) {
-    this.form = this.formBuilder.group({
-      name: [null, Validators.required],
-      displayName:[null, Validators.required],
-    });
+  lsCheckedModulesWithPermissions:ModuleWithPermissionsVM[];
+  SearchSortModule:SearchSortModuleVM;
+  ModulesWithPermssions:ModuleWithPermissionsVM[]=[]
+  count:number;
+  constructor(  private ref: DynamicDialogRef,private conf:DynamicDialogConfig,private ModuleService:ModuleService,private ngxService:NgxUiLoaderService) {
+
   }
   validateRoleCategory()
   {
       this.isInvalidRoleCategory=!this.CreateRole.roleCategoryId;
   }
   ngOnInit(): void {
+    this.SearchSortModule={SortFiled:'',SortOrder:1,Name:'',NameAr:''}
     this.CreateRole={roleCategoryId:null,name:'',displayName:'',ModuleIdsWithPermissions:[]};
    this.lstRoleCategories=this.conf.data.rolecategoryRes;
   // this.ModuleWithPermssions=this.conf.data.ModuleWithPermissionRes; 
-  this.ModuleWithPermssions=this.conf.data.ModuleWithPermissionRes.map(mwp=>({...mwp,permissions:mwp.permissions.map(p=>({...p,value:false}))}));   
-   console.log(" this.ModuleWithPermssions",this.ModuleWithPermssions);
+  //this.ModulesWithPermssionsResult=this.conf.data.ModuleWithPermissionRes
+  // console.log(" this.ModuleWithPermssions",this.ModulesWithPermssionsResult.Results);
+  // this.ModuleWithPermssions=this.conf.data.ModuleWithPermissionRes.map(mwp=>({...mwp,permissions:mwp.permissions.map(p=>({...p,value:false}))}));   
+  //  console.log(" this.ModuleWithPermssions",this.ModuleWithPermssions);
+  }
+  LoadModulesWithPermssions(event)
+  {
+    this.ngxService.start('loading');
+    this.SearchSortModule.SortOrder=event.sortOrder;
+    this.SearchSortModule.SortFiled=event.sortField;
+      this.ModuleService.GetModulesWithPermissions(event.first, event.rows,this.SearchSortModule).subscribe((res) => {
+      this.ModulesWithPermssionsResult = res;  
+      this.count=this.ModulesWithPermssionsResult.count;
+      this.ModulesWithPermssions=this.ModulesWithPermssionsResult.results;
+console.log("count :",this.count);
+console.log("ModulesWithPermssions:",this.ModulesWithPermssionsResult.results);
+       this.ngxService.stop('loading');
+    },error=>{
+      this.ngxService.stop('loading');
+    }
+    );
   }
   getPermissionValue(ModulesWithPermissions:any,permission:string)
   {
@@ -60,20 +82,20 @@ export class CreateComponent implements OnInit {
   }
   updatePermissionValue(ModulesWithPermissions:any,permission:string,value:boolean)
   {
-    var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
-    if(per) per.value=value;
-    this.noCheckedAnyPermissions=!this.anyPermissionChecked();
+    // var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
+    // if(per) per.value=value;
+    // this.noCheckedAnyPermissions=!this.anyPermissionChecked();
 
   }
   hasPermission(rowIndex:number,permission:string)
   {
-    return this.ModuleWithPermssions[rowIndex].permissions.some(p=>p.name===permission);
+    // return this.ModuleWithPermssions[rowIndex].permissions.some(p=>p.name===permission);
   }
  
-  anyPermissionChecked(): boolean {
-    return this.ModuleWithPermssions.some(module => 
-        module.permissions.some(permission => permission.value === true)
-    );
+  anyPermissionChecked() {
+    // return this.ModuleWithPermssions.some(module => 
+    //     module.permissions.some(permission => permission.value === true)
+    // );
 }
   onSubmit() {
     if(this.CreateRole.roleCategoryId == null)
@@ -119,19 +141,19 @@ export class CreateComponent implements OnInit {
           return false;
         }
       }
-    else if(!this.anyPermissionChecked())
-      {
-        this.noCheckedAnyPermissions=true;
-        this.errorDisplay=true;
-        if(this.lang=='en'){this.errorMessage='Please select at least one permission'}
-        else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
-        return false;
-      }
-    this.CreateRole.ModuleIdsWithPermissions = this.ModuleWithPermssions.map(module => ({
-      moduleId:module.id,
-      permissionIDs: module.permissions.filter(permission => permission.value === true).map(p=>p.id)
-  })).filter(module => module.permissionIDs.length > 0);
-  console.log("this.CreateRole.ModuleIdsWithPermissions :",this.CreateRole.ModuleIdsWithPermissions);
+    // else if(!this.anyPermissionChecked())
+    //   {
+    //     this.noCheckedAnyPermissions=true;
+    //     this.errorDisplay=true;
+    //     if(this.lang=='en'){this.errorMessage='Please select at least one permission'}
+    //     else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
+    //     return false;
+    //   }
+  //   this.CreateRole.ModuleIdsWithPermissions = this.ModuleWithPermssionsResult.Results.map(module => ({
+  //     moduleId:module.id,
+  //     permissionIDs: module.permissions.filter(permission => permission.value === true).map(p=>p.id)
+  // })).filter(module => module.permissionIDs.length > 0);
+  // console.log("this.CreateRole.ModuleIdsWithPermissions :",this.CreateRole.ModuleIdsWithPermissions);
   
       this.ref.close(this.CreateRole);
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ModulesWithPermissionsValueVM, ModulesWithPermissionsVM } from 'src/app/Shared/Models/Module';
+import { ModulesWithPermissionsValueVM, ModuleWithPermissionsVM } from 'src/app/Shared/Models/Module';
 import { ListRoleCategoriesVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { CreateRoleVM } from 'src/app/Shared/Models/roleVM';
 import { RoleService } from 'src/app/Shared/Services/role.service';
@@ -24,7 +24,7 @@ export class EditComponent implements OnInit {
   dir=this.lang=='en'?'ltr':'rtl';
   isInvalidRoleCategory=true;
   noCheckedAnyPermissions=false;
-  lsCheckedModulesWithPermissions:ModulesWithPermissionsVM[];
+  // lsCheckedModulesWithPermissions:ModulesWithPermissionsVM[];
   constructor( private ref: DynamicDialogRef,private conf:DynamicDialogConfig) {
  
   }
@@ -57,9 +57,9 @@ export class EditComponent implements OnInit {
   }
   updatePermissionValue(ModulesWithPermissions:any,permission:string,value:boolean)
   {
-    var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
-    if(per) per.value=value;
-    this.noCheckedAnyPermissions=!this.anyPermissionChecked();
+    // var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
+    // if(per) per.value=value;
+    // this.noCheckedAnyPermissions=!this.anyPermissionChecked();
 
   }
   hasPermission(rowIndex:number,permission:string)
@@ -67,10 +67,10 @@ export class EditComponent implements OnInit {
     return this.ModulesWithPermssions[rowIndex].permissions.some(p=>p.name===permission);
   }
  
-  anyPermissionChecked(): boolean {
-    return this.ModulesWithPermssions.some(module => 
-        module.permissions.some(permission => permission.value === true)
-    );
+  anyPermissionChecked() {
+    // return this.ModulesWithPermssions.some(module => 
+    //     module.permissions.some(permission => permission.value === true)
+    // );
 }
   onSubmit() {
     // if(this.EditRole.roleCategoryId == null)
@@ -124,11 +124,11 @@ export class EditComponent implements OnInit {
     //     else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
     //     return false;
     //   }
-    this.EditRole.ModuleIdsWithPermissions = this.ModulesWithPermssions.map(module => ({
-      moduleId:module.id,
-      permissionIDs: module.permissions.filter(permission => permission.value === true).map(p=>p.id)
-  })).filter(module => module.permissionIDs.length > 0);
-  console.log("this.EditRole.ModuleIdsWithPermissions :",this.EditRole.ModuleIdsWithPermissions);
+  //   this.EditRole.ModuleIdsWithPermissions = this.ModulesWithPermssions.map(module => ({
+  //     moduleId:module.id,
+  //     permissionIDs: module.permissions.filter(permission => permission.value === true).map(p=>p.id)
+  // })).filter(module => module.permissionIDs.length > 0);
+  // console.log("this.EditRole.ModuleIdsWithPermissions :",this.EditRole.ModuleIdsWithPermissions);
   
       this.ref.close(this.EditRole);
 

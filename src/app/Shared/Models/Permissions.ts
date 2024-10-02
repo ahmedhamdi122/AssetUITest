@@ -5,5 +5,4 @@ export class PermissionVM{
 export class PermissionWithValueVM{
     id:number;
     name:string;
-    value:boolean;
 }
