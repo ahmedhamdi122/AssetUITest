@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { el } from '@fullcalendar/core/internal-common';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ModulesPermissionsResult, ModulesWithPermissionsValueVM, ModuleWithPermissionsVM, SearchSortModuleVM } from 'src/app/Shared/Models/Module';
@@ -65,7 +66,6 @@ export class CreateComponent implements OnInit {
   }
   LoadModulesWithPermssions(event)
   {
-    console.log("evemt.first",event.first)
     this.ngxService.start('loading');
     this.SearchSortModule.SortOrder=event.sortOrder;
     this.SearchSortModule.SortFiled=event.sortField;
@@ -73,38 +73,63 @@ export class CreateComponent implements OnInit {
       this.ModulesWithPermssionsResult = res;  
       this.count=this.ModulesWithPermssionsResult.count;
       this.ModulesWithPermssions=this.ModulesWithPermssionsResult.results.map(result=>({...result,permissions:result.permissions.map(p=>({...p,value:false}))}))
-      console.log("ModulesWithPermssions:",this.ModulesWithPermssions);
       
       this.ngxService.stop('loading');
     },error=>{
       this.ngxService.stop('loading');
     }
     );
-  }
-  getPermissionValue(ModulesWithPermissions:any,permission:string)
-  {
-    var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
-    if(per)return per.value;
-    return false;    
-  }
-  updatePermissionValue(ModulesWithPermissions:any,permission:string,value:boolean)
-  {
-    var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
-    if(per) per.value=value;
-    this.noCheckedAnyPermissions=!this.anyPermissionChecked();
 
   }
-  hasPermission(rowIndex:number,permission:string)
+  getPermissionValue(ModuleWithPermissions:any,permissionName:string):boolean
   {
-    console.log("rowindex :",rowIndex);
-    if( this.ModulesWithPermssions[rowIndex])
-     return this.ModulesWithPermssions[rowIndex].permissions.some(p=>p.name===permission);
+    var permissionId=ModuleWithPermissions.permissions.find(p=>p.name==permissionName).id;
+    if(this.CreateRole.ModuleIdsWithPermissions.length!=0)
+    {
+      return this.CreateRole.ModuleIdsWithPermissions.some(m=>m.moduleId==ModuleWithPermissions.id &&m.permissionIDs.some(pId=>pId==permissionId)==true);
+     }
+    else{
+      var per=ModuleWithPermissions.permissions.find(p=>p.name===permissionName)
+      if(per)return per.value;
+      return false; 
+    }
+    
+  }
+  updatePermissionValue(ModuleWithPermissions:ModulesWithPermissionsValueVM,permissionName:string,value:boolean)
+  {
+    
+    var ModuleIdWithpermissionIDs=this.CreateRole.ModuleIdsWithPermissions.find(mwp=>mwp.moduleId==ModuleWithPermissions.id);
+    var permissionId=ModuleWithPermissions.permissions.find(p=>p.name==permissionName).id;
+    if(ModuleIdWithpermissionIDs)
+    {
+      if(value)
+      {this.CreateRole.ModuleIdsWithPermissions.find(m=>m.moduleId==ModuleWithPermissions.id).permissionIDs.push(permissionId);}
+      else{
+        var index=this.CreateRole.ModuleIdsWithPermissions.find(m=>m.moduleId==ModuleWithPermissions.id).permissionIDs.indexOf(permissionId);
+        if(index!=-1)
+        {
+          this.CreateRole.ModuleIdsWithPermissions.find(m=>m.moduleId==ModuleWithPermissions.id).permissionIDs.splice(index,1);
+          if(this.CreateRole.ModuleIdsWithPermissions.find(m=>m.moduleId==ModuleWithPermissions.id).permissionIDs.length==0)
+          {
+          this.CreateRole.ModuleIdsWithPermissions=this.CreateRole.ModuleIdsWithPermissions.filter(mwp=>mwp.permissionIDs.length!=0)
+        }
+      }
+    }
+  }
+    else
+    {
+      this.CreateRole.ModuleIdsWithPermissions.push({moduleId:ModuleWithPermissions.id,permissionIDs:[permissionId]});
+
+    }
+  }
+  hasPermission(ModuleWithPermssions:any,permission:string)
+  {
+   
+     return ModuleWithPermssions.permissions.some(p=>p.name===permission);
   }
  
   anyPermissionChecked() {
-    return this.ModulesWithPermssions.some(module => 
-        module.permissions.some(permission => permission.value === true)
-    );
+    return this.CreateRole.ModuleIdsWithPermissions.length!=0
 }
   onSubmit() {
     if(this.CreateRole.roleCategoryId == null)
@@ -158,14 +183,8 @@ export class CreateComponent implements OnInit {
         else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
         return false;
       }
-    this.CreateRole.ModuleIdsWithPermissions = this.ModulesWithPermssions.map(module => ({
-      moduleId:module.id,
-      permissionIDs: module.permissions.filter(permission => permission.value === true).map(p=>p.id)
-  })).filter(module => module.permissionIDs.length > 0);
-  console.log("this.CreateRole.ModuleIdsWithPermissions :",this.CreateRole.ModuleIdsWithPermissions);
-  
-      this.ref.close(this.CreateRole);
-
+ 
+     this.ref.close(this.CreateRole);
 }
   
 }

@@ -176,41 +176,40 @@ export class ListComponent implements OnInit {
   //       }
   //     });
 
-  // }
-  // editRole(item:any,rowIndex:number)
-  // {
-  //   this.ngxService.start()
-  //   var rolecategoryReq=this.rolecategoryService.GetRoleCategories();
-  //   var ModuleWithPermissionReq=this.ModuleService.GetModulesWithPermissions();
-  //   forkJoin([rolecategoryReq,ModuleWithPermissionReq]).subscribe(
-  //     {
-  //       next:([rolecategoryRes,ModuleWithPermissionRes])=>{
-  //         this.ngxService.stop();
-  //         const dialogRef = this.dialogService.open(EditComponent, {
-  //           header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
-  //           width: '70%',
-  //           data:{"rolecategoryRes":rolecategoryRes,"ModuleWithPermissionRes":ModuleWithPermissionRes},
-  //           style: {
-  //             'dir': this.lang == "en" ? 'ltr' : "rtl",
-  //             "text-align": this.lang == "en" ? 'left' : "right",
-  //             "direction": this.lang == "en" ? 'ltr' : "rtl"
-  //           }
-  //         });
-  //             dialogRef.onClose.subscribe((editRole) => {
-  //           if(editRole)
-  //           {
-  //            console.log("edit");
+   }
+   editRole(item:any,rowIndex:number)
+   {
+    this.ngxService.start()
+    var rolecategoryReq=this.rolecategoryService.GetRoleCategories();
+    forkJoin([rolecategoryReq]).subscribe(
+      {
+        next:([rolecategoryRes])=>{
+          this.ngxService.stop();
+          const dialogRef = this.dialogService.open(EditComponent, {
+            header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
+            width: '70%',
+            data:{"rolecategoryRes":rolecategoryRes},
+            style: {
+              'dir': this.lang == "en" ? 'ltr' : "rtl",
+              "text-align": this.lang == "en" ? 'left' : "right",
+              "direction": this.lang == "en" ? 'ltr' : "rtl"
+            }
+          });
+              dialogRef.onClose.subscribe((editRole) => {
+            if(editRole)
+            {
+             console.log("edit");
              
-  //           }
-  //         });
+            }
+          });
           
-  //       },
-  //       error:(err)=>{
-  //         console.log("some error  : ",err);
+        },
+        error:(err)=>{
+          console.log("some error  : ",err);
           
-  //       }
-  //     }
-  //   )
+        }
+      }
+    )
   }
   reload() {
     let currentUrl = this.route.url;

@@ -24,6 +24,7 @@ export class EditComponent implements OnInit {
   dir=this.lang=='en'?'ltr':'rtl';
   isInvalidRoleCategory=true;
   noCheckedAnyPermissions=false;
+  list=[{moduleId:1,permissionId:1},{moduleId:3,permissionId:1},{moduleId:1,permissionId:1},{moduleId:15,permissionId:1},{moduleId:5,permissionId:21},{moduleId:22,permissionId:1},]
   // lsCheckedModulesWithPermissions:ModulesWithPermissionsVM[];
   constructor( private ref: DynamicDialogRef,private conf:DynamicDialogConfig) {
  
@@ -36,10 +37,9 @@ export class EditComponent implements OnInit {
     this.EditRole={roleCategoryId:null,name:'',displayName:'',ModuleIdsWithPermissions:[]};
    this.lstRoleCategories=this.conf.data.rolecategoryRes;
   this.ModulesWithPermssions=this.conf.data.ModuleWithPermissionRes.map(mwp=>({...mwp,permissions:mwp.permissions.map(p=>({...p,value:false}))}));  
-  this.EditRole={name:"edit",displayName:"editDisplayName",roleCategoryId:2,
-    ModuleIdsWithPermissions:[{moduleId:1,permissionIDs:[1,2,3,4]},{moduleId:3,permissionIDs:[1,2]},{moduleId:5,permissionIDs:[3,4]}]}
-     console.log("this.EditRole.ModuleIdsWithPermissions :",this.EditRole.ModuleIdsWithPermissions);
-   console.log(" this.ModulesWithPermssions",this.ModulesWithPermssions);
+  //.EditRole={name:"edit",displayName:"editDisplayName",roleCategoryId:2,
+    //ModuleIdsWithPermissions:[{moduleId:1,permissionIDs:[1,2,3,4]},{moduleId:3,permissionIDs:[1,2]},{moduleId:5,permissionIDs:[3,4]}]}
+
 
 
     this.EditRole.ModuleIdsWithPermissions.forEach(ModuleIdWithPermissions => {
