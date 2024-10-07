@@ -329,7 +329,6 @@ export class CreateComponent implements OnInit {
 
     },
       error => {
-        console.log("error :",error)
         this.errorDisplay = true;
         if (this.lang == 'en') {
           if (error.error.status == 'brnd') {
