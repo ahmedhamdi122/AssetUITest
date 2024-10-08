@@ -25,7 +25,7 @@ export const environment = {
   ListRolesWithPaging: "http://localhost:25813/api/Role/ListRolesWithPages/",
   getRolescount: "http://localhost:25813/api/Role/getcount/",
   AddRole: "http://localhost:25813/api/Role/AddRole",
-  GetRoleById: "http://localhost:25813/api/Role/GetById/",
+  GetRoleById: "http://localhost:25813/api/Role/GetRoleById/",
   GetRolesByRoleCategoryId: "http://localhost:25813/api/Role/GetRolesByRoleCategoryId/",
   AddRoleToListById: "http://localhost:25813/api/Role/AddRoleToListById/",
   UpdateRole: "http://localhost:25813/api/Role/UpdateRole",

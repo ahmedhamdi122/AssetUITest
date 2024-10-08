@@ -14,7 +14,7 @@ import { Table } from 'primeng/table';
 import { EditComponent } from '../edit/edit.component';
 import { ViewComponent } from '../view/view.component';
 import { ConfirmationService } from 'primeng/api';
-import { ModulesPermissionsResult, SearchSortModuleVM } from 'src/app/Shared/Models/Module';
+import { ModulesPermissionsResult } from 'src/app/Shared/Models/Module';
 
 @Component({
   selector: 'app-list',
@@ -57,7 +57,7 @@ export class ListComponent implements OnInit {
        this.ngxService.stop();
     },error=>{
       this.errorDisplay=true;
-      this.errorMessage="error when delete";
+      this.errorMessage="error";
       this.ngxService.stop();
     }
     );
@@ -73,7 +73,7 @@ export class ListComponent implements OnInit {
           const dialogRef = this.dialogService.open(CreateComponent, {
             header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
             width: '70%',
-            data:{"rolecategoryRes":rolecategoryRes},
+            data:rolecategoryRes,
             style: {
               'dir': this.lang == "en" ? 'ltr' : "rtl",
               "text-align": this.lang == "en" ? 'left' : "right",
@@ -83,67 +83,46 @@ export class ListComponent implements OnInit {
               dialogRef.onClose.subscribe((CreateRole) => {
             if(CreateRole)
             {
-              this.ngxService.start();
-              
-              this.roleService.AddRole(CreateRole).subscribe(res=>{
-                this.ngxService.stop();
+ 
                 this.reloadTableObj.first=Math.max(0, Math.floor((this.count) / 10) * 10);;
                 this.LoadRole(this.reloadTableObj);
                 this.dataTable.first=this.count;
                 this.displaySuccessCreate=true;
-              },
-              error=>{
-              this.errorDisplay = true;
-              if (this.lang == 'en') {
-                if (error.error.status == 'roleExists') {
-                  this.errorMessage = error.error.message;
-                }
-                else if (error.error.status == 'DisplayNameroleExists') {
-                  this.errorMessage = error.error.message;
-                }
-            }
-            else if (this.lang == 'ar') {
-              if (error.error.status == 'roleExists') {
-                this.errorMessage = error.error.messageAr;
               }
-              else if (error.error.status == 'DisplayNameroleExists') {
-                this.errorMessage = error.error.message;
-              }
-            }
-          });
+      
           
-        }})},error:err=>{
+        })
+      },error:err=>{
 
         }})
 
   }
-  viewRole(id:number)
+  viewRole(id:string)
   {
 
-    // this.ngxService.start()
-    // var rolecategoryReq=this.rolecategoryService.GetRoleCategories();
-    // var ModuleWithPermissionReq=this.ModuleService.GetModulesWithPermissions();
-    // forkJoin([rolecategoryReq,ModuleWithPermissionReq]).subscribe(
-    //   {
-    //     next:([rolecategoryRes,ModuleWithPermissionRes])=>{
-    //       this.ngxService.stop();
-    //       const dialogRef = this.dialogService.open(ViewComponent, {
-    //         header: this.lang == "en" ? 'View Role ' : "عرض دور",
-    //         width: '70%',
-    //         data:{"rolecategoryRes":rolecategoryRes,"ModuleWithPermissionRes":ModuleWithPermissionRes},
-    //         style: {
-    //           'dir': this.lang == "en" ? 'ltr' : "rtl",
-    //           "text-align": this.lang == "en" ? 'left' : "right",
-    //           "direction": this.lang == "en" ? 'ltr' : "rtl"
-    //         }
-    //       });
-    //     },
-    //     error:(err)=>{
-    //       console.log("some error  : ",err);
+    this.ngxService.start()
+    var roleReq=this.roleService.GetRoleById(id);
+    forkJoin([roleReq]).subscribe(
+      {
+        next:([roleReqRes])=>{
+          this.ngxService.stop();
+          const dialogRef = this.dialogService.open(ViewComponent, {
+            header: this.lang == "en" ? 'View Role ' : "عرض دور",
+            width: '70%',
+            data:roleReqRes,
+            style: {
+              'dir': this.lang == "en" ? 'ltr' : "rtl",
+              "text-align": this.lang == "en" ? 'left' : "right",
+              "direction": this.lang == "en" ? 'ltr' : "rtl"
+            }
+          });
+        },
+        error:(err)=>{
+          console.log("some error  : ",err);
           
-    //     }
-    //   }
-    // ) 
+        }
+      }
+    ) 
      }
   deleteRole(item:any,rowIndex:number)
   {

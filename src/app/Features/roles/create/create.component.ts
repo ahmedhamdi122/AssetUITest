@@ -42,7 +42,7 @@ export class CreateComponent implements OnInit {
   ModulesWithPermssions:ModulesWithPermissionsValueVM[]=[]
   count:number;
   direction:string;
-  constructor(  private ref: DynamicDialogRef,private conf:DynamicDialogConfig,private ModuleService:ModuleService,private ngxService:NgxUiLoaderService) {
+  constructor(  private ref: DynamicDialogRef,private conf:DynamicDialogConfig,private ModuleService:ModuleService,private ngxService:NgxUiLoaderService,private roleService:RoleService) {
 
   }
   validateRoleCategory()
@@ -50,6 +50,8 @@ export class CreateComponent implements OnInit {
       this.isInvalidRoleCategory=!this.CreateRole.roleCategoryId;
   }
   ngOnInit(): void {
+    this.lstRoleCategories=this.conf.data[0];
+    
     if (localStorage.getItem("lang") == null) {
       this.lang = 'en'
       this.direction = 'ltr';
@@ -61,8 +63,7 @@ export class CreateComponent implements OnInit {
     }
     this.SearchSortModule={SortFiled:'',SortOrder:1,Name:'',NameAr:''}
     this.CreateRole={roleCategoryId:null,name:'',displayName:'',ModuleIdsWithPermissions:[]};
-   this.lstRoleCategories=this.conf.data.rolecategoryRes;
-
+    
   }
   LoadModulesWithPermssions(event)
   {
@@ -183,8 +184,29 @@ export class CreateComponent implements OnInit {
         else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
         return false;
       }
- 
-     this.ref.close(this.CreateRole);
+      this.roleService.AddRole(this.CreateRole).subscribe(res=>{
+        this.ref.close(this.CreateRole);
+      },
+      error=>{
+        this.errorDisplay = true;
+        if (this.lang == 'en') {
+          if (error.error.status == 'roleExists') {
+            this.errorMessage = error.error.message;
+          }
+          else if (error.error.status == 'DisplayNameroleExists') {
+            this.errorMessage = error.error.message;
+          }
+      }
+      else if (this.lang == 'ar') {
+        if (error.error.status == 'roleExists') {
+          this.errorMessage = error.error.messageAr;
+        }
+        else if (error.error.status == 'DisplayNameroleExists') {
+          this.errorMessage = error.error.messageAr;
+        }
+      }
+    });
+  
 }
   
 }

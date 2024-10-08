@@ -23,3 +23,12 @@ export class RolesResult
     results: ListRolesVM[];
     count: number;
 }
+export class RoleVM{
+    name:string;
+    displayName:string;
+    categoryName:RoleCategoryNamesVM;
+}
+export class RoleCategoryNamesVM{
+    name:string;
+    nameAr:string;
+}

@@ -21,7 +21,6 @@ export class RoleService {
     headers: new HttpHeaders({
       'content-type': 'application/json',
       'Accept': '*/*'
-
     })
   };
  
@@ -37,8 +36,6 @@ export class RoleService {
   GetRoleById(roleId: string): Observable<EditRoleVM> {
     return this.httpClient.get<EditRoleVM>(`${environment.GetRoleById}${roleId}`, this.httpHeader);
   }
-
-
 
   // AddRoleToListById(id: string): Observable<EditRoleVM> {
   //   return this.httpClient.get<EditRoleVM>(`${environment.AddRoleToListById}${id}`, this.httpHeader);
