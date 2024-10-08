@@ -45,12 +45,12 @@ export class ListComponent implements OnInit {
     private route: Router ,private dialogService:DialogService,private ngxService:NgxUiLoaderService
   ) { }
   ngOnInit(): void {
-    this.SearchSortRoleObj = { SortField:'', SortOrder: 1 ,search:''}
+    this.SearchSortRoleObj = { SortField:'', SortOrder: 1 ,Search:''}
   }
   LoadRole(event:any)
   {
     this.ngxService.start();
-    this.SearchSortRoleObj={ SortField:event.sortField, SortOrder: event.sortOrder ,search:''};
+    this.SearchSortRoleObj={ SortField:event.sortField, SortOrder: event.sortOrder ,Search:''};
       this.roleService.GetRoles(event.first, event.rows,this.SearchSortRoleObj).subscribe((items) => {
       this.lstRoles = items.results;           
       this.count = items.count;
@@ -109,7 +109,7 @@ export class ListComponent implements OnInit {
           const dialogRef = this.dialogService.open(ViewComponent, {
             header: this.lang == "en" ? 'View Role ' : "عرض دور",
             width: '70%',
-            data:roleReqRes,
+            data:{"roleReqRes":roleReqRes,"Id":id},
             style: {
               'dir': this.lang == "en" ? 'ltr' : "rtl",
               "text-align": this.lang == "en" ? 'left' : "right",

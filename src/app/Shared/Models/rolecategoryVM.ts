@@ -22,7 +22,7 @@ export class EditRoleCategoryVM {
 export class SortSearchVM {
     SortField: string = "";
     SortOrder: number;
-    search:string='';
+    Search:string='';
 }
 
 export class RoleCategoriesResult
