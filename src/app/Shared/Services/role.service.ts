@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { CreateRoleVM, EditRoleVM, ListRolesVM, RolesResult } from '../Models/roleVM';
+import { CreateRoleVM, EditRoleVM, ListRolesVM, RolesResult, RoleVM } from '../Models/roleVM';
 import { Paging } from '../Models/paging';
 import { SortSearchVM } from '../Models/rolecategoryVM';
+import { ModulesPermissionsResult } from '../Models/Module';
 
 
 
@@ -33,9 +34,12 @@ export class RoleService {
   getCount(): Observable<number> {
     return this.httpClient.get<number>(`${environment.getRolescount}`);
   }
-  GetRoleById(roleId: string): Observable<EditRoleVM> {
-    return this.httpClient.get<EditRoleVM>(`${environment.GetRoleById}${roleId}`, this.httpHeader);
+  GetRoleById(roleId: string): Observable<RoleVM> {
+    return this.httpClient.get<RoleVM>(`${environment.GetRoleById}${roleId}`, this.httpHeader);
   }
+  getModulesPermissionsbyRoleId(roleId: string,first:number,rows:number,sortSearchObj:SortSearchVM){
+      return this.httpClient.post<ModulesPermissionsResult>(`${environment.getModulesPermissionsbyRoleId}${roleId}/modules-permissions/${first}/${rows}`,sortSearchObj, this.httpHeader);
+    }
 
   // AddRoleToListById(id: string): Observable<EditRoleVM> {
   //   return this.httpClient.get<EditRoleVM>(`${environment.AddRoleToListById}${id}`, this.httpHeader);

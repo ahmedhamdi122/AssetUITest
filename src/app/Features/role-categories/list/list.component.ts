@@ -156,7 +156,7 @@ export class ListComponent implements OnInit {
 
   LoadRoleCategories(event) {    
     this.ngxService.start();
-    this.sortObj = { SortField: event.sortField, SortOrder: event.sortOrder ,search:''}
+    this.sortObj = { SortField: event.sortField, SortOrder: event.sortOrder ,Search:''}
     this.rolecategoryService.LoadRoleCategories(event.first,event.rows, this.sortObj).subscribe(items => {
       this.RoleCategoriesResult = items;
      this.lstRoleCategories=this.RoleCategoriesResult.results;
