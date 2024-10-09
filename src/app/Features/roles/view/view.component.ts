@@ -1,8 +1,9 @@
 import { DialogConfig } from '@angular/cdk/dialog';
 import { Component, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { ModulesPermissionsResult, ModulesWithPermissionsValueVM, ModuleWithPermissionsVM, SearchSortModuleVM } from 'src/app/Shared/Models/Module';
+import { ModulesPermissionsResult, ModulesWithPermissionsValueVM } from 'src/app/Shared/Models/Module';
 import { SortSearchVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { EditRoleVM, RoleVM } from 'src/app/Shared/Models/roleVM';
 import { RoleService } from 'src/app/Shared/Services/role.service';
@@ -16,21 +17,20 @@ export class ViewComponent implements OnInit{
   Role:RoleVM;
   lang = localStorage.getItem("lang");
   direction:string;
-  SearchSortModule:SearchSortModuleVM;
-  ModulesWithSelectedPermssions:ModulesPermissionsResult;
+  SortSearch:SortSearchVM;
+  ModulesPermissionsResult:ModulesPermissionsResult;
+  ModuleWithPermissions:ModulesWithPermissionsValueVM[]
   RoleId:string;
   count:number;
-  searchSortModule:SortSearchVM;
-  constructor(private conf:DynamicDialogConfig,private ngxService:NgxUiLoaderService,private RoleService:RoleService)
+  constructor(private conf:DynamicDialogConfig,private spinner:NgxSpinnerService,private RoleService:RoleService)
   {
 
   }
 
   ngOnInit(): void {
-    this.searchSortModule={Search:"",SortField:"",SortOrder:1}
-    this.Role=this.conf.data.roleReqRes;
-     this.RoleId=this.conf.data.id;
-     
+    this.SortSearch={Search:"",SortField:"",SortOrder:1}
+    this.Role=this.conf.data.roleRes;
+    
     if (localStorage.getItem("lang") == null) {
       this.lang = 'en'
       this.direction = 'ltr';
@@ -40,26 +40,29 @@ export class ViewComponent implements OnInit{
     } else if (this.lang == 'ar') {
       this.direction = 'rtl';
     }
-    this.SearchSortModule={SortFiled:'',SortOrder:1,Name:'',NameAr:''}
-    console.log("role :",this.Role.categoryName.name);
+    this.SortSearch={SortField:'',SortOrder:1,Search:""}
   }
   LoadModulesWithPermssions(event)
-  {
-    console.log("event :",event);
+  {    
     
-    this.ngxService.start('loading');
-    this.SearchSortModule.SortOrder=event.sortOrder;
-    this.SearchSortModule.SortFiled=event.sortField;
-      this.RoleService.getModulesPermissionsbyRoleId(this.RoleId,event.first, event.rows,this.searchSortModule).subscribe((res) => {
-      this.ModulesWithSelectedPermssions = res;  
-      this.count=this.ModulesWithSelectedPermssions.count;
-      console.log(this.ModulesWithSelectedPermssions);
+    this.spinner.show()
+    this.SortSearch.SortOrder=event.sortOrder;
+    this.SortSearch.SortField=event.sortField;
+      this.RoleService.getModulesPermissionsbyRoleId(this.Role.id,event.first, event.rows,this.SortSearch).subscribe((res) => {
+      this.ModulesPermissionsResult = res;  
+      this.count=this.ModulesPermissionsResult.count;
+      this.ModuleWithPermissions=this.ModulesPermissionsResult.results.map(result=>({...result,permissions:result.permissions.map(p=>({...p,value:true}))}));
       
-      this.ngxService.stop('loading');
+     this.spinner.hide();
     },error=>{
-      this.ngxService.stop('loading');
+     this.spinner.hide();
     }
     );
-
+  }
+  getPermissionValue(ModuleWithPermissions:any,permissionName:string):boolean
+  {
+    var per=ModuleWithPermissions.permissions.find(p=>p.name===permissionName)
+    if(per)return per.value;
+    return false; 
   }
 }

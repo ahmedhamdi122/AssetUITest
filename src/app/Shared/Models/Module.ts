@@ -11,6 +11,19 @@ export class ModulesPermissionsResult
     results:ModuleWithPermissionsVM[];
     count:number;
 }
+export class ModulesPermissionsWithSelectedPermissionIDsResult 
+{
+    results:ModulePermissionsWithSelectedPermissionIdsVM[];
+    count:number;
+}
+export class ModulePermissionsWithSelectedPermissionIdsVM
+{
+    id:number;
+    name:string;
+    nameAr:string;
+    permissions:PermissionVM[];
+    selectedPemrissionIDs:number[];
+}
 export class ModulesWithPermissionsValueVM{
     id:number;
     name:string;
@@ -22,10 +35,9 @@ export class ModuleIdsWithPermissionsVM
     moduleId:number;
     permissionIDs:number[]
 }
-export class SearchSortModuleVM
+export class SortSearchVM
 {
     SortOrder: number;
     SortFiled: string;
-    Name: string;
-    NameAr: string;
+    search: string;
 }

@@ -24,11 +24,13 @@ export class RolesResult
     count: number;
 }
 export class RoleVM{
+    id:string;
     name:string;
     displayName:string;
-    categoryName:RoleCategoryNamesVM;
+    roleCategory:roleCategoryVM;
 }
-export class RoleCategoryNamesVM{
+export class roleCategoryVM{
+    id:number;
     name:string;
     nameAr:string;
 }

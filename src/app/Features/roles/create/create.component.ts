@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { el } from '@fullcalendar/core/internal-common';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { ModulesPermissionsResult, ModulesWithPermissionsValueVM, ModuleWithPermissionsVM, SearchSortModuleVM } from 'src/app/Shared/Models/Module';
+import { ModulesPermissionsResult, ModulesWithPermissionsValueVM, ModuleWithPermissionsVM, SortSearchVM } from 'src/app/Shared/Models/Module';
 import { ListRoleCategoriesVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { CreateRoleVM } from 'src/app/Shared/Models/roleVM';
 import { ModuleService } from 'src/app/Shared/Services/module.service';
@@ -38,12 +38,12 @@ export class CreateComponent implements OnInit {
   isInvalidRoleCategory=true;
   noCheckedAnyPermissions=false;
   lsCheckedModulesWithPermissions:ModuleWithPermissionsVM[];
-  SearchSortModule:SearchSortModuleVM;
+  SearchSortModule:SortSearchVM;
   ModulesWithPermssions:ModulesWithPermissionsValueVM[]=[]
   count:number;
   direction:string;
   constructor(  private ref: DynamicDialogRef,private conf:DynamicDialogConfig,private ModuleService:ModuleService,private ngxService:NgxUiLoaderService,private roleService:RoleService) {
-
+    
   }
   validateRoleCategory()
   {
@@ -61,7 +61,7 @@ export class CreateComponent implements OnInit {
     } else if (this.lang == 'ar') {
       this.direction = 'rtl';
     }
-    this.SearchSortModule={SortFiled:'',SortOrder:1,Name:'',NameAr:''}
+    this.SearchSortModule={SortFiled:'',SortOrder:1,search:""}
     this.CreateRole={roleCategoryId:null,name:'',displayName:'',ModuleIdsWithPermissions:[]};
     
   }

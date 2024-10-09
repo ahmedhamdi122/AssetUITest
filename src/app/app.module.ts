@@ -164,6 +164,7 @@ import { AuthenticationService } from './Shared/Services/guards/authentication.s
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { RolesModule } from './Features/roles/roles.module';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 // FullCalendarModule.registerPlugins([
 //   interactionPlugin,
@@ -247,7 +248,7 @@ import { RolesModule } from './Features/roles/roles.module';
     ConfirmDialogModule,
      RoleCategoriesModule,
      RoleCategoriesRoutingModule,
-
+    NgxSpinnerModule,
     // OrganizationsModule,
     // OrganizationsRoutingModule,
 

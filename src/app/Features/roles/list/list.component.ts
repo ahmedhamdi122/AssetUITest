@@ -15,6 +15,7 @@ import { EditComponent } from '../edit/edit.component';
 import { ViewComponent } from '../view/view.component';
 import { ConfirmationService } from 'primeng/api';
 import { ModulesPermissionsResult } from 'src/app/Shared/Models/Module';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-list',
@@ -41,35 +42,36 @@ export class ListComponent implements OnInit {
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
   constructor(
     private roleService: RoleService,
-    private rolecategoryService: RoleCategoryService,private ModuleService:ModuleService,private confirmationService:ConfirmationService,
-    private route: Router ,private dialogService:DialogService,private ngxService:NgxUiLoaderService
+    private rolecategoryService: RoleCategoryService,
+    private route: Router ,private dialogService:DialogService,private spinner:NgxSpinnerService,private confirmationService:ConfirmationService
   ) { }
   ngOnInit(): void {
     this.SearchSortRoleObj = { SortField:'', SortOrder: 1 ,Search:''}
   }
   LoadRole(event:any)
   {
-    this.ngxService.start();
+    this.spinner.show()
     this.SearchSortRoleObj={ SortField:event.sortField, SortOrder: event.sortOrder ,Search:''};
       this.roleService.GetRoles(event.first, event.rows,this.SearchSortRoleObj).subscribe((items) => {
       this.lstRoles = items.results;           
       this.count = items.count;
-       this.ngxService.stop();
+      this.spinner.hide()
     },error=>{
       this.errorDisplay=true;
       this.errorMessage="error";
-      this.ngxService.stop();
+      this.spinner.hide()
     }
     );
   }
   addRole()
   {
-    this.ngxService.start()
+    this.spinner.show()
+
     var rolecategoryReq=this.rolecategoryService.GetRoleCategories();
     forkJoin([rolecategoryReq]).subscribe(
       {
         next:rolecategoryRes=>{
-          this.ngxService.stop();
+          this.spinner.hide()
           const dialogRef = this.dialogService.open(CreateComponent, {
             header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
             width: '70%',
@@ -99,17 +101,16 @@ export class ListComponent implements OnInit {
   }
   viewRole(id:string)
   {
-
-    this.ngxService.start()
+    this.spinner.show()
     var roleReq=this.roleService.GetRoleById(id);
     forkJoin([roleReq]).subscribe(
       {
-        next:([roleReqRes])=>{
-          this.ngxService.stop();
+        next:([roleRes])=>{
+          this.spinner.hide()
           const dialogRef = this.dialogService.open(ViewComponent, {
             header: this.lang == "en" ? 'View Role ' : "عرض دور",
             width: '70%',
-            data:{"roleReqRes":roleReqRes,"Id":id},
+            data:{"roleRes":roleRes},
             style: {
               'dir': this.lang == "en" ? 'ltr' : "rtl",
               "text-align": this.lang == "en" ? 'left' : "right",
@@ -126,77 +127,75 @@ export class ListComponent implements OnInit {
      }
   deleteRole(item:any,rowIndex:number)
   {
-      //check in backEnd before delete role that is exists first 
-      //and no user have this role 
-  //     this.selectedObj = item;
-  //     this.confirmationService.confirm({
-  //       message: `${this.lang === 'en' ? `Are you sure that you want to delete ${this.selectedObj.name}?` : `هل أنت متأكد أنك تريد حذف ${this.selectedObj.name}؟`}`,
-  //       header: `${this.lang === 'en' ? 'Delete Confirmation' : 'تأكيد المسح'}`,
-  //       icon: 'pi pi-exclamation-triangle',
-  //       acceptIcon: 'none', 
-  //       rejectIcon: 'none', 
-  //       acceptButtonStyleClass: 'btn btn-primary m-2', 
-  //       rejectButtonStyleClass: 'btn btn-light m-2',
-  //       rejectLabel: this.lang === 'en' ? 'No' : 'لا',
-  //       acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
-  //       accept: () => {
-  //         this.ngxService.start();
-  //         this.rolecategoryService.DeleteRoleCategory(item.id).subscribe(
-  //           deleted => {
-  //             this.ngxService.stop();
-  //             this.displaySuccessDelete=true;
-  //             const first = (Math.floor(rowIndex / 10))*10;
-  //             this.reloadTableObj.first=first;
-  //             this.LoadRole(this.LoadRole)
-  //             this.dataTable.first=first;
-  //           },
-  //           error => {
-  //             this.ngxService.stop();
-  //             console.error('Error deleting Role Category:', error);
-  //             this.errorDisplay=true;
-  //             this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;
-  //           }
-  //         );
-  //       },
-  //       reject: () => {
-  //         console.log('Deletion rejected.');
-  //       }
-  //     });
+      // check in backEnd before delete role that is exists first 
+      // and no user have this role 
+      this.selectedObj = item;
+      this.confirmationService.confirm({
+        message: `${this.lang === 'en' ? `Are you sure that you want to delete ${this.selectedObj.name}?` : `هل أنت متأكد أنك تريد حذف ${this.selectedObj.name}؟`}`,
+        header: `${this.lang === 'en' ? 'Delete Confirmation' : 'تأكيد المسح'}`,
+        icon: 'pi pi-exclamation-triangle',
+        acceptIcon: 'none', 
+        rejectIcon: 'none', 
+        acceptButtonStyleClass: 'btn btn-primary m-2', 
+        rejectButtonStyleClass: 'btn btn-light m-2',
+        rejectLabel: this.lang === 'en' ? 'No' : 'لا',
+        acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+        accept: () => {
+          this.spinner.show()
+          this.rolecategoryService.DeleteRoleCategory(item.id).subscribe(
+            deleted => {
+              this.spinner.hide()
+              this.displaySuccessDelete=true;
+              const first = (Math.floor(rowIndex / 10))*10;
+              this.reloadTableObj.first=first;
+              this.LoadRole(this.LoadRole)
+              this.dataTable.first=first;
+            },
+            error => {
+              this.spinner.hide()
+              console.error('Error deleting Role Category:', error);
+              this.errorDisplay=true;
+              this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;
+            }
+          );
+        },
+        reject: () => {
+          console.log('Deletion rejected.');
+        }
+      });
 
    }
-   editRole(item:any,rowIndex:number)
+   editRole(id:string)
    {
-    // this.ngxService.start()
-    // var rolecategoryReq=this.rolecategoryService.GetRoleCategories();
-    // forkJoin([rolecategoryReq]).subscribe(
-    //   {
-    //     next:rolecategoryRes=>{
-    //       this.ngxService.stop();
-    //       const dialogRef = this.dialogService.open(EditComponent, {
-    //         header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
-    //         width: '70%',
-    //         data:{"rolecategoryRes":rolecategoryRes},
-    //         style: {
-    //           'dir': this.lang == "en" ? 'ltr' : "rtl",
-    //           "text-align": this.lang == "en" ? 'left' : "right",
-    //           "direction": this.lang == "en" ? 'ltr' : "rtl"
-    //         }
-    //       });
-    //           dialogRef.onClose.subscribe((editRole) => {
-    //         if(editRole)
-    //         {
-    //          console.log("edit");
-             
-    //         }
-    //       });
+    this.spinner.show()
+    var roleReq=this.roleService.GetRoleById(id);
+    var rolecategoryReq=this.rolecategoryService.GetRoleCategories();
+    forkJoin([roleReq,rolecategoryReq]).subscribe(
+      {
+        next:([roleRes,rolecategoryRes])=>{
+          this.spinner.hide()
+          const dialogRef = this.dialogService.open(EditComponent, {
+            header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
+            width: '70%',
+            data:{"roleReqRes":roleRes,"rolecategoryRes":rolecategoryRes},
+            style: {
+              'dir': this.lang == "en" ? 'ltr' : "rtl",
+              "text-align": this.lang == "en" ? 'left' : "right",
+              "direction": this.lang == "en" ? 'ltr' : "rtl"
+            }
+          });
+              dialogRef.onClose.subscribe((editRole) => {
+            if(editRole)
+            {
+             console.log("edit");
+            }
+          });
           
-    //     },
-    //     error:(err)=>{
-    //       console.log("some error  : ",err);
-          
-    //     }
-    //   }
-    // )
+        },
+        error:(err)=>{
+          console.log("some error  : ",err);}
+      }
+    )
   
   }
   reload() {

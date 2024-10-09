@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { CreateRoleVM, EditRoleVM, ListRolesVM, RolesResult, RoleVM } from '../Models/roleVM';
 import { Paging } from '../Models/paging';
 import { SortSearchVM } from '../Models/rolecategoryVM';
-import { ModulesPermissionsResult } from '../Models/Module';
+import { ModulesPermissionsResult, ModulesPermissionsWithSelectedPermissionIDsResult } from '../Models/Module';
 
 
 
@@ -44,7 +44,9 @@ export class RoleService {
   // AddRoleToListById(id: string): Observable<EditRoleVM> {
   //   return this.httpClient.get<EditRoleVM>(`${environment.AddRoleToListById}${id}`, this.httpHeader);
   // }
-
+  getModulesPermissionsbyRoleIdForEdit(roleId: string,first:number,rows:number,sortSearchObj:SortSearchVM){
+    return this.httpClient.post<ModulesPermissionsWithSelectedPermissionIDsResult>(`${environment.getModulesPermissionsbyRoleIdForEdit}${roleId}/${first}/${rows}`,sortSearchObj, this.httpHeader);
+  }
 
 
   GetRolesByRoleCategoryId(catId: number): Observable<ListRolesVM[]> {
