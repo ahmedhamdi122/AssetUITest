@@ -41,7 +41,6 @@ export class CreateComponent implements OnInit {
   SearchSortModule:SortSearchVM;
   ModulesWithPermssions:ModulesWithPermissionsValueVM[]=[]
   count:number;
-  direction:string;
   constructor(  private ref: DynamicDialogRef,private conf:DynamicDialogConfig,private ModuleService:ModuleService,private ngxService:NgxUiLoaderService,private roleService:RoleService) {
     
   }
@@ -52,15 +51,6 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
     this.lstRoleCategories=this.conf.data[0];
     
-    if (localStorage.getItem("lang") == null) {
-      this.lang = 'en'
-      this.direction = 'ltr';
-    }
-    else if (this.lang == 'en') {
-      this.direction = 'ltr';
-    } else if (this.lang == 'ar') {
-      this.direction = 'rtl';
-    }
     this.SearchSortModule={SortFiled:'',SortOrder:1,search:""}
     this.CreateRole={roleCategoryId:null,name:'',displayName:'',ModuleIdsWithPermissions:[]};
     
@@ -122,6 +112,7 @@ export class CreateComponent implements OnInit {
       this.CreateRole.ModuleIdsWithPermissions.push({moduleId:ModuleWithPermissions.id,permissionIDs:[permissionId]});
 
     }
+    this.anyPermissionChecked() ?this.noCheckedAnyPermissions=false :this.noCheckedAnyPermissions=true;
   }
   hasPermission(ModuleWithPermssions:any,permission:string)
   {

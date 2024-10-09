@@ -14,9 +14,10 @@ export class CreateRoleVM {
 }
 export class EditRoleVM {
     id: string = "";
-    roleCategoryId: number = 0;
+    roleCategoryId: number;
     name: string = "";
     displayName: string = "";
+    ModuleIdsWithPermissions:ModuleIdsWithPermissionsVM[];
 }
 export class RolesResult
 {

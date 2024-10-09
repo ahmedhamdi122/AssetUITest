@@ -175,7 +175,7 @@ export class ListComponent implements OnInit {
         next:([roleRes,rolecategoryRes])=>{
           this.spinner.hide()
           const dialogRef = this.dialogService.open(EditComponent, {
-            header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
+            header: this.lang == "en" ? 'Edit Role ' : "تعديل دور",
             width: '70%',
             data:{"roleReqRes":roleRes,"rolecategoryRes":rolecategoryRes},
             style: {

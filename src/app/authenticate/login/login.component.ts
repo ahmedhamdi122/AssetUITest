@@ -4,6 +4,7 @@ import { AuthenticationService } from '../../Shared/Services/guards/authenticati
 import { AuthGuard } from '../../Shared/Services/guards/authGuard.guard';
 import { LoggedUser, User } from '../../Shared/Models/userVM';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-login',
   templateUrl:
@@ -21,7 +22,7 @@ export class LoginComponent implements OnInit {
   lang = localStorage.getItem("lang");
   textDir: string = 'ltr';
   cookieValue: string = "";
-  constructor(private router: Router, private authenticationService: AuthenticationService,private ngxService:NgxUiLoaderService,
+  constructor(private router: Router, private authenticationService: AuthenticationService,private spinner:NgxSpinnerService,
    private activateRoute: ActivatedRoute, private Authguardservice: AuthGuard) {
   }
   ngOnInit(): void {
@@ -68,14 +69,14 @@ export class LoginComponent implements OnInit {
           }
           return false;
         }
-  this.ngxService.start();
-    this.authenticationService.login(this.loggingUserObj).subscribe(
+        this.spinner.show()
+        this.authenticationService.login(this.loggingUserObj).subscribe(
       data => {
 
         this.userObj = this.authenticationService.currentUserValue;
         this.userObj.isRemembered = this.loggingUserObj.isRemembered;
 
-        this.ngxService.stop();
+        this.spinner.hide()
         this.router.navigate(['/dash']);
       },
       error => {
@@ -86,7 +87,7 @@ export class LoginComponent implements OnInit {
         else {
             this.errorMessage = error.error.messageAr;
         }
-        this.ngxService.stop();
+        this.spinner.hide()
         this.errorDisplay = true;
         return false;
      

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateRoleCategoryVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
@@ -17,9 +18,7 @@ export class CreateComponent implements OnInit {
   frm: FormGroup;
   roleCategoryObj: CreateRoleCategoryVM;
   showError: boolean = false;
-  constructor(private roleCategoryService: RoleCategoryService, private route: Router, private ref: DynamicDialogRef) {
-
-
+  constructor(private roleCategoryService: RoleCategoryService, private route: Router, private ref: DynamicDialogRef,private spinner:NgxSpinnerService) {
     this.roleCategoryService.GenerateRoleCategoryOrderId().subscribe(result => {
       this.roleCategoryObj.orderId = result["orderId"];
     });
@@ -61,7 +60,9 @@ export class CreateComponent implements OnInit {
           }
           return false;
         }
+        this.spinner.show()
         this.roleCategoryService.AddRoleCategories(this.roleCategoryObj).subscribe(()=>{
+          this.spinner.hide()
           this.ref.close("created");
         }
       ,((error)=>console.log(error)))

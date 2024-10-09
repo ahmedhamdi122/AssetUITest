@@ -11,6 +11,7 @@ import { ViewComponent } from '../view/view.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Table } from 'primeng/table';
 import { ConfirmationService } from 'primeng/api';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-list',
@@ -33,8 +34,9 @@ export class ListComponent implements OnInit {
   displaySuccessCreate=false;
   displaySuccessDelete=false;
   @ViewChild('table') dataTable: Table;
+  dir=this.lang=='en'?'ltr':'rtl';
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
-  constructor(private rolecategoryService: RoleCategoryService, private dialog: MatDialog, private route: Router, public dialogService: DialogService,private ngxService:NgxUiLoaderService,private confirmationService:ConfirmationService) { }
+  constructor(private rolecategoryService: RoleCategoryService, private dialog: MatDialog, private spinner:NgxSpinnerService,private route: Router, public dialogService: DialogService,private ngxService:NgxUiLoaderService,private confirmationService:ConfirmationService) { }
   ngOnInit(): void {
   }
 
@@ -51,10 +53,10 @@ export class ListComponent implements OnInit {
         rejectLabel: this.lang === 'en' ? 'No' : 'لا',
         acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
         accept: () => {
-          this.ngxService.start();
+          this.spinner.show()
           this.rolecategoryService.DeleteRoleCategory(item.id).subscribe(
             deleted => {
-              this.ngxService.stop();
+              this.spinner.hide()
               this.displaySuccessDelete=true;
               const first = (Math.floor(rowIndex / 10))*10;
               this.reloadTableObj.first=first;
@@ -62,7 +64,7 @@ export class ListComponent implements OnInit {
               this.dataTable.first=first;
             },
             error => {
-              this.ngxService.stop();
+              this.spinner.hide()
               console.error('Error deleting Role Category:', error);
               this.errorDisplay=true;
               this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;
@@ -101,11 +103,11 @@ export class ListComponent implements OnInit {
   }
   editRoleCategory(id: number,rowIndex) {
 
-
+    this.spinner.show()
     this.rolecategoryService.GetRoleCategoryById(id).subscribe(
       (data => {
         this.roleCategoryObj = data;
-        this.ngxService.stop()
+        this.spinner.hide()
         const ref = this.dialogService.open(EditComponent, {
           header: this.lang == "en" ? 'Edit Role Category' : "تعديل  فئة الأدوار",
           width: '50%',
@@ -130,11 +132,11 @@ export class ListComponent implements OnInit {
       }), (error => {console.log(error); this.ngxService.stop()}));
   }
   viewRoleCategory(id: number) {
-    this.ngxService.start();
+    this.spinner.show()
     this.rolecategoryService.GetRoleCategoryById(id).subscribe(
       (data => {
         this.roleCategoryObj = data;
-        this.ngxService.stop();
+        this.spinner.hide()
         const ref = this.dialogService.open(ViewComponent, {
           header: this.lang == "en" ? 'View Role Category' : "بيان  فئة الأدوار",
           width: '50%',
@@ -148,20 +150,21 @@ export class ListComponent implements OnInit {
           }
         });
       }), (error =>{ console.log(error);     
-         this.ngxService.stop()}
+        this.spinner.hide()
+      }
     ));
     
   }
 
 
   LoadRoleCategories(event) {    
-    this.ngxService.start();
+    this.spinner.show()
     this.sortObj = { SortField: event.sortField, SortOrder: event.sortOrder ,Search:''}
     this.rolecategoryService.LoadRoleCategories(event.first,event.rows, this.sortObj).subscribe(items => {
       this.RoleCategoriesResult = items;
      this.lstRoleCategories=this.RoleCategoriesResult.results;
       this.count=this.RoleCategoriesResult.count;
-      this.ngxService.stop();
+      this.spinner.hide()
     });
   }
   reload() {

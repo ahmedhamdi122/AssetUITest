@@ -5,7 +5,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { reportUrl } from 'src/app/constants';
 import { ModulePermissionsWithSelectedPermissionIdsVM, ModulesPermissionsWithSelectedPermissionIDsResult, ModulesWithPermissionsValueVM  } from 'src/app/Shared/Models/Module';
 import { ListRoleCategoriesVM, SortSearchVM } from 'src/app/Shared/Models/rolecategoryVM';
-import { CreateRoleVM, RoleVM } from 'src/app/Shared/Models/roleVM';
+import { EditRoleVM, RoleVM } from 'src/app/Shared/Models/roleVM';
 import { RoleService } from 'src/app/Shared/Services/role.service';
 
 
@@ -17,7 +17,7 @@ import { RoleService } from 'src/app/Shared/Services/role.service';
 export class EditComponent implements OnInit {
   public lang = localStorage.getItem("lang");
   form: FormGroup;
-  EditRole: CreateRoleVM;
+  EditRole: EditRoleVM;
   lstRoleCategories: ListRoleCategoriesVM[] = [];
   ModulesPermissionsResult:ModulesPermissionsWithSelectedPermissionIDsResult;
   errorMessage: string ;
@@ -31,7 +31,6 @@ export class EditComponent implements OnInit {
   RoleId:string;
   count:number;
   ModuleWithPermissions:ModulesWithPermissionsValueVM[];
-  // lsCheckedModulesWithPermissions:ModulesWithPermissionsVM[];
   constructor( private ref: DynamicDialogRef,private conf:DynamicDialogConfig,private spinner:NgxSpinnerService,private roleService:RoleService) {
   }
   validateRoleCategory()
@@ -42,7 +41,7 @@ export class EditComponent implements OnInit {
     this.Role=this.conf.data.roleReqRes;
     this.lstRoleCategories=this.conf.data.rolecategoryRes;
     //this.EditRole.roleCategoryId=this.Role.roleCategory.id;
-    this.EditRole={roleCategoryId:this.Role.roleCategory.id,name:'',displayName:'',ModuleIdsWithPermissions:[]};
+    this.EditRole={id:this.Role.id,roleCategoryId:this.Role.roleCategory.id,name:'',displayName:'',ModuleIdsWithPermissions:[]};
  
     this.SortSearch={SortField:'',SortOrder:1,Search:""}
     
@@ -57,7 +56,6 @@ export class EditComponent implements OnInit {
     this.SortSearch.SortOrder=event.sortOrder;
     this.SortSearch.SortField=event.sortField;
       this.roleService.getModulesPermissionsbyRoleIdForEdit(this.Role.id,event.first, event.rows,this.SortSearch).subscribe((res) => {
-        console.log("res :",res);
       this.ModulesPermissionsResult = res;  
        this.count=this.ModulesPermissionsResult.count;
        this.ModuleWithPermissions=this.ModulesPermissionsResult.results.map(result=>({...result,permissions:result.permissions.map(p=>{if(result.selectedPemrissionIDs.some(spID=>p.id==spID)==true)return {...p,value:true};else return {...p,value:false};})}));
@@ -68,19 +66,45 @@ export class EditComponent implements OnInit {
     }
     );
   }
-  getPermissionValue(ModulesWithPermissions:any,permission:string)
+  hasPermission(ModuleWithPermssions:any,permission:string)
+  {
+   
+     return ModuleWithPermssions.permissions.some(p=>p.name===permission);
+  }
+  getPermissionValue(ModuleWithPermissions:any,permission:string)
   {
     
-    var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
+    var per=ModuleWithPermissions.permissions.find(p=>p.name===permission)
     if(per)return per.value;
     return false;    
   }
-  updatePermissionValue(ModulesWithPermissions:any,permission:string,value:boolean)
+  updatePermissionValue(ModuleWithPermissions:ModulesWithPermissionsValueVM,permissionName:string,value:boolean)
   {
-    var per=ModulesWithPermissions.permissions.find(p=>p.name===permission)
-    if(per) per.value=value;
-    this.noCheckedAnyPermissions=!this.anyPermissionChecked();
+    
+    var ModuleIdWithpermissionIDs=this.EditRole.ModuleIdsWithPermissions.find(mwp=>mwp.moduleId==ModuleWithPermissions.id);
+    var permissionId=ModuleWithPermissions.permissions.find(p=>p.name==permissionName).id;
+    if(ModuleIdWithpermissionIDs)
+    {
+      if(value)
+      {this.EditRole.ModuleIdsWithPermissions.find(m=>m.moduleId==ModuleWithPermissions.id).permissionIDs.push(permissionId);}
+      else{
+        var index=this.EditRole.ModuleIdsWithPermissions.find(m=>m.moduleId==ModuleWithPermissions.id).permissionIDs.indexOf(permissionId);
+        if(index!=-1)
+        {
+          this.EditRole.ModuleIdsWithPermissions.find(m=>m.moduleId==ModuleWithPermissions.id).permissionIDs.splice(index,1);
+          if(this.EditRole.ModuleIdsWithPermissions.find(m=>m.moduleId==ModuleWithPermissions.id).permissionIDs.length==0)
+          {
+          this.EditRole.ModuleIdsWithPermissions=this.EditRole.ModuleIdsWithPermissions.filter(mwp=>mwp.permissionIDs.length!=0)
+        }
+      }
+    }
+  }
+    else
+    {
+      this.EditRole.ModuleIdsWithPermissions.push({moduleId:ModuleWithPermissions.id,permissionIDs:[permissionId]});
 
+    }
+    this.anyPermissionChecked() ?this.noCheckedAnyPermissions=false :this.noCheckedAnyPermissions=true;
   }
   anyPermissionChecked() {
     return this.EditRole.ModuleIdsWithPermissions.length!=0
@@ -139,13 +163,10 @@ export class EditComponent implements OnInit {
     //     else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
     //     return false;
     //   }
-  //   this.EditRole.ModuleIdsWithPermissions = this.ModulesWithPermssions.map(module => ({
-  //     moduleId:module.id,
-  //     permissionIDs: module.permissions.filter(permission => permission.value === true).map(p=>p.id)
-  // })).filter(module => module.permissionIDs.length > 0);
-  // console.log("this.EditRole.ModuleIdsWithPermissions :",this.EditRole.ModuleIdsWithPermissions);
-  
-      this.ref.close(this.EditRole);
+    
+    console.log("this.EditRole. :",this.EditRole );
+    
+     // this.ref.close(this.EditRole);
 
 }
   
