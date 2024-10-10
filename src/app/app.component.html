@@ -1,4 +1,4 @@
-<div class="col-12" [ngStyle]="{'text-align': lang == 'en' ? 'left': 'right'}" [dir]="direction">
+<div class="col-12" [ngStyle]="{'text-align': lang == 'en' ? 'left': 'right'}" [attr.dir]="lang === 'ar' ? 'rtl' : null">>
     <ngx-spinner
     bdColor="rgba(51,51,51,0.8)"
     size="medium"

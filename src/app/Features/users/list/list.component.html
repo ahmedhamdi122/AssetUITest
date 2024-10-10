@@ -1,17 +1,18 @@
+<div class="row p-2">
 <div class="col-12">
   <div class="row mt-3">
     <div class="col-10">
       <h1 class="card-title"> {{ 'Asset.Users' | translate }} </h1>
     </div>
     <div class="col-2">
-      <a class="addbutton" [routerLink]="['/users/adduser']">
-        <i class="fa-solid fa-plus"></i> {{ 'Asset.Create' | translate }}</a>
+  <a class="addbutton" (click)="addUser()">
+        <i class="pi pi-plus-circle"></i> {{ 'Asset.Create' | translate }}</a>
     </div>
   </div>
 <div class="top-buffer">
   <p-table [value]="lstUsers" styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines"
     responsiveLayout="scroll" [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" pageLinks="10"
-    [rowHover]="true" (onLazyLoad)="clicktbl($event)">
+    [rowHover]="true" (onLazyLoad)="LoadUsers($event)">
     <ng-template pTemplate="header">
       <tr>
         <th style="text-align: inherit;" [sortable]="true">{{'Asset.Username' | translate }}
@@ -54,3 +55,32 @@
   </p-table>
 </div>
 </div>
+</div>
+
+
+
+
+<p-confirmDialog></p-confirmDialog>
+<p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
+  <p-header style="color: rgb(181, 4, 4)"> {{ 'Asset.Error' | translate }} </p-header>
+  <span style="color: rgb(181, 4, 4); font-weight: bold">
+      {{ errorMessage }}</span>
+</p-dialog>
+<p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessCreate" [style]="{ width: '350px' }">
+    <ng-template pTemplate="header">
+      <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
+        {{ "Asset.Save" | translate }}
+      </h6>
+    </ng-template>
+    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
+      {{ "Asset.SavedSuccess" | translate }}</span>
+  </p-dialog>
+  <p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessDelete" [style]="{ width: '350px' }">
+    <ng-template pTemplate="header">
+      <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
+        {{ "Asset.Delete" | translate }}
+      </h6>
+    </ng-template>
+    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
+      {{ "Asset.DeletedSuccess" | translate }}</span>
+  </p-dialog>

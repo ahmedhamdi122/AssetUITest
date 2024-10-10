@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { el } from '@fullcalendar/core/internal-common';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ModulesPermissionsResult, ModulesWithPermissionsValueVM, ModuleWithPermissionsVM, SortSearchVM } from 'src/app/Shared/Models/Module';
@@ -25,7 +26,7 @@ interface Permission {
 })
 
 
-export class CreateComponent implements OnInit {
+export class CreateRoleComponent implements OnInit {
   public lang = localStorage.getItem("lang");
   form: FormGroup;
   CreateRole: CreateRoleVM;
@@ -41,7 +42,7 @@ export class CreateComponent implements OnInit {
   SearchSortModule:SortSearchVM;
   ModulesWithPermssions:ModulesWithPermissionsValueVM[]=[]
   count:number;
-  constructor(  private ref: DynamicDialogRef,private conf:DynamicDialogConfig,private ModuleService:ModuleService,private ngxService:NgxUiLoaderService,private roleService:RoleService) {
+  constructor(  private spinner:NgxSpinnerService,private ref: DynamicDialogRef,private conf:DynamicDialogConfig,private ModuleService:ModuleService,private ngxService:NgxUiLoaderService,private roleService:RoleService) {
     
   }
   validateRoleCategory()
@@ -175,10 +176,12 @@ export class CreateComponent implements OnInit {
         else this.errorMessage='من فضلك إضافة صلاحية واحده على الأقل'
         return false;
       }
+      this.spinner.show()
       this.roleService.AddRole(this.CreateRole).subscribe(res=>{
         this.ref.close(this.CreateRole);
       },
       error=>{
+        this.spinner.hide()
         this.errorDisplay = true;
         if (this.lang == 'en') {
           if (error.error.status == 'roleExists') {

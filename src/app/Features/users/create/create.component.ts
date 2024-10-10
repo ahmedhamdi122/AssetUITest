@@ -3,7 +3,6 @@ import { ListRoleCategoriesVM } from 'src/app/Shared/Models/rolecategoryVM';
 import { EditRoleVM, ListRolesVM } from 'src/app/Shared/Models/roleVM';
 import {
   CreateUserVM,
-  EditUserVM,
   selectedHospitalType,
 } from 'src/app/Shared/Models/userVM';
 import { RoleService } from 'src/app/Shared/Services/role.service';
@@ -28,6 +27,12 @@ import { CommetieeMemberService } from 'src/app/Shared/Services/commetieeMember.
 import { ListCommetieeMemberVM } from 'src/app/Shared/Models/commetieeMemberVM';
 import { ListEngineerVM } from 'src/app/Shared/Models/engineerVM';
 import { EngineerService } from './../../../Shared/Services/engineer.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { DialogService } from 'primeng/dynamicdialog';
+import { forkJoin } from 'rxjs';
+import { CreateRoleComponent } from '../../roles/create/create.component';
+
+
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -75,7 +80,7 @@ export class CreateComponent implements OnInit {
   showSuppliers: boolean = false;
   showMembers: boolean = false;
   showVisits: boolean = false;
-
+  displaySuccessCreate=false;
   constructor(
     private roleCategoryService: RoleCategoryService,
     private roleService: RoleService,
@@ -90,6 +95,7 @@ export class CreateComponent implements OnInit {
     private commetieeMemberService: CommetieeMemberService,
     private route: Router,
     private engineerService: EngineerService,
+    private spinner:NgxSpinnerService,private rolecategoryService:RoleCategoryService,private dialogService: DialogService
   ) { }
 
   ngOnInit(): void {
@@ -99,7 +105,7 @@ export class CreateComponent implements OnInit {
     };
 
 
-
+    
     if (this.lang == "en") {
       this.lstHospitalTypes = [
         { name: 'Get hospitals by City', id: 1 },
@@ -151,7 +157,37 @@ export class CreateComponent implements OnInit {
     })
   }
 
+  addRole()
+  {
+    this.spinner.show();
+    var rolecategoryReq=this.rolecategoryService.GetRoleCategories();
+    forkJoin([rolecategoryReq]).subscribe(
+      {
+        next:rolecategoryRes=>{
+          this.spinner.hide();
+          const dialogRef = this.dialogService.open(CreateRoleComponent, {
+            header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
+            width: '70%',
+            data:rolecategoryRes,
+            style: {
+              'dir': this.lang == "en" ? 'ltr' : "rtl",
+              "text-align": this.lang == "en" ? 'left' : "right",
+              "direction": this.lang == "en" ? 'ltr' : "rtl"
+            }
+          });
+              dialogRef.onClose.subscribe((CreateRole) => {
+            if(CreateRole)
+            {
+              this.spinner.hide();
+                 this.displaySuccessCreate=true;
+              }
+      
+          
+        })
+      },error:err=>{
 
+        }})
+  }
   selectedRoles($event) {
     if ($event.checked) {
       this.addRoles.push($event.source.value);
@@ -382,10 +418,13 @@ export class CreateComponent implements OnInit {
 
     if (this.selectedCategory == 1) {
       this.userObj.roleIds = this.addRoles;
+      this.spinner.show();
       this.userService.AddUser(this.userObj).subscribe((user) => {
         this.display = true;
+        this.spinner.hide();
       },
         error => {
+          this.spinner.hide();
           this.errorDisplay = true;
           if (this.lang == 'en') {
             if (error.error.status == 'Error') {

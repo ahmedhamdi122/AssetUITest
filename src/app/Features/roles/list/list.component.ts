@@ -6,7 +6,7 @@ import { ListRoleCategoriesVM, SortSearchVM } from 'src/app/Shared/Models/roleca
 import { EditRoleVM, ListRolesVM, RolesResult } from 'src/app/Shared/Models/roleVM';
 import { RoleService } from 'src/app/Shared/Services/role.service';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
-import { CreateComponent } from '../create/create.component';
+import { CreateRoleComponent } from '../create/create.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { ModuleService } from 'src/app/Shared/Services/module.service';
 import { forkJoin } from 'rxjs';
@@ -66,13 +66,12 @@ export class ListComponent implements OnInit {
   addRole()
   {
     this.spinner.show()
-
     var rolecategoryReq=this.rolecategoryService.GetRoleCategories();
     forkJoin([rolecategoryReq]).subscribe(
       {
         next:rolecategoryRes=>{
           this.spinner.hide()
-          const dialogRef = this.dialogService.open(CreateComponent, {
+          const dialogRef = this.dialogService.open(CreateRoleComponent, {
             header: this.lang == "en" ? 'Add Role ' : "إضافة دور",
             width: '70%',
             data:rolecategoryRes,
@@ -127,8 +126,6 @@ export class ListComponent implements OnInit {
      }
   deleteRole(item:any,rowIndex:number)
   {
-      // check in backEnd before delete role that is exists first 
-      // and no user have this role 
       this.selectedObj = item;
       this.confirmationService.confirm({
         message: `${this.lang === 'en' ? `Are you sure that you want to delete ${this.selectedObj.name}?` : `هل أنت متأكد أنك تريد حذف ${this.selectedObj.name}؟`}`,
@@ -141,26 +138,45 @@ export class ListComponent implements OnInit {
         rejectLabel: this.lang === 'en' ? 'No' : 'لا',
         acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
         accept: () => {
+          
           this.spinner.show()
-          this.rolecategoryService.DeleteRoleCategory(item.id).subscribe(
+          this.roleService.DeleteRole(item.id).subscribe(
             deleted => {
+              console.log("inside deleted");
               this.spinner.hide()
               this.displaySuccessDelete=true;
               const first = (Math.floor(rowIndex / 10))*10;
               this.reloadTableObj.first=first;
-              this.LoadRole(this.LoadRole)
+              this.LoadRole(this.reloadTableObj)
               this.dataTable.first=first;
             },
             error => {
+              console.log("inside error");
               this.spinner.hide()
-              console.error('Error deleting Role Category:', error);
               this.errorDisplay=true;
-              this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;
+              if (this.lang == 'en') {
+                if (error.error.status == 'IsRoleAssignedToUsers') {
+                  this.errorMessage = error.error.message;
+                }
+                else {
+                  this.errorMessage = 'An unexpected error occurred. Please try again later.'
+                }
+               
+            }
+            else if (this.lang == 'ar') {
+              if (error.error.status == 'IsRoleAssignedToUsers') {
+                this.errorMessage = error.error.messageAr;
+              }
+              else {
+                this.errorMessage =  'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى لاحقًا.';
+              }
+           
+            }
+      
             }
           );
         },
         reject: () => {
-          console.log('Deletion rejected.');
         }
       });
 

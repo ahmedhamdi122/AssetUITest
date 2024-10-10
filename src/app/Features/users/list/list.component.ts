@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Subject } from 'rxjs';
 import { Paging } from 'src/app/Shared/Models/paging';
 import { ListRoleCategoriesVM } from 'src/app/Shared/Models/rolecategoryVM';
@@ -8,6 +9,7 @@ import { EditUserVM, ListUsersVM, LoggedUser, SortUsersVM } from 'src/app/Shared
 import { AuthenticationService } from 'src/app/Shared/Services/guards/authentication.service';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
 import { UserService } from 'src/app/Shared/Services/user.service';
+import { CreateComponent } from '../create/create.component';
 
 @Component({
   selector: 'app-list',
@@ -25,18 +27,20 @@ export class ListComponent implements OnInit {
   lstRoleCategories: ListRoleCategoriesVM[] = [];
   sortStatus: string = "descending";
   sortObj: SortUsersVM;
+  displaySuccessDelete:string;
+  displaySuccessCreate:boolean;
+  errorMessage:string;
+  errorDisplay:string;
+  reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
+
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private rolecategoryService: RoleCategoryService,
-    private dialog: MatDialog,
-    private route: Router
+    private route: Router, private dialogService: DialogService
   ) { this.currentUser = this.authenticationService.currentUserValue; }
   ngOnInit(): void {
 
-    this.userService.getCount().subscribe((data) => {
-      this.count = data;
-    });
+   
     this.page = {
       pagenumber: 1,
       pagesize: 10
@@ -55,14 +59,35 @@ export class ListComponent implements OnInit {
     }
 
   }
-  clicktbl(event) {
+  LoadUsers(event) {
     this.page.pagenumber = (event.first + 10) / 10;
     this.page.pagesize = event.rows;
     this.userService.GetUsersWithPaging(this.page).subscribe((items) => {
       this.lstUsers = items;
     });
   }
-
+  addUser()
+  {
+    const dialogRef2 = this.dialogService.open(CreateComponent, {
+      header: this.lang == "en" ? 'Add User' : " إضافة مستخدم",
+      width: '70%',
+      style: {
+        'dir': this.lang == "en" ? 'ltr' : "rtl",
+        "text-align": this.lang == "en" ? 'left' : "right",
+        "direction": this.lang == "en" ? 'ltr' : "rtl"
+      }
+    });
+    dialogRef2.onClose.subscribe((created) => {
+      if(created)
+      {
+        this.displaySuccessCreate=true;
+         const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
+        this.reloadTableObj.first=lastPageIndex;
+        // this.LoadUsers(this.reloadTableObj);
+        // this.dataTable.first=this.count;
+      }
+    });
+  }
 
   sort(field) {
 

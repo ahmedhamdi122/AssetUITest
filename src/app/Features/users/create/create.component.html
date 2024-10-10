@@ -1,10 +1,6 @@
-<div class="card">
-  <div class="card-header cardHeader">
-    <h4 class="card-title" style="font-size: 30px;color: #1683c2;font-weight: bold;" [translate]="''">
-      {{ 'Asset.AddUser' | translate }}
-    </h4>
+<div >
+ 
   </div>
-  <div class="card-body">
 
     <form (ngSubmit)="addForm.valid && onSubmit()" #addForm="ngForm">
       <div class="row top-buffer">
@@ -42,6 +38,9 @@
                 {{itm.name}} - {{itm.displayName}}
               </mat-checkbox>
             </li>
+            <span  (click)="addRole()" style="width: 100px; height: 50px; color: #4291EF;cursor: pointer;" pTooltip="{{'Asset.CreateRole' | translate}}">
+              <i class="pi pi-plus-circle"></i> {{ 'Asset.CreateRole' | translate }}
+          </span>
           </ul>
         </div>
       </div>
@@ -218,9 +217,6 @@
       </div>
 
       <div class="row top-buffer">
-
-
-
         <div class="col-4">
           <label for="code" [translate]="'Asset.EMail'"></label>
           <input type="text" class="form-control" [(ngModel)]="userObj.email" #email="ngModel" id="email" name="email"
@@ -235,13 +231,9 @@
           <input type="text" class="form-control" [(ngModel)]="userObj.phoneNumber" id="phoneNumber" name="phoneNumber">
         </div>
       </div>
-
-
-
-
-      <div class="row top-buffer">
+      <div class="row mt-3">
         <div class="col-offset-3 col-6 col-offset-3">
-          <button class="btn btn-primary pull-center btn-sm" value="save" type="submit" style="
+          <button class="btn btn-primary pull-center " value="save" type="submit" style="
             margin: 0px 5px;
             background-color: #1483c2;
             border-color: #1483c2;">
@@ -249,14 +241,10 @@
           </button>
 
 
-          <button class="btn btn-primary pull-center btn-sm" (click)="back()"
-            style="margin: 0px 5px;background-color: #7e8083 !important;border-color:#7e8083">{{
-            'Asset.Back' | translate }}</button>
         </div>
       </div>
     </form>
-  </div>
-</div>
+
 
 
 <p-dialog appendTo="body" modal="true" [(visible)]="display" [style]="{width: '350px'}">
@@ -272,4 +260,13 @@
   <p-header style="color: rgb(181, 4, 4)"> {{ 'Asset.Error' | translate }} </p-header>
   <span style="color: rgb(181, 4, 4); font-weight: bold">
     {{ errorMessage }}</span>
+</p-dialog>
+<p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessCreate" [style]="{ width: '350px' }">
+  <ng-template pTemplate="header">
+    <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
+      {{ "Asset.Save" | translate }}
+    </h6>
+  </ng-template>
+  <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
+    {{ "Asset.SavedSuccess" | translate }}</span>
 </p-dialog>

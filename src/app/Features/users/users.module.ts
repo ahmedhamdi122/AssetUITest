@@ -20,6 +20,8 @@ import { PaginatorModule } from 'primeng/paginator';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TableModule } from 'primeng/table';
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
 @NgModule({
   declarations: [
     ListComponent,
@@ -40,7 +42,8 @@ import { DeleteModule } from 'src/app/Shared/delete/delete.module';
     PaginatorModule,
     UsersRoutingModule,
     MatCheckboxModule,
-    TableModule
+    TableModule,
+    ConfirmDialogModule
   ],
   providers: [
     {

@@ -1,5 +1,6 @@
 {
         "Asset": {
+                "CreateRole":"Create Role",
                 "add":"add",
                 "showDetails":"show Details",
                 "Login":"Login",

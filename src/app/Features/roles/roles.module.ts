@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { RolesRoutingModule } from './roles-routing.module';
 import { ListComponent } from './list/list.component';
-import { CreateComponent } from './create/create.component';
+import { CreateRoleComponent } from './create/create.component';
 import { EditComponent } from './edit/edit.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -23,7 +23,7 @@ import { ViewComponent } from './view/view.component';
 @NgModule({
   declarations: [
     ListComponent,
-    CreateComponent,
+    CreateRoleComponent,
     EditComponent,
     ViewComponent,
   ],

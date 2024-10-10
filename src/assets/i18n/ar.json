@@ -1,5 +1,6 @@
 {
         "Asset": {
+                "CreateRole":"إضافة دور",
                 "Module":"الوحدة",
                 "add":"اضافة",
                 "showDetails":"عرض التفاصيل",

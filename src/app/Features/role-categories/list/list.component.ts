@@ -36,7 +36,7 @@ export class ListComponent implements OnInit {
   @ViewChild('table') dataTable: Table;
   dir=this.lang=='en'?'ltr':'rtl';
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
-  constructor(private rolecategoryService: RoleCategoryService, private dialog: MatDialog, private spinner:NgxSpinnerService,private route: Router, public dialogService: DialogService,private ngxService:NgxUiLoaderService,private confirmationService:ConfirmationService) { }
+  constructor(private rolecategoryService: RoleCategoryService, private dialog: MatDialog, private spinner:NgxSpinnerService,private route: Router, private dialogService: DialogService,private ngxService:NgxUiLoaderService,private confirmationService:ConfirmationService) { }
   ngOnInit(): void {
   }
 
