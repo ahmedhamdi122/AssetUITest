@@ -22,9 +22,8 @@ export class CreateUserVM {
     subOrganizationId: number;
     hospitalId: number;
     roleIds: string[];
-    userRoleIds: EditRoleVM[];
-    supplierId: 0;
-    commetieeMemberId: 0
+    userRoleIds: string[];
+
 }
 
 

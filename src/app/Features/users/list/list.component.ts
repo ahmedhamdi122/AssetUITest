@@ -68,6 +68,7 @@ export class ListComponent implements OnInit {
   }
   addUser()
   {
+    
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add User' : " إضافة مستخدم",
       width: '70%',

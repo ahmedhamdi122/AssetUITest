@@ -99,9 +99,10 @@ export class CreateComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    
     this.userObj = {
       email2: '', userRoleIds: [],
-      roleId: '', commetieeMemberId: 0, supplierId: 0, roleCategoryId: 0, cityId: 0, subOrganizationId: 0, governorateId: 0, organizationId: 0, hospitalId: 0, email: '', phoneNumber: '', passwordHash: '', userName: '', roleIds: []
+      roleId: '', roleCategoryId: 0, cityId: 0, subOrganizationId: 0, governorateId: 0, organizationId: 0, hospitalId: 0, email: '', phoneNumber: '', passwordHash: '', userName: '', roleIds: []
     };
 
 
@@ -126,26 +127,21 @@ export class CreateComponent implements OnInit {
         .GetRolesByRoleCategoryId(Number(this.selectedCategory))
         .subscribe((roles) => {
           this.lstRoles = roles;
-
+          
           this.lstRoles2 = roles;
         });
     });
 
     this.governorateService.GetGovernorates().subscribe((items) => {
       this.lstGovernorates = items;
+      
     });
 
     this.organizationService.GetOrganizations().subscribe((items) => {
       this.lstOrganizations = items;
-    });
-    this.supplierService.GetSuppliers().subscribe(suppliers => {
-      this.lstSuppliers = suppliers;
-    });
-    this.commetieeMemberService.GetCommetieeMembers().subscribe(members => {
-      this.lstMembers = members;
-    });
 
-
+    });
+  
 
     // if (this.userObj.hospitalId > 0) {
     //   //  this.getUnregisteredEmployees(this.userObj.hospitalId);
@@ -188,16 +184,16 @@ export class CreateComponent implements OnInit {
 
         }})
   }
-  selectedRoles($event) {
-    if ($event.checked) {
-      this.addRoles.push($event.source.value);
-    }
-    else {
-      var index = this.addRoles.indexOf($event.source.value);
-      var roleindex = this.lstEditRoles.indexOf($event.source.value);
-      this.addRoles.splice(index, 1);
-    }
-  }
+  // selectedRoles($event) {
+  //   if ($event.checked) {
+  //     this.addRoles.push($event.source.value);
+  //   }
+  //   else {
+  //     var index = this.addRoles.indexOf($event.source.value);
+  //     var roleindex = this.lstEditRoles.indexOf($event.source.value);
+  //     this.addRoles.splice(index, 1);
+  //   }
+  // }
 
   removeRoleFromObjectArray(doc) {
     const index: number = this.lstEditRoles.indexOf(doc);
@@ -206,6 +202,7 @@ export class CreateComponent implements OnInit {
     }
   }
   onTypeChange($event) {
+    
     let typeId = $event.value;
     this.selectedHospitalType = typeId;
     if (typeId == 1) {
@@ -225,11 +222,11 @@ export class CreateComponent implements OnInit {
   }
 
   onRoleChange($event) {
-    this.roleService
-      .GetRolesByRoleCategoryId(Number($event.value))
-      .subscribe((roles) => {
+    this.addRoles=[];
+    this.spinner.show();
+    this.roleService.GetRolesByRoleCategoryId(Number($event.value)).subscribe((roles) => {
+      this.spinner.hide();
         this.lstRoles = roles;
-
         this.lstRoles2 = roles;
       });
 
@@ -288,6 +285,7 @@ export class CreateComponent implements OnInit {
     }
 
     if ($event.value == '5') {
+      
       this.selectedHospitalType = 1;
       this.showGov = true;
       this.showCity = true;
@@ -364,39 +362,45 @@ export class CreateComponent implements OnInit {
   }
 
   getEmployeesByHospitalId($event) {
+    this.spinner.show();
     this.employeeService.GetUnregisteredUsers($event.target.value).subscribe((items) => {
       this.lstUnregisteredUsers = items;
+      this.spinner.hide();
+
     });
+
   }
 
 
 
 
   getCitiesByGovId(govId: number) {
+    this.spinner.show();
     this.cityService.GetCitiesByGovernorateId(govId).subscribe((cities) => {
       this.lstCities = cities;
+      this.spinner.hide();
     });
   }
   getHospitalsByCityId($event) {
-    this.hospitalService
-      .GetHospitalsByCityId($event.target.value)
-      .subscribe((hospitals) => {
+    this.spinner.show();
+    this.hospitalService.GetHospitalsByCityId($event.target.value).subscribe((hospitals) => {
         this.lstHospitals = hospitals;
+        this.spinner.hide();
       });
   }
   getSubOrgByOrgId($event) {
-    this.subOrganizationService
-      .GetSubOrganizationByOrgId($event.target.value)
-      .subscribe((suborgs) => {
+    this.spinner.show();
+    this.subOrganizationService.GetSubOrganizationByOrgId($event.target.value).subscribe((suborgs) => {
         this.lstSubOrganizations = suborgs;
+        this.spinner.hide();
       });
   }
 
   getHospitalsBySubOrgId($event) {
-    this.hospitalService
-      .GetHospitalsBySubOrganizationId($event.target.value)
-      .subscribe((hospitals) => {
+    this.spinner.show();
+    this.hospitalService.GetHospitalsBySubOrganizationId($event.target.value).subscribe((hospitals) => {
         this.lstHospitals = hospitals;
+        this.spinner.hide();
       });
   }
 
@@ -440,7 +444,7 @@ export class CreateComponent implements OnInit {
         });
 
     }
-    if (this.selectedCategory == 2) {
+    else if (this.selectedCategory == 2) {
       if (this.userObj.organizationId == 0) {
         alert('Please select organization');
         return false;
@@ -456,7 +460,7 @@ export class CreateComponent implements OnInit {
         });
       }
     }
-    if (this.selectedCategory == 3) {
+    else if (this.selectedCategory == 3) {
       if (this.userObj.governorateId == 0) {
         this.errorDisplay = true;
         this.errorMessage = "Please select governorate";
@@ -473,7 +477,7 @@ export class CreateComponent implements OnInit {
         });
       }
     }
-    if (this.selectedCategory == 4) {
+    else if (this.selectedCategory == 4) {
       if (this.userObj.governorateId == 0) {
         this.errorDisplay = true;
         this.errorMessage = 'Please select governorate';
@@ -495,7 +499,7 @@ export class CreateComponent implements OnInit {
         });
       }
     }
-    if (this.selectedCategory == 5) {
+    else if (this.selectedCategory == 5) {
       if (this.selectedHospitalType == 1) {
         if (this.userObj.governorateId == 0) {
           this.errorDisplay = true;
@@ -550,7 +554,7 @@ export class CreateComponent implements OnInit {
         }
       }
     }
-    if (this.selectedCategory == 6) {
+    else if (this.selectedCategory == 6) {
 
       if (this.userObj.organizationId == 0) {
         this.errorDisplay = true;
@@ -583,84 +587,6 @@ export class CreateComponent implements OnInit {
       }
 
     }
-    if (this.selectedCategory == 7) {
-      if (this.userObj.supplierId == 0) {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = 'Please select supplier';
-        }
-        else {
-          this.errorMessage = 'من فضلك اختر مورد';
-        }
-        return false;
-      }
-      else {
-        this.userObj.roleIds = this.addRoles;
-        this.userService.AddUser(this.userObj).subscribe((user) => {
-          this.display = true;
-        }, error => {
-          this.errorDisplay = true;
-          this.errorMessage = error.error.message;
-          return false;
-        });
-      }
-    }
-    if (this.selectedCategory == 8) {
-      if (this.userObj.commetieeMemberId == 0) {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = 'Please select commetiee member';
-        }
-        else {
-          this.errorMessage = 'من فضلك اختر عضو لجنة';
-        }
-        return false;
-      }
-      else {
-        this.userObj.roleIds = this.addRoles;
-        this.userService.AddUser(this.userObj).subscribe((user) => {
-          this.display = true;
-        }, error => {
-          this.errorDisplay = true;
-          this.errorMessage = error.error.message;
-          return false;
-        });
-      }
-    }
-    if (this.selectedCategory == 9) {
-      if (this.userObj.email2 == '') {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = 'Please select engineer';
-        }
-        else {
-          this.errorMessage = 'من فضلك اختر مهندس';
-        }
-        return false;
-      }
-      else {
-        this.userObj.roleIds = this.addRoles;
-        this.userObj.email = this.userObj.email2;
-        this.userService.AddUser(this.userObj).subscribe((user) => {
-          this.display = true;
-        }, error => {
-          this.errorDisplay = true;
-          this.errorMessage = error.error.message;
-          return false;
-        });
-      }
-    }
-
-
   }
-  back() { this.route.navigate(['/dash/users']); }
-  changeUnregiteredEngineer($event) {
-    const email = $event.target.value;
-    this.engineerService.GetEngineerByEmail(email).subscribe(engObj => {
-      this.userObj.email2 = email;
-      this.userObj.phoneNumber = engObj.phone;
-      this.userObj.userName = engObj.email.split('@')[0].trim();
-    });
 
-  }
 }

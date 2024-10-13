@@ -1,7 +1,5 @@
 <div >
- 
   </div>
-
     <form (ngSubmit)="addForm.valid && onSubmit()" #addForm="ngForm">
       <div class="row top-buffer">
         <div class="col-md-12">
@@ -32,16 +30,17 @@
       <div class="row top-buffer">
         <div class="col-12">
           <label for="code"> {{ 'Asset.Roles' | translate }}</label>
-          <ul>
-            <li *ngFor="let itm of lstRoles2;let idx= index">
+          <!-- <ul> -->
+            <!-- <li *ngFor="let itm of lstRoles2;let idx= index">
               <mat-checkbox id="ckbx{{idx}}" name="ckbx{{idx}}" (change)="selectedRoles($event)" [value]="itm.id">
                 {{itm.name}} - {{itm.displayName}}
               </mat-checkbox>
-            </li>
-            <span  (click)="addRole()" style="width: 100px; height: 50px; color: #4291EF;cursor: pointer;" pTooltip="{{'Asset.CreateRole' | translate}}">
-              <i class="pi pi-plus-circle"></i> {{ 'Asset.CreateRole' | translate }}
-          </span>
-          </ul>
+            </li> -->
+            <p-multiSelect [options]="lstRoles2" [(ngModel)]="addRoles"  [ngModelOptions]="{standalone: true}" 
+            optionLabel="name" optionValue="id" autoWidth="false"     placeholder="{{ lang == 'en' ? 'Select Roles'   : 'اختر دور' }}"  [style]="{'width':'100%'}"/>
+            <div class="mt-3" (click)="addRole()" style="width: 100px; height: 50px; color: #4291EF;cursor: pointer;" pTooltip="{{'Asset.CreateRole' | translate}}">
+              <i class="pi pi-plus-circle"></i> <span style="margin-left: '20px'">{{ 'Asset.CreateRole' | translate }}</span></div>
+          <!-- </ul> -->
         </div>
       </div>
 

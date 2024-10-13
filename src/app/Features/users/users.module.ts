@@ -21,6 +21,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TableModule } from 'primeng/table';
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     EditComponent,
   ],
   imports: [
+    MultiSelectModule,
     DeleteModule,
     CommonModule,
     FormsModule,
