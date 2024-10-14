@@ -8,6 +8,7 @@ import { EditComponent } from './edit/edit.component';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { DropdownModule } from 'primeng/dropdown';
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule, MatDialogRef } from "@angular/material/dialog";
@@ -30,6 +31,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     EditComponent,
   ],
   imports: [
+    DropdownModule,
     MultiSelectModule,
     DeleteModule,
     CommonModule,

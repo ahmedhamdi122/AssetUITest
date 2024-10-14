@@ -102,11 +102,8 @@ export class CreateComponent implements OnInit {
     
     this.userObj = {
       email2: '', userRoleIds: [],
-      roleId: '', roleCategoryId: 0, cityId: 0, subOrganizationId: 0, governorateId: 0, organizationId: 0, hospitalId: 0, email: '', phoneNumber: '', passwordHash: '', userName: '', roleIds: []
+      roleId: '', roleCategoryId: 0, cityId: null, subOrganizationId: 0, governorateId: null, organizationId: 0, hospitalId: null, email: null, phoneNumber: '', passwordHash: '', userName: '', roleIds: []
     };
-
-
-    
     if (this.lang == "en") {
       this.lstHospitalTypes = [
         { name: 'Get hospitals by City', id: 1 },
@@ -123,17 +120,16 @@ export class CreateComponent implements OnInit {
     this.roleCategoryService.GetRoleCategories().subscribe((items) => {
       this.lstRoleCategories = items;
       this.selectedCategory = this.lstRoleCategories[0].id;
-      this.roleService
-        .GetRolesByRoleCategoryId(Number(this.selectedCategory))
-        .subscribe((roles) => {
+      this.roleService.GetRolesByRoleCategoryId(Number(this.selectedCategory)).subscribe((roles) => {
           this.lstRoles = roles;
-          
           this.lstRoles2 = roles;
         });
     });
 
     this.governorateService.GetGovernorates().subscribe((items) => {
+      
       this.lstGovernorates = items;
+      console.log("this.lstGovernorates :",this.lstGovernorates);
       
     });
 
@@ -184,23 +180,7 @@ export class CreateComponent implements OnInit {
 
         }})
   }
-  // selectedRoles($event) {
-  //   if ($event.checked) {
-  //     this.addRoles.push($event.source.value);
-  //   }
-  //   else {
-  //     var index = this.addRoles.indexOf($event.source.value);
-  //     var roleindex = this.lstEditRoles.indexOf($event.source.value);
-  //     this.addRoles.splice(index, 1);
-  //   }
-  // }
 
-  removeRoleFromObjectArray(doc) {
-    const index: number = this.lstEditRoles.indexOf(doc);
-    if (index !== -1) {
-      this.lstEditRoles.splice(index, 1);
-    }
-  }
   onTypeChange($event) {
     
     let typeId = $event.value;
@@ -356,42 +336,97 @@ export class CreateComponent implements OnInit {
     }
   }
   changeUnregiteredValue($event) {
-    const email = $event.target.value;
-    this.userObj.email = email;
-    this.userObj.userName = this.userObj.email.split('@')[0].trim();
+    if($event.value!=null)
+    {
+      console.log("  $event.value :", $event.value);
+      const email = $event.value;
+      this.userObj.email = email;
+      this.userObj.userName = this.userObj.email.split('@')[0].trim();
+    }
+    else
+    {
+      console.log("null inside changeUnregiteredValue");
+      
+      this.userObj.email = null;
+      this.userObj.userName =null;
+    }
+
   }
 
-  getEmployeesByHospitalId($event) {
-    this.spinner.show();
-    this.employeeService.GetUnregisteredUsers($event.target.value).subscribe((items) => {
-      this.lstUnregisteredUsers = items;
-      this.spinner.hide();
-
-    });
-
-  }
-
-
-
-
-  getCitiesByGovId(govId: number) {
-    this.spinner.show();
-    this.cityService.GetCitiesByGovernorateId(govId).subscribe((cities) => {
-      this.lstCities = cities;
-      this.spinner.hide();
-    });
-  }
-  getHospitalsByCityId($event) {
-    this.spinner.show();
-    this.hospitalService.GetHospitalsByCityId($event.target.value).subscribe((hospitals) => {
-        this.lstHospitals = hospitals;
+  getEmployeesByHospitalId(hospitalId:number) {
+    console.log("getEmployeesByHospitalId :",hospitalId);
+    if(hospitalId)
+    {
+      this.spinner.show();
+      this.employeeService.GetUnregisteredUsers(hospitalId).subscribe((items) => {
+        this.lstUnregisteredUsers = items;
+        console.log("lstUnregisteredUsers :",this.lstUnregisteredUsers);
         this.spinner.hide();
       });
+    }
+    else
+    {
+      this.lstUnregisteredUsers =null;
+      this.userObj.hospitalId=null;
+      this.userObj.email=null;
+      this.lstUnregisteredUsers=null;
+      this.userObj.userName=null;
+      this.userObj.passwordHash=null;
+    }
+   
+  }
+  getGovernorateLabel(governorate: any) {
+    return this.lang === 'ar' ? governorate.nameAr : governorate.nameEn;
+  }
+  getCitiesByGovId(govId: number) {
+    console.log("govId :",govId);
+    if(govId!=null)
+    {
+      this.spinner.show();
+      this.cityService.GetCitiesByGovernorateId(govId).subscribe((cities) => {
+        this.lstCities = cities;
+        console.log("lstCities :",this.lstCities);
+        this.spinner.hide();
+      });
+    }
+    else{
+      this.lstCities=null;
+      this.userObj.cityId=null;
+      this.lstHospitals=null;
+      this.userObj.hospitalId=null;
+      this.userObj.email=null;
+      this.lstUnregisteredUsers=null;
+      this.userObj.userName=null;
+      this.userObj.passwordHash=null;
+    }
+  
+  }
+  getHospitalsByCityId(cityId:number) {
+    console.log("cityId :", cityId);
+    if(cityId!=null)
+    {
+      this.spinner.show();
+      this.hospitalService.GetHospitalsByCityId(cityId).subscribe((hospitals) => {
+          this.lstHospitals = hospitals;
+          console.log("lstHospitals :",this.lstHospitals);
+          this.spinner.hide();
+        });
+    }
+    else
+    {
+      this.lstHospitals=null;
+      this.userObj.hospitalId=null;
+      this.userObj.email=null;
+      this.lstUnregisteredUsers=null;
+      this.userObj.userName=null;
+      this.userObj.passwordHash=null;
+    }
+   
   }
   getSubOrgByOrgId($event) {
     this.spinner.show();
     this.subOrganizationService.GetSubOrganizationByOrgId($event.target.value).subscribe((suborgs) => {
-        this.lstSubOrganizations = suborgs;
+        this.lstSubOrganizations = suborgs;        
         this.spinner.hide();
       });
   }
@@ -408,7 +443,7 @@ export class CreateComponent implements OnInit {
 
     this.userObj.roleCategoryId = this.selectedCategory;
     this.userObj.roleIds = this.addRoles;
-    if (this.userObj.roleIds.length == 0) {
+    if (this.addRoles.length == 0) {
       this.errorDisplay = true;
       if (this.lang == "en") {
         this.errorMessage = 'Please select at least one Role';
@@ -420,173 +455,172 @@ export class CreateComponent implements OnInit {
     }
 
 
-    if (this.selectedCategory == 1) {
-      this.userObj.roleIds = this.addRoles;
-      this.spinner.show();
-      this.userService.AddUser(this.userObj).subscribe((user) => {
-        this.display = true;
-        this.spinner.hide();
-      },
-        error => {
-          this.spinner.hide();
-          this.errorDisplay = true;
-          if (this.lang == 'en') {
-            if (error.error.status == 'Error') {
-              this.errorMessage = error.error.message;
-            }
-          }
-          else {
-            if (error.error.status == 'Error') {
-              this.errorMessage = error.error.messageAr;
-            }
-          }
-          return false;
-        });
+    // if (this.selectedCategory == 1) {
+    //   this.userObj.roleIds = this.addRoles;
+    //   this.spinner.show();
+    //   this.userService.AddUser(this.userObj).subscribe((user) => {
+    //     this.display = true;
+    //     this.spinner.hide();
+    //   },
+    //     error => {
+    //       this.spinner.hide();
+    //       this.errorDisplay = true;
+    //       if (this.lang == 'en') {
+    //         if (error.error.status == 'Error') {
+    //           this.errorMessage = error.error.message;
+    //         }
+    //       }
+    //       else {
+    //         if (error.error.status == 'Error') {
+    //           this.errorMessage = error.error.messageAr;
+    //         }
+    //       }
+    //       return false;
+    //     });
+    // }
+    // else if (this.selectedCategory == 2) {
+    //   if (this.userObj.organizationId == 0) {
+    //     alert('Please select organization');
+    //     return false;
+    //   }
+    //   else {
+    //     this.userObj.roleIds = this.addRoles;
+    //     this.userService.AddUser(this.userObj).subscribe((user) => {
+    //       this.display = true;
+    //     }, error => {
+    //       this.errorDisplay = true;
+    //       this.errorMessage = error.error.message;
+    //       return false;
+    //     });
+    //   }
+    // }
+    // else if (this.selectedCategory == 3) {
+    //   if (this.userObj.governorateId == 0) {
+    //     this.errorDisplay = true;
+    //     this.errorMessage = "Please select governorate";
+    //     return false;
+    //   } else {
 
-    }
-    else if (this.selectedCategory == 2) {
-      if (this.userObj.organizationId == 0) {
-        alert('Please select organization');
-        return false;
-      }
-      else {
-        this.userObj.roleIds = this.addRoles;
-        this.userService.AddUser(this.userObj).subscribe((user) => {
-          this.display = true;
-        }, error => {
-          this.errorDisplay = true;
-          this.errorMessage = error.error.message;
-          return false;
-        });
-      }
-    }
-    else if (this.selectedCategory == 3) {
-      if (this.userObj.governorateId == 0) {
-        this.errorDisplay = true;
-        this.errorMessage = "Please select governorate";
-        return false;
-      } else {
+    //     this.userObj.roleIds = this.addRoles;
+    //     this.userService.AddUser(this.userObj).subscribe((user) => {
+    //       this.display = true;
+    //     }, error => {
+    //       this.displayerror = true;
+    //       this.errorMessage = error.error.message;
+    //       return false;
+    //     });
+    //   }
+    // }
+    // else if (this.selectedCategory == 4) {
+    //   if (this.userObj.governorateId == 0) {
+    //     this.errorDisplay = true;
+    //     this.errorMessage = 'Please select governorate';
+    //     return false;
+    //   }
+    //   if (this.userObj.cityId == 0) {
+    //     this.errorDisplay = true;
+    //     this.errorMessage = 'Please select city';
+    //     return false;
+    //   } else {
 
-        this.userObj.roleIds = this.addRoles;
-        this.userService.AddUser(this.userObj).subscribe((user) => {
-          this.display = true;
-        }, error => {
-          this.displayerror = true;
-          this.errorMessage = error.error.message;
-          return false;
-        });
-      }
-    }
-    else if (this.selectedCategory == 4) {
-      if (this.userObj.governorateId == 0) {
-        this.errorDisplay = true;
-        this.errorMessage = 'Please select governorate';
-        return false;
-      }
-      if (this.userObj.cityId == 0) {
-        this.errorDisplay = true;
-        this.errorMessage = 'Please select city';
-        return false;
-      } else {
+    //     this.userObj.roleIds = this.addRoles;
+    //     this.userService.AddUser(this.userObj).subscribe((user) => {
+    //       this.display = true;
+    //     }, error => {
+    //       this.errorDisplay = true;
+    //       this.errorMessage = error.error.message;
+    //       return false;
+    //     });
+    //   }
+    // }
+    // else if (this.selectedCategory == 5) {
+    //   if (this.selectedHospitalType == 1) {
+    //     if (this.userObj.governorateId == 0) {
+    //       this.errorDisplay = true;
+    //       this.errorMessage = 'Please select governorate';
+    //       return false;
+    //     }
+    //     if (this.userObj.cityId == 0) {
+    //       this.errorDisplay = true;
+    //       this.errorMessage = 'Please select city';
+    //       return false;
+    //     } else {
+    //       this.userObj.roleIds = this.addRoles;
+    //       this.userService.AddUser(this.userObj).subscribe((user) => {
+    //         this.display = true;
+    //       }, error => {
+    //         this.errorDisplay = true;
+    //         this.errorMessage = error.error.message;
+    //         return false;
+    //       });
+    //     }
+    //   }
 
-        this.userObj.roleIds = this.addRoles;
-        this.userService.AddUser(this.userObj).subscribe((user) => {
-          this.display = true;
-        }, error => {
-          this.errorDisplay = true;
-          this.errorMessage = error.error.message;
-          return false;
-        });
-      }
-    }
-    else if (this.selectedCategory == 5) {
-      if (this.selectedHospitalType == 1) {
-        if (this.userObj.governorateId == 0) {
-          this.errorDisplay = true;
-          this.errorMessage = 'Please select governorate';
-          return false;
-        }
-        if (this.userObj.cityId == 0) {
-          this.errorDisplay = true;
-          this.errorMessage = 'Please select city';
-          return false;
-        } else {
-          this.userObj.roleIds = this.addRoles;
-          this.userService.AddUser(this.userObj).subscribe((user) => {
-            this.display = true;
-          }, error => {
-            this.errorDisplay = true;
-            this.errorMessage = error.error.message;
-            return false;
-          });
-        }
-      }
+    //   if (this.selectedHospitalType == 2) {
+    //     if (this.userObj.organizationId == 0) {
+    //       this.errorDisplay = true;
+    //       if (this.lang == "en") {
+    //         this.errorMessage = 'Please select Organization';
+    //       } else {
+    //         this.errorMessage = 'من فضلك اختر هيئة';
+    //       }
+    //       return false;
+    //     }
+    //     if (this.userObj.subOrganizationId == 0) {
+    //       this.errorDisplay = true;
+    //       if (this.lang == "en") {
+    //         this.errorMessage = 'Please select sub Organization';
+    //       }
+    //       else {
+    //         this.errorMessage = 'من فضلك اختر هيئة فرعية';
+    //       }
+    //       return false;
+    //     } else {
 
-      if (this.selectedHospitalType == 2) {
-        if (this.userObj.organizationId == 0) {
-          this.errorDisplay = true;
-          if (this.lang == "en") {
-            this.errorMessage = 'Please select Organization';
-          } else {
-            this.errorMessage = 'من فضلك اختر هيئة';
-          }
-          return false;
-        }
-        if (this.userObj.subOrganizationId == 0) {
-          this.errorDisplay = true;
-          if (this.lang == "en") {
-            this.errorMessage = 'Please select sub Organization';
-          }
-          else {
-            this.errorMessage = 'من فضلك اختر هيئة فرعية';
-          }
-          return false;
-        } else {
+    //       this.userObj.roleIds = this.addRoles;
+    //       this.userService.AddUser(this.userObj).subscribe((user) => {
+    //         this.display = true;
+    //       }, error => {
+    //         this.errorDisplay = true;
+    //         this.errorMessage = error.error.message;
+    //         return false;
+    //       });
+    //     }
+    //   }
+    // }
+    // else if (this.selectedCategory == 6) {
 
-          this.userObj.roleIds = this.addRoles;
-          this.userService.AddUser(this.userObj).subscribe((user) => {
-            this.display = true;
-          }, error => {
-            this.errorDisplay = true;
-            this.errorMessage = error.error.message;
-            return false;
-          });
-        }
-      }
-    }
-    else if (this.selectedCategory == 6) {
+    //   if (this.userObj.organizationId == 0) {
+    //     this.errorDisplay = true;
+    //     if (this.lang == "en") {
+    //       this.errorMessage = 'Please select Organization';
+    //     } else {
+    //       this.errorMessage = 'من فضلك اختر هيئة';
+    //     }
+    //     return false;
+    //   }
+    //   if (this.userObj.subOrganizationId == 0) {
+    //     this.errorDisplay = true;
+    //     if (this.lang == "en") {
+    //       this.errorMessage = 'Please select sub Organization';
+    //     }
+    //     else {
+    //       this.errorMessage = 'من فضلك اختر هيئة فرعية';
+    //     }
+    //     return false;
+    //   } else {
 
-      if (this.userObj.organizationId == 0) {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = 'Please select Organization';
-        } else {
-          this.errorMessage = 'من فضلك اختر هيئة';
-        }
-        return false;
-      }
-      if (this.userObj.subOrganizationId == 0) {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = 'Please select sub Organization';
-        }
-        else {
-          this.errorMessage = 'من فضلك اختر هيئة فرعية';
-        }
-        return false;
-      } else {
+    //     this.userObj.roleIds = this.addRoles;
+    //     this.userService.AddUser(this.userObj).subscribe((user) => {
+    //       this.display = true;
+    //     }, error => {
+    //       this.errorDisplay = true;
+    //       this.errorMessage = error.error.message;
+    //       return false;
+    //     });
+    //   }
 
-        this.userObj.roleIds = this.addRoles;
-        this.userService.AddUser(this.userObj).subscribe((user) => {
-          this.display = true;
-        }, error => {
-          this.errorDisplay = true;
-          this.errorMessage = error.error.message;
-          return false;
-        });
-      }
-
-    }
+    // }
   }
 
 }

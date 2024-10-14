@@ -574,14 +574,9 @@ export const environment = {
   GetPMAssetTaskByTaskIdAndMasterAssetId: "http://localhost:25813/api/PMAssetTask/GetPMAssetTaskByTaskIdAndMasterAssetId/",
   DeletePMAssetTask: "http://localhost:25813/api/PMAssetTask/DeletePMAssetTask/",
   ListPMTimes: "http://localhost:25813/api/PMTime/ListPMTimes",
-
   GenerateMasterContractSerial: 'http://localhost:25813/api/Contract/GenerateMasterContractSerial',
   GetContractAttachmentByMasterContractId: 'http://localhost:25813/api/Contract/GetContractAttachmentByMasterContractId/',
-
   AlertContractsEndBefore3Months: 'http://localhost:25813/api/Contract/AlertContractsEndBefore3Months/',
-
-
-
   GetRequestDocumentsByRequestTrackingId: 'http://localhost:25813/api/RequestDocument/GetRequestDocumentsByRequestTrackingId/',
   GetLastDocumentForRequestTrackingId: 'http://localhost:25813/api/RequestDocument/GetLastDocumentForRequestTrackingId/',
   GetLastDocumentForWorkOrderTrackingId: 'http://localhost:25813/api/WorkOrderAttachment/GetLastDocumentForWorkOrderTrackingId/',

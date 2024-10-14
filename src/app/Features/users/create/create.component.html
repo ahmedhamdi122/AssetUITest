@@ -105,24 +105,18 @@
       <div class="row top-buffer">
         <div *ngIf="showGov" [ngClass]="selectedCategory == '3' ? 'col-12' : 'col-6'">
           <label for="governorate"> {{ 'Asset.Governorate' | translate }}</label>
-          <select class="form-control" id="governorate" pTooltip="select governorate" tooltipPosition="bottom"
-            name="governorate" #governorate="ngModel" [value]="0" [(ngModel)]="userObj.governorateId"
-            (change)="getCitiesByGovId(userObj.governorateId)">
-            <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.Governorate' | translate }}</option>
-            <option *ngFor="let gov of lstGovernorates" [value]="gov.id">
-              {{ lang == "en" ? gov.name : gov.nameAr }}
-            </option>
-          </select>
+           <p-dropdown  
+  [options]="lstGovernorates" [(ngModel)]="userObj.governorateId"[checkmark]="true" [ngModelOptions]="{standalone: true}" [optionLabel]="lang === 'en' ? 'name' : 'nameAr'"[showClear]="true"
+  optionValue="id" placeholder="{{ lang === 'en' ? 'select governorate' : 'اختر محافظة' }}" (onChange)="getCitiesByGovId(userObj.governorateId)" 
+   [style]="{'width':'100%'}" [filter]="true" [filterBy]="lang === 'en' ? 'name' : 'nameAr'" [filterPlaceholder]="lang === 'en' ? 'Search...' : 'ابحث...'"/>
+
         </div>
         <div *ngIf="showCity" [ngClass]="selectedCategory == '3' ? 'col-0' : 'col-6'">
           <label for="districtName"> {{ 'Asset.City' | translate }}</label>
-          <select class="form-control" id="city" pTooltip="select city" tooltipPosition="bottom" name="city"
-            #districtName="ngModel" [(ngModel)]="userObj.cityId" [value]="0" (change)="getHospitalsByCityId($event)">
-            <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.City' | translate }}</option>
-            <option *ngFor="let city of lstCities" [value]="city.id">
-              {{ lang == "en" ? city.name : city.nameAr }}
-            </option>
-          </select>
+          <p-dropdown 
+          [options]="lstCities" [(ngModel)]="userObj.cityId" [ngModelOptions]="{standalone: true}" [optionLabel]="lang == 'en' ? 'name' : 'nameAr' "  optionValue="id" placeholder="{{ lang === 'en' ? 'select City' : 'اختر مدينة' }}" 
+          (onChange)="getHospitalsByCityId(userObj.cityId)"  [style]="{'width':'100%'}" [filter]="true" [filterBy]="lang === 'en' ? 'name' : 'nameAr'" [filterPlaceholder]="lang === 'en' ? 'Search...' : 'ابحث...'" [checkmark]="true" [showClear]="true">
+        </p-dropdown>
         </div>
       </div>
       <div class="row top-buffer">
@@ -148,33 +142,26 @@
               {{ lang == "en" ? suborg.name : suborg.nameAr }}
             </option>
           </select>
+          <!-- <p-dropdown 
+          [options]="lstSubOrganizations" [(ngModel)]="userObj.subOrganizationId" [ngModelOptions]="{standalone: true}" [optionLabel]="lang == 'en' ? 'name' : 'nameAr' "  optionValue="id" placeholder="{{ lang === 'en' ? 'select City' : 'اختر مدينة' }}" 
+          (onChange)="getHospitalsByCityId(userObj.cityId)"  [style]="{'width':'100%'}" [filter]="true" [filterBy]="lang === 'en' ? 'name' : 'nameAr'" [filterPlaceholder]="lang === 'en' ? 'Search...' : 'ابحث...'" [checkmark]="true" [showClear]="true">
+        </p-dropdown> -->
         </div>
         <div class="col-12" *ngIf="showHospitals">
           <label for="hospital"> {{ 'Asset.Hospitals' | translate }}</label>
-          <select class="form-control" id="hospital" pTooltip="select hospital" tooltipPosition="bottom" name="hospital"
-            [value]="0" [(ngModel)]="userObj.hospitalId" #hospital="ngModel"
-            (change)="getEmployeesByHospitalId($event)">
-            <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.Hospital' | translate }}</option>
-            <option *ngFor="let host of lstHospitals" [value]="host.id">
-              {{ lang == "en" ? host.name : host.nameAr }}
-            </option>
-          </select>
+          <p-dropdown 
+          [options]="lstHospitals" [(ngModel)]="userObj.hospitalId" [ngModelOptions]="{standalone: true}" [optionLabel]="lang == 'en' ? 'name' : 'nameAr' "  optionValue="id" placeholder="{{ lang === 'en' ? 'select Hospital' : 'اختر مستشفى' }}" 
+          (onChange)="getEmployeesByHospitalId(userObj.hospitalId)" [checkmark]="true" [showClear]="true"  [style]="{'width':'100%'}" [filter]="true" [filterBy]="lang === 'en' ? 'name' : 'nameAr'" [filterPlaceholder]="lang === 'en' ? 'Search...' : 'ابحث...'">
+        </p-dropdown>
         </div>
       </div>
-
-
-
       <div class="row top-buffer">
         <div *ngIf="showEmployees" [ngClass]="selectedCategory == '5' || selectedCategory == '1'? 'col-4' : 'col-6'">
           <label class="myfont" [translate]="'Asset.Employee'"></label>
-          <select type="text" [(ngModel)]="userObj.email" (change)="changeUnregiteredValue($event)"
-            name="unregisteredUsers" id="unregisteredUsers" class="form-control" [value]="0"
-            [ngModelOptions]="{standalone: true}">
-            <option value="0" [translate]="'Asset.Select'"></option>
-            <option *ngFor="let user of lstUnregisteredUsers" [value]="user.email">
-              {{ lang == "en" ? user.name : user.nameAr }}
-            </option>
-          </select>
+          <p-dropdown 
+          [options]="lstUnregisteredUsers"  [checkmark]="true" [showClear]="true" [(ngModel)]="userObj.email" [ngModelOptions]="{standalone: true}" [optionLabel]="lang == 'en' ? 'name' : 'nameAr' "  optionValue="email" placeholder="{{ lang === 'en' ? 'select Employee' : 'اختر موظف' }}" 
+          (onChange)="changeUnregiteredValue($event)"  [style]="{'width':'100%'}" [filter]="true" [filterBy]="lang === 'en' ? 'name' : 'nameAr'" [filterPlaceholder]="lang === 'en' ? 'Search...' : 'ابحث...'">
+        </p-dropdown>
         </div>
         <div *ngIf="showVisits" class="col-4">
           <label class="myfont" [translate]="'Asset.Engineer'"></label>
