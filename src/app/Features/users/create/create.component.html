@@ -192,7 +192,7 @@
         </div>
         <div class="col-4">
           <label for="code" [translate]="'Asset.Password'"></label>
-          <input type="password" class="form-control" [(ngModel)]="userObj.passwordHash" #passwordHash="ngModel"
+          <input type="password" class="form-control" [(ngModel)]="userObj.password" #passwordHash="ngModel"
             id="passwordHash" name="passwordHash" autofocus required
             [class.is-invalid]="(passwordHash.touched && passwordHash.errors) || addForm.submitted"
             [class.is-valid]="passwordHash.valid && addForm.submitted">

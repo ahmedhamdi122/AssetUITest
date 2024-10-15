@@ -76,10 +76,9 @@ export class UserService {
   }
 
   AddUser(createUserObj: CreateUserVM): Observable<CreateUserVM> {
+    console.log(" createUserObj:",createUserObj);
     return this.httpClient.post<CreateUserVM>(`${environment.AddUser}`, createUserObj, this.httpHeader);
   }
-
-
   DeleteUser(id: string): Observable<any> {
     return this.httpClient.delete<any>(`${environment.DeleteUser}${id}`, this.httpHeader);
   }

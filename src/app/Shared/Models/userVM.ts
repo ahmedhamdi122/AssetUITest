@@ -11,22 +11,16 @@ export class ListUsersVM {
 export class CreateUserVM {
     userName: string;
     email: string;
-    email2: string;
-    passwordHash: string;
+    password: string;
     phoneNumber: string;
-    roleId: string;
     roleCategoryId: number;
     governorateId: number;
     cityId: number;
     organizationId: number;
     subOrganizationId: number;
     hospitalId: number;
-    roleIds: string[];
-    userRoleIds: string[];
-
+    roleIds: string[]=[];
 }
-
-
 export class EditUserVM {
     id: string;
     userName: string;

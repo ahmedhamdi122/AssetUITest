@@ -101,8 +101,8 @@ export class CreateComponent implements OnInit {
   ngOnInit(): void {
     
     this.userObj = {
-      email2: '', userRoleIds: [],
-      roleId: '', roleCategoryId: 0, cityId: null, subOrganizationId: 0, governorateId: null, organizationId: 0, hospitalId: null, email: null, phoneNumber: '', passwordHash: '', userName: '', roleIds: []
+      roleIds: [],
+   roleCategoryId: 0, cityId: null, subOrganizationId: 0, governorateId: null, organizationId: 0, hospitalId: null, email: null, phoneNumber: '', password: '', userName: '',
     };
     if (this.lang == "en") {
       this.lstHospitalTypes = [
@@ -201,7 +201,7 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  onRoleChange($event) {
+  onRoleChange($event) {    
     this.addRoles=[];
     this.spinner.show();
     this.roleService.GetRolesByRoleCategoryId(Number($event.value)).subscribe((roles) => {
@@ -371,7 +371,7 @@ export class CreateComponent implements OnInit {
       this.userObj.email=null;
       this.lstUnregisteredUsers=null;
       this.userObj.userName=null;
-      this.userObj.passwordHash=null;
+      this.userObj.password=null;
     }
    
   }
@@ -397,7 +397,7 @@ export class CreateComponent implements OnInit {
       this.userObj.email=null;
       this.lstUnregisteredUsers=null;
       this.userObj.userName=null;
-      this.userObj.passwordHash=null;
+      this.userObj.password=null;
     }
   
   }
@@ -419,7 +419,7 @@ export class CreateComponent implements OnInit {
       this.userObj.email=null;
       this.lstUnregisteredUsers=null;
       this.userObj.userName=null;
-      this.userObj.passwordHash=null;
+      this.userObj.password=null;
     }
    
   }
@@ -440,10 +440,12 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
-
+    console.log("this.addRoles :",this.addRoles);
+    console.log("this.addRoleslength :", this.addRoles.length);
     this.userObj.roleCategoryId = this.selectedCategory;
     this.userObj.roleIds = this.addRoles;
     if (this.addRoles.length == 0) {
+      console.log("this.addRoles inside:", this.addRoles);
       this.errorDisplay = true;
       if (this.lang == "en") {
         this.errorMessage = 'Please select at least one Role';
@@ -453,31 +455,39 @@ export class CreateComponent implements OnInit {
       }
       return false;
     }
-
-
-    // if (this.selectedCategory == 1) {
-    //   this.userObj.roleIds = this.addRoles;
-    //   this.spinner.show();
-    //   this.userService.AddUser(this.userObj).subscribe((user) => {
-    //     this.display = true;
-    //     this.spinner.hide();
-    //   },
-    //     error => {
-    //       this.spinner.hide();
-    //       this.errorDisplay = true;
-    //       if (this.lang == 'en') {
-    //         if (error.error.status == 'Error') {
-    //           this.errorMessage = error.error.message;
-    //         }
-    //       }
-    //       else {
-    //         if (error.error.status == 'Error') {
-    //           this.errorMessage = error.error.messageAr;
-    //         }
-    //       }
-    //       return false;
-    //     });
-    // }
+    if (this.selectedCategory == 1) {
+      this.userObj.roleIds = this.addRoles;
+      this.spinner.show();
+      this.userService.AddUser(this.userObj).subscribe((user) => {
+        this.spinner.hide();
+        this.display = true;
+      },
+        error => {
+          this.spinner.hide();
+          console.log("error :",error);
+          
+          this.errorDisplay = true;
+          if (this.lang == 'en') {
+            if (error.error.status == 'Error') {
+              this.errorMessage = error.error.message;
+            }
+            else if(error.error.status =="UserExists")
+            {
+              this.errorMessage = error.error.message;
+            }
+          }
+          else {
+            if (error.error.status == 'Error') {
+              this.errorMessage = error.error.messageAr;
+            }
+            else if(error.error.status =="UserExists")
+              {
+                this.errorMessage = error.error.messageAr;
+              }
+          }
+          return false;
+        });
+    }
     // else if (this.selectedCategory == 2) {
     //   if (this.userObj.organizationId == 0) {
     //     alert('Please select organization');
