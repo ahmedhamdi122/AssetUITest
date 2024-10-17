@@ -15,7 +15,7 @@
               </a>
         </div>
         <div class="col-2">
-            <a class="addbutton" *ngIf="(isAdmin || isHospitalManager) || canAddMasterAsset" (click)="addMasterAsset()">
+            <a class="addbutton"(click)="addMasterAsset()">
                 <i class="pi pi-plus-circle"></i> {{'Asset.Create' | translate}}</a>
         </div>
     </div>

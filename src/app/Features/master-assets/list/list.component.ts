@@ -24,6 +24,7 @@ import { Table } from 'primeng/table';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { SectionModulePermisisons } from 'src/app/Shared/Models/Module';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -60,10 +61,171 @@ export class ListComponent implements OnInit {
   displaySuccessCreate=false;
   displaySuccessDelete =false;
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
+  SectionModulePermisisons:SectionModulePermisisons[];
   constructor(    private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService,private ngxService:NgxUiLoaderService) { this.currentUser = this.authenticationService.currentUserValue; }
   ngOnInit(): void {
+    this.SectionModulePermisisons=[
+      {
+        icon: "pi pi-structure", 
+        sectionName: "Structure",
+        sectionNameAr: "الهيكل الهرمي",
+        moduleWithPermissionNames: [
+          {
+            icon: "",
+            route: "governorates",
+            moduleName: "Governorate",
+            moduleNameAr: "المحافظات",
+            permissionNames: ["add", "edit", "delete"],
+          },
+          {
+            icon: "",
+            route: "organizations",
+            moduleName: "Organization",
+            moduleNameAr: "الهيئات",
+            permissionNames: ["add", "delete"],
+          },
+          {
+            icon: "",
+            route: "hospitals",
+            moduleName: "Hospitals",
+            moduleNameAr: "المستشفيات",
+            permissionNames: ["delete"],
+          },
+          {
+            icon: "",
+            route: "buildings",
+            moduleName: "Buildings",
+            moduleNameAr: "المباني",
+            permissionNames: ["add", "delete"],
+          },
+          {
+            icon: "",
+            route: "departments",
+            moduleName: "Departments",
+            moduleNameAr: "الأقسام",
+            permissionNames: ["delete"],
+          },
+        ],
+      },
+      {
+        icon: "pi pi-assets", 
+        sectionName: "Assets",
+        sectionNameAr: "الأصول",
+        moduleWithPermissionNames: [
+          {
+            icon: "",
+            route: "assets",
+            moduleName: "Master Assets",
+            moduleNameAr: "الأصول الرئيسية",
+            permissionNames: ["add", "edit", "delete"],
+          },
+          {
+            icon: "",
+            route: "hospitalassets",
+            moduleName: "Hospital Assets",
+            moduleNameAr: "أصول المستشفى",
+            permissionNames: ["add", "delete"],
+          },
+          {
+            icon: "",
+            route: "origins",
+            moduleName: "Origins",
+            moduleNameAr: "بلد المنشأ",
+            permissionNames: ["delete"],
+          },
+          {
+            icon: "",
+            route: "",
+            moduleName: "Manufactures",
+            moduleNameAr: "الماركات",
+            permissionNames: ["add", "delete"],
+          },
+          {
+            icon: "",
+            route: "suppliers",
+            moduleName: "Suppliers",
+            moduleNameAr: "الموردين",
+            permissionNames: ["delete"],
+          },
+          {
+            icon: "",
+            route: "categories",
+            moduleName: "Categories",
+            moduleNameAr: "الفئات",
+            permissionNames: ["delete"],
+          },
+        ],
+      },
+      {
+        icon: "pi pi-settings",  // Example icon for Settings section
+        sectionName: "Settings",
+        sectionNameAr: "الإعدادات",
+        moduleWithPermissionNames: [
+          {
+            icon: "",
+            route: "rolecategories",
+            moduleName: "Role Categories",
+            moduleNameAr: "فئة الأدوار",
+            permissionNames: ["add", "edit", "delete"],
+          },
+          {
+            icon: "",
+            route: "roles",
+            moduleName: "Roles",
+            moduleNameAr: "المهام",
+            permissionNames: ["add", "delete"],
+          },
+          {
+            icon: "",
+            route: "users",
+            moduleName: "Users",
+            moduleNameAr: "المستخدمين",
+            permissionNames: ["delete"],
+          },
+          {
+            icon: "",
+            route: "",
+            moduleName: "Employees",
+            moduleNameAr: "الموظفين",
+            permissionNames: ["add", "delete"],
+          },
+          {
+            icon: "",
+            route: "",
+            moduleName: "Speciality",
+            moduleNameAr: "التصنيف",
+            permissionNames: ["delete"],
+          },
+          {
+            icon: "",
+            route: "",
+            moduleName: "ECRIS",
+            moduleNameAr: "ECRIS",
+            permissionNames: ["delete"],
+          },
+          {
+            icon: "",
+            route: "",
+            moduleName: "Visits",
+            moduleNameAr: "الزيارات",
+            permissionNames: ["delete"],
+          },
+          {
+            icon: "",
+            route: "",
+            moduleName: "Engineers",
+            moduleNameAr: "المهندسين",
+            permissionNames: ["delete"],
+          },
+        ],
+      },
+    ];
+        
+    console.log( "hasPermission",this.hasPermission("add"," Assets"));
+     //this.hasPermission("add","Master Assets")
+
     this.SearchSortMasterAsset = {
         sortOrder: 0,
         sortFiled: null,
@@ -80,9 +242,9 @@ export class ListComponent implements OnInit {
     const translationKeys = ['Asset.Assets', 'Asset.MasterAssets']; // Array of translation keys
     const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
     this.breadcrumbService.addBreadcrumb(this.activateRoute.snapshot, parentUrlArray, translationKeys);
-    this.currentUser["roleNames"].forEach(element => {
-      this.lstRoleNames.push(element["name"]);
-    });
+    // this.currentUser["roleNames"].forEach(element => {
+    //   this.lstRoleNames.push(element["name"]);
+    // });
     this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
     this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
     this.canAddMasterAsset = (['AddMasterAsset'].some(r => this.lstRoleNames.includes(r)));
@@ -91,6 +253,20 @@ export class ListComponent implements OnInit {
       pagesize: 10
     }
     this.onLoad();
+  }
+ 
+  hasPermission(requiredPermissions: string, moduleName: string): boolean {
+    // Loop through each section
+    for (const section of this.SectionModulePermisisons) {
+      // Loop through each module in the current section
+      const module = section.moduleWithPermissionNames.find(m => m.moduleName === moduleName);
+      // If the module is found, check if it has any of the required permissions
+      if (module) {
+         module.permissionNames.find(permission => module.permissionNames.includes(permission));
+      }
+    }
+    // Return false if the module is not found or has no required permissions
+    return false;
   }
   onLoad() {
     this.ecriService.GetECRIS().subscribe(ecris => {

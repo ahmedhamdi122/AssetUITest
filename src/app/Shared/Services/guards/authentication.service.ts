@@ -91,9 +91,9 @@ export class AuthenticationService {
         const user = localStorage.getItem("currentUser");
         if (user) {
             this.currentUser = JSON.parse(localStorage.getItem("currentUser"));
-            this.currentUser["roleNames"].forEach(element => {
-                this.lstRoleNames.push(element["name"]);
-            });
+            // this.currentUser["roleNames"].forEach(element => {
+            //     this.lstRoleNames.push(element["name"]);
+            // });
 
             return !!localStorage.getItem("currentUser");
         }

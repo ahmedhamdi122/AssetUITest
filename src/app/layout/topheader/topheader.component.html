@@ -22,18 +22,9 @@
                     {{ breadcrumb.label | translate}} &nbsp;&nbsp;</span>
             </div>
         </div>
-
-
-
-
-
-
-
         <div class="col-1"></div>
         <div class="col-1">
             <li class="nav-item dropdown">
-               
-           
                     <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
                         <i class="pi pi-envelope" style="font-size: 1.5rem; color: green;" pBadge value="9"></i>
                     </a>
@@ -49,8 +40,6 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
                 <i class="pi pi-bell"  style="font-size: 1.5rem;color: green;" pBadge value="23"></i>
-   
-
             </a>
             <div class="dropdown-content">
                 <a class="dropdown-item">Message 1</a>
@@ -87,11 +76,8 @@
 <div class="col row ">
     <div class="col-2">
         <div class="main">
-
-            <div>
-                <aside>
+                <!-- <aside>
                     <div class="sidebar left bg-light">
-                        <hr *ngIf="!isAdmin">
                         <h4 class="text-center">{{ hospitalName }}</h4>
                         <hr *ngIf="!isAdmin">
                         <ul class="nav flex-column bg-light">
@@ -140,8 +126,7 @@
 
                                 <i class="pi pi-building"></i>{{'Asset.Assets' | translate }} 
                                 <i class="pi pi-chevron-right float-end" [ngClass]="{'rotate-180': isCollapsed('assets'), 'rotate-0': !isCollapsed('assets')}"></i>
-                                <!-- <span *ngIf="lang=='en'" class="pi pi-chevron-down float-end pull-right"></span>
-                                <span *ngIf="lang=='ar'" class="pi pi-chevron-down pull-left"></span> -->
+                    
                             </a>
                             <ul class="collapse" id="assets">
                                 <li class="active"><a class="text-truncate" [routerLinkActive]="['active']"
@@ -216,8 +201,30 @@
 
                         </ul>
                     </div>
+                </aside> -->
+                <aside style="height: 100%;">
+                    <ul class="nav flex-column bg-light">
+                        <li class="nav-item">
+                            <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/dashboard']" >
+                                <i class="pi pi-home"></i> {{'Asset.DashBoard' | translate }}
+                            </a>
+                        </li>
+                        <li *ngFor="let section of SectionModulePermisisons" class="nav-item">
+                            <a class="text-truncate" href="#" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + section.sectionName"
+                            class="collapsed active" > <span class="nav-label"><i [class]="section.icon"></i>
+                                {{section.sectionName}}</span>
+                             <i class="pi pi-chevron-right float-end" [ngClass]="{'rotate-180': isCollapsed('settings'), 'rotate-0': !isCollapsed('settings')}"></i>
+                          </a>
+                          <ul class="collapse" [id]="section.sectionName">
+                            <li  *ngFor="let module of section.moduleWithPermissionNames" >
+                                <a class="text-truncate" [routerLinkActive]="['active']"
+                                    [routerLink]="['/dash/'+module.route]"><i [class]="module.icon"></i>
+                                    {{module.moduleName}}</a>
+                            </li>
+                        </ul>
+                        </li>
+                    </ul>  
                 </aside>
-            </div>
         </div>
     </div>
     <div class="col-10 ">

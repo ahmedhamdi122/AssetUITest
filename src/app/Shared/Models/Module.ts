@@ -35,9 +35,24 @@ export class ModuleIdsWithPermissionsVM
     moduleId:number;
     permissionIDs:number[]
 }
+export class ModuleWithPermissionNames
+{
+    moduleName:string;
+    moduleNameAr:string;
+    route :string;
+    icon :string;
+    permissionNames:string[]
+}
 export class SortSearchVM
 {
     SortOrder: number;
     SortFiled: string;
     search: string;
+}
+export class SectionModulePermisisons {
+    icon:string;
+    sectionName:string;
+    sectionNameAr:string;
+    moduleWithPermissionNames:ModuleWithPermissionNames[];
+    
 }
