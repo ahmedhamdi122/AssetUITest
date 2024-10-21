@@ -117,15 +117,15 @@ export class CreateComponent implements OnInit {
     } else if (this.lang == 'ar') {
       this.textDir = 'rtl';
     }
-    if (this.currentUser) {
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
+    // if (this.currentUser) {
+    //   this.currentUser["roleNames"].forEach(element => {
+    //     this.lstRoleNames.push(element["name"]);
+    //   });
 
-      this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-      this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
-      this.canAddBrand = (['AddBrand'].some(r => this.lstRoleNames.includes(r)));
-    }
+      // this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
+      // this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
+      // this.canAddBrand = (['AddBrand'].some(r => this.lstRoleNames.includes(r)));
+  
     this.masterAssetDocument = { fileName: '', masterAssetId: 0, masterFile: File, title: '' };
     this.pmTaskObj = { tasknameAr: '', taskname: '', masterAssetId: 0 }
     this.woTaskObj = { name: '', nameAr: '', code: '', masterAssetId: 0, id: 0 }

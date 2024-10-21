@@ -111,15 +111,15 @@ export class EditComponent implements OnInit {
     } else if (this.lang == 'ar') {
       this.textDir = 'rtl';
     }
-    if (this.currentUser) {
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
+    // if (this.currentUser) {
+    //   this.currentUser["roleNames"].forEach(element => {
+    //     this.lstRoleNames.push(element["name"]);
+    //   });
 
-      this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-      this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
-      this.canAddBrand = (['AddBrand'].some(r => this.lstRoleNames.includes(r)));
-    }
+    //   this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
+    //   this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
+    //   this.canAddBrand = (['AddBrand'].some(r => this.lstRoleNames.includes(r)));
+    // }
     this.masterAssetDocument = {
       fileName: '', masterAssetId: 0, title: '', masterFile: File
     };
@@ -137,7 +137,6 @@ export class EditComponent implements OnInit {
     let id = this.config.data.id;
     this.masterId = id;
     this.masterAssetService.GetMasterAssetById(id).subscribe((data) => {
-      console.log("masterObj :",data);
       this.masterAssetObj = data;
       this.masterAssetId = this.masterAssetObj.id;
 

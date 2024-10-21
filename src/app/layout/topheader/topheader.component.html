@@ -1,15 +1,4 @@
-<!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script> -->
-<!-- <script>
-    $(document).ready(function () {
-        $('.button-left').click(function () {
-            $('.sidebar').toggleClass('fliph');
-        });
-    });
-</script> -->
 
-<!--===================  Header  =======================-->
 <header class="header mb-3">
     <nav class="navbar navbar-toggleable-md navbar-light row ">
    
@@ -76,154 +65,40 @@
 <div class="col row ">
     <div class="col-2">
         <div class="main">
-                <!-- <aside>
-                    <div class="sidebar left bg-light">
-                        <h4 class="text-center">{{ hospitalName }}</h4>
-                        <hr *ngIf="!isAdmin">
-                        <ul class="nav flex-column bg-light">
-                            <li class="nav-item">
-                                <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/dashboard']" >
-                                    <i class="pi pi-home"></i> {{'Asset.DashBoard' | translate }}
-                                </a>
+                <aside >
+                    <!-- <ul >
+                        <li style="list-style-type: none;padding: 2px;"*ngFor="let section of SectionModulePermisisons" class="nav-item" >
+                            <span class="text-truncate"  [routerLink]="section.sectionName=='Dashboard'?['/dash/dashboard']:null" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + section.sectionName"
+                            class="collapsed active" > <span class="nav-label" style="font-size: 19px;cursor: pointer;"><i [class]="section.icon"></i>
+                                {{lang=='en' ?  section.sectionName: section.sectionNameAr}}</span>
+                          </span>
+                          <ul class="collapse" [id]="section.sectionName">
+                            <li  style="list-style-type: none;padding: 2px;" *ngFor="let module of section.moduleWithPermissionNames" class="nav-item">
+                                <span class="text-truncate" style="font-size: 17px;cursor: pointer;" [routerLinkActive]="['active']"
+                                    [routerLink]="['/dash/'+module.route]"><i [class]="module.icon"></i>
+                                    {{lang=='en'? module.moduleName:module.moduleNameAr}}</span>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-truncate" href="#" data-bs-toggle="collapse" data-bs-target="#org" aria-expanded="false" aria-controls="org"  (click)="toggleCollapse('org')" >
-                                    <i class="pi pi-sitemap"></i> {{'Asset.heirarchicalstructure' | translate }}
-                                    <i class="pi pi-chevron-right float-end" [ngClass]="{'rotate-180': isCollapsed('org'), 'rotate-0': !isCollapsed('org')}"></i>
-                                </a>
-                                <ul class="collapse" id="org">
-                                    <li class="nav-item">
-                                        <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/governorates']">
-                                            <i class="pi pi-flag-fill"></i> {{'Asset.Governorates' | translate }}
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/organizations']">
-                                            <i class="pi pi-sitemap"></i> {{'Asset.Organizations' | translate }}
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/hospitals']">
-                                            <i class="pi pi-warehouse"></i> {{'Asset.Hospitals' | translate }}
-                                        </a>
-                                    </li>
-                                    
-                                    <li class="nav-item">
-                                        <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/buildings']">
-                                            <i class="pi pi-building"></i> {{'Asset.Buildings' | translate }}
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/departments']">
-                                            <i class="pi pi-sitemap"></i> {{'Asset.Departments' | translate }}
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-
-                            <li> <a class="text-truncate" href="#" data-bs-toggle="collapse" data-bs-target="#assets" (click)="toggleCollapse('assets')"
-                                class="collapsed active">
-
-                                <i class="pi pi-building"></i>{{'Asset.Assets' | translate }} 
-                                <i class="pi pi-chevron-right float-end" [ngClass]="{'rotate-180': isCollapsed('assets'), 'rotate-0': !isCollapsed('assets')}"></i>
-                    
-                            </a>
-                            <ul class="collapse" id="assets">
-                                <li class="active"><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/assets']" ><i class="pi pi-building-columns"></i>  
-                                        {{
-                                        'Asset.MasterAssets' | translate }}</a></li>
-                                <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/hospitalassets']" ><i class="pi pi-building"></i>  {{
-                                        'Asset.HospitalAssets' | translate }}</a> </li>
-                                <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/AssetStatus']" ><i class="pi pi-chart-line"></i> {{
-                                        'Asset.AssetStatus' | translate }}</a></li>
-                                <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/origins']" ><i class="pi pi-globe"></i>
-                                        {{'Asset.Origins' |
-                                        translate }}</a></li>
-                                <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/brands']" ><i class="pi pi-briefcase"></i> {{
-                                        'Asset.Brands' |
-                                        translate }}</a></li>
-                                <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/suppliers']" ><i class="pi-warehouse"></i> {{
-                                        'Asset.Suppliers' | translate }}</a></li>
-                                <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                        [routerLink]="['/dash/categories']" ><i class="pi pi-bars"></i> {{
-                                        'Asset.Categories' | translate }}</a></li>
+                        </ul>
+                        </li>
+                    </ul>   -->
+                    <ul>
+                        <li style="list-style-type: none; padding: 2px;" *ngFor="let section of SectionModulePermisisons" class="nav-item">
+                            <span class="text-truncate" [routerLink]="section.sectionName=='Dashboard' ? ['/dash/dashboard'] : null" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + section.sectionName" class="collapsed active">
+                                <span class="nav-label" style="font-size: 19px; cursor: pointer;">
+                                    <i [class]="section.icon"></i>
+                                    {{ lang == 'en' ? section.sectionName : section.sectionNameAr }}
+                                </span>
+                            </span>
+                            <ul class="collapse" [id]="section.sectionName">
+                                <li style="list-style-type: none; padding: 2px;" *ngFor="let module of section.moduleWithPermissionNames" class="nav-item">
+                                    <span class="text-truncate" style="font-size: 17px; cursor: pointer;" [routerLinkActive]="['active']" [routerLink]="['/dash/' + module.route]">
+                                        <i [class]="module.icon"></i>
+                                        {{ lang == 'en' ? module.moduleName : module.moduleNameAr }}
+                                    </span>
+                                </li>
                             </ul>
                         </li>
-
-
-                        <li> <a class="text-truncate" href="#" data-bs-toggle="collapse" data-bs-target="#settings"
-                            class="collapsed active" > <span class="nav-label"><i class="pi pi-cog"></i> {{
-                                'Asset.Settings' | translate }}</span>
-                             <i class="pi pi-chevron-right float-end" [ngClass]="{'rotate-180': isCollapsed('settings'), 'rotate-0': !isCollapsed('settings')}"></i>
-                          </a>
-                        <ul class="collapse" id="settings">
-                            <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/rolecategories']"><i class="pi pi-th-large"></i>
-                                    {{'Asset.RoleCategories' | translate }}</a>
-                            </li>
-                            <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/roles']"><i class="pi pi-align-justify"></i> {{
-                                    'Asset.Roles' |
-                                    translate }}</a></li>
-                            <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/users']"><i class="pi pi-user"></i> {{
-                                    'Asset.Users'
-                                    |
-                                    translate
-                                    }}</a></li>
-                            <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/employees']"><i class="pi pi-briefcase"></i> {{
-                                    'Asset.Employees' |
-                                    translate }}</a></li>
-                            <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/Classifications']"><i class="pi pi-sliders-h"></i> {{
-                                    'Asset.Classification' | translate }}</a>
-                            </li>
-                            <li><a class="text-truncate" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/ecris']"><i class="pi pi-book"></i> {{
-                                    'Asset.ECRIS' | translate }}</a></li>
-                            <li> <a class="text-truncate" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/visits']" ><i class="pi pi-car"></i>
-                                    <span class="nav-label"> {{'Asset.Visits' | translate}}</span> </a></li>
-                            <li> <a class="text-truncate" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/engineers']" ><i class="pi pi-lightbulb"></i>
-                                    <span class="nav-label"> {{'Asset.Engineers' | translate}}</span> </a></li>
-                        </ul>
-                    </li>
-
-
-
-                        </ul>
-                    </div>
-                </aside> -->
-                <aside style="height: 100%;">
-                    <ul class="nav flex-column bg-light">
-                        <li class="nav-item">
-                            <a class="nav-link text-truncate" [routerLinkActive]="['active']" [routerLink]="['/dash/dashboard']" >
-                                <i class="pi pi-home"></i> {{'Asset.DashBoard' | translate }}
-                            </a>
-                        </li>
-                        <li *ngFor="let section of SectionModulePermisisons" class="nav-item">
-                            <a class="text-truncate" href="#" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + section.sectionName"
-                            class="collapsed active" > <span class="nav-label"><i [class]="section.icon"></i>
-                                {{section.sectionName}}</span>
-                             <i class="pi pi-chevron-right float-end" [ngClass]="{'rotate-180': isCollapsed('settings'), 'rotate-0': !isCollapsed('settings')}"></i>
-                          </a>
-                          <ul class="collapse" [id]="section.sectionName">
-                            <li  *ngFor="let module of section.moduleWithPermissionNames" >
-                                <a class="text-truncate" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/'+module.route]"><i [class]="module.icon"></i>
-                                    {{module.moduleName}}</a>
-                            </li>
-                        </ul>
-                        </li>
-                    </ul>  
+                    </ul>
                 </aside>
         </div>
     </div>

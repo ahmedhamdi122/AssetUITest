@@ -13,12 +13,10 @@ a:hover {
 /** ======================  header ==============================**/
 
 .header {}
-
 .navbar-toggleable-md {
     margin: 0 !important;
     padding: 0 !important;
 }
-
 .header .dropdown-menu {
     position: absolute;
     right: 0;
@@ -26,12 +24,10 @@ a:hover {
     border-radius: 0px;
     color: inherit;
 }
-
 .header .dropdown-item {
     cursor: pointer;
     border-radius: 10px;
 }
-
 .header .user-image {
     float: left;
     width: 40px;
@@ -11027,3 +11023,14 @@ a.text-gray-dark:hover {
     transform: rotate(0deg);
     transition: transform 0.3s ease;
   }
+
+// .nav-item:hover  :hover{
+//     color: black;
+//       }
+
+.nav-item {
+    
+}
+
+.nav-item:hover {
+color: black;}

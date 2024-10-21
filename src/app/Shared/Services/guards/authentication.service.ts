@@ -6,6 +6,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../../src/environments/environment';
 import { LoggedUser, User } from '../../Models/userVM';
+import { ModulesPermissionsResult, SectionModulePermisisons } from '../../Models/Module';
+import { RequestStatus } from '../../Models/RequestStatusVM';
 
 
 @Injectable({ providedIn: 'root' })
@@ -25,8 +27,11 @@ export class AuthenticationService {
         })
     };
 
+
     private currentUserSubject: BehaviorSubject<LoggedUser>;
     private currentUserCookieLogged: BehaviorSubject<LoggedUser>;
+    private AllModulesPermissionsforcurrentUserSubject: BehaviorSubject<SectionModulePermisisons[]>;
+    public AllModulesPermissionsForCurrentUser$:Observable<SectionModulePermisisons[]>; 
     public currentUser: Observable<LoggedUser>;
     public loggedUserCookie: Observable<LoggedUser>;
     lstRoleNames: string[] = [];
@@ -45,6 +50,36 @@ export class AuthenticationService {
         // }
 
     }
+    hasPermission(requiredPermissions: string, moduleName: string,SectionModulePermisisons:SectionModulePermisisons[]): boolean {
+      var module;
+      return SectionModulePermisisons.some(s=>{
+         module=s.moduleWithPermissionNames.find(m=> m.moduleName==moduleName)
+         if(module)
+         {
+          console.log("module :",module.permissionNames);
+          var permissionsExists=module.permissionNames.find(pName=>pName==requiredPermissions);
+          console.log(" permissionsExists :",permissionsExists);
+          if(permissionsExists)
+          {
+            return true;
+          }
+          return false;
+          
+         }
+      });
+      }
+      hasModule(moduleName: string,SectionModulePermisisons:SectionModulePermisisons[])
+      {
+        var module;
+        return SectionModulePermisisons.some(s=>{
+           module=s.moduleWithPermissionNames.find(m=> m.moduleName==moduleName)
+           if(module)
+           {
+            return true;
+           }
+           return false;
+        });
+      }
 
     public get currentUserValue(): LoggedUser {
         return this.currentUserSubject.value;
@@ -53,6 +88,174 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
+    public  setAllModulesPermissionsforcurrentUser(): void {
+        this.AllModulesPermissionsforcurrentUserSubject=new BehaviorSubject<SectionModulePermisisons[]>([]);
+        //make api to get modules
+        this.AllModulesPermissionsforcurrentUserSubject.next( [
+            {
+              icon: "pi pi-home", 
+              sectionName: "Dashboard",
+              sectionNameAr: "الصفحة الرئيسية",
+              moduleWithPermissionNames: []
+            },
+            {
+              icon: "pi pi-sitemap", 
+              sectionName: "Structure",
+              sectionNameAr: "الهيكل الهرمي",
+              moduleWithPermissionNames: [
+                {
+                  icon: "pi pi-flag-fill",
+                  route: "governorates",
+                  moduleName: "Governorate",
+                  moduleNameAr: "المحافظات",
+                  permissionNames: ["add", "edit", "delete"],
+                },
+                {
+                  icon: "pi pi-sitemap",
+                  route: "organizations",
+                  moduleName: "Organization",
+                  moduleNameAr: "الهيئات",
+                  permissionNames: ["add", "delete"],
+                },
+                {
+                  icon: "pi pi-warehouse",
+                  route: "hospitals",
+                  moduleName: "Hospitals",
+                  moduleNameAr: "المستشفيات",
+                  permissionNames: ["delete"],
+                },
+                {
+                  icon: "pi pi-building",
+                  route: "buildings",
+                  moduleName: "Buildings",
+                  moduleNameAr: "المباني",
+                  permissionNames: ["add", "delete"],
+                },
+                {
+                  icon: "pi pi-sitemap",
+                  route: "departments",
+                  moduleName: "Departments",
+                  moduleNameAr: "الأقسام",
+                  permissionNames: ["delete"],
+                },
+              ],
+            },
+            {
+              icon: "pi pi-assets", 
+              sectionName: "Assets",
+              sectionNameAr: "الأصول",
+              moduleWithPermissionNames: [
+                // {
+                //   icon: "",
+                //   route: "assets",
+                //   moduleName: "Master Assets",
+                //   moduleNameAr: "الأصول الرئيسية",
+                //   permissionNames: [ "edit", ],
+                // },
+                {
+                  icon: "",
+                  route: "hospitalassets",
+                  moduleName: "Hospital Assets",
+                  moduleNameAr: "أصول المستشفى",
+                  permissionNames: ["add", "delete"],
+                },
+                {
+                  icon: "",
+                  route: "origins",
+                  moduleName: "Origins",
+                  moduleNameAr: "بلد المنشأ",
+                  permissionNames: ["delete"],
+                },
+                {
+                  icon: "",
+                  route: "",
+                  moduleName: "Manufactures",
+                  moduleNameAr: "الماركات",
+                  permissionNames: ["add", "delete"],
+                },
+                {
+                  icon: "",
+                  route: "suppliers",
+                  moduleName: "Suppliers",
+                  moduleNameAr: "الموردين",
+                  permissionNames: ["delete","view"],
+                },
+                {
+                  icon: "",
+                  route: "categories",
+                  moduleName: "Categories",
+                  moduleNameAr: "الفئات",
+                  permissionNames: ["delete"],
+                },
+              ],
+            },
+            {
+              icon: "pi pi-settings",  // Example icon for Settings section
+              sectionName: "Settings",
+              sectionNameAr: "الإعدادات",
+              moduleWithPermissionNames: [
+                {
+                  icon: "",
+                  route: "rolecategories",
+                  moduleName: "Role Categories",
+                  moduleNameAr: "فئة الأدوار",
+                  permissionNames: ["add", "edit", "delete"],
+                },
+                {
+                  icon: "",
+                  route: "roles",
+                  moduleName: "Roles",
+                  moduleNameAr: "المهام",
+                  permissionNames: ["add", "delete"],
+                },
+                {
+                  icon: "",
+                  route: "users",
+                  moduleName: "Users",
+                  moduleNameAr: "المستخدمين",
+                  permissionNames: ["delete"],
+                },
+                {
+                  icon: "",
+                  route: "",
+                  moduleName: "Employees",
+                  moduleNameAr: "الموظفين",
+                  permissionNames: ["add", "delete"],
+                },
+                {
+                  icon: "",
+                  route: "",
+                  moduleName: "Speciality",
+                  moduleNameAr: "التصنيف",
+                  permissionNames: ["delete"],
+                },
+                {
+                  icon: "",
+                  route: "",
+                  moduleName: "ECRIS",
+                  moduleNameAr: "ECRIS",
+                  permissionNames: ["delete"],
+                },
+                {
+                  icon: "",
+                  route: "",
+                  moduleName: "Visits",
+                  moduleNameAr: "الزيارات",
+                  permissionNames: ["delete"],
+                },
+                {
+                  icon: "",
+                  route: "",
+                  moduleName: "Engineers",
+                  moduleNameAr: "المهندسين",
+                  permissionNames: ["delete"],
+                },
+              ],
+            },
+          ]
+        );
+        this.AllModulesPermissionsForCurrentUser$=this.AllModulesPermissionsforcurrentUserSubject.asObservable()
+    }
 
     login(userObj: User): Observable<LoggedUser> {
         return this.http.post<LoggedUser>(`${environment.Login}`, userObj, { headers: this.httpHeader })

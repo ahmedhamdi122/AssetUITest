@@ -118,7 +118,6 @@ export class ListComponent implements OnInit {
           });
         },
         error:(err)=>{
-          console.log("some error  : ",err);
           
         }
       }
@@ -142,7 +141,6 @@ export class ListComponent implements OnInit {
           this.spinner.show()
           this.roleService.DeleteRole(item.id).subscribe(
             deleted => {
-              console.log("inside deleted");
               this.spinner.hide()
               this.displaySuccessDelete=true;
               const first = (Math.floor(rowIndex / 10))*10;
@@ -151,7 +149,6 @@ export class ListComponent implements OnInit {
               this.dataTable.first=first;
             },
             error => {
-              console.log("inside error");
               this.spinner.hide()
               this.errorDisplay=true;
               if (this.lang == 'en') {
@@ -203,13 +200,11 @@ export class ListComponent implements OnInit {
               dialogRef.onClose.subscribe((editRole) => {
             if(editRole)
             {
-             console.log("edit");
             }
           });
           
         },
-        error:(err)=>{
-          console.log("some error  : ",err);}
+        error:(err)=>{}
       }
     )
   

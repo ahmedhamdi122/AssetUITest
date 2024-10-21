@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-// import { ChartdashboardComponent } from './chartdashboard/chartdashboard.component';
+ import { ChartdashboardComponent } from './chartdashboard/chartdashboard.component';
 import { DashPageComponent } from './dash-page/dash-page.component';
 
 const routes: Routes = [
   {
     path: '', component: DashPageComponent, data: { breadcrumb: 'Asset.Home' }, children: [
 
-      // { path: 'dashboard', component: ChartdashboardComponent, data: { breadcrumb: 'Asset.DashBoard' } },
+       { path: 'dashboard', component: ChartdashboardComponent, data: { breadcrumb: 'Asset.DashBoard' } },
        { path: 'rolecategories', loadChildren: () => import('src/app/Features/role-categories/role-categories.module').then(m => m.RoleCategoriesModule) },
       { path: 'roles', loadChildren: () => import('src/app/Features/roles/roles.module').then(m => m.RolesModule) },
       // { path: 'organizations', loadChildren: () => import('src/app/Features/organizations/organizations.module').then(m => m.OrganizationsModule) },

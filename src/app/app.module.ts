@@ -24,7 +24,7 @@ import { MatMenuModule } from '@angular/material/menu';
  import { MatTabsModule } from '@angular/material/tabs';
  import { MatExpansionModule } from '@angular/material/expansion';
  import { MatCheckboxModule } from '@angular/material/checkbox';
-//  import { ChartModule } from 'primeng/chart';
+  import { ChartModule } from 'primeng/chart';
 import { FloatLabelModule } from 'primeng/floatlabel';
 // import { AvatarModule } from 'primeng/avatar';
  import { TableModule } from 'primeng/table';
@@ -198,7 +198,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   BrandsRoutingModule,
   BrandsModule,
   ToastModule,
-  // ChartModule,
+   ChartModule,
   MatCheckboxModule,
   MatExpansionModule,
   MatTabsModule,

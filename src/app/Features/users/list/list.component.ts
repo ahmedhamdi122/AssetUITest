@@ -10,6 +10,7 @@ import { AuthenticationService } from 'src/app/Shared/Services/guards/authentica
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
 import { UserService } from 'src/app/Shared/Services/user.service';
 import { CreateComponent } from '../create/create.component';
+import { SectionModulePermisisons } from 'src/app/Shared/Models/Module';
 
 @Component({
   selector: 'app-list',
@@ -32,7 +33,7 @@ export class ListComponent implements OnInit {
   errorMessage:string;
   errorDisplay:string;
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
-
+  SectionModulePermisisons:SectionModulePermisisons[];
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
@@ -46,7 +47,14 @@ export class ListComponent implements OnInit {
       pagesize: 10
     }
 
-
+    this.authenticationService.AllModulesPermissionsForCurrentUser$.subscribe(
+      res=>
+        {
+          this.SectionModulePermisisons=res
+          console.log("res :",res);
+          
+        }
+    )
     // this.userService.GetUsersWithPaging(this.page).subscribe((items) => {
     //   this.lstUsers = items;
     //   this.loading = true;
