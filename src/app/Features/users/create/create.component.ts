@@ -28,7 +28,7 @@ import { ListCommetieeMemberVM } from 'src/app/Shared/Models/commetieeMemberVM';
 import { ListEngineerVM } from 'src/app/Shared/Models/engineerVM';
 import { EngineerService } from './../../../Shared/Services/engineer.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { forkJoin } from 'rxjs';
 import { CreateRoleComponent } from '../../roles/create/create.component';
 
@@ -95,7 +95,7 @@ export class CreateComponent implements OnInit {
     private commetieeMemberService: CommetieeMemberService,
     private route: Router,
     private engineerService: EngineerService,
-    private spinner:NgxSpinnerService,private rolecategoryService:RoleCategoryService,private dialogService: DialogService
+    private spinner:NgxSpinnerService,private rolecategoryService:RoleCategoryService,private dialogService: DialogService,private ref:DynamicDialogRef
   ) { }
 
   ngOnInit(): void {
@@ -129,7 +129,6 @@ export class CreateComponent implements OnInit {
     this.governorateService.GetGovernorates().subscribe((items) => {
       
       this.lstGovernorates = items;
-      console.log("this.lstGovernorates :",this.lstGovernorates);
       
     });
 
@@ -338,14 +337,12 @@ export class CreateComponent implements OnInit {
   changeUnregiteredValue($event) {
     if($event.value!=null)
     {
-      console.log("  $event.value :", $event.value);
       const email = $event.value;
       this.userObj.email = email;
       this.userObj.userName = this.userObj.email.split('@')[0].trim();
     }
     else
     {
-      console.log("null inside changeUnregiteredValue");
       
       this.userObj.email = null;
       this.userObj.userName =null;
@@ -354,13 +351,11 @@ export class CreateComponent implements OnInit {
   }
 
   getEmployeesByHospitalId(hospitalId:number) {
-    console.log("getEmployeesByHospitalId :",hospitalId);
     if(hospitalId)
     {
       this.spinner.show();
       this.employeeService.GetUnregisteredUsers(hospitalId).subscribe((items) => {
         this.lstUnregisteredUsers = items;
-        console.log("lstUnregisteredUsers :",this.lstUnregisteredUsers);
         this.spinner.hide();
       });
     }
@@ -379,13 +374,11 @@ export class CreateComponent implements OnInit {
     return this.lang === 'ar' ? governorate.nameAr : governorate.nameEn;
   }
   getCitiesByGovId(govId: number) {
-    console.log("govId :",govId);
     if(govId!=null)
     {
       this.spinner.show();
       this.cityService.GetCitiesByGovernorateId(govId).subscribe((cities) => {
         this.lstCities = cities;
-        console.log("lstCities :",this.lstCities);
         this.spinner.hide();
       });
     }
@@ -402,13 +395,11 @@ export class CreateComponent implements OnInit {
   
   }
   getHospitalsByCityId(cityId:number) {
-    console.log("cityId :", cityId);
     if(cityId!=null)
     {
       this.spinner.show();
       this.hospitalService.GetHospitalsByCityId(cityId).subscribe((hospitals) => {
           this.lstHospitals = hospitals;
-          console.log("lstHospitals :",this.lstHospitals);
           this.spinner.hide();
         });
     }
@@ -440,54 +431,54 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("this.addRoles :",this.addRoles);
-    console.log("this.addRoleslength :", this.addRoles.length);
     this.userObj.roleCategoryId = this.selectedCategory;
     this.userObj.roleIds = this.addRoles;
+    console.log("roleIds :",this.userObj.roleIds);
     if (this.addRoles.length == 0) {
-      console.log("this.addRoles inside:", this.addRoles);
       this.errorDisplay = true;
       if (this.lang == "en") {
         this.errorMessage = 'Please select at least one Role';
+        return false;
       }
       else {
         this.errorMessage = 'من فضلك اختر أحد المهام';
+        return false;
       }
-      return false;
     }
-    if (this.selectedCategory == 1) {
-      this.userObj.roleIds = this.addRoles;
-      this.spinner.show();
-      this.userService.AddUser(this.userObj).subscribe((user) => {
-        this.spinner.hide();
-        this.display = true;
-      },
-        error => {
-          this.spinner.hide();
-          console.log("error :",error);
+    this.ref.close();
+    // if (this.selectedCategory == 1) {
+    //   this.userObj.roleIds = this.addRoles;
+    //   this.spinner.show();
+    //   this.userService.AddUser(this.userObj).subscribe((user) => {
+    //     this.spinner.hide();
+    //     this.display = true;
+    //   },
+    //     error => {
+    //       this.spinner.hide();
+    
           
-          this.errorDisplay = true;
-          if (this.lang == 'en') {
-            if (error.error.status == 'Error') {
-              this.errorMessage = error.error.message;
-            }
-            else if(error.error.status =="UserExists")
-            {
-              this.errorMessage = error.error.message;
-            }
-          }
-          else {
-            if (error.error.status == 'Error') {
-              this.errorMessage = error.error.messageAr;
-            }
-            else if(error.error.status =="UserExists")
-              {
-                this.errorMessage = error.error.messageAr;
-              }
-          }
-          return false;
-        });
-    }
+    //       this.errorDisplay = true;
+    //       if (this.lang == 'en') {
+    //         if (error.error.status == 'Error') {
+    //           this.errorMessage = error.error.message;
+    //         }
+    //         else if(error.error.status =="UserExists")
+    //         {
+    //           this.errorMessage = error.error.message;
+    //         }
+    //       }
+    //       else {
+    //         if (error.error.status == 'Error') {
+    //           this.errorMessage = error.error.messageAr;
+    //         }
+    //         else if(error.error.status =="UserExists")
+    //           {
+    //             this.errorMessage = error.error.messageAr;
+    //           }
+    //       }
+    //       return false;
+    //     });
+    // }
     // else if (this.selectedCategory == 2) {
     //   if (this.userObj.organizationId == 0) {
     //     alert('Please select organization');

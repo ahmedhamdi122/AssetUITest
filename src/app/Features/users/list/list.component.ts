@@ -40,8 +40,6 @@ export class ListComponent implements OnInit {
     private route: Router, private dialogService: DialogService
   ) { this.currentUser = this.authenticationService.currentUserValue; }
   ngOnInit(): void {
-
-   
     this.page = {
       pagenumber: 1,
       pagesize: 10
@@ -51,7 +49,6 @@ export class ListComponent implements OnInit {
       res=>
         {
           this.SectionModulePermisisons=res
-          console.log("res :",res);
           
         }
     )

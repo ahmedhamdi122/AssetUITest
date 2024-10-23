@@ -149,6 +149,7 @@ export class ListComponent implements OnInit {
               this.dataTable.first=first;
             },
             error => {
+              
               this.spinner.hide()
               this.errorDisplay=true;
               if (this.lang == 'en') {

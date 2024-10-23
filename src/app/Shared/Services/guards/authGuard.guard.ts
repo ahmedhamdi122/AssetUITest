@@ -16,15 +16,11 @@ export class AuthGuard implements CanActivate {
     constructor(private router: Router,
         private authenticationService: AuthenticationService)
          {
-            this.authenticationService.AllModulesPermissionsForCurrentUser$.subscribe(res=>this.SectionModulePermisisons=res)
+           // this.authenticationService.AllModulesPermissionsForCurrentUser$.subscribe(res=>this.SectionModulePermisisons=res)
           }
-
-
-
     canActivate(route: ActivatedRouteSnapshot,): boolean {
         if (this.authenticationService.isLogged()) {
             //console.log("route :",route.data['']);
-            
             //this.authenticationService.hasModule('',this.SectionModulePermisisons)
             return true;
         }
