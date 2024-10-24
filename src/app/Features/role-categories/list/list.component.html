@@ -16,8 +16,8 @@
   <div class="row mt-3">
     <div class="col-12 ">
       <p-table #table  [value]="lstRoleCategories" styleClass="p-datatable-striped  p-datatable-sm p-datatable-gridlines"
-        responsiveLayout="scroll" [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" pageLinks="10" [rowHover]="true"
-        (onLazyLoad)="LoadRoleCategories($event)" [customSort]="true" (sortFunction)="LoadRoleCategories($event)" >
+        responsiveLayout="scroll" [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count"  [rowHover]="true"
+        (onLazyLoad)="LoadRoleCategories($event)">
         <ng-template pTemplate="header">
           <tr>
               <th style="text-align: center;" pSortableColumn="id">{{'Asset.Id' | translate }}

@@ -102,7 +102,7 @@ export class CreateComponent implements OnInit {
     
     this.userObj = {
       roleIds: [],
-   roleCategoryId: 0, cityId: null, subOrganizationId: 0, governorateId: null, organizationId: 0, hospitalId: null, email: null, phoneNumber: '', password: '', userName: '',
+   roleCategoryId: 0, cityId: null, subOrganizationId: 0, governorateId: null, organizationId: 0, hospitalId: null, email: '', phoneNumber: '', password: '', userName: '',
     };
     if (this.lang == "en") {
       this.lstHospitalTypes = [
@@ -344,8 +344,8 @@ export class CreateComponent implements OnInit {
     else
     {
       
-      this.userObj.email = null;
-      this.userObj.userName =null;
+      this.userObj.email = '';
+      this.userObj.userName ='';
     }
 
   }
@@ -363,10 +363,10 @@ export class CreateComponent implements OnInit {
     {
       this.lstUnregisteredUsers =null;
       this.userObj.hospitalId=null;
-      this.userObj.email=null;
+      this.userObj.email='';
       this.lstUnregisteredUsers=null;
-      this.userObj.userName=null;
-      this.userObj.password=null;
+      this.userObj.userName='';
+      this.userObj.password='';
     }
    
   }
@@ -387,10 +387,10 @@ export class CreateComponent implements OnInit {
       this.userObj.cityId=null;
       this.lstHospitals=null;
       this.userObj.hospitalId=null;
-      this.userObj.email=null;
+      this.userObj.email='';
       this.lstUnregisteredUsers=null;
-      this.userObj.userName=null;
-      this.userObj.password=null;
+      this.userObj.userName='';
+      this.userObj.password='';
     }
   
   }
@@ -407,10 +407,10 @@ export class CreateComponent implements OnInit {
     {
       this.lstHospitals=null;
       this.userObj.hospitalId=null;
-      this.userObj.email=null;
+      this.userObj.email='';
       this.lstUnregisteredUsers=null;
-      this.userObj.userName=null;
-      this.userObj.password=null;
+      this.userObj.userName='';
+      this.userObj.password='';
     }
    
   }
@@ -434,51 +434,57 @@ export class CreateComponent implements OnInit {
     this.userObj.roleCategoryId = this.selectedCategory;
     this.userObj.roleIds = this.addRoles;
     console.log("roleIds :",this.userObj.roleIds);
-    if (this.addRoles.length == 0) {
-      this.errorDisplay = true;
-      if (this.lang == "en") {
-        this.errorMessage = 'Please select at least one Role';
-        return false;
-      }
-      else {
-        this.errorMessage = 'من فضلك اختر أحد المهام';
-        return false;
-      }
-    }
-    this.ref.close();
-    // if (this.selectedCategory == 1) {
-    //   this.userObj.roleIds = this.addRoles;
-    //   this.spinner.show();
-    //   this.userService.AddUser(this.userObj).subscribe((user) => {
-    //     this.spinner.hide();
-    //     this.display = true;
-    //   },
-    //     error => {
-    //       this.spinner.hide();
-    
-          
-    //       this.errorDisplay = true;
-    //       if (this.lang == 'en') {
-    //         if (error.error.status == 'Error') {
-    //           this.errorMessage = error.error.message;
-    //         }
-    //         else if(error.error.status =="UserExists")
-    //         {
-    //           this.errorMessage = error.error.message;
-    //         }
-    //       }
-    //       else {
-    //         if (error.error.status == 'Error') {
-    //           this.errorMessage = error.error.messageAr;
-    //         }
-    //         else if(error.error.status =="UserExists")
-    //           {
-    //             this.errorMessage = error.error.messageAr;
-    //           }
-    //       }
-    //       return false;
-    //     });
+    // if (this.addRoles.length == 0) {
+    //   this.errorDisplay = true;
+    //   if (this.lang == "en") {
+    //     this.errorMessage = 'Please select at least one Role';
+    //     return false;
+    //   }
+    //   else {
+    //     this.errorMessage = 'من فضلك اختر أحد المهام';
+    //     return false;
+    //   }
     // }
+
+
+    if (this.selectedCategory == 1) {
+      this.userObj.roleIds = this.addRoles;
+      console.log("userObj.userName :",this.userObj.userName=='');
+      if(!this.validateUserName())return;
+      if(!this.validatePassword())return;
+      if(!this.validateEmail())return;
+      
+       this.spinner.show();
+       this.userService.AddUser(this.userObj).subscribe((user) => {
+        this.spinner.hide();
+        this.ref.close('created');
+        this.display = true;
+      },
+        error => {
+          console.log("error :",error)
+          this.spinner.hide();
+          this.errorDisplay = true;
+          if (this.lang == 'en') {
+            if (error.error.status == 'UserExists') {
+              this.errorMessage = error.error.message;
+            }
+            else if(error.error.status =="Error")
+            {
+              this.errorMessage = error.error.message;
+            }
+          }
+          else {
+            if (error.error.status == 'UserExists') {
+              this.errorMessage = error.error.messageAr;
+            }
+            else if(error.error.status =="Error")
+              {
+                this.errorMessage = error.error.messageAr;
+              }
+          }
+          return false;
+        });
+    }
     // else if (this.selectedCategory == 2) {
     //   if (this.userObj.organizationId == 0) {
     //     alert('Please select organization');
@@ -622,6 +628,54 @@ export class CreateComponent implements OnInit {
     //   }
 
     // }
+  }
+
+  validateUserName()
+  {
+    if (this.userObj.userName == '') {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = 'Please Insert User Name';
+        return false;
+      }
+      else {
+        this.errorMessage = 'من فضلك أدخل اسم المستخدم';
+        return false;
+      }
+    }
+    return true;
+  }
+  validatePassword()
+  {
+    if (this.userObj.password == '') {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = 'Please Insert Password';
+        return false;
+      }
+      else {
+        this.errorMessage = 'من فضلك أدخل كلمة المرور';
+        return false;
+      }
+    }
+    return true;
+
+  }
+  validateEmail()
+  {
+    if (this.userObj.email == '') {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = 'Please Insert Email';
+        return false;
+      }
+      else {
+        this.errorMessage = 'من فضلك أدخل البريد الإلكتروني';
+        return false;
+      }
+    }
+    return true;
+
   }
 
 }

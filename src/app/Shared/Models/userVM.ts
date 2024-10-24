@@ -1,3 +1,4 @@
+import { ReadRoleCategoryVM } from "./rolecategoryVM";
 import { EditRoleVM } from "./roleVM";
 
 export class ListUsersVM {
@@ -7,6 +8,18 @@ export class ListUsersVM {
     phoneNumber: string;
     email: string;
     displayName: string;
+}
+export class UserResultVM{
+    results:UserVM[];
+    count:number;
+}
+export class UserVM{
+    id:number;
+    userName:string;
+    roleCategory:ReadRoleCategoryVM;
+    displayName:string;
+    phoneNumber:string;
+    email:string;
 }
 export class CreateUserVM {
     userName: string;

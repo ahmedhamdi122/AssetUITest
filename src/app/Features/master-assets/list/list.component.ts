@@ -23,8 +23,8 @@ import { AuthenticationService } from 'src/app/Shared/Services/guards/authentica
 import { Table } from 'primeng/table';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { SectionModulePermisisons } from 'src/app/Shared/Models/Module';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -49,7 +49,6 @@ export class ListComponent implements OnInit {
   lstMasterAssetNames: ListMasterAssetVM[] = [];
   lstECRIS: ListECRIVM[] = [];
   selectedObj: MasterAssetVM;
-  isLoading: boolean = true;
   lstRoleNames: string[] = [];
   isAdmin: boolean = false;
   isHospitalManager: boolean = false;
@@ -62,9 +61,9 @@ export class ListComponent implements OnInit {
   displaySuccessDelete =false;
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
   SectionModulePermisisons:SectionModulePermisisons[];
-  constructor(    private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
+  constructor(private spinner:NgxSpinnerService,private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
-    private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService,private ngxService:NgxUiLoaderService) { this.currentUser = this.authenticationService.currentUserValue; }
+    private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
   ngOnInit(): void {
     this.authenticationService.AllModulesPermissionsForCurrentUser$.subscribe(
       res=>{this.SectionModulePermisisons=res
@@ -129,16 +128,15 @@ export class ListComponent implements OnInit {
     return this.authenticationService.hasPermission("view","Master Assets",this.SectionModulePermisisons)
   }
   LoadMasterAssets(event) {
-    this.ngxService.start('loading');
+    this.spinner.show()
     this.SearchSortMasterAsset.sortOrder=event.sortOrder;
     this.SearchSortMasterAsset.sortFiled=event.sortField;
       this.masterAssetService.GetListMasterAssets(event.first, event.rows,this.SearchSortMasterAsset).subscribe((items) => {
       this.lstMasterAssets = items.results;     
       this.count = items.count;
-       this.isLoading = false;
-       this.ngxService.stop('loading');
+      this.spinner.hide();
     },error=>{
-      this.isLoading = false;
+      this.spinner.hide();
     }
     );
 }
@@ -161,13 +159,13 @@ export class ListComponent implements OnInit {
      }
     this.first = 0;
     this.rows=10;
-   this.ngxService.start('loading');
+   this.spinner.show();
   //  this.SearchSortMasterAsset.modelNumber=this.SearchSortMasterAsset.modelNumber?.trim() ?? ''
   //  this.SearchSortMasterAsset.assetName=this.SearchSortMasterAsset.assetName?.trim() ?? ''
    this.masterAssetService.GetListMasterAssets(this.first,this.rows,this.SearchSortMasterAsset).subscribe((items) => {
       this.lstMasterAssets = items.results;
       this.count = items.count;
-      this.ngxService.stop('loading');
+      this.spinner.hide();
     });
   }
   addMasterAsset() {

@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { CreateUserVM, EditUserVM, ListUsersVM, LoggedUser, SortUsersVM } from '../Models/userVM';
+import { CreateUserVM, EditUserVM, ListUsersVM, LoggedUser, SortUsersVM, UserResultVM } from '../Models/userVM';
 import { ForgetPasswordVM } from '../Models/forgetpasswordVM';
 import { ResetPasswordVM } from '../Models/resetpasswordVM';
 import { Paging } from '../Models/paging';
+import { SortSearchVM } from '../Models/Module';
 
 
 
@@ -48,8 +49,8 @@ export class UserService {
   }
 
 
-  GetUsers(): Observable<ListUsersVM[]> {
-    return this.httpClient.get<ListUsersVM[]>(`${environment.ListUsers}`, this.httpHeader);
+  GetUsers(first: number, rows: number, SortSearchObj: SortSearchVM): Observable<UserResultVM> {
+    return this.httpClient.post<UserResultVM>(`${environment.ListUsers}/${first}/${rows}`,SortSearchObj, this.httpHeader);
   }
   ListUsersByHospitalId(hospitalId: number): Observable<ListUsersVM[]> {
     return this.httpClient.get<ListUsersVM[]>(`${environment.ListUsersByHospitalId}${hospitalId}`, this.httpHeader);
@@ -76,7 +77,6 @@ export class UserService {
   }
 
   AddUser(createUserObj: CreateUserVM): Observable<CreateUserVM> {
-    console.log(" createUserObj:",createUserObj);
     return this.httpClient.post<CreateUserVM>(`${environment.AddUser}`, createUserObj, this.httpHeader);
   }
   DeleteUser(id: string): Observable<any> {

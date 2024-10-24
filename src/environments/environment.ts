@@ -104,7 +104,7 @@ export const environment = {
   sortHospitals: 'http://localhost:25813/api/Hospital/SortHospitals/',
   sortHospitalAsset: 'http://localhost:25813/api/Hospital/SortHospitalAssets/',
   getHospitalWithAssets: 'http://localhost:25813/api/Hospital/GetHospitalsWithAssets/',
-  ListUsers: "http://localhost:25813/api/User/ListUsers",
+  ListUsers: "http://localhost:25813/api/User",
   ListUsersByHospitalId: "http://localhost:25813/api/User/ListUsersByHospitalId/",
   ListUsersInHospitalByEngRoleName: "http://localhost:25813/api/User/ListUsersInHospitalByEngRoleName/",
   ListUsersInHospitalByEngManagerRoleName: "http://localhost:25813/api/User/ListUsersInHospitalByEngManagerRoleName/",

@@ -1,5 +1,5 @@
 
-    <form (ngSubmit)="onSubmit()" #addForm="ngForm">
+    <form  #addForm="ngForm">
       <div class="row top-buffer">
         <div class="col-md-12">
           <label> {{ 'Asset.RoleCategories' | translate }}</label>
@@ -139,20 +139,15 @@
           <label for="code" [translate]="'Asset.Username'"></label>
           <input type="text" class="form-control" [(ngModel)]="userObj.userName" #userName="ngModel" id="userName"
             name="userName" autofocus required
-            [class.is-invalid]="(userName.touched && userName.errors)">
-          <div *ngIf="userName.touched  && userName.errors?.required">
-            <span class="text-danger"> {{ 'Asset.Name' | translate }} {{ 'Asset.Required' | translate }} </span>
-          </div>
+            [class.is-invalid]="(userName.errors)">
+  
         </div>
         <div class="col-4">
           <label for="code" [translate]="'Asset.Password'"></label>
           <input type="password" class="form-control" [(ngModel)]="userObj.password" #passwordHash="ngModel"
             id="passwordHash" name="passwordHash" autofocus required
-            [class.is-invalid]="(passwordHash.touched && passwordHash.errors) || addForm.submitted"
-            [class.is-valid]="passwordHash.valid && addForm.submitted">
-          <div *ngIf="(passwordHash.touched || addForm.submitted) && passwordHash.errors?.required">
-            <span class="text-danger"> {{ 'Asset.Password' | translate }} {{ 'Asset.Required' | translate }} </span>
-          </div>
+            [class.is-invalid]="(passwordHash.errors)">
+      
         </div>
       </div>
 
@@ -160,11 +155,8 @@
         <div class="col-4">
           <label for="code" [translate]="'Asset.EMail'"></label>
           <input type="text" class="form-control" [(ngModel)]="userObj.email" #email="ngModel" id="email" name="email"
-            autofocus required [class.is-invalid]="(email.touched && email.errors) || addForm.submitted"
-            [class.is-valid]="email.valid && addForm.submitted">
-          <div *ngIf="(email.touched || addForm.submitted) && email.errors?.required">
-            <span class="text-danger"> {{ 'Asset.EMail' | translate }} {{ 'Asset.Required' | translate }} </span>
-          </div>
+            autofocus required [class.is-invalid]="email.errors">
+   
         </div>
         <div class="col-4">
           <label for="code" [translate]="'Asset.Mobile'"></label>
@@ -173,7 +165,7 @@
       </div>
       <div class="row mt-3">
         <div class="col-offset-3 col-6 col-offset-3">
-          <button class="btn btn-primary pull-center " value="save" type="submit" style="
+          <button class="btn btn-primary pull-center " value="save" type="button" (click)="onSubmit()" style="
             margin: 0px 5px;
             background-color: #1483c2;
             border-color: #1483c2;">
@@ -187,13 +179,6 @@
 
 
 
-<p-dialog appendTo="body" modal="true" [(visible)]="display" [style]="{width: '350px'}">
-  <ng-template pTemplate="header">
-    <h6 style="color: #04527e;font-weight: bold;font-size: 16pt;"> {{ 'Asset.Save' | translate }}</h6>
-  </ng-template>
-  <span style="color: green;font-weight: bold;font-size: 12pt;text-align: center;"> {{ 'Asset.SavedSuccess' | translate
-    }}</span>
-</p-dialog>
 
 
 <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">

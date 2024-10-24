@@ -5,12 +5,13 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { Subject } from 'rxjs';
 import { Paging } from 'src/app/Shared/Models/paging';
 import { ListRoleCategoriesVM } from 'src/app/Shared/Models/rolecategoryVM';
-import { EditUserVM, ListUsersVM, LoggedUser, SortUsersVM } from 'src/app/Shared/Models/userVM';
+import { EditUserVM, ListUsersVM, LoggedUser, SortUsersVM, UserResultVM, UserVM } from 'src/app/Shared/Models/userVM';
 import { AuthenticationService } from 'src/app/Shared/Services/guards/authentication.service';
 import { RoleCategoryService } from 'src/app/Shared/Services/rolecategory.service';
 import { UserService } from 'src/app/Shared/Services/user.service';
 import { CreateComponent } from '../create/create.component';
-import { SectionModulePermisisons } from 'src/app/Shared/Models/Module';
+import { SectionModulePermisisons, SortSearchVM } from 'src/app/Shared/Models/Module';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-list',
@@ -23,11 +24,12 @@ export class ListComponent implements OnInit {
   loading: boolean;
   page: Paging;
   count: number;
-  lstUsers: ListUsersVM[] = [];
+  UserResult: UserResultVM;
+  users:UserVM[];
   selectedObj: EditUserVM;
   lstRoleCategories: ListRoleCategoriesVM[] = [];
   sortStatus: string = "descending";
-  sortObj: SortUsersVM;
+  sortObj: SortSearchVM;
   displaySuccessDelete:string;
   displaySuccessCreate:boolean;
   errorMessage:string;
@@ -35,6 +37,7 @@ export class ListComponent implements OnInit {
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
   SectionModulePermisisons:SectionModulePermisisons[];
   constructor(
+     private spinner:NgxSpinnerService,
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private route: Router, private dialogService: DialogService
@@ -52,23 +55,16 @@ export class ListComponent implements OnInit {
           
         }
     )
-    // this.userService.GetUsersWithPaging(this.page).subscribe((items) => {
-    //   this.lstUsers = items;
-    //   this.loading = true;
-    // });
-
-
-    this.sortObj = {
-      sortStatus: '', id: '', categoryRoleName: '',
-      userName: '', email: '', phoneNumber: '', displayName: '', displayNameAr: ''
-    }
-
   }
   LoadUsers(event) {
-    this.page.pagenumber = (event.first + 10) / 10;
-    this.page.pagesize = event.rows;
-    this.userService.GetUsersWithPaging(this.page).subscribe((items) => {
-      this.lstUsers = items;
+    this.sortObj = { SortFiled: event.sortField, SortOrder: event.sortOrder ,search:''}
+    this.spinner.show()
+    this.userService.GetUsers(event.first,event.rows, this.sortObj).subscribe((res) => {
+      this.UserResult = res;
+      this.users=this.UserResult.results;
+      this.count=this.UserResult.count;
+      this.spinner.hide();
+
     });
   }
   addUser()
@@ -87,76 +83,13 @@ export class ListComponent implements OnInit {
       if(created)
       {
         this.displaySuccessCreate=true;
-         const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
-        this.reloadTableObj.first=lastPageIndex;
+        //  const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
+        // this.reloadTableObj.first=lastPageIndex;
         // this.LoadUsers(this.reloadTableObj);
         // this.dataTable.first=this.count;
       }
     });
   }
-
-  sort(field) {
-
-
-    // this.sortObj.userId = this.currentUser.id;
-    this.sortObj.id = this.currentUser.id;
-    if (this.sortStatus === "descending") {
-      this.sortStatus = "ascending";
-      this.sortObj.sortStatus = this.sortStatus;
-    }
-    else {
-      this.sortStatus = "descending"
-      this.sortObj.sortStatus = this.sortStatus;
-    }
-
-    if (field.currentTarget.id == "Mobile") {
-      this.sortObj.phoneNumber = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == "المحمول") {
-      this.sortObj.phoneNumber = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "Username") {
-      this.sortObj.userName = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == "اسم المستخدم") {
-      this.sortObj.userName = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "EMail") {
-      this.sortObj.email = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == "البريد الإلكتروني") {
-      this.sortObj.email = field.currentTarget.id
-    }
-
-
-    if (field.currentTarget.id == "Display Name") {
-      this.sortObj.displayName = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == "الاسم") {
-      this.sortObj.displayNameAr = field.currentTarget.id
-    }
-
-    if (field.currentTarget.id == "Role Category") {
-      this.sortObj.categoryRoleName = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == "فئة الدور") {
-      this.sortObj.categoryRoleName = field.currentTarget.id
-    }
-
-
-
-    this.userService.sortUsers(this.page.pagenumber, this.page.pagesize, this.sortObj).subscribe(data => {
-      this.lstUsers = data;
-      this.sortStatus = this.sortObj.sortStatus;
-      this.sortObj = {
-        sortStatus: '', id: '', categoryRoleName: '',
-        userName: '', email: '', phoneNumber: '', displayName: '', displayNameAr: ''
-      }
-    })
-  }
-
-
-
   deleteUser(id: string) {
    
 

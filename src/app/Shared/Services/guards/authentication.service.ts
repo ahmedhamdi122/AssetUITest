@@ -56,9 +56,8 @@ export class AuthenticationService {
          module=s.moduleWithPermissionNames.find(m=> m.moduleName==moduleName)
          if(module)
          {
-          console.log("module :",module.permissionNames);
           var permissionsExists=module.permissionNames.find(pName=>pName==requiredPermissions);
-          console.log(" permissionsExists :",permissionsExists);
+       
           if(permissionsExists)
           {
             return true;
@@ -145,13 +144,18 @@ export class AuthenticationService {
               sectionName: "Assets",
               sectionNameAr: "الأصول",
               moduleWithPermissionNames: [
-                // {
-                //   icon: "",
-                //   route: "assets",
-                //   moduleName: "Master Assets",
-                //   moduleNameAr: "الأصول الرئيسية",
-                //   permissionNames: [ "edit", ],
-                // },
+                {
+                  icon: "",
+                  route: "assets",
+                  moduleName: "Master Assets",
+                  moduleNameAr: "الأصول الرئيسية",
+                  permissionNames: [ 
+                    "edit",
+                    // "view",
+                    // "add" ,
+                    "delete"
+                  ],
+                },
                 {
                   icon: "",
                   route: "hospitalassets",
@@ -190,7 +194,7 @@ export class AuthenticationService {
               ],
             },
             {
-              icon: "pi pi-settings",  // Example icon for Settings section
+              icon: "pi pi-settings",  
               sectionName: "Settings",
               sectionNameAr: "الإعدادات",
               moduleWithPermissionNames: [

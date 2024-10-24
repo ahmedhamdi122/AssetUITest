@@ -10,7 +10,11 @@ export class CreateRoleCategoryVM {
     nameAr: string;
     orderId: number;
 }
-
+export class ReadRoleCategoryVM{
+    id:number;
+    name:string;
+    nameAr:string;
+}
 export class EditRoleCategoryVM {
     id: number = 0;
     name: string = "";
