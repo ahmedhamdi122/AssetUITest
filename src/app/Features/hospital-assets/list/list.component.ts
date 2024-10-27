@@ -47,6 +47,8 @@ import { Table } from 'primeng/table';
 // import { DetailsComponent } from '../details/details.component';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { SectionModulePermisisons } from 'src/app/Shared/Models/Module';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
@@ -187,17 +189,18 @@ export class ListComponent implements OnInit {
 
 
 
+  SectionModulePermisisons:SectionModulePermisisons[];
 
   showTitle: boolean = false;
 
-  constructor(public dialogService: DialogService, private dialog: MatDialog, private masterAssetService: MasterAssetService,
+  constructor(public dialogService: DialogService, private dialog: MatDialog, private masterAssetService: MasterAssetService,private spinner :NgxSpinnerService,
     private authenticationService: AuthenticationService, private assetStatusService: AssetStatusService,
     private activeRoute: ActivatedRoute, private cdr: ChangeDetectorRef,
     private assetDetailService: AssetDetailService, private governorateService: GovernorateService, private cityService: CityService,
     private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService,
     private supplierService: SupplierService, private originService: OriginService, private brandService: BrandService,
     private departmentService: DepartmentService, private breadcrumbService: BreadcrumbService, private route: ActivatedRoute,
-    private hospitalService: HospitalService, private router: Router, public translate: TranslateService, private datePipe: DatePipe,private ngxService:NgxUiLoaderService) {
+    private hospitalService: HospitalService, private router: Router, public translate: TranslateService, private datePipe: DatePipe) {
     this.currentUser = this.authenticationService.currentUserValue;
     if (this.currentUser.hospitalId > 0) {
       this.statusId = 3;
@@ -214,7 +217,10 @@ export class ListComponent implements OnInit {
     this.lstSelectedColumns.push(val);
   }
   ngOnInit(): void {
-
+    this.authenticationService.AllModulesPermissionsForCurrentUser$.subscribe(
+      res=>{this.SectionModulePermisisons=res
+      }
+    )
     this.lstWarrantyType = [{ id: 1, name: 'In Warranty', nameAr: 'ضمان ساري' }, { id: 2, name: 'Out of Warranty', nameAr: 'ليس له ضمان' }];
     this.lstContractTypes = [{ id: 1, name: 'In Contract', nameAr: 'في عقد الصيانة' }, { id: 2, name: 'Out of Contract', nameAr: 'خارج عقد الصيانة' }];
 
@@ -229,22 +235,22 @@ export class ListComponent implements OnInit {
 
 
     if (this.currentUser) {
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
+      // this.currentUser["roleNames"].forEach(element => {
+      //   this.lstRoleNames.push(element["name"]);
+      // });
 
-      this.isHospital2 = (['Admin', 'TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
-      this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
-      this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-      this.isEngManager = (['EngDepManager'].some(r => this.lstRoleNames.includes(r)));
-      this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
+      // this.isHospital2 = (['Admin', 'TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
+      // this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
+      // this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
+      // this.isEngManager = (['EngDepManager'].some(r => this.lstRoleNames.includes(r)));
+      // this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
 
-      if (this.isHospitalManager) {
-        this.showDelete = true;
-      }
-      else {
-        this.showDelete = false;
-      }
+      // if (this.isHospitalManager) {
+      //   this.showDelete = true;
+      // }
+      // else {
+      //   this.showDelete = false;
+      // }
     }
     this.onLoad();
     this.onLoadByLogIn();
@@ -332,9 +338,9 @@ export class ListComponent implements OnInit {
         this.lstDepartments = items;
       });
     }
-    this.masterAssetService.GetMasterAssets().subscribe(lstmasters => {
-      this.lstMasterAssets = lstmasters;
-    });
+    // this.masterAssetService.GetMasterAssets().subscribe(lstmasters => {
+    //   this.lstMasterAssets = lstmasters;
+    // });
 
     this.sortFilterObjects = {
       searchObj: { assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', contractDate: '', contractEnd: '', contractStart: '', contractTypeId: 0, departmentId: 0, end: '', governorateId: 0, hospitalId: 0, masterAssetId: 0, masterAssetName: '', masterAssetNameAr: '', model: '', organizationId: 0, originId: 0, serial: '', start: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: '', warrantyTypeId: 0 },
@@ -533,7 +539,6 @@ export class ListComponent implements OnInit {
   }
   hideShowControls() {
     if (this.currentUser.governorateId == 0 && this.currentUser.cityId == 0 && this.currentUser.hospitalId == 0 && this.currentUser.organizationId == 0 && this.currentUser.subOrganizationId == 0) {
-
       if (this.lang == "en") {
         this.columnsSelected = "Columns Selected";
         this.cols = [
@@ -816,12 +821,12 @@ export class ListComponent implements OnInit {
       this.sortFilterObjects.searchObj.brandId = 0;
       this.showTitle = true;
     }
-    this.ngxService.start('loading');
+    this.spinner.show()
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
       this.lstAssets = items.results;
       this.count = items.count;
       this.loading = false;
-      this.ngxService.stop('loading');
+      this.spinner.hide();
 
     });
 
@@ -878,12 +883,13 @@ export class ListComponent implements OnInit {
       this.sortFilterObjects.searchObj.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
     }
 
-    this.ngxService.start();
+    this.spinner.show();
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
       this.lstAssets = items.results;
       this.count = items.count;
       this.loading = false;
-      this.ngxService.stop();
+      this.spinner.hide();
+
 
     });
 
@@ -924,6 +930,22 @@ export class ListComponent implements OnInit {
   //     });
   //   }
   // }
+  CanAdd()
+  {
+    return this.authenticationService.hasPermission("add","Hospital Assets",this.SectionModulePermisisons)
+  }
+  CanDelete()
+  {
+    return this.authenticationService.hasPermission("delete","Hospital Assets",this.SectionModulePermisisons)
+  }
+  CanEdit()
+  {
+    return this.authenticationService.hasPermission("edit","Hospital Assets",this.SectionModulePermisisons)
+  }
+  CanView()
+  {
+    return this.authenticationService.hasPermission("view","Hospital Assets",this.SectionModulePermisisons)
+  }
   viewAsset(id: number) {
 
     const ref = this.dialogService.open(ViewComponent, {
@@ -1009,28 +1031,28 @@ export class ListComponent implements OnInit {
     });
   }
   deleteAsset(id: number) {
-    this.assetDetailService.GetAssetById(id).subscribe((data) => {
-      this.selectedObj = data;
+    // this.assetDetailService.GetAssetById(id).subscribe((data) => {
+    //   this.selectedObj = data;
 
-      // const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
-      //   width: '30%',
-      //   autoFocus: true,
-      //   data: {
-      //     id: this.selectedObj.id,
-      //     name: this.selectedObj.assetName,
-      //     nameAr: this.selectedObj.assetNameAr,
-      //   },
-      // });
+    //   const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
+    //     width: '30%',
+    //     autoFocus: true,
+    //     data: {
+    //       id: this.selectedObj.id,
+    //       name: this.selectedObj.assetName,
+    //       nameAr: this.selectedObj.assetNameAr,
+    //     },
+    //   });
 
-      // dialogRef2.afterClosed().subscribe(deleted => {
-      //   this.reset();
-      // });
+    //   dialogRef2.afterClosed().subscribe(deleted => {
+    //     this.reset();
+    //   });
 
-    });
+    // });
 
   }
   editAsset(id: number) {
-    //const ref = this.dialogService.open(EditComponent, {
+    // const ref = this.dialogService.open(EditComponent, {
     //   header: this.lang == "en" ? 'Edit Hospital Asset' : "تعديل الأصل في المستشفى",
     //   closable: true,
     //   width: '70%',

@@ -4,7 +4,7 @@
    
         <div class="col-2  text-center"> <img src="../../../assets/images/logoH.png" width="176" height="55"></div>
         <div [ngClass]="translate.currentLang === 'en' ? 'ul' :'ular' " class="col-5 d-flex flex-row">
-            <div *ngFor="let breadcrumb of (breadcrumbs$ | async)">
+            <div *ngFor="let breadcrumb of breadcrumbs$">
                 <span [href]="breadcrumb.url">
                     <i *ngIf="lang=='en'" class="pi pi-chevron-right"></i>
                     <i *ngIf="lang=='ar'" class="pi pi-chevron-right"></i>
@@ -21,7 +21,6 @@
                         <a class="dropdown-item" href="#">Message 1</a>
                         <a class="dropdown-item" href="#">Message 2</a>
                     </div>
-              
                 </li>
         </div>
 <div class="col-1">

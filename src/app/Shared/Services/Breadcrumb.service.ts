@@ -56,6 +56,7 @@ export class BreadcrumbService {
 
     getParentUrlSegments(): string[] {
         const urlSegments: string[] = this.activateRoute.snapshot.pathFromRoot
+        
             .filter((snapshot: ActivatedRouteSnapshot) => snapshot.url.length > 0)
             .reduce((acc: string[], snapshot: ActivatedRouteSnapshot) => acc.concat(snapshot.url.map(urlSegment => urlSegment.path)), []);
 

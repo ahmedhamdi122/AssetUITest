@@ -433,18 +433,17 @@ export class CreateComponent implements OnInit {
   onSubmit() {
     this.userObj.roleCategoryId = this.selectedCategory;
     this.userObj.roleIds = this.addRoles;
-    console.log("roleIds :",this.userObj.roleIds);
-    // if (this.addRoles.length == 0) {
-    //   this.errorDisplay = true;
-    //   if (this.lang == "en") {
-    //     this.errorMessage = 'Please select at least one Role';
-    //     return false;
-    //   }
-    //   else {
-    //     this.errorMessage = 'من فضلك اختر أحد المهام';
-    //     return false;
-    //   }
-    // }
+    if (this.addRoles.length == 0) {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = 'Please select at least one Role';
+        return false;
+      }
+      else {
+        this.errorMessage = 'من فضلك اختر أحد المهام';
+        return false;
+      }
+    }
 
 
     if (this.selectedCategory == 1) {

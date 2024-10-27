@@ -104,12 +104,10 @@
     </div>
     <div class="row ">
         <div class="col-12">
-      
             <p-table #dt2 [value]="lstMasterAssets" id="masterTbl" name="masterTbl" 
                 [rowHover]="true" [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" [scrollable]="true"
                 (onLazyLoad)="LoadMasterAssets($event)" [customSort]="true" (sortFunction)="LoadMasterAssets($event)">
                 <ng-template pTemplate="header">
-
                     <tr>
                         <th style="text-align: center;" pSortableColumn="Code">{{'Asset.Code' | translate }}
                             <p-sortIcon id="{{ 'Asset.Code' | translate}}" field="Code"/>

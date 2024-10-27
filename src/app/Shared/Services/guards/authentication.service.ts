@@ -161,7 +161,12 @@ export class AuthenticationService {
                   route: "hospitalassets",
                   moduleName: "Hospital Assets",
                   moduleNameAr: "أصول المستشفى",
-                  permissionNames: ["add", "delete"],
+                  permissionNames: [
+                    "add", 
+                    "delete",
+                    "edit",
+                    // "view"
+                  ],
                 },
                 {
                   icon: "",

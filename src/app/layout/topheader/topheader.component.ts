@@ -34,7 +34,7 @@ export class TopheaderComponent implements OnInit {
   direction = localStorage.getItem('dir');
   lang = localStorage.getItem("lang");
   userName = "";
-  breadcrumbs$: Observable<Breadcrumb[]>;
+  breadcrumbs$: Breadcrumb[];
 
   isSuperAdmin: boolean = false;
   isAdmin: boolean = false;
@@ -150,7 +150,12 @@ export class TopheaderComponent implements OnInit {
         
       
     if (this.breadcrumbService.breadcrumbs$) {
-      this.breadcrumbs$ =this.breadcrumbService.breadcrumbs$;
+       this.breadcrumbService.breadcrumbs$.subscribe(
+        res=>
+          {
+            this.breadcrumbs$=res
+          }
+      );
     }
    
   }

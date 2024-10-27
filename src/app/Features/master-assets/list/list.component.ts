@@ -85,7 +85,6 @@ export class ListComponent implements OnInit {
     const translationKeys = ['Asset.Assets', 'Asset.MasterAssets']; 
     const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
     this.breadcrumbService.addBreadcrumb(this.activateRoute.snapshot, parentUrlArray, translationKeys);
-
     this.page = {
       pagenumber: 1,
       pagesize: 10

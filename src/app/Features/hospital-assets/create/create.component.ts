@@ -140,9 +140,9 @@ export class CreateComponent implements OnInit {
     }
 
     if (this.currentUser) {
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
+      // this.currentUser["roleNames"].forEach(element => {
+      //   this.lstRoleNames.push(element["name"]);
+      // });
 
       this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
       this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
