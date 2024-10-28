@@ -63,7 +63,7 @@ export class CreateComponent implements OnInit {
 
   lstHospitalTypes: selectedHospitalType[];
 
-  selectedCategory: number;
+  selectedRoleCategory: number|null=null;;
   selectedHospitalType: any;
   errorMessage: string;
   errorDisplay: boolean = false;
@@ -119,11 +119,11 @@ export class CreateComponent implements OnInit {
 
     this.roleCategoryService.GetRoleCategories().subscribe((items) => {
       this.lstRoleCategories = items;
-      this.selectedCategory = this.lstRoleCategories[0].id;
-      this.roleService.GetRolesByRoleCategoryId(Number(this.selectedCategory)).subscribe((roles) => {
-          this.lstRoles = roles;
-          this.lstRoles2 = roles;
-        });
+      // this.selectedCategory = this.lstRoleCategories[0].id;
+      // this.roleService.GetRolesByRoleCategoryId(Number(this.selectedCategory)).subscribe((roles) => {
+      //     this.lstRoles = roles;
+      //     this.lstRoles2 = roles;
+      //   });
     });
 
     this.governorateService.GetGovernorates().subscribe((items) => {
@@ -200,16 +200,22 @@ export class CreateComponent implements OnInit {
     }
   }
 
-  onRoleChange($event) {    
-    this.addRoles=[];
+  onRoleCategoryChange(RoleCategoryId) {   
+    if(RoleCategoryId==null)
+      {
+        this.addRoles=[];
+      } 
+   else
+   {
     this.spinner.show();
-    this.roleService.GetRolesByRoleCategoryId(Number($event.value)).subscribe((roles) => {
-      this.spinner.hide();
+    this.roleService.GetRolesByRoleCategoryId(RoleCategoryId).subscribe((roles) => {
+
+    
         this.lstRoles = roles;
         this.lstRoles2 = roles;
-      });
-
-    if ($event.value == '1') {
+        
+      
+    if (RoleCategoryId == '1') {
       this.showGov = false;
       this.showCity = false;
       this.showOrg = false;
@@ -223,7 +229,7 @@ export class CreateComponent implements OnInit {
 
     }
 
-    if ($event.value == '2') {
+    if (RoleCategoryId == '2') {
       this.showGov = false;
       this.showCity = false;
       this.showOrg = true;
@@ -235,7 +241,7 @@ export class CreateComponent implements OnInit {
       this.showVisits = false;
 
     }
-    if ($event.value == '3') {
+    if (RoleCategoryId == '3') {
       this.showGov = true;
       this.showCity = false;
       this.showOrg = false;
@@ -249,7 +255,7 @@ export class CreateComponent implements OnInit {
 
     }
 
-    if ($event.value == '4') {
+    if (RoleCategoryId == '4') {
       this.showGov = true;
       this.showCity = true;
       this.showOrg = false;
@@ -263,7 +269,7 @@ export class CreateComponent implements OnInit {
 
     }
 
-    if ($event.value == '5') {
+    if (RoleCategoryId == '5') {
       
       this.selectedHospitalType = 1;
       this.showGov = true;
@@ -280,7 +286,7 @@ export class CreateComponent implements OnInit {
 
     }
 
-    if ($event.value == '6') {
+    if (RoleCategoryId == '6') {
       this.selectedHospitalType = 1;
       this.showGov = false;
       this.showCity = false;
@@ -295,7 +301,7 @@ export class CreateComponent implements OnInit {
 
     }
 
-    if ($event.value == '7') {
+    if (RoleCategoryId == '7') {
       this.showGov = false;
       this.showCity = false;
       this.showOrg = false;
@@ -308,7 +314,7 @@ export class CreateComponent implements OnInit {
       this.showVisits = false;
 
     }
-    if ($event.value == '8') {
+    if (RoleCategoryId == '8') {
 
       this.showGov = false;
       this.showCity = false;
@@ -321,7 +327,7 @@ export class CreateComponent implements OnInit {
       this.showVisits = false;
 
     }
-    if ($event.value == '9') {
+    if (RoleCategoryId == '9') {
 
       this.showGov = false;
       this.showCity = false;
@@ -333,6 +339,10 @@ export class CreateComponent implements OnInit {
       this.showMembers = false;
       this.showVisits = true;
     }
+        this.spinner.hide();
+      });
+   }
+
   }
   changeUnregiteredValue($event) {
     if($event.value!=null)
@@ -431,8 +441,20 @@ export class CreateComponent implements OnInit {
   }
 
   onSubmit() {
-    this.userObj.roleCategoryId = this.selectedCategory;
+    this.userObj.roleCategoryId = this.selectedRoleCategory;
     this.userObj.roleIds = this.addRoles;
+     
+    if (this.selectedRoleCategory == null) {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = 'Please select Role Category';
+        return false;
+      }
+      else {
+        this.errorMessage = 'من فضلك اختر فئة الدور';
+        return false;
+      }
+    }
     if (this.addRoles.length == 0) {
       this.errorDisplay = true;
       if (this.lang == "en") {
@@ -444,9 +466,10 @@ export class CreateComponent implements OnInit {
         return false;
       }
     }
+  
 
 
-    if (this.selectedCategory == 1) {
+    if (this.selectedRoleCategory == 1) {
       this.userObj.roleIds = this.addRoles;
       console.log("userObj.userName :",this.userObj.userName=='');
       if(!this.validateUserName())return;

@@ -1,4 +1,3 @@
-
 <header class="header mb-3">
     <nav class="navbar navbar-toggleable-md navbar-light row ">
    
@@ -65,21 +64,6 @@
     <div class="col-2">
         <div class="main">
                 <aside >
-                    <!-- <ul >
-                        <li style="list-style-type: none;padding: 2px;"*ngFor="let section of SectionModulePermisisons" class="nav-item" >
-                            <span class="text-truncate"  [routerLink]="section.sectionName=='Dashboard'?['/dash/dashboard']:null" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + section.sectionName"
-                            class="collapsed active" > <span class="nav-label" style="font-size: 19px;cursor: pointer;"><i [class]="section.icon"></i>
-                                {{lang=='en' ?  section.sectionName: section.sectionNameAr}}</span>
-                          </span>
-                          <ul class="collapse" [id]="section.sectionName">
-                            <li  style="list-style-type: none;padding: 2px;" *ngFor="let module of section.moduleWithPermissionNames" class="nav-item">
-                                <span class="text-truncate" style="font-size: 17px;cursor: pointer;" [routerLinkActive]="['active']"
-                                    [routerLink]="['/dash/'+module.route]"><i [class]="module.icon"></i>
-                                    {{lang=='en'? module.moduleName:module.moduleNameAr}}</span>
-                            </li>
-                        </ul>
-                        </li>
-                    </ul>   -->
                     <ul>
                         <li style="list-style-type: none; padding: 2px;" *ngFor="let section of SectionModulePermisisons" class="nav-item">
                             <span class="text-truncate" [routerLink]="section.sectionName=='Dashboard' ? ['/dash/dashboard'] : null" data-bs-toggle="collapse" [attr.data-bs-target]="'#' + section.sectionName" class="collapsed active">

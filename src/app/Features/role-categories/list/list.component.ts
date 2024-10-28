@@ -36,11 +36,13 @@ export class ListComponent implements OnInit {
   @ViewChild('table') dataTable: Table;
   dir=this.lang=='en'?'ltr':'rtl';
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
+  rowsSkipped:number=0;
   constructor(private rolecategoryService: RoleCategoryService, private dialog: MatDialog, private spinner:NgxSpinnerService,private route: Router, private dialogService: DialogService,private ngxService:NgxUiLoaderService,private confirmationService:ConfirmationService) { }
   ngOnInit(): void {
   }
 
-  deleteRoleCategory(item: any,rowIndex:any) {
+  deleteRoleCategory(item: any) {
+    
       this.selectedObj = item;
       this.confirmationService.confirm({
         message: `${this.lang === 'en' ? `Are you sure that you want to delete ${this.selectedObj.name}?` : `هل أنت متأكد أنك تريد حذف ${this.selectedObj.nameAr}؟`}`,
@@ -58,10 +60,10 @@ export class ListComponent implements OnInit {
             deleted => {
               this.spinner.hide()
               this.displaySuccessDelete=true;
-              const first = (Math.floor(rowIndex / 10))*10;
-              this.reloadTableObj.first=first;
-              this.LoadRoleCategories( this.reloadTableObj);
-              this.dataTable.first=first;
+              this.reloadTableObj.first= this.rowsSkipped;
+               this.LoadRoleCategories(this.reloadTableObj);
+               this.dataTable.first= this.rowsSkipped;
+
             },
             error => {
               this.spinner.hide()
@@ -72,7 +74,6 @@ export class ListComponent implements OnInit {
           );
         },
         reject: () => {
-          console.log('Deletion rejected.');
         }
       });
 
@@ -101,8 +102,7 @@ export class ListComponent implements OnInit {
       }
     });
   }
-  editRoleCategory(id: number,rowIndex) {
-
+  editRoleCategory(id: number) {
     this.spinner.show()
     this.rolecategoryService.GetRoleCategoryById(id).subscribe(
       (data => {
@@ -123,13 +123,12 @@ export class ListComponent implements OnInit {
         ref.onClose.subscribe((updated) => {
           if(updated)
           {
-            var first=Math.floor(rowIndex/10)*10;
-           this.reloadTableObj.first=first;
+           this.reloadTableObj.first= this.rowsSkipped;
            this.LoadRoleCategories(this.reloadTableObj);
-           this.dataTable.first=first;
+           this.dataTable.first= this.rowsSkipped;
           }
         });
-      }), (error => {console.log(error); this.ngxService.stop()}));
+      }), (error => { this.ngxService.stop()}));
   }
   viewRoleCategory(id: number) {
     this.spinner.show()
@@ -149,7 +148,7 @@ export class ListComponent implements OnInit {
             "direction": this.lang == "en" ? 'ltr' : "rtl"
           }
         });
-      }), (error =>{ console.log(error);     
+      }), (error =>{     
         this.spinner.hide()
       }
     ));
@@ -159,6 +158,7 @@ export class ListComponent implements OnInit {
 
   LoadRoleCategories(event) {    
     this.spinner.show()
+    this.rowsSkipped=event.first;
     this.sortObj = { SortField: event.sortField, SortOrder: event.sortOrder ,Search:''}
     this.rolecategoryService.LoadRoleCategories(event.first,event.rows, this.sortObj).subscribe(items => {
       this.RoleCategoriesResult = items;
@@ -167,11 +167,6 @@ export class ListComponent implements OnInit {
       this.spinner.hide()
     });
   }
-  reload() {
-    let currentUrl = this.route.url;
-    this.route.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.route.onSameUrlNavigation = 'reload';
-    this.route.navigate([currentUrl]);
-  }
+
 }
 

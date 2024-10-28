@@ -463,8 +463,7 @@ export class EditComponent implements OnInit {
         });
       }
       this.display = true;
-      this.ref.close();
-      this.reload();
+      this.ref.close("edit");
 
     },
       (error) => {

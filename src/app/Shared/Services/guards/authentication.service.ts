@@ -151,9 +151,9 @@ export class AuthenticationService {
                   moduleNameAr: "الأصول الرئيسية",
                   permissionNames: [ 
                     "edit",
-                    // "view",
+                     "view",
                     // "add" ,
-                    "delete"
+                    // "delete"
                   ],
                 },
                 {

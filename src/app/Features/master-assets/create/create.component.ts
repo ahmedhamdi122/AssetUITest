@@ -246,7 +246,6 @@ export class CreateComponent implements OnInit {
       }
       return false;
     }
-    console.log("masterAssetObj:",this.masterAssetObj);
     this.masterAssetService.CreateMasterAsset(this.masterAssetObj).subscribe(assetObj => {
       this.masterAssetId = assetObj;
       if (this.file) {
@@ -386,7 +385,6 @@ export class CreateComponent implements OnInit {
     this.route.navigate([currentUrl]);
   }
   onFileSelected(event) {
-    console.log("event :",event.target.files)
     this.file = event.target.files[0];
     if (this.file) {
       var reader = new FileReader();
@@ -405,7 +403,6 @@ export class CreateComponent implements OnInit {
     this.isInvalidBrand=!this.masterAssetObj.brandId;
   }
   resetFile() {
-    console.log("upfile.nativeElement",this.upfile.nativeElement)
     this.upfile.nativeElement.value = "";
     this.imgVisible = true;
     this.btnHidden = true;

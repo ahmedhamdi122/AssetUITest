@@ -59,6 +59,7 @@ export class ListComponent implements OnInit {
   selectedMasterAssetName: any;
   displaySuccessCreate=false;
   displaySuccessDelete =false;
+  rowsSkipped:number=0;
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
   SectionModulePermisisons:SectionModulePermisisons[];
   constructor(private spinner:NgxSpinnerService,private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
@@ -130,6 +131,7 @@ export class ListComponent implements OnInit {
     this.spinner.show()
     this.SearchSortMasterAsset.sortOrder=event.sortOrder;
     this.SearchSortMasterAsset.sortFiled=event.sortField;
+    this.rowsSkipped=event.first;
       this.masterAssetService.GetListMasterAssets(event.first, event.rows,this.SearchSortMasterAsset).subscribe((items) => {
       this.lstMasterAssets = items.results;     
       this.count = items.count;
@@ -167,7 +169,7 @@ export class ListComponent implements OnInit {
       this.spinner.hide();
     });
   }
-  addMasterAsset() {
+  addMasterAsset () {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
       header: this.lang == "en" ? 'Add Master Asset' : "بيان إضافة أصل جديد",
       width: '80%',
@@ -177,10 +179,12 @@ export class ListComponent implements OnInit {
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-    dialogRef2.onClose.subscribe((Created) => {
+    dialogRef2.onClose.subscribe( (Created) => {
      if(Created){
-       this.LoadMasterAssets(this.reloadTableObj);
-       this.dataTable.first=0;
+      const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
+      this.reloadTableObj.first=lastPageIndex;
+        this.LoadMasterAssets(this.reloadTableObj);
+       this.dataTable.first=this.count;
       this.displaySuccessCreate  =true;
     }});
   }
@@ -195,8 +199,9 @@ export class ListComponent implements OnInit {
       rejectIcon:"none",
       accept: ()=>{
         this.masterAssetService.DeleteMasterAsset(masterAsset.id).subscribe(deleted => {
+          this.reloadTableObj.first= this.rowsSkipped;
           this.LoadMasterAssets(this.reloadTableObj);
-          this.dataTable.first=0;
+          this.dataTable.first= this.rowsSkipped;
         this.displaySuccessDelete=true;
         },
           (error) => {
@@ -204,7 +209,9 @@ export class ListComponent implements OnInit {
             this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;
       },)}})
   }
-  editMasterAsset(id: number) {
+  editMasterAsset(id: number,i:number) {
+    console.log("i :",i);
+    
     const ref = this.dialogService.open(EditComponent, {
       data: {
         id: id,
@@ -217,9 +224,14 @@ export class ListComponent implements OnInit {
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-    ref.onClose.subscribe(() => {
-      //   this.reload();
-      //when click edit only
+    ref.onClose.subscribe((edit) => {
+      if(edit)
+      {
+       var first=Math.floor(i/10)*10;
+      this.reloadTableObj.first=first;
+      this.dataTable.first=first;
+      this.LoadMasterAssets(this.reloadTableObj)
+      }
     });
   }
   viewMasterAsset(id: number) {
@@ -240,12 +252,7 @@ export class ListComponent implements OnInit {
       // this.reload();
     });
   }
-  reload() {
-    const currentUrl = this.route.url;
-    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.route.navigate([currentUrl]);
-    });
-  }
+ 
   GetSubCategoryByCategoryId($event) {
     this.subCategoryService
       .GetSubCategoriesByCategoryId($event.target.value)
@@ -280,7 +287,8 @@ export class ListComponent implements OnInit {
     this.SearchSortMasterAsset = null;
     this.lstMasterAssets = [];
     this.count = 0;
-    this.reload();
+
+       //relaod
   }
   // onPageChange(event: any) {
   //   this.page.pagenumber = (event.first + 10) / 10;

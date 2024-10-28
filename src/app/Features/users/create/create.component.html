@@ -5,12 +5,10 @@
           <label> {{ 'Asset.RoleCategories' | translate }}</label>
         </div>
         <div class="col-md-12">
-          <mat-radio-group [(ngModel)]="selectedCategory" (change)="onRoleChange($event)" name="gcat" id="gcat"
-            [ngModelOptions]="{standalone: true}">
-            <mat-radio-button [value]="item.id" *ngFor="let item of lstRoleCategories">
-              {{ lang == "en" ? item.name : item.nameAr }}
-            </mat-radio-button>
-          </mat-radio-group>
+        <p-dropdown 
+        [options]="lstRoleCategories" [(ngModel)]="selectedRoleCategory" [ngModelOptions]="{standalone: true}" [optionLabel]="lang == 'en' ? 'name' : 'nameAr' "  optionValue="id" placeholder="{{ lang === 'en' ? 'select Role Category' : 'اختر فئة الدور' }}" 
+        (onChange)="onRoleCategoryChange(selectedRoleCategory)" [checkmark]="true" [showClear]="true"  [style]="{'width':'100%'}" [filter]="true" [filterBy]="lang === 'en' ? 'name' : 'nameAr'" [filterPlaceholder]="lang === 'en' ? 'Search...' : 'ابحث...'">
+      </p-dropdown>
         </div>
       </div>
       <div class="row top-buffer" *ngIf="showRadioHospitals">
