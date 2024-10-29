@@ -9,30 +9,35 @@
         <div class="col-3">
         </div>
         <div class="col-2">
-            <a data-bs-toggle="collapse" href="#filter" role="button" aria-expanded="false" aria-controls="filter" class="filterbutton">
+            <a (click)="showFilter=!showFilter" role="button" aria-expanded="false" aria-controls="filter" class="filterbutton">
                 <i class="pi pi-filter-fill"></i>
                 {{'Asset.Filter'|translate}}
               </a>
+             
         </div>
         <div class="col-2" *ngIf="CanAdd()">
             <a class="addbutton"(click)="addMasterAsset()">
                 <i class="pi pi-plus-circle"></i> {{'Asset.Create' | translate}}</a>
         </div>
     </div>
-    <div class="top-buffer">
-        <div class="col-12">
-            <div class="collapse row card-filter" id="filter">
+    <div *ngIf="showFilter" class="filter p-3 m-2" style="background-color: white ;border-radius: 20px;">
+        <div class="col-12" >
+            <div >
                 <form (ngSubmit)="onSearch()" #searchForm="ngForm">
                     <div class="row">
                         <div class="col-2">
                             <label for="brandId" [translate]="'Asset.Brands'">Brands</label>
-                            <select class="form-select" id="brandId" [ngModelOptions]="{standalone: true}"
+                            <!-- <select class="form-select" id="brandId" [ngModelOptions]="{standalone: true}"
                                 name="brandId" [(ngModel)]="SearchSortMasterAsset.brandId" [value]="0">
                                 <option value="0"> </option>
                                 <option *ngFor="let brnd of lstBrands" [value]="brnd.id">
                                     {{ lang == "en" ? brnd.name : brnd.nameAr }}
                                 </option>
-                            </select>
+                            </select> -->
+                            <p-dropdown 
+                            [options]="lstBrandsTest" [(ngModel)]="SearchSortMasterAsset.brandId" [ngModelOptions]="{standalone: true}" [optionLabel]="lang == 'en' ? 'name' : 'nameAr' "  optionValue="id" placeholder="{{ lang === 'en' ? 'select Role Brand' : 'اختر ماركة' }}" 
+                             [checkmark]="true" [showClear]="true"  [style]="{'width':'100%'}" [filter]="true" [filterBy]="lang === 'en' ? 'name' : 'nameAr'" [filterPlaceholder]="lang === 'en' ? 'Search...' : 'ابحث...'"  [panelStyle]="{'width': '200px'}" >
+                          </p-dropdown>
                         </div>
                         <div class="col-2">
                             <label for="orginId" [translate]="'Asset.Origins'">Origins</label>

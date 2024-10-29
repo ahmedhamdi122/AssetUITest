@@ -152,8 +152,8 @@ export class AuthenticationService {
                   permissionNames: [ 
                     "edit",
                      "view",
-                    // "add" ,
-                    // "delete"
+                    "add" ,
+                    "delete"
                   ],
                 },
                 {
@@ -165,7 +165,7 @@ export class AuthenticationService {
                     "add", 
                     "delete",
                     "edit",
-                    // "view"
+                    "view"
                   ],
                 },
                 {

@@ -60,8 +60,10 @@ export class ListComponent implements OnInit {
   displaySuccessCreate=false;
   displaySuccessDelete =false;
   rowsSkipped:number=0;
+  showFilter=false;
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
   SectionModulePermisisons:SectionModulePermisisons[];
+  lstBrandsTest=[{id:2,nameAr:"واحد",name:"one"},{id:23,nameAr:"اتين",name:"two"},]
   constructor(private spinner:NgxSpinnerService,private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
@@ -75,7 +77,7 @@ export class ListComponent implements OnInit {
         sortFiled: null,
         eCRIId: 0,
         originId: 0,
-        brandId:0, 
+        brandId:null, 
         categoryId: 0,
         subCategoryId: 0,
         code: null,
@@ -101,14 +103,13 @@ export class ListComponent implements OnInit {
     this.originService.GetOrigins().subscribe(origins => {
       this.lstOrigins = origins;
     });
-
-
     this.categoryService.GetCategories().subscribe(categories => {
       this.lstCategories = categories;
     });
-
     this.brandService.GetBrands().subscribe(brands => {
       this.lstBrands = brands;
+      console.log("lstBrands :",this.lstBrands.length);
+      
     });
   }
   CanAdd()
