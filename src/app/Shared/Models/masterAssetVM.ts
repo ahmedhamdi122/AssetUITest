@@ -206,7 +206,12 @@ export class CountMasterAssetBySupplierVM {
 
 }
 
-
+export class reloadTableObj{
+    sortOrder:number;
+    sortField:string;
+    first:number;
+    rows:number;
+}
 export class SearchSortMasterAssetVM {
     sortOrder: number;
     sortFiled: string;

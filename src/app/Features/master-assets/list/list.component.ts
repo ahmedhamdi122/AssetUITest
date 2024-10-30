@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ListBrandVM } from 'src/app/Shared/Models/brandVM';
 import { ListECRIVM } from 'src/app/Shared/Models/ecriVM';
-import { ListMasterAssetVM, MasterAssetVM, SearchSortMasterAssetVM } from 'src/app/Shared/Models/masterAssetVM';
+import { ListMasterAssetVM, MasterAssetVM, reloadTableObj, SearchSortMasterAssetVM } from 'src/app/Shared/Models/masterAssetVM';
 import { ListOriginVM } from 'src/app/Shared/Models/originVM';
 import { Paging } from 'src/app/Shared/Models/paging';
 import { LoggedUser } from 'src/app/Shared/Models/userVM';
@@ -61,9 +61,8 @@ export class ListComponent implements OnInit {
   displaySuccessDelete =false;
   rowsSkipped:number=0;
   showFilter=false;
-  reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
+  reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
   SectionModulePermisisons:SectionModulePermisisons[];
-  lstBrandsTest=[{id:2,nameAr:"واحد",name:"one"},{id:23,nameAr:"اتين",name:"two"}]
   constructor(private spinner:NgxSpinnerService,private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
@@ -137,22 +136,16 @@ export class ListComponent implements OnInit {
       this.lstMasterAssets = items.results;     
       this.count = items.count;
       this.spinner.hide();
+      
     },error=>{
-      console.log("error :",error);
       
       this.spinner.hide();
     }
     );
 }
   onSearch() {
-    console.log("this.SearchSortMasterAsset.brandId :",this.SearchSortMasterAsset.brandId==0);
-    console.log("this.SearchSortMasterAsset.originId :",this.SearchSortMasterAsset.originId==0);
-    console.log("this.SearchSortMasterAsset.categoryId :",this.SearchSortMasterAsset.categoryId==0);
-    console.log("this.SearchSortMasterAsset.subCategoryId :",this.SearchSortMasterAsset.subCategoryId==0);
-    console.log("this.SearchSortMasterAsset.modelNumber :",this.SearchSortMasterAsset.modelNumber=='');
-    console.log("this.SearchSortMasterAsset.assetName :",this.SearchSortMasterAsset.assetName=='');
     
-    if( this.SearchSortMasterAsset.brandId == 0)
+    if( this.SearchSortMasterAsset.brandId == 0 &&this.SearchSortMasterAsset.originId==0 && this.SearchSortMasterAsset.categoryId==0 && this.SearchSortMasterAsset.subCategoryId==0 && this.SearchSortMasterAsset.modelNumber=='' && this.SearchSortMasterAsset.assetName=='')
     {
       this.errorDisplay=true;
         if (this.lang == "en") {
@@ -163,16 +156,12 @@ export class ListComponent implements OnInit {
         }
         return ;
      }
-    this.first = 0;
-    this.rows=10;
-   this.spinner.show();
+   
   //  this.SearchSortMasterAsset.modelNumber=this.SearchSortMasterAsset.modelNumber?.trim() ?? ''
   //  this.SearchSortMasterAsset.assetName=this.SearchSortMasterAsset.assetName?.trim() ?? ''
-   this.masterAssetService.GetListMasterAssets(this.first,this.rows,this.SearchSortMasterAsset).subscribe((items) => {
-      this.lstMasterAssets = items.results;
-      this.count = items.count;
-      this.spinner.hide();
-    });
+  this.reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10}
+   this.LoadMasterAssets(this.reloadTableObj);
+    
   }
   addMasterAsset () {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
@@ -288,17 +277,16 @@ export class ListComponent implements OnInit {
     this.SearchSortMasterAsset.modelNumber = '';
     this.SearchSortMasterAsset.assetName = "";
     this.SearchSortMasterAsset.assetNameAr = "";
-    this.lstMasterAssets = [];
-    this.count = 0;
+    
 
-       //relaod
+   this.reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10}
+   this.LoadMasterAssets(this.reloadTableObj);
   }
   // onPageChange(event: any) {
   //   this.page.pagenumber = (event.first + 10) / 10;
   //   this.page.pagesize = event.rows;
   // }
   onMasterAssetSelectionChanged(event) {
-    console.log("event :",event);
     this.masterAssetService.DistinctAutoCompleteMasterAssetName(event.query).subscribe(masterAssets => {
       if(masterAssets==null)
       {
@@ -306,10 +294,8 @@ export class ListComponent implements OnInit {
       }
       else{
         this.lstMasterAssetNames = masterAssets;
-        console.log("this.lstMasterAssetNames :",this.lstMasterAssetNames);
         if(this.lstMasterAssetNames!=null)
         {
-          console.log("inside")
           if (this.lang == "en") {
             this.lstMasterAssetNames.forEach(item => item.name = item.name);
           }
