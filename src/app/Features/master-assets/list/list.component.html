@@ -27,23 +27,19 @@
                     <div class="row">
                         <div class="col-2">
                             <label for="brandId" [translate]="'Asset.Brands'">Brands</label>
-                            <!-- <select class="form-select" id="brandId" [ngModelOptions]="{standalone: true}"
-                                name="brandId" [(ngModel)]="SearchSortMasterAsset.brandId" [value]="0">
-                                <option value="0"> </option>
+                            <select class="form-select" id="brandId" [ngModelOptions]="{standalone: true}"
+                                name="brandId" [(ngModel)]="SearchSortMasterAsset.brandId" [value]="0"  >
+                                <option [value]="0">{{ lang === 'en' ? 'select Role Brand' : 'اختر ماركة' }} </option>
                                 <option *ngFor="let brnd of lstBrands" [value]="brnd.id">
                                     {{ lang == "en" ? brnd.name : brnd.nameAr }}
                                 </option>
-                            </select> -->
-                            <p-dropdown 
-                            [options]="lstBrandsTest" [(ngModel)]="SearchSortMasterAsset.brandId" [ngModelOptions]="{standalone: true}" [optionLabel]="lang == 'en' ? 'name' : 'nameAr' "  optionValue="id" placeholder="{{ lang === 'en' ? 'select Role Brand' : 'اختر ماركة' }}" 
-                             [checkmark]="true" [showClear]="true"  [style]="{'width':'100%'}" [filter]="true" [filterBy]="lang === 'en' ? 'name' : 'nameAr'" [filterPlaceholder]="lang === 'en' ? 'Search...' : 'ابحث...'"  [panelStyle]="{'width': '200px'}" >
-                          </p-dropdown>
+                            </select>
                         </div>
                         <div class="col-2">
                             <label for="orginId" [translate]="'Asset.Origins'">Origins</label>
                             <select class="form-select" id="orginId" [ngModelOptions]="{standalone: true}"
                                 name="orginId" [(ngModel)]="SearchSortMasterAsset.originId" [value]="0">
-                                <option value="0"></option>
+                                <option [value]="0">{{ lang === 'en' ? 'select Origin' : 'اختر بلد المنشأ' }} </option>
                                 <option *ngFor="let orgn of lstOrigins" [value]="orgn.id">
                                     {{ lang == "en" ? orgn.name : orgn.nameAr }}
                                 </option>
@@ -54,7 +50,7 @@
                             <select class="form-select" id="categoryId" name="categoryId" name="categoryId"
                                 [(ngModel)]="SearchSortMasterAsset.categoryId" [value]="0"
                                 (change)="GetSubCategoryByCategoryId($event)" [ngModelOptions]="{standalone: true}">
-                                <option value="0"></option>
+                                <option [value]="0">{{ lang === 'en' ? 'select Categorie' : 'اختر فئة ' }}</option>
                                 <option *ngFor="let cat of lstCategories" [value]="cat.id">
                                     {{ lang == "en" ? cat.name : cat.nameAr }}
                                 </option>
@@ -65,7 +61,7 @@
                             <select class="form-select" id="subCategoryId" name="subCategoryId" name="subCategoryId"
                                 [(ngModel)]="SearchSortMasterAsset.subCategoryId" [value]="0"
                                 [ngModelOptions]="{standalone: true}">
-                                <option value="0"> </option>
+                                <option [value]="0"> {{ lang === 'en' ? 'select SubCategorie' : ' اختر فئة فرعية' }}</option>
                                 <option *ngFor="let sub of lstSubCategories" [value]="sub.id">
                                     {{ lang == "en" ? sub.name : sub.nameAr }}
                                 </option>
@@ -93,14 +89,14 @@
                                 [ngModelOptions]="{standalone: true}" />
                         </div>
                     </div>
-                    <div class="row top-buffer">
+                    <div class="row mt-3">
                         <div class="col-10"></div>
-                        <div class="col-1"> <button class="btn searchIcon" value="save" type="submit">
-                                <i class="pi pi-search"></i>
+                        <div class="col-1"> <button class="btn " value="save" type="submit">
+                                <i  pTooltip="{{'Asset.Search' | translate }}" style="font-size: 25px;"  class="pi pi-search searchIcon"></i>
                             </button></div>
-                        <div class="col-1"> <button class="btn reset" value="Reset" type="button"
+                        <div class="col-1"> <button class="btn " value="Reset" type="button"
                                 (click)="clearSearch()">
-                                <i class="pi pi-times-circle"></i>
+                                <i pTooltip="{{'Asset.Cancel' | translate }}"  style="font-size: 25px;" class="pi pi-times-circle reset"></i>
                             </button></div>
                     </div>
                 </form>

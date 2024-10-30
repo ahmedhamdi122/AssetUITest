@@ -210,11 +210,11 @@ export class CountMasterAssetBySupplierVM {
 export class SearchSortMasterAssetVM {
     sortOrder: number;
     sortFiled: string;
-    eCRIId?: number;
-    originId?: number;
-    brandId?: number;
-    categoryId?: number;
-    subCategoryId?: number;
+    eCRIId: number;
+    originId: number;
+    brandId: number;
+    categoryId: number;
+    subCategoryId: number;
     code: string;
     modelNumber: string;
     assetName: string;

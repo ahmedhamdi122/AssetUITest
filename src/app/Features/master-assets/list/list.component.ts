@@ -63,7 +63,7 @@ export class ListComponent implements OnInit {
   showFilter=false;
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
   SectionModulePermisisons:SectionModulePermisisons[];
-  lstBrandsTest=[{id:2,nameAr:"واحد",name:"one"},{id:23,nameAr:"اتين",name:"two"},]
+  lstBrandsTest=[{id:2,nameAr:"واحد",name:"one"},{id:23,nameAr:"اتين",name:"two"}]
   constructor(private spinner:NgxSpinnerService,private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
@@ -73,17 +73,17 @@ export class ListComponent implements OnInit {
       }
     )
     this.SearchSortMasterAsset = {
-        sortOrder: 0,
-        sortFiled: null,
+        sortOrder: 1,
+        sortFiled: '',
         eCRIId: 0,
         originId: 0,
-        brandId:null, 
+        brandId:0, 
         categoryId: 0,
         subCategoryId: 0,
-        code: null,
-        modelNumber:null,
-        assetName: null,
-        assetNameAr: null
+        code:  '',
+        modelNumber:'',
+        assetName: '',
+        assetNameAr: ''
     };
     const translationKeys = ['Asset.Assets', 'Asset.MasterAssets']; 
     const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
@@ -108,10 +108,10 @@ export class ListComponent implements OnInit {
     });
     this.brandService.GetBrands().subscribe(brands => {
       this.lstBrands = brands;
-      console.log("lstBrands :",this.lstBrands.length);
       
     });
   }
+
   CanAdd()
   {
     return this.authenticationService.hasPermission("add","Master Assets",this.SectionModulePermisisons)
@@ -138,17 +138,21 @@ export class ListComponent implements OnInit {
       this.count = items.count;
       this.spinner.hide();
     },error=>{
+      console.log("error :",error);
+      
       this.spinner.hide();
     }
     );
 }
   onSearch() {
-    if( this.SearchSortMasterAsset.brandId === 0 &&
-      this.SearchSortMasterAsset.originId === 0 &&
-      this.SearchSortMasterAsset.categoryId === 0 &&
-      this.SearchSortMasterAsset.subCategoryId === 0 &&
-      (this.SearchSortMasterAsset.modelNumber === "" || this.SearchSortMasterAsset.modelNumber === null) &&
-      (this.SearchSortMasterAsset.assetName === "" || this.SearchSortMasterAsset.assetName === null))
+    console.log("this.SearchSortMasterAsset.brandId :",this.SearchSortMasterAsset.brandId==0);
+    console.log("this.SearchSortMasterAsset.originId :",this.SearchSortMasterAsset.originId==0);
+    console.log("this.SearchSortMasterAsset.categoryId :",this.SearchSortMasterAsset.categoryId==0);
+    console.log("this.SearchSortMasterAsset.subCategoryId :",this.SearchSortMasterAsset.subCategoryId==0);
+    console.log("this.SearchSortMasterAsset.modelNumber :",this.SearchSortMasterAsset.modelNumber=='');
+    console.log("this.SearchSortMasterAsset.assetName :",this.SearchSortMasterAsset.assetName=='');
+    
+    if( this.SearchSortMasterAsset.brandId == 0)
     {
       this.errorDisplay=true;
         if (this.lang == "en") {
@@ -211,7 +215,6 @@ export class ListComponent implements OnInit {
       },)}})
   }
   editMasterAsset(id: number,i:number) {
-    console.log("i :",i);
     
     const ref = this.dialogService.open(EditComponent, {
       data: {
@@ -266,8 +269,8 @@ export class ListComponent implements OnInit {
       this.SearchSortMasterAsset.originId === 0 &&
       this.SearchSortMasterAsset.categoryId === 0 &&
       this.SearchSortMasterAsset.subCategoryId === 0 &&
-      (this.SearchSortMasterAsset.modelNumber === "" || this.SearchSortMasterAsset.modelNumber === null) &&
-      (this.SearchSortMasterAsset.assetName === "" || this.SearchSortMasterAsset.assetName === null))
+      (this.SearchSortMasterAsset.modelNumber === "" || this.SearchSortMasterAsset.modelNumber === '') &&
+      (this.SearchSortMasterAsset.assetName === "" || this.SearchSortMasterAsset.assetName === ''))
       {
         this.errorDisplay=true;
           if (this.lang == "en") {
@@ -285,7 +288,6 @@ export class ListComponent implements OnInit {
     this.SearchSortMasterAsset.modelNumber = '';
     this.SearchSortMasterAsset.assetName = "";
     this.SearchSortMasterAsset.assetNameAr = "";
-    this.SearchSortMasterAsset = null;
     this.lstMasterAssets = [];
     this.count = 0;
 
@@ -296,23 +298,37 @@ export class ListComponent implements OnInit {
   //   this.page.pagesize = event.rows;
   // }
   onMasterAssetSelectionChanged(event) {
-    this.masterAssetService.DistinctAutoCompleteMasterAssetName(event.query).subscribe(masters => {
-      this.lstMasterAssetNames = masters;
-      if (this.lang == "en") {
-        this.lstMasterAssetNames.forEach(item => item.name = item.name);
+    console.log("event :",event);
+    this.masterAssetService.DistinctAutoCompleteMasterAssetName(event.query).subscribe(masterAssets => {
+      if(masterAssets==null)
+      {
+        this.lstMasterAssetNames=[];
       }
-      else {
-        this.lstMasterAssetNames.forEach(item => item.name = item.nameAr);
+      else{
+        this.lstMasterAssetNames = masterAssets;
+        console.log("this.lstMasterAssetNames :",this.lstMasterAssetNames);
+        if(this.lstMasterAssetNames!=null)
+        {
+          console.log("inside")
+          if (this.lang == "en") {
+            this.lstMasterAssetNames.forEach(item => item.name = item.name);
+          }
+          else {
+            this.lstMasterAssetNames.forEach(item => item.name = item.nameAr);
+          }
+        }
       }
+      
+   
     });
   }
 
   getMasterAssetObject(event) {
+
     if (this.lang == 'en')
       this.SearchSortMasterAsset.assetName = event["name"];
     else
       this.SearchSortMasterAsset.assetNameAr = event["nameAr"];
-
   }
   clearAutoCompelete(event) {
     this.selectedMasterAssetName = null;
