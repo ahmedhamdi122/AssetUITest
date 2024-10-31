@@ -15,8 +15,7 @@
                 tooltipPosition="top"> <i class="pi pi-file-excel" style="font-size: 2rem;color: green;"></i></button>
             </div>
             <div class="col-2">
-                <a data-bs-toggle="collapse" href="#filter" role="button" aria-expanded="false"
-                    aria-controls="filter" class="filterbutton">
+                <a (click)="showFilter=!showFilter" role="button" aria-expanded="false" aria-controls="filter" class="filterbutton">
                     <i class="pi pi-filter-fill" ></i> {{'Asset.Filter'|translate}}</a>
             </div>
             <div *ngIf="CanAdd()" class="col-2">
@@ -164,7 +163,7 @@
             </p-multiSelect>
         </div>
     </div>
-    <!-- <div class="col-12 mt-3 p-2">
+    <div *ngIf="showFilter" class="col-12 filter p-3 m-2" style="background-color: white ;border-radius: 20px;">
         <div class="collapse row card-filter mt-2" id="filter">
             <form (ngSubmit)="onSearch()" #searchForm="ngForm">
                 <div class="row mt-2">
@@ -388,14 +387,13 @@
             </form>
         </div>
  
-    </div> -->
+    </div>
     <div class="row">
         <div class="col-12">
             <p-table #dtAssets [rowHover]="true" [value]="lstAssets"  
                 styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [paginator]="true" [lazy]="true"
                 [rows]="10" [rowsPerPageOptions]="[10,25,50]" [totalRecords]="count" pageLinks="10"
-                (onLazyLoad)="clicktbl($event)" [loading]="loading" [columns]="selectedColumns"
-                (pageChange)="clicktbl($event)">
+                (onLazyLoad)="LoadHospitalAssets($event)" [loading]="loading" [columns]="selectedColumns">
                 <ng-template pTemplate="header" let-cols>
                     <tr>
                         <th></th>

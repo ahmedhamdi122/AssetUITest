@@ -477,8 +477,8 @@ export class AssetDetailService {
 
 
 
-  ListHospitalAssets(data: SortAndFilterVM, pageNumber: number, pageSize: number): Observable<MainClass> {
-    return this.httpClient.post<MainClass>(`${environment.ListHospitalAssets}${pageNumber}/${pageSize}`, data, this.httpHeader)
+  ListHospitalAssets(data: SortAndFilterVM, first: number, rows: number): Observable<MainClass> {
+    return this.httpClient.post<MainClass>(`${environment.ListHospitalAssets}${first}/${rows}`, data, this.httpHeader)
   }
 
 

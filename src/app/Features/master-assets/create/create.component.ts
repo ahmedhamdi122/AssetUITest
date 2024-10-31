@@ -225,7 +225,7 @@ export class CreateComponent implements OnInit {
       {
         this.errorDisplay = true;
         if (this.lang == "en") {
-          this.errorMessage = "Please Insert Name In";
+          this.errorMessage = "Please Insert Name In Arabic";
           this.tabGroup.selectedIndex=0;
         }
         else {
@@ -246,6 +246,7 @@ export class CreateComponent implements OnInit {
       }
       return false;
     }
+    console.log("master asset :",this.masterAssetObj)
     this.masterAssetService.CreateMasterAsset(this.masterAssetObj).subscribe(assetObj => {
       this.masterAssetId = assetObj;
       if (this.file) {
@@ -257,6 +258,8 @@ export class CreateComponent implements OnInit {
         let masterFileName = HospitalAssetFileName + "." + ext;
         this.masterAssetObj.assetImg = masterFileName;
         this.masterAssetObj.id = this.masterAssetId;
+        console.log("master asset to image  :",this.masterAssetObj)
+
         this.masterAssetService.UpdateMasterAssetImageAfterInsert(this.masterAssetObj).subscribe(master => {
           this.uploadService
             .uploadMasterAssetImage(this.file, masterFileName)

@@ -113,13 +113,10 @@ export class ListComponent implements OnInit {
   lstRoleNames: string[] = [];
   sortObj: SortAssetDetailVM;
   sortStatus: string = "ascending";
-
   direction: string = 'ltr';
   selectedLang: string;
-
   lstStatuses: ListAssetStatusVM[] = [];
   lstMainStatuses: ListAssetStatusVM[] = [];
-
   isGov: boolean = false;
   isCity: boolean = false;
   isOrg: boolean = false;
@@ -161,7 +158,7 @@ export class ListComponent implements OnInit {
   lstSelectedColumns: any[] = [];
 
 
-  sortFilterObjects: SortAndFilterVM;
+  sortFilterObjects: SortAndFilterVM=null;
 
   countNeedRepair: number = 0;
   countInActive: number = 0;
@@ -188,7 +185,8 @@ export class ListComponent implements OnInit {
   lstStatus19: number = 0;
 
 
-
+  showFilter:boolean=false;
+  rowsSkipped:number;
   SectionModulePermisisons:SectionModulePermisisons[];
 
   showTitle: boolean = false;
@@ -252,54 +250,44 @@ export class ListComponent implements OnInit {
       //   this.showDelete = false;
       // }
     }
-    this.onLoad();
-    this.onLoadByLogIn();
+    // this.onLoad();
+    // this.onLoadByLogIn();
 
-    if (this.isHospitalManager || this.isAdmin) {
+   console.log(" this.sortFilterObjects :",this.sortFilterObjects);
+   
+    // if (this.currentUser.hospitalId != 0) {
+    //   this.hospitalId = this.currentUser.hospitalId;
+    // }
+    // if (this.sortFilterObjects.searchObj.hospitalId != 0) {
+    //   this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
+    // }
 
-      this.showAdd = true;
-    }
-    else {
-      this.showAdd = false;
-    }
-    if (this.currentUser.hospitalId != 0) {
-      this.hospitalId = this.currentUser.hospitalId;
-    }
-    if (this.sortFilterObjects.searchObj.hospitalId != 0) {
-      this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
-    }
-
-    this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
-      this.lstStatuses = statuses.listStatus;
-
-
- 
-      this.countNeedRepair = statuses.countNeedRepair
-      this.countInActive = statuses.countInActive;
-      this.countWorking = statuses.countWorking;
-      this.countUnderMaintenance = statuses.countUnderMaintenance;
-      this.countUnderInstallation = statuses.countUnderInstallation;
-      this.countNotWorking = statuses.countNotWorking;
-      this.countShutdown = statuses.countShutdown;
-      this.countExecluded = statuses.countExecluded;
-      this.countHold = statuses.countHold;
-
-      console.log("status :",statuses)
-      this.lstStatus10 = statuses.lstStatus10;
-      this.lstStatus11 = statuses.lstStatus11;
-      this.lstStatus12 = statuses.lstStatus12;
-      this.lstStatus13 = statuses.lstStatus13;
-      this.lstStatus14 = statuses.lstStatus14;
-      this.lstStatus15 = statuses.lstStatus15;
-      this.lstStatus16 = statuses.lstStatus16;
-      this.lstStatus17 = statuses.lstStatus17;
-      this.lstStatus18 = statuses.lstStatus18;
-      this.lstStatus19 = statuses.lstStatus19;
+    // this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
+    //   this.lstStatuses = statuses.listStatus;
+    //   this.countNeedRepair = statuses.countNeedRepair
+    //   this.countInActive = statuses.countInActive;55
+    //   this.countWorking = statuses.countWorking;
+    //   this.countUnderMaintenance = statuses.countUnderMaintenance;
+    //   this.countUnderInstallation = statuses.countUnderInstallation;
+    //   this.countNotWorking = statuses.countNotWorking;
+    //   this.countShutdown = statuses.countShutdown;
+    //   this.countExecluded = statuses.countExecluded;
+    //   this.countHold = statuses.countHold;
+    //   this.lstStatus10 = statuses.lstStatus10;
+    //   this.lstStatus11 = statuses.lstStatus11;
+    //   this.lstStatus12 = statuses.lstStatus12;
+    //   this.lstStatus13 = statuses.lstStatus13;
+    //   this.lstStatus14 = statuses.lstStatus14;
+    //   this.lstStatus15 = statuses.lstStatus15;
+    //   this.lstStatus16 = statuses.lstStatus16;
+    //   this.lstStatus17 = statuses.lstStatus17;
+    //   this.lstStatus18 = statuses.lstStatus18;
+    //   this.lstStatus19 = statuses.lstStatus19;
 
 
 
-      this.totalCount = statuses.totalCount;
-    });
+    //   this.totalCount = statuses.totalCount;
+    // });
 
 
     
@@ -338,9 +326,9 @@ export class ListComponent implements OnInit {
         this.lstDepartments = items;
       });
     }
-    // this.masterAssetService.GetMasterAssets().subscribe(lstmasters => {
-    //   this.lstMasterAssets = lstmasters;
-    // });
+    this.masterAssetService.GetMasterAssets().subscribe(lstmasters => {
+      this.lstMasterAssets = lstmasters;
+    });
 
     this.sortFilterObjects = {
       searchObj: { assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', contractDate: '', contractEnd: '', contractStart: '', contractTypeId: 0, departmentId: 0, end: '', governorateId: 0, hospitalId: 0, masterAssetId: 0, masterAssetName: '', masterAssetNameAr: '', model: '', organizationId: 0, originId: 0, serial: '', start: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: '', warrantyTypeId: 0 },
@@ -362,6 +350,7 @@ export class ListComponent implements OnInit {
     if (this.currentUser.hospitalId > 0 && this.currentUser.organizationId > 0 && this.currentUser.subOrganizationId > 0) {
       this.organizationService.GetOrganizations().subscribe(items => {
         this.lstOrganizations = items;
+        
         if (this.currentUser.organizationId > 0) {
           //   this.searchObj.organizationId = this.currentUser.organizationId;
           this.sortFilterObjects.searchObj.organizationId = this.currentUser.organizationId;
@@ -774,60 +763,66 @@ export class ListComponent implements OnInit {
     }
     this._selectedColumns = this.cols;
   }
-  clicktbl(event) {
-    this.page.pagenumber = (event.first + 10) / 10;
-    this.page.pagesize = event.rows;
+  LoadHospitalAssets(event) {
+    console.log("event :",event);
+  
 
-    if (this.currentUser.hospitalId > 0) {
-      if (this.statusId != 3)
-        this.statusId = this.statusId;
-      else
-        this.statusId = 3;
-    }
-    else {
-      if (this.statusId != 3)
-        this.statusId = this.statusId;
-      else if (this.statusId == 3)
-        this.statusId = 3;
-      else
-        this.statusId = 0;
-    }
-    if (this.currentUser.hospitalId != 0) {
-      this.hospitalId = this.currentUser.hospitalId;
-    }
-    if (this.sortFilterObjects.searchObj.hospitalId != 0) {
-      this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
-    }
-    this.sortFilterObjects.searchObj.hospitalId = this.hospitalId;
-    this.sortFilterObjects.searchObj.statusId = this.statusId;
-    this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    this.sortFilterObjects.searchObj.warrantyTypeId = this.selectedWarrantyType;
-    this.sortFilterObjects.searchObj.contractTypeId = this.selectedContractType;
+    console.log("statusId :",this.statusId);
 
-    if (this.activeRoute.snapshot != null || this.activeRoute.snapshot != undefined) {
-      let brandId = this.activeRoute.snapshot.params['brandId'];
-      this.sortFilterObjects.searchObj.brandId = brandId;
-      this.showTitle = false;
-    }
+    // if (this.currentUser.hospitalId > 0) {
+    //   if (this.statusId != 3)
+    //     this.statusId = this.statusId;
+    //   else
+    //     this.statusId = 3;
+    // }
+    // else {
+    //   if (this.statusId != 3)
+    //     this.statusId = this.statusId;
+    //   else if (this.statusId == 3)
+    //     this.statusId = 3;
+    //   else
+    //     this.statusId = 0;
+    // }
+    // if (this.currentUser.hospitalId != 0) {
+    //   this.hospitalId = this.currentUser.hospitalId;
+    // }
+    // if (this.sortFilterObjects.searchObj.hospitalId != 0) {
+    //   this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
+    // }
+    // this.sortFilterObjects.searchObj.hospitalId = this.hospitalId;
+    // this.sortFilterObjects.searchObj.statusId = this.statusId;
+    // this.sortFilterObjects.searchObj.userId = this.currentUser.id;
+    // this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
+    // this.sortFilterObjects.searchObj.warrantyTypeId = this.selectedWarrantyType;
+    // this.sortFilterObjects.searchObj.contractTypeId = this.selectedContractType;
+
+    // if (this.activeRoute.snapshot != null || this.activeRoute.snapshot != undefined) {
+    //   let brandId = this.activeRoute.snapshot.params['brandId'];
+    //   this.sortFilterObjects.searchObj.brandId = brandId;
+    //   this.showTitle = false;
+    // }
     // if (this.config.data != null || this.config.data != undefined) {
     //   let brandId = this.config.data.brandId;
-    //   console.log("brandId", brandId);
+    
 
     //   this.sortFilterObjects.searchObj.brandId = brandId;
     //   this.showTitle = false;
     // }
-    if (this.sortFilterObjects.searchObj.brandId == undefined) {
-      this.sortFilterObjects.searchObj.brandId = 0;
-      this.showTitle = true;
-    }
+    // if (this.sortFilterObjects.searchObj.brandId == undefined) {
+    //   this.sortFilterObjects.searchObj.brandId = 0;
+    //   this.showTitle = true;
+    // }
+    this.rowsSkipped=event.first;
+console.log("first :",event.first);
+console.log("rows :",event.rows);
+console.log("sortFilterObjects :",this.sortFilterObjects);
+
     this.spinner.show()
-    this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
+    this.assetDetailService.ListHospitalAssets(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
       this.lstAssets = items.results;
       this.count = items.count;
       this.loading = false;
       this.spinner.hide();
-
     });
 
     this.cdr.detectChanges();
@@ -979,10 +974,8 @@ export class ListComponent implements OnInit {
 
     this.page.pagenumber = 1;
     this.page.pagesize = 10;
-    console.log("statusId :",this.statusId);
     this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
       this.lstStatuses = statuses.listStatus;
-      console.log("res :",statuses)
       this.countNeedRepair = statuses.countNeedRepair
       this.countInActive = statuses.countInActive;
       this.countWorking = statuses.countWorking;
