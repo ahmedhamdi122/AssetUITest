@@ -158,7 +158,7 @@ export class ListComponent implements OnInit {
   lstSelectedColumns: any[] = [];
 
 
-  sortFilterObjects: SortAndFilterVM=null;
+  sortFilterObjects: SortAndFilterVM;
 
   countNeedRepair: number = 0;
   countInActive: number = 0;
@@ -211,10 +211,15 @@ export class ListComponent implements OnInit {
     return this._selectedColumns;
   }
   set selectedColumns(val: any[]) {
+    
     this._selectedColumns = this.cols.filter(col => val.includes(col));
     this.lstSelectedColumns.push(val);
+    console.log("this.lstSelectedColumns :",this.lstSelectedColumns);
+    
   }
   ngOnInit(): void {
+
+    this.sortFilterObjects={sortObj:null,searchObj:null,isSearchAndSort:false}
     this.authenticationService.AllModulesPermissionsForCurrentUser$.subscribe(
       res=>{this.SectionModulePermisisons=res
       }
@@ -252,8 +257,6 @@ export class ListComponent implements OnInit {
     }
     // this.onLoad();
     // this.onLoadByLogIn();
-
-   console.log(" this.sortFilterObjects :",this.sortFilterObjects);
    
     // if (this.currentUser.hospitalId != 0) {
     //   this.hospitalId = this.currentUser.hospitalId;
@@ -261,7 +264,7 @@ export class ListComponent implements OnInit {
     // if (this.sortFilterObjects.searchObj.hospitalId != 0) {
     //   this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
     // }
-
+    
     // this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
     //   this.lstStatuses = statuses.listStatus;
     //   this.countNeedRepair = statuses.countNeedRepair
@@ -289,14 +292,14 @@ export class ListComponent implements OnInit {
     //   this.totalCount = statuses.totalCount;
     // });
 
-
+this.onLoad()
     
   }
   onLoad() {
-    this.page = {
-      pagenumber: 1,
-      pagesize: 10,
-    }
+    // this.page = {
+    //   pagenumber: 1,
+    //   pagesize: 10,
+    // }
     this.searchObj = {
       masterAssetName: '', masterAssetNameAr: '',
       contractTypeId: 0, contractDate: '', contractEnd: '', contractStart: '', barCode: '', masterAssetId: 0, statusId: 0, departmentId: 0, warrantyTypeId: 0, end: '', start: '',
@@ -764,10 +767,6 @@ export class ListComponent implements OnInit {
     this._selectedColumns = this.cols;
   }
   LoadHospitalAssets(event) {
-    console.log("event :",event);
-  
-
-    console.log("statusId :",this.statusId);
 
     // if (this.currentUser.hospitalId > 0) {
     //   if (this.statusId != 3)
@@ -813,10 +812,7 @@ export class ListComponent implements OnInit {
     //   this.showTitle = true;
     // }
     this.rowsSkipped=event.first;
-console.log("first :",event.first);
-console.log("rows :",event.rows);
-console.log("sortFilterObjects :",this.sortFilterObjects);
-
+    console.log("this.sortFilterObjects :",this.sortFilterObjects)
     this.spinner.show()
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
       this.lstAssets = items.results;
