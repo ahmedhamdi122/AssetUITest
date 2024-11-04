@@ -1,6 +1,6 @@
 <div class="col-12">
     <form #AddAssetForm="ngForm">
-        <mat-tab-group mat-align-tabs="start">
+        <mat-tab-group mat-align-tabs="start"  #tabGroup>
             <mat-tab>
                 <ng-template mat-tab-label >
                     <span style="color: black;font-weight: bold;"><i class="pi pi-database" style="margin: 0px 20px;"></i>
@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-3">
                         <label for="masterCode" [translate]="'Asset.MasterAsset'">Asset</label>
-                        <p-autoComplete [(ngModel)]="masterAssetObj" appendTo="body"
+                        <p-autoComplete [(ngModel)]="masterAssetObj" appendTo="body" required
                             [ngModelOptions]="{standalone: true}" [suggestions]="lstMasterAssets" name="masterAssetId"
                             id="masterAssetId" (completeMethod)="onSelectionChanged($event)"
                             (onSelect)="getObject($event)" field="name" [dropdown]="false">
@@ -93,7 +93,7 @@
                     <div class="col-12">
                         <input type="file" multiple #file placeholder="Choose file"
                             (change)="uploadMultipleFile($event)" style="display: none;">
-                        <button type="button" name="btnUpload" class="btn btnUpload" style="margin:0px 10px"
+                        <button type="button" style="background-color: #51A351;color: white;padding: 7px 30px ;" name="upload" class="btn"
                             (click)="file.click()">
                             <i class="pi pi-upload"></i> {{'Asset.SelectUploadFiles' |
                             translate }}
@@ -151,6 +151,8 @@
                         {{ 'Asset.Location' | translate }}</span>
               
                 </ng-template>
+                <div  class="container mt-5">
+
                 <div class="row top-buffer">
                     <div class="col-3">
                         <label for="governorate" [translate]="'Asset.Governorate'"></label>
@@ -295,12 +297,15 @@
                         </select>
                     </div>
                 </div>
+                </div>
             </mat-tab>
             <mat-tab>
                 <ng-template mat-tab-label>  <span style="color: black;font-weight: bold;">     <i class="pi pi-tag" style="margin: 0px 20px"></i>
                     {{ 'Asset.Purchase' | translate }}</span>
                
                 </ng-template>
+                <div  class="container mt-5">
+
                 <div class="row top-buffer">
 
                     <div class="col-2">
@@ -378,6 +383,7 @@
                             [(ngModel)]="assetObj.operationDate" #operationDate="ngModel">
                     </div>
                 </div>
+                </div>
             </mat-tab>
             <mat-tab>
                 <ng-template mat-tab-label>
@@ -385,6 +391,8 @@
                         {{ 'Asset.Warranty' | translate }}</span>
                
                 </ng-template>
+                <div  class="container mt-5">
+
                 <div class="row top-buffer">
                     <div class="col-6">
                         <label for="warrantyStart" [translate]="'Asset.WarrantyStart'">Warranty Start</label>
@@ -408,13 +416,14 @@
                             {{'Asset.Months' | translate}}</label>
                     </div>
                 </div>
+                </div>
             </mat-tab>
 
         </mat-tab-group>
 
-        <div class="row top-buffer">
+        <div class="row mt-3">
             <div class="col-12 text-center">
-                <button class="btn btn-success" value="save" type="button" (click)="onSubmit()"> {{ 'Asset.Save' |
+                <button class="btn" style="background-color: #51A351;color: white;padding: 7px 35px ;" value="save" type="button" (click)="onSubmit()"> {{ 'Asset.Save' |
                     translate }}
                 </button>
 
@@ -424,14 +433,6 @@
 </div>
 
 
-<p-dialog appendTo="body" modal="true" [(visible)]="display" [style]="{width: '350px'}">
-    <ng-template pTemplate="header">
-        <h6 [translate]="''" style="color: #04527e;font-weight: bold;font-size: 16pt;"> {{ 'Asset.Save' | translate }}
-        </h6>
-    </ng-template>
-    <span style="color: green;font-weight: bold;font-size: 12pt;text-align: center;"> {{ 'Asset.SavedSuccess' |
-        translate }}</span>
-</p-dialog>
 
 <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
     <p-header style="color: rgb(181, 4, 4)"> {{ 'Asset.Error' | translate }} </p-header>

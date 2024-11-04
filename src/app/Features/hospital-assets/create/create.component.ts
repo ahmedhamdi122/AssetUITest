@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, viewChild, ViewEncapsulation } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Observable } from 'rxjs';
@@ -38,6 +38,7 @@ import { UploadFilesService } from 'src/app/Shared/Services/uploadfilesservice';
 import { CreateDepartmentComponent } from '../../departments/create-department/create-department.component';
 // import { CreateSupplierComponent } from '../../suppliers/create-supplier/create-supplier.component';
 import { ListBrandVM } from 'src/app/Shared/Models/brandVM';
+import { MatTabGroup } from '@angular/material/tabs';
 @Component({
   selector: 'app-create',
   templateUrl: './create.component.html',
@@ -46,6 +47,7 @@ import { ListBrandVM } from 'src/app/Shared/Models/brandVM';
 })
 export class CreateComponent implements OnInit {
 
+  @ViewChild('tabGroup') tabGroup: MatTabGroup;
 
   lang = localStorage.getItem("lang");
   textDir: string = 'ltr';
@@ -275,7 +277,7 @@ export class CreateComponent implements OnInit {
     this.assetObj = {
       assetConditionId: 0, assetStatusId: 0, createdBy: '',
       barcode: '', code: '', departmentId: 0, hospitalId: 0, installationDate: '', costCenter: '', depreciationRate: 0,
-      masterAssetId: 0, price: 0, purchaseDate: '', remarks: '', serialNumber: '', supplierId: null, warrantyExpires: '',
+      masterAssetId: null, price: 0, purchaseDate: '', remarks: '', serialNumber: '', supplierId: null, warrantyExpires: '',
       warrantyStart: '', warrantyEnd: '', buildingId: null, floorId: null, roomId: null, operationDate: '', poNumber: '', receivingDate: '',
       listOwners: [], cityId: 0, governorateId: 0, organizationId: 0, subOrganizationId: 0
     }
@@ -372,6 +374,53 @@ export class CreateComponent implements OnInit {
     });
   }
   onSubmit() {
+    if (this.assetObj.code == "" || this.assetObj.code == null) {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+      this.errorMessage = "Please insert code";
+      }
+      else
+      {
+        this.errorMessage="من فضلك ادخل كود"
+      }
+      this.tabGroup.selectedIndex=0;
+      return false;
+    }
+    
+    if(this.masterAssetObj)
+    {
+      this.assetObj.masterAssetId=this.masterAssetObj.id;
+      
+    }
+    else
+    {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select asset";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر أصل";
+        }
+        this.tabGroup.selectedIndex=0;
+        return false;
+        }
+    if (this.currentUser.hospitalId == 0) {
+      if (this.assetObj.hospitalId == 0) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select hospital";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر مستشفى";
+        }
+        this.tabGroup.selectedIndex=1;
+        return false;
+      }
+    }
+    else if (this.currentUser.hospitalId != 0) {
+      this.assetObj.hospitalId = this.currentUser.hospitalId;
+    }
+
     this.assetObj.governorateId = this.selectedGovernorateId;
     this.assetObj.cityId = this.selectedCityId;
     this.assetObj.listOwners = this.selectedEmployees;
@@ -471,38 +520,7 @@ export class CreateComponent implements OnInit {
         return false;
       }
     }
-    if (this.assetObj.code == "" || this.assetObj.code == null) {
-      this.errorDisplay = true;
-      this.errorMessage = "Please insert code";
-      return false;
-    }
-
-    if (this.assetObj.masterAssetId == 0) {
-      this.errorDisplay = true;
-      if (this.lang == "en") {
-        this.errorMessage = "Please select asset";
-      }
-      else {
-        this.errorMessage = "من فضلك اختر أصل";
-      }
-      return false;
-    }
-    if (this.currentUser.hospitalId == 0) {
-      if (this.assetObj.hospitalId == 0) {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = "Please select hospital";
-        }
-        else {
-          this.errorMessage = "من فضلك اختر مستشفى";
-        }
-        return false;
-      }
-    }
-    else if (this.currentUser.hospitalId != 0) {
-      this.assetObj.hospitalId = this.currentUser.hospitalId;
-    }
-
+    
 
     this.assetDetailService.CreateAsset(this.assetObj).subscribe(assetObj => {
       this.assetId = assetObj;
@@ -528,20 +546,20 @@ export class CreateComponent implements OnInit {
               });
           });
         });
-        this.display = true;
-        this.ref.close();
       }
-      else {
+     
         this.display = true;
-        this.ref.close();
-      }
-      // });
+        this.ref.close("created");
+      
+ 
     },
       error => {
         this.errorDisplay = true;
         if (this.lang == 'en') {
           if (error.error.status == 'code') {
             this.errorMessage = error.error.message;
+            this.tabGroup.selectedIndex=0;
+
           }
           if (error.error.status == 'name') {
             this.errorMessage = error.error.message;
@@ -549,6 +567,7 @@ export class CreateComponent implements OnInit {
         } else {
           if (error.error.status == 'code') {
             this.errorMessage = error.error.messageAr;
+            this.tabGroup.selectedIndex=0;
           }
           if (error.error.status == 'name') {
             this.errorMessage = error.error.messageAr;
@@ -763,13 +782,17 @@ export class CreateComponent implements OnInit {
 
 
   getObject(event) {
+    
     this.assetObj.masterAssetId = event["id"];
     this.assetName = this.lang == "en" ? event["name"] : event["nameAr"];
 
     this.lstBrands = [];
       this.lstModels = [];
     this.masterAssetService.GetDistintMasterAssetBrands(this.assetName).subscribe(brands => {
+      
       this.lstBrands = brands;
+      console.log("  this.lstBrands :", this.lstBrands);
+      
     });
   }
   addSupplier() {

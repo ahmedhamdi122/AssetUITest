@@ -41,7 +41,7 @@ import { Workbook } from 'exceljs';
 import { DatePipe } from '@angular/common';
 import * as fs from 'file-saver';
 import { DepartmentService } from 'src/app/Shared/Services/department.service';
-import { ListMasterAssetVM } from 'src/app/Shared/Models/masterAssetVM';
+import { ListMasterAssetVM, reloadTableObj } from 'src/app/Shared/Models/masterAssetVM';
 import { MasterAssetService } from 'src/app/Shared/Services/masterAsset.service';
 import { Table } from 'primeng/table';
 // import { DetailsComponent } from '../details/details.component';
@@ -49,13 +49,15 @@ import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SectionModulePermisisons } from 'src/app/Shared/Models/Module';
+import { ConfirmationService } from 'primeng/api';
+import { EditComponent } from '../edit/edit.component';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
-  @ViewChild("dtAssets") table: Table;
+  @ViewChild("dtAssets") dataTable: Table;
   lang = localStorage.getItem("lang");
   currentUser: LoggedUser;
   searchForm: FormGroup;
@@ -188,9 +190,11 @@ export class ListComponent implements OnInit {
   showFilter:boolean=false;
   rowsSkipped:number;
   SectionModulePermisisons:SectionModulePermisisons[];
+  reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
 
   showTitle: boolean = false;
-
+  displaySuccessCreate:boolean=false;
+  displaySuccessDelete:boolean=false;
   constructor(public dialogService: DialogService, private dialog: MatDialog, private masterAssetService: MasterAssetService,private spinner :NgxSpinnerService,
     private authenticationService: AuthenticationService, private assetStatusService: AssetStatusService,
     private activeRoute: ActivatedRoute, private cdr: ChangeDetectorRef,
@@ -198,7 +202,7 @@ export class ListComponent implements OnInit {
     private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService,
     private supplierService: SupplierService, private originService: OriginService, private brandService: BrandService,
     private departmentService: DepartmentService, private breadcrumbService: BreadcrumbService, private route: ActivatedRoute,
-    private hospitalService: HospitalService, private router: Router, public translate: TranslateService, private datePipe: DatePipe) {
+    private hospitalService: HospitalService, private router: Router, public translate: TranslateService, private datePipe: DatePipe,private confirmationService:ConfirmationService) {
     this.currentUser = this.authenticationService.currentUserValue;
     if (this.currentUser.hospitalId > 0) {
       this.statusId = 3;
@@ -214,7 +218,6 @@ export class ListComponent implements OnInit {
     
     this._selectedColumns = this.cols.filter(col => val.includes(col));
     this.lstSelectedColumns.push(val);
-    console.log("this.lstSelectedColumns :",this.lstSelectedColumns);
     
   }
   ngOnInit(): void {
@@ -296,10 +299,7 @@ this.onLoad()
     
   }
   onLoad() {
-    // this.page = {
-    //   pagenumber: 1,
-    //   pagesize: 10,
-    // }
+  
     this.searchObj = {
       masterAssetName: '', masterAssetNameAr: '',
       contractTypeId: 0, contractDate: '', contractEnd: '', contractStart: '', barCode: '', masterAssetId: 0, statusId: 0, departmentId: 0, warrantyTypeId: 0, end: '', start: '',
@@ -334,19 +334,13 @@ this.onLoad()
     });
 
     this.sortFilterObjects = {
-      searchObj: { assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', contractDate: '', contractEnd: '', contractStart: '', contractTypeId: 0, departmentId: 0, end: '', governorateId: 0, hospitalId: 0, masterAssetId: 0, masterAssetName: '', masterAssetNameAr: '', model: '', organizationId: 0, originId: 0, serial: '', start: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: '', warrantyTypeId: 0 },
+      searchObj: { assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', contractDate: '', contractEnd: '', contractStart: '', contractTypeId: 0, departmentId: 0, end: '', governorateId: 0, hospitalId: 0, masterAssetId: 0, masterAssetName: '', masterAssetNameAr: '', model: '', organizationId: 0, originId: 0, serial: '', start: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: this.currentUser.id, warrantyTypeId: 0 },
       sortObj: { sortBy: '', assetName: '', assetNameAr: '', barCode: '', barCodeValue: '', brand: '', brandId: 0, brandName: '', brandNameAr: '', cityId: 0, cityName: '', cityNameAr: '', Code: '', departmentId: 0, governorateId: 0, governorateName: '', governorateNameAr: '', hospitalId: 0, hospitalName: '', hospitalNameAr: '', Id: 0, masterAssetId: 0, model: '', organizationId: 0, orgName: '', orgNameAr: '', originId: 0, serial: '', serialValue: '', sortStatus: '', statusId: 0, subOrganizationId: 0, subOrgName: '', subOrgNameAr: '', supplier: '', supplierId: 0, supplierName: '', supplierNameAr: '', userId: '' },
       isSearchAndSort: false
     };
 
     this.hideShowControls();
-    // if (this.activeRoute.snapshot != null) {
-    //   let supplierId = this.activeRoute.snapshot.params['supplierId'];
-    //   this.sortFilterObjects.searchObj.supplierId = supplierId;
-    // }
-    // else if (this.activeRoute.snapshot == null) {
-    //   this.sortFilterObjects.searchObj.supplierId = 0;
-    // }
+   
 
   }
   onLoadByLogIn() {
@@ -812,7 +806,6 @@ this.onLoad()
     //   this.showTitle = true;
     // }
     this.rowsSkipped=event.first;
-    console.log("this.sortFilterObjects :",this.sortFilterObjects)
     this.spinner.show()
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
       this.lstAssets = items.results;
@@ -1015,50 +1008,73 @@ this.onLoad()
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-    dialogRef2.onClose.subscribe((res) => {
-      // this.reset();
+    dialogRef2.onClose.subscribe((created) => {
+      if(created)
+      {        
+        this.displaySuccessCreate=true;
+        const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
+       this.reloadTableObj.first=lastPageIndex;
+       this.LoadHospitalAssets(this.reloadTableObj);
+       this.dataTable.first=this.count;
+      }
     });
   }
-  deleteAsset(id: number) {
-    // this.assetDetailService.GetAssetById(id).subscribe((data) => {
-    //   this.selectedObj = data;
+  deleteAsset(item: any) {    
+      this.confirmationService.confirm({
+        message: `${this.lang === 'en' ? `Are you sure that you want to delete ${item.assetName}?` : `هل أنت متأكد أنك تريد حذف ${item.assetNameAr}؟`}`,
+        header: `${this.lang === 'en' ? 'Delete Confirmation' : 'تأكيد المسح'}`,
+        icon: 'pi pi-exclamation-triangle',
+        acceptIcon: 'none', 
+        rejectIcon: 'none', 
+        acceptButtonStyleClass: 'btn btn-primary m-2', 
+        rejectButtonStyleClass: 'btn btn-light m-2',
+        rejectLabel: this.lang === 'en' ? 'No' : 'لا',
+        acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+        accept: () => {
+          this.spinner.show()
+          this.assetDetailService.DeleteAsset(item.id).subscribe(
+            deleted => {
+               this.spinner.hide()
+               this.displaySuccessDelete=true;
+              this.reloadTableObj.first= this.rowsSkipped;
+               this.LoadHospitalAssets(this.reloadTableObj);
+               this.dataTable.first= this.rowsSkipped;
 
-    //   const dialogRef2 = this.dialog.open(DeleteconfirmationComponent, {
-    //     width: '30%',
-    //     autoFocus: true,
-    //     data: {
-    //       id: this.selectedObj.id,
-    //       name: this.selectedObj.assetName,
-    //       nameAr: this.selectedObj.assetNameAr,
-    //     },
-    //   });
-
-    //   dialogRef2.afterClosed().subscribe(deleted => {
-    //     this.reset();
-    //   });
-
-    // });
+            },
+            error => {
+              this.spinner.hide()
+              console.log("error :",error);
+              
+              this.errorDisplay=true;
+              this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;
+            }
+          );
+        },
+        reject: () => {
+        }
+      });
+ 
 
   }
   editAsset(id: number) {
-    // const ref = this.dialogService.open(EditComponent, {
-    //   header: this.lang == "en" ? 'Edit Hospital Asset' : "تعديل الأصل في المستشفى",
-    //   closable: true,
-    //   width: '70%',
-    //   data: {
-    //     id: id,
-    //     pageNumber: this.page.pagenumber,
-    //     pageSize: this.page.pagesize
-    //   },
-    //   style: {
-    //     'dir': this.lang == "en" ? 'ltr' : "rtl",
-    //     "text-align": this.lang == "en" ? 'left' : "right",
-    //     "direction": this.lang == "en" ? 'ltr' : "rtl"
-    //   }
-    // });
-    // ref.onClose.subscribe((page) => {
-    //   this.reset();
-    // });
+    const ref = this.dialogService.open(EditComponent, {
+      header: this.lang == "en" ? 'Edit Hospital Asset' : "تعديل الأصل في المستشفى",
+      closable: true,
+      width: '70%',
+      data: {
+        id: id,
+        pageNumber: this.page.pagenumber,
+        pageSize: this.page.pagesize
+      },
+      style: {
+        'dir': this.lang == "en" ? 'ltr' : "rtl",
+        "text-align": this.lang == "en" ? 'left' : "right",
+        "direction": this.lang == "en" ? 'ltr' : "rtl"
+      }
+    });
+    ref.onClose.subscribe((page) => {
+      this.reset();
+    });
   }
   sort(event) {
     if (this.sortStatus == "descending") {

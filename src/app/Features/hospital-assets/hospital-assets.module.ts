@@ -55,12 +55,13 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { DeleteModule } from '../../../../src/app/Shared/delete/delete.module';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { DialogService } from 'primeng/dynamicdialog';
+import { EditComponent } from './edit/edit.component';
 
 @NgModule({
   declarations: [
     ListComponent,
      CreateComponent,
-    // EditComponent,
+     EditComponent,
     // DeleteconfirmationComponent,
     // DetailsComponent,
      ViewComponent,
@@ -72,6 +73,7 @@ import { DialogService } from 'primeng/dynamicdialog';
   ],
   imports: [
     // DeleteModule,
+    ConfirmDialogModule,
     NgxUiLoaderModule,
     CommonModule,
     FormsModule,
