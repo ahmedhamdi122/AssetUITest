@@ -178,13 +178,13 @@ export class EditComponent implements OnInit {
       statusName: '', statusNameAr: '', subject: '', sortStatus: '', modeNameAr: '', description: '', periorityId: 0, statusId: 0, strBarCode: '', strModel: '', strRequestCode: '', strSerial: '', strSubject: ''
     }
     if (this.currentUser) {
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
-      this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-      this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
-      this.canAddSupplier = (['AddSupplier'].some(r => this.lstRoleNames.includes(r)));
-      this.canAddDepartment = (['AddDepartment'].some(r => this.lstRoleNames.includes(r)));
+      // this.currentUser["roleNames"].forEach(element => {
+      //   this.lstRoleNames.push(element["name"]);
+      // });
+      // this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
+      // this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
+      // this.canAddSupplier = (['AddSupplier'].some(r => this.lstRoleNames.includes(r)));
+      // this.canAddDepartment = (['AddDepartment'].some(r => this.lstRoleNames.includes(r)));
 
     }
     if (this.lang == 'en') {

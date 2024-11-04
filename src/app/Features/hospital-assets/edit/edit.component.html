@@ -3,9 +3,10 @@
         <input type="hidden" [(ngModel)]="assetObj.qrFilePath" [ngModelOptions]="{standalone: true}" />
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="fa-solid fa-database" style="margin: 0px 20px"></i>
+                <i class="pi pi-database" style="margin: 0px 20px;"></i>
                 {{ 'Asset.Identification' | translate }}
             </ng-template>
+            <div  class="container mt-5">
             <div class="row top-buffer">
                 <div class="col-3">
                     <label for="code" [translate]="'Asset.Code'">Code</label>
@@ -85,12 +86,14 @@
                         name="assetImg" id="assetImg" />
                 </div>
             </div>
+            </div>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="fa fa-map-marker" style="margin: 0px 20px"></i>
+                <i class="pi pi-map-marker" style="margin: 0px 20px"></i>
                 {{ 'Asset.Location' | translate }}
             </ng-template>
+            <div  class="container mt-5">
             <div class="row top-buffer">
                 <div class="col-6">
                     <label for="governorate" [translate]="'Asset.Governorate'"></label>
@@ -241,12 +244,14 @@
                     </select>
                 </div>
             </div>
+            </div>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="fa-solid fa-code-branch" style="margin: 0px 20px"></i>
+                <i class="pi pi-tag" style="margin: 0px 20px"></i>
                 {{ 'Asset.Purchase' | translate }}
             </ng-template>
+            <div  class="container mt-5">
             <div class="row top-buffer">
                 <div class="col-4">
                     <label for="poNumber" [translate]="'Asset.PONumber'"></label>
@@ -346,12 +351,14 @@
                     </mat-form-field> -->
                 </div>
             </div>
+            </div>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="fa-solid fa-info" style="margin: 0px 20px"></i>
+                <i class="pi pi-shield" style="margin: 0px 20px"></i>
                 {{ 'Asset.Warranty' | translate }}
             </ng-template>
+            <div  class="container mt-5">
             <div class="row top-buffer">
                 <div class="col-6">
                     <label for="warrantyStart" [translate]="'Asset.WarrantyStart'">Warranty Start</label>
@@ -382,12 +389,14 @@
                         pTooltip="{{'Asset.WarrantyExpires' | translate}}" tooltipPosition="bottom" />
                 </div>
             </div>
+            </div>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="fa-solid fa-info" style="margin: 0px 20px"></i>
+                <i class="pi pi-info-circle" style="margin: 0px 20px"></i>
                 {{ 'Asset.OtherData' | translate }}
             </ng-template>
+            <div  class="container mt-5">
             <div class="row top-buffer">
                 <div class="col-6">
                     <label for="remarks" [translate]="'Asset.Remarks'">Remarks</label>
@@ -396,13 +405,14 @@
                         pTooltip="{{'Asset.Remarks' | translate }}" tooltipPosition="bottom">
                 </div>
             </div>
+            </div>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="fa fa-paperclip" style="margin: 0px 20px"></i>
+                <i class="pi pi-paperclip" style="margin: 0px 20px"></i>
                 {{ 'Asset.Attachments' | translate }}
             </ng-template>
-
+            <div  class="container mt-5">
             <div class="row top-buffer" style="margin-top: 10px;">
                 <div class="col-9" style="display: none;">
                     <div class="p-inputgroup">
@@ -413,9 +423,8 @@
                 <div class="col-3">
                     <input type="file" multiple #file placeholder="Choose file" (change)="uploadMultipleFile($event)"
                         style="display: none;">
-                    <button type="button" name="btnUpload" class="btn btnUpload" style="margin:0px 10px"
-                        (click)="file.click()"> <i class="fa fa-upload"></i> {{'Asset.SelectUploadFiles' |
-                        translate }}
+                    <button type="button" style="background-color: #51A351;color: white;padding: 7px 30px ;" name="upload" class="btn" style="margin:0px 10px"
+                        (click)="file.click()"> <i class="pi pi-upload"></i> {{'Asset.SelectUploadFiles' |translate }}
                     </button>
                 </div>
             </div>
@@ -487,11 +496,11 @@
                     </table>
                 </div>
             </div>
-
+</div>
         </mat-tab>
     </mat-tab-group>
 
-    <div class="row top-buffer">
+    <div class="row mt-3">
         <div class="col-12 text-center">
             <button class="btn btn-success" value="save" type="button" (click)="onSubmit()">
                 {{ 'Asset.Save' | translate }}

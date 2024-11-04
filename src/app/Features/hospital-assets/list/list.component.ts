@@ -1063,8 +1063,6 @@ this.onLoad()
       width: '70%',
       data: {
         id: id,
-        pageNumber: this.page.pagenumber,
-        pageSize: this.page.pagesize
       },
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",

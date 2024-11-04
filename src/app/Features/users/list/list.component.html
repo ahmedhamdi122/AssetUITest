@@ -44,9 +44,9 @@
         <td style="text-align: center;">{{item.phoneNumber}}</td>
         <td style="text-align: center;">{{item.email}}</td>
         <td style="text-align: center;">
-          <span class="viewIcon" (click)="viewRoleCategory(item.id)"> <i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i></span>
-          <span class="editIcon" (click)="editRoleCategory(item.id,rowIndex)" [routerLinkActive]="['active']"><i class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i></span>
-          <span class="deleteIcon" (click)="deleteRoleCategory(item,rowIndex)"><i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i></span>       
+          <span class="viewIcon" (click)="viewUser(item.id)"> <i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i></span>
+          <span class="editIcon" (click)="editUser(item)" [routerLinkActive]="['active']"><i class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i></span>
+          <span class="deleteIcon" (click)="deleteUser(item)"><i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i></span>       
              </td>
       </tr>
     </ng-template>
