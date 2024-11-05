@@ -105,7 +105,6 @@ export class CreateComponent implements OnInit {
   isAdmin: boolean = false;
   isHospitalManager: boolean = false;
   canAddSupplier: boolean = false;
-  canAddDepartment: boolean = false;
   lstRoleNames: string[] = [];
   lstModels: string[] = [];
   lstBrands: ListBrandVM[] = [];
@@ -116,7 +115,7 @@ export class CreateComponent implements OnInit {
   uploadFileName: string;
   itmIndex: any[] = [];
   formData = new FormData();
-
+  displaySuccessCreate:boolean=false;
 
   assetName: string = "";
   brandId: number = 0;
@@ -146,10 +145,6 @@ export class CreateComponent implements OnInit {
       //   this.lstRoleNames.push(element["name"]);
       // });
 
-      this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-      this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
-      this.canAddSupplier = (['AddSupplier'].some(r => this.lstRoleNames.includes(r)));
-      this.canAddDepartment = (['AddDepartment'].some(r => this.lstRoleNames.includes(r)));
     }
 
     this.assetObj = { createdBy: '', assetConditionId: 0, assetStatusId: 0, barcode: '', cityId: 0, code: '', costCenter: '', departmentId: 0, depreciationRate: 0, governorateId: 0, hospitalId: 0, listOwners: [], masterAssetId: 0, organizationId: 0, poNumber: '', price: 0, purchaseDate: '', remarks: '', serialNumber: '', subOrganizationId: 0, warrantyExpires: '', buildingId: 0, floorId: 0, installationDate: '', operationDate: '', receivingDate: '', roomId: 0, supplierId: 0, warrantyEnd: '', warrantyStart: '' }
@@ -437,6 +432,8 @@ export class CreateComponent implements OnInit {
         this.isValidDate = this.validateWarrantyDates(start, end);
         if (!this.isValidDate) {
           this.dateError = true;
+          this.tabGroup.selectedIndex=2;
+
           return false;
         }
       }
@@ -447,6 +444,7 @@ export class CreateComponent implements OnInit {
         this.isValidDate = this.validateIntallationDates(installDate, today);
         if (!this.isValidDate) {
           this.dateError = true;
+          this.tabGroup.selectedIndex=2;
           return false;
         }
       }
@@ -456,6 +454,7 @@ export class CreateComponent implements OnInit {
       this.isValidDate2 = this.validatePurchaseDates(purchaseDate, today);
       if (!this.isValidDate2) {
         this.dateError = true;
+        this.tabGroup.selectedIndex=2;
         return false;
       }
     }
@@ -465,6 +464,7 @@ export class CreateComponent implements OnInit {
       this.isValidDate = this.validatePurchaseInstallDates(purchase, install);
       if (!this.isValidDate) {
         this.dateError = true;
+        this.tabGroup.selectedIndex=2;
         return false;
       }
     }
@@ -473,6 +473,7 @@ export class CreateComponent implements OnInit {
       this.isValidDate = this.validateOperationInstallDates(operation, today);
       if (!this.isValidDate) {
         this.dateError = true;
+        this.tabGroup.selectedIndex=2;
         return false;
       }
     }
@@ -482,6 +483,7 @@ export class CreateComponent implements OnInit {
       this.isValidDate = this.validateOperationInstallDates(install, operation);
       if (!this.isValidDate) {
         this.dateError = true;
+        this.tabGroup.selectedIndex=2;
         return false;
       }
     }
@@ -490,6 +492,7 @@ export class CreateComponent implements OnInit {
       this.isValidDate = this.validateOperationInstallDates(receive, today);
       if (!this.isValidDate) {
         this.dateError = true;
+        this.tabGroup.selectedIndex=2;
         return false;
       }
     }
@@ -499,6 +502,7 @@ export class CreateComponent implements OnInit {
       this.isValidDate = this.validateReceivePurchaseDates(purchase, receive);
       if (!this.isValidDate) {
         this.dateError = true;
+        this.tabGroup.selectedIndex=2;
         return false;
       }
     }
@@ -508,6 +512,7 @@ export class CreateComponent implements OnInit {
       this.isValidDate = this.validateReceiveIntallationDates(receive, install);
       if (!this.isValidDate) {
         this.dateError = true;
+        this.tabGroup.selectedIndex=2;
         return false;
       }
     }
@@ -517,11 +522,10 @@ export class CreateComponent implements OnInit {
       this.isValidDate = this.validateReceiveOperationDates(receive, operation);
       if (!this.isValidDate) {
         this.dateError = true;
+        this.tabGroup.selectedIndex=2;
         return false;
       }
     }
-    
-
     this.assetDetailService.CreateAsset(this.assetObj).subscribe(assetObj => {
       this.assetId = assetObj;
       if (this.lstAssetDetailDocument.length > 0) {
@@ -782,16 +786,17 @@ export class CreateComponent implements OnInit {
 
 
   getObject(event) {
-    
-    this.assetObj.masterAssetId = event["id"];
-    this.assetName = this.lang == "en" ? event["name"] : event["nameAr"];
+ 
+
+    this.assetObj.masterAssetId = event.value["id"];
+    this.assetName = this.lang == "en" ? event.value["name"] : event.value["nameAr"];
 
     this.lstBrands = [];
       this.lstModels = [];
+      
     this.masterAssetService.GetDistintMasterAssetBrands(this.assetName).subscribe(brands => {
       
       this.lstBrands = brands;
-      console.log("  this.lstBrands :", this.lstBrands);
       
     });
   }
@@ -814,10 +819,14 @@ export class CreateComponent implements OnInit {
     //   });
     // });
   }
+  canAddDepartment():boolean
+  {
+    return true;
+  }
   addDepartment() {
     const dialogRef2 = this.dialogService.open(CreateDepartmentComponent, {
-      // header: this.lang == "en" ? 'Add New Brand' : "بيان إضافة ماركة جديدة",
-      width: '50%',
+       header: this.lang == "en" ? 'Add New Department' : "بيان إضافة قسم جديد",
+      width: '60%',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",
@@ -825,6 +834,10 @@ export class CreateComponent implements OnInit {
       }
     });
     dialogRef2.onClose.subscribe((res) => {
+      if(res)
+      {
+       this.displaySuccessCreate=true;
+        
       this.hospitalService.GetHospitalDepartmentByHospitalId2(this.currentUser.hospitalId).subscribe(hospitaldeparts => {
         this.lstHospitalDepartments = hospitaldeparts;
       });
@@ -834,6 +847,7 @@ export class CreateComponent implements OnInit {
           //  this.assetObj.departmentId = department["departmentId"];
         });
       }
+    }
     });
   }
 
@@ -841,6 +855,7 @@ export class CreateComponent implements OnInit {
     this.lstModels = [];
     this.brandId = $event.target.value;
     this.masterAssetService.GetDistintMasterAssetModels($event.target.value, this.assetName).subscribe(models => {
+  
       this.lstModels = models;
     });
   }
@@ -853,4 +868,5 @@ export class CreateComponent implements OnInit {
       }
     });
   }
+ 
 }

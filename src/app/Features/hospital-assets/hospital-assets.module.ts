@@ -56,6 +56,7 @@ import { DeleteModule } from '../../../../src/app/Shared/delete/delete.module';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { DialogService } from 'primeng/dynamicdialog';
 import { EditComponent } from './edit/edit.component';
+import { NgxBarcode6Module } from 'ngx-barcode6';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { EditComponent } from './edit/edit.component';
   ],
   imports: [
     // DeleteModule,
+    NgxBarcode6Module,
     ConfirmDialogModule,
     NgxUiLoaderModule,
     CommonModule,

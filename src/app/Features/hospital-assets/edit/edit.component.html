@@ -3,8 +3,8 @@
         <input type="hidden" [(ngModel)]="assetObj.qrFilePath" [ngModelOptions]="{standalone: true}" />
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="pi pi-database" style="margin: 0px 20px;"></i>
-                {{ 'Asset.Identification' | translate }}
+                <span style="color: black;font-weight: bold;margin: 0px 20px;"><i class="pi pi-database" ></i>
+                    {{ 'Asset.Identification' | translate }}</span>
             </ng-template>
             <div  class="container mt-5">
             <div class="row top-buffer">
@@ -34,9 +34,9 @@
                 </div>
                 <div class="col-3">
                     <label for="brand" [translate]="'Asset.Brand'">Brand</label>
-                    <select class="form-control" id="assetBrand" name="assetBrand" [value]="0"
+                    <select class="form-select" id="assetBrand" name="assetBrand" [value]="0"
                         (change)="getModel($event)"  [(ngModel)]="assetObj.brandId">
-                        <option value="0"> </option>
+                        <option value="0"> {{lang=="en"?"select Brand":"اختر ماركة"}}</option>
                         <option *ngFor="let brnd of lstBrands" [value]="brnd.id">
                             {{ lang == "en" ? brnd.name : brnd.nameAr }}
                         </option>
@@ -44,9 +44,9 @@
                 </div>
                 <div class="col-3">
                     <label for="model" [translate]="'Asset.Model'">Model</label>
-                    <select class="form-control" id="assetModel" name="assetModel"  [(ngModel)]="assetObj.model" [value]="0"
+                    <select class="form-select" id="assetModel" name="assetModel"  [(ngModel)]="assetObj.model" [value]="0"
                        (change)="getMasterAssetId($event)">
-                        <option value="0"> </option>
+                        <option value="0">{{lang=="en"?"select Model Number":"اختر رقم الموديل"}} </option>
                         <option *ngFor="let mdls of lstModels" [value]="mdls">
                             {{ mdls }}
                         </option>
@@ -70,7 +70,7 @@
             
                 <div class="col-4">
                     <label for="assetStatus" [translate]="'Asset.Status'"></label>
-                    <select class="form-control" id="assetStatus" pTooltip="{{'Asset.Status' | translate}}"
+                    <select class="form-select" id="assetStatus" pTooltip="{{'Asset.Status' | translate}}"
                         tooltipPosition=" bottom" name="assetStatus" [value]="0" disabled="true">
                         <option value="0">{{ 'Asset.Select' | translate }} {{'Asset.Status' | translate }}
                         </option>
@@ -90,14 +90,15 @@
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="pi pi-map-marker" style="margin: 0px 20px"></i>
-                {{ 'Asset.Location' | translate }}
+                <span style="color: black;font-weight: bold;margin: 0px 20px;"> <i class="pi pi-map-marker"></i>
+                    {{ 'Asset.Location' | translate }}</span>
+               
             </ng-template>
             <div  class="container mt-5">
             <div class="row top-buffer">
                 <div class="col-6">
                     <label for="governorate" [translate]="'Asset.Governorate'"></label>
-                    <select class="form-control" id="governorate" [ngModelOptions]="{standalone: true}"
+                    <select class="form-select" id="governorate" [ngModelOptions]="{standalone: true}"
                         [(ngModel)]="assetObj.governorateId" name="governorate" [value]="0"
                         (change)="getCitiesByGovId($event)" [disabled]="isGov">
                         <option value="0">{{ 'Asset.Select' | translate }} {{ 'Asset.Governorate' |
@@ -110,7 +111,7 @@
                 </div>
                 <div class="col-6">
                     <label for="cityId" [translate]="'Asset.City'"></label>
-                    <select class="form-control" id="city" pTooltip="select city" tooltipPosition="bottom" name="city"
+                    <select class="form-select" id="city" pTooltip="select city" tooltipPosition="bottom" name="city"
                         [value]="0" [(ngModel)]="assetObj.cityId" [disabled]="isCity"
                         [ngModelOptions]="{standalone: true}">
                         <option value="0">{{ 'Asset.Select' | translate }} {{ 'Asset.City' | translate }}
@@ -125,7 +126,7 @@
             <div class="row top-buffer">
                 <div class="col-6">
                     <label for="organization" [translate]="'Asset.Organization'"></label>
-                    <select class="form-control" id="organization" pTooltip="select organization"
+                    <select class="form-select" id="organization" pTooltip="select organization"
                         [(ngModel)]="assetObj.organizationId" tooltipPosition="bottom" name="organization"
                         (change)="getSubOrgByOrgId($event)" [value]="null" [disabled]="isOrg"
                         [ngModelOptions]="{standalone: true}">
@@ -140,7 +141,7 @@
 
                 <div class="col-6">
                     <label for="suborganization" [translate]="'Asset.SubOrganization'"></label>
-                    <select class="form-control" id="suborganization" pTooltip="select sub organization"
+                    <select class="form-select" id="suborganization" pTooltip="select sub organization"
                         [(ngModel)]="assetObj.subOrganizationId" tooltipPosition="bottom" name="suborganization"
                         [ngModelOptions]="{standalone: true}" [value]="null" (change)="getHospitalsBySubOrgId($event)"
                         [disabled]="isSubOrg">
@@ -156,11 +157,11 @@
             <div class="row top-buffer">
                 <div class="col-4">
                     <label for="hospitalId" [translate]="'Asset.Hospitals'"></label>
-                    <select class="form-control" id="hospitalId" name="hospitalId" #hospitalId="ngModel" [value]="null"
+                    <select class="form-select" id="hospitalId" name="hospitalId" #hospitalId="ngModel" [value]="null"
                         [(ngModel)]="selectedHospitalId" [ngModelOptions]="{standalone: true}"
                         pTooltip="{{'Asset.Select' | translate }}{{ 'Asset.Hospital' | translate }}"
                         tooltipPosition="bottom" (change)="getDepartmentsofHospital($event)" [disabled]="isHospital">
-                        <option [value]="null">{{'Asset.Select' | translate }} {{ 'Asset.Hospital' | translate
+                        <option [value]="null" >{{'Asset.Select' | translate }} {{ 'Asset.Hospital' | translate
                             }}
                         </option>
                         <option *ngFor="let host of lstHospitals" [value]="host.id">
@@ -179,10 +180,10 @@
                 </div>
                 <div [ngClass]="(isHospitalManager && canAddDepartment) == true ? 'col-3': 'col-4'">
                     <label for="departmentId" [translate]="'Asset.Departments'">Departments</label>
-                    <select class="form-control" id="departmentId" name="departmentId" #departmentId="ngModel"
+                    <select class="form-select" id="departmentId" name="departmentId" #departmentId="ngModel"
                         value="null" [(ngModel)]="assetObj.departmentId" pTooltip="Select Department"
-                        tooltipPosition="bottom" [ngModelOptions]="{standalone: true}">
-                        <option [value]="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Department' |
+                        tooltipPosition="bottom"[value]="0"  [ngModelOptions]="{standalone: true}">
+                        <option [value]="0">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Department' |
                             translate
                             }} --</option>
                         <option *ngFor="let depart of lstDepartments" [value]="depart.id"
@@ -202,7 +203,7 @@
             <div class="row top-buffer">
                 <div class="col-4">
                     <label for="buildId" [translate]="'Asset.Buildings'">Buildings</label>
-                    <select class="form-control" id="buildingId" name="buildingId" #buildingId="ngModel" [value]="null"
+                    <select class="form-select" id="buildingId" name="buildingId" #buildingId="ngModel" [value]="null"
                         [(ngModel)]="assetObj.buildingId" pTooltip="Select Building"
                         [ngModelOptions]="{standalone: true}" tooltipPosition="bottom"
                         (change)="getFloorsByBuildId($event)">
@@ -217,7 +218,7 @@
                 </div>
                 <div class="col-4">
                     <label for="floor" [translate]="'Asset.Floors'">Floors</label>
-                    <select class="form-control" id="floorId" name="floorId" #floorId="ngModel" [value]="null"
+                    <select class="form-select" id="floorId" name="floorId" #floorId="ngModel" [value]="null"
                         [(ngModel)]="assetObj.floorId" pTooltip="Select Floor" tooltipPosition="bottom"
                         [ngModelOptions]="{standalone: true}" (change)="getRoomsByfloorId($event)">
                         <option value="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Floor' | translate }}
@@ -232,7 +233,7 @@
 
                 <div class="col-4">
                     <label for="room" [translate]="'Asset.Rooms'">Rooms</label>
-                    <select class="form-control" id="roomId" name="roomId" #roomId="ngModel" [value]="null"
+                    <select class="form-select" id="roomId" name="roomId" #roomId="ngModel" [value]="null"
                         [(ngModel)]="assetObj.roomId" pTooltip="Select Room" tooltipPosition="bottom"
                         [ngModelOptions]="{standalone: true}">
                         <option value="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Room' | translate }}
@@ -248,8 +249,8 @@
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="pi pi-tag" style="margin: 0px 20px"></i>
-                {{ 'Asset.Purchase' | translate }}
+                <span style="color: black;font-weight: bold;margin: 0px 20px;">  <i class="pi pi-tag"></i>{{ 'Asset.Purchase' | translate }}</span>
+              
             </ng-template>
             <div  class="container mt-5">
             <div class="row top-buffer">
@@ -278,7 +279,7 @@
             <div class="row top-buffer">
                 <div [ngClass]="(isHospitalManager && canAddSupplier) == true ? 'col-5': 'col-6'">
                     <label for="supplierId" [translate]="'Asset.Suppliers'">Suppliers</label>
-                    <select type="text" id="supplierId" class="form-control" name="supplierId"
+                    <select type="text" id="supplierId" class="form-select" name="supplierId"
                         [(ngModel)]="assetObj.supplierId" [ngModelOptions]="{standalone: true}" #supplierId="ngModel"
                         [value]="null" pTooltip="{{'Asset.Supplier' | translate }}" tooltipPosition="bottom">
                         <option [value]="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Supplier' |
@@ -303,85 +304,62 @@
                         tooltipPosition="bottom" />
                 </div>
             </div>
-            <div class="row top-buffer">
-                <div class="col-6">
+            <div class="row mt-2">
+                <div class="col-3">
                     <label for="purchaseDate" [translate]="'Asset.PurchaseDate'">Purchase Date</label>
                     <br />
-                    <!-- <mat-form-field appearance="fill">
-                        <input matInput [matDatepicker]="picker" container="body" name="purchaseDate"
-                            [value]="assetObj.purchaseDate | date:'yyyy-MM-dd'" placeholder="Input & change Date"
-                            (dateChange)="changePurchaseDate($event)">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field> -->
+                    <p-calendar  [ngModelOptions]="{standalone: true}"[(ngModel)]="assetObj.purchaseDate" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [appendTo]="'body'"/>
+
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                     <label for="date" [translate]="'Asset.ReceivingDate'">Receiving Date</label>
                     <br />
-                    <!-- <mat-form-field class="example-full-width" appearance="fill">
-                        <input matInput [matDatepicker]="receivingDate" name="receivenDate" container="body"
-                            [value]="assetObj.receivingDate | date:'yyyy-MM-dd'" placeholder="Input & change Date"
-                            (dateChange)="changeReceivingDate($event)">
-                        <mat-datepicker-toggle matSuffix [for]="receivingDate"></mat-datepicker-toggle>
-                        <mat-datepicker #receivingDate></mat-datepicker>
-                    </mat-form-field> -->
+                    <p-calendar  [ngModelOptions]="{standalone: true}"[(ngModel)]="assetObj.receivingDate" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [appendTo]="'body'"/>
+
                 </div>
             </div>
-            <div class="row top-buffer">
-                <div class="col-6">
+            <div class="row mt-2">
+                <div class="col-3">
                     <label for="date" [translate]="'Asset.InstallationDate'">Installation Date</label>
                     <br />
-                    <!-- <mat-form-field appearance="fill">
-                        <input matInput [matDatepicker]="picker2" name="installationDate" container="body"
-                            [value]="assetObj.installationDate | date:'yyyy-MM-dd'" placeholder="Input & change Date"
-                            (dateChange)="changeInstallationDate($event)">
-                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                        <mat-datepicker #picker2></mat-datepicker>
-                    </mat-form-field> -->
+                    
+                    <p-calendar [ngModelOptions]="{standalone: true}"[(ngModel)]="assetObj.installationDate" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [appendTo]="'body'"/>
+
+
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                     <label for="date" [translate]="'Asset.OperationDate'">Operation Date</label>
                     <br />
-                    <!-- <mat-form-field appearance="fill">
-                        <input matInput [matDatepicker]="operatioPicker" name="operationDate" container="body"
-                            [value]="assetObj.operationDate | date:'yyyy-MM-dd'" placeholder="Input & change Date"
-                            (dateChange)="changeOperationDate($event)">
-                        <mat-datepicker-toggle matSuffix [for]="operatioPicker"></mat-datepicker-toggle>
-                        <mat-datepicker #operatioPicker></mat-datepicker>
-                    </mat-form-field> -->
+              
+                    <p-calendar  [ngModelOptions]="{standalone: true}"[(ngModel)]="assetObj.operationDate" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [appendTo]="'body'"/>
+
+
                 </div>
             </div>
             </div>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="pi pi-shield" style="margin: 0px 20px"></i>
-                {{ 'Asset.Warranty' | translate }}
+                <span style="color: black;font-weight: bold;margin: 0px 20px;"> <i class="pi pi-shield"></i>{{ 'Asset.Warranty' | translate }}</span>
+               
             </ng-template>
             <div  class="container mt-5">
             <div class="row top-buffer">
-                <div class="col-6">
+                <div class="col-3">
                     <label for="warrantyStart" [translate]="'Asset.WarrantyStart'">Warranty Start</label>
                     <br />
-                    <!-- <mat-form-field appearance="fill" style="margin: 0px 30px;">
-                        <input matInput [matDatepicker]="dpWarrantyStart" (dateChange)="changWarrantyStartDate($event)"
-                            [value]="assetObj.warrantyStart | date:'yyyy-MM-dd'" placeholder="Input & change Date">
-                        <mat-datepicker-toggle matSuffix [for]="dpWarrantyStart"></mat-datepicker-toggle>
-                        <mat-datepicker #dpWarrantyStart></mat-datepicker>
-                    </mat-form-field> -->
+             
+                    <p-calendar  [ngModelOptions]="{standalone: true}"[(ngModel)]="assetObj.warrantyStart" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [appendTo]="'body'"/>
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                     <label for="warrantyEnd" [translate]="'Asset.WarrantyEnd'">Warranty End</label>
                     <br />
-                    <!-- <mat-form-field appearance="fill" style="margin: 0px 30px;">
-                        <input matInput [matDatepicker]="dpWarrantyEnd"
-                            [value]="assetObj.warrantyEnd | date:'yyyy-MM-dd'" placeholder="Input & change Date"
-                            (dateChange)="getDifferenceInMonths($event)">
-                        <mat-datepicker-toggle matSuffix [for]="dpWarrantyEnd"></mat-datepicker-toggle>
-                        <mat-datepicker #dpWarrantyEnd></mat-datepicker>
-                    </mat-form-field> -->
+               
+                    <p-calendar  [ngModelOptions]="{standalone: true}"[(ngModel)]="assetObj.warrantyEnd" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" [appendTo]="'body'"/>
+
+
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                     <label for="warrantyExpires" [translate]="'Asset.WarrantyExpires'">Warranty Expires</label>
                     <input type="text" class="form-control" id="warrantyExpires" name="warrantyExpires"
                         placeholder="Warranty Expires" [(ngModel)]="assetObj.warrantyExpires"
@@ -393,8 +371,7 @@
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="pi pi-info-circle" style="margin: 0px 20px"></i>
-                {{ 'Asset.OtherData' | translate }}
+                <span style="color: black;font-weight: bold;margin: 0px 20px;"><i class="pi pi-info-circle"></i>{{ 'Asset.OtherData' | translate }}</span>
             </ng-template>
             <div  class="container mt-5">
             <div class="row top-buffer">
@@ -409,8 +386,8 @@
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <i class="pi pi-paperclip" style="margin: 0px 20px"></i>
-                {{ 'Asset.Attachments' | translate }}
+                <span style="color: black;font-weight: bold;margin: 0px 20px;"><i class="pi pi-paperclip"></i>{{ 'Asset.Attachments' | translate }}</span>
+      
             </ng-template>
             <div  class="container mt-5">
             <div class="row top-buffer" style="margin-top: 10px;">
@@ -429,7 +406,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12 top-buffer">
+                <div class="col-12 mt-3">
 
                     <p-table [value]="lstAssetDetailDocument" dataKey="id"
                         styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
@@ -585,14 +562,6 @@
     </ng-template>
     <span style="color: green;font-weight: bold;font-size: 12pt;text-align: center;">{{ 'Asset.SavedFiles' | translate
         }}</span>
-</p-dialog>
-<p-dialog appendTo="body" modal="true" [(visible)]="display" [style]="{width: '350px'}">
-    <ng-template pTemplate="header">
-        <h6 style="color: #04527e;font-weight: bold;font-size: 16pt;"> {{ 'Asset.Save' | translate }}
-        </h6>
-    </ng-template>
-    <span style="color: green;font-weight: bold;font-size: 12pt;text-align: center;"> {{ 'Asset.SavedSuccess' |
-        translate }}</span>
 </p-dialog>
 
 <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">

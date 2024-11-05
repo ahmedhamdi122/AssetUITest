@@ -124,6 +124,8 @@
                 "Select": "اختر",
                 "SavedSuccess": "تم حفظ البيانات بنجاح",
                 "DeletedSuccess":"تم مسح البيانات بنجاح",
+                "UpdatedSuccess":"تم تعديل البيانات بنجاح",
+                "Update":"تعديل",
                 "Error": "خطأ",
                 "DirectorName": "اسم المسؤول",
                 "ArabicDirectorName": "اسم المسؤول بالعربي",

@@ -47,6 +47,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CreateDepartmentComponent } from '../../departments/create-department/create-department.component';
 import { ListBrandVM } from 'src/app/Shared/Models/brandVM';
 import { BrandService } from 'src/app/Shared/Services/brand.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-edit',
@@ -151,11 +152,11 @@ export class EditComponent implements OnInit {
   model: string = "";
   lstModels: string[] = [];
   lstBrands: ListBrandVM[] = [];
-
+  purchaseDate:string='';
   @ViewChild('autoItems', { static: false }) public autoItems: AutoComplete;
 
   constructor(private authenticationService: AuthenticationService, private dialogService: DialogService,
-    private brandService: BrandService,
+    private brandService: BrandService,private spinner :NgxSpinnerService,
     private assetDetailService: AssetDetailService, private masterAssetService: MasterAssetService, private departmentService: DepartmentService, private supplierService: SupplierService, private uploadService: UploadFilesService,
     private floorService: FloorService, private buildingService: BuildingService, private roomService: RoomService, private datePipe: DatePipe,
     private config: DynamicDialogConfig, private ref: DynamicDialogRef, private confirmationService: ConfirmationService, private route: Router,
@@ -275,11 +276,13 @@ export class EditComponent implements OnInit {
       let id = this.config.data.id;
       this.assetId = id;
 
-
+      console.log(" this.assetId :", this.assetId)
       this.assetDetailService.GetAssetById(this.assetId).subscribe(
         data => {
           this.assetObj = data;
-
+          console.log(" this.assetObj :", this.assetObj)
+          console.log(" this.assetObj.purchaseDate :", this.assetObj.purchaseDate);
+          
           this.masterAssetService.GetMasterAssetById(data["masterAssetId"]).subscribe(masterObj => {
             this.masterAssetObj = masterObj;
                if (this.lang == "en") {
@@ -427,6 +430,7 @@ export class EditComponent implements OnInit {
 
 
   }
+ 
   getSubOrgByOrgId($event) {
     this.subOrganizationService.GetSubOrganizationByOrgId($event.target.value).subscribe(suborgs => {
       this.lstSubOrganizations = suborgs;
@@ -472,8 +476,9 @@ export class EditComponent implements OnInit {
   changeInstallationDate(event: MatDatepickerInputEvent<Date>) {
     this.assetObj.installationDate = this.datePipe.transform(event.value, "yyyy-MM-dd");
   }
-  changePurchaseDate(event: MatDatepickerInputEvent<Date>) {
+  changePurchaseDate(event:any) {
     this.assetObj.purchaseDate = this.datePipe.transform(event.value, "yyyy-MM-dd");
+    console.log(" this.assetObj.purchaseDate :", this.assetObj.purchaseDate)
   }
   changeReceivingDate(event: MatDatepickerInputEvent<Date>) {
     this.assetObj.receivingDate = this.datePipe.transform(event.value, "yyyy-MM-dd");
@@ -631,9 +636,8 @@ export class EditComponent implements OnInit {
       this.assetObj.hospitalId = this.currentUser.hospitalId;
     }
 
-    this.page.pagenumber = this.pageNumber;
-    this.page.pagesize = this.pageSize;
 
+    this.spinner.show();
     this.assetDetailService.UpdateAsset(this.assetObj).subscribe(savedId => {
       if (this.lstAssetDetailDocument.length > 0) {
         this.lstAssetDetailDocument.forEach((elemnt, index) => {
@@ -656,17 +660,11 @@ export class EditComponent implements OnInit {
               });
           });
         });
-
-        this.display = true;
-        this.ref.close(this.page);
       }
-
-
-
-
-      else {
-        this.display = true;
-        this.ref.close(this.page);
+      else
+      {
+        this.spinner.hide();
+        this.ref.close("updated");
       }
     }, error => {
       this.errorDisplay = true;
@@ -714,6 +712,7 @@ export class EditComponent implements OnInit {
     }
     return this.isValidDate;
   }
+ 
   validateIntallationDates(sDate: string, eDate: string) {
     this.isValidDate = true;
     if ((sDate != null && eDate != null) && (eDate) < (sDate)) {
@@ -838,7 +837,6 @@ export class EditComponent implements OnInit {
   }
   downloadFile(fileName) {
     var filePath = `${environment.Domain}UploadedAttachments/`;
-
     this.uploadService.downloadAssetDetailFile(fileName).subscribe(file => {
       var dwnldFile = filePath + 'AssetDetails/' + fileName;
       if (fileName != "" || fileName != null)

@@ -191,7 +191,7 @@ export class ListComponent implements OnInit {
   rowsSkipped:number;
   SectionModulePermisisons:SectionModulePermisisons[];
   reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
-
+  displaySuccessUpdate:boolean=false;
   showTitle: boolean = false;
   displaySuccessCreate:boolean=false;
   displaySuccessDelete:boolean=false;
@@ -295,8 +295,8 @@ export class ListComponent implements OnInit {
     //   this.totalCount = statuses.totalCount;
     // });
 
-this.onLoad()
-    
+this.onLoad();
+this.onLoadByLogIn();
   }
   onLoad() {
   
@@ -961,8 +961,7 @@ this.onLoad()
       this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
     }
 
-    this.page.pagenumber = 1;
-    this.page.pagesize = 10;
+  
     this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
       this.lstStatuses = statuses.listStatus;
       this.countNeedRepair = statuses.countNeedRepair
@@ -992,10 +991,13 @@ this.onLoad()
     this.sortFilterObjects.searchObj.warrantyTypeId = this.selectedWarrantyType;
     this.sortFilterObjects.searchObj.contractTypeId = this.selectedContractType;
     this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
+    // this.reloadTableObj={}
+    this.spinner.show();
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
       this.lstAssets = items.results;
       this.count = items.count;
       this.loading = false;
+      this.spinner.hide();
     });
   }
   addAsset() {
@@ -1070,8 +1072,14 @@ this.onLoad()
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-    ref.onClose.subscribe((page) => {
-      this.reset();
+    ref.onClose.subscribe((updated) => {
+     if(updated)
+     {
+      this.displaySuccessUpdate=true;
+      this.reloadTableObj.first= this.rowsSkipped;
+      this.LoadHospitalAssets(this.reloadTableObj);
+      this.dataTable.first= this.rowsSkipped;
+     }
     });
   }
   sort(event) {

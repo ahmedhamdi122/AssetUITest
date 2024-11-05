@@ -67,6 +67,15 @@
     <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
       {{ "Asset.SavedSuccess" | translate }}</span>
   </p-dialog>
+  <p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessUpdate" [style]="{ width: '350px' }">
+    <ng-template pTemplate="header">
+      <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
+        {{ "Asset.Update" | translate }}
+      </h6>
+    </ng-template>
+    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
+      {{ "Asset.UpdatedSuccess" | translate }}</span>
+  </p-dialog>
   <p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessDelete" [style]="{ width: '350px' }">
     <ng-template pTemplate="header">
       <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">

@@ -36,7 +36,7 @@
                         <label for="brand" [translate]="'Asset.Brand'">Brand</label>
                         <select class="form-select" id="assetBrand" name="assetBrand" [value]="0"
                             (change)="getModel($event)">
-                            <option value="0"> </option>
+                            <option value="0"> {{lang=="en"?"select Brand":"اختر ماركة"}}</option>
                             <option *ngFor="let brnd of lstBrands" [value]="brnd.id">
                                 {{ lang == "en" ? brnd.name : brnd.nameAr }}
                             </option>
@@ -46,7 +46,7 @@
 
                         <label for="model" [translate]="'Asset.Model'">Model</label>
                         <select class="form-select" id="assetModel" name="assetModel" [value]="0"   (change)="getMasterAssetId($event)">
-                            <option value="0"> </option>
+                            <option value="0"> {{lang=="en"?"select Model Number":"اختر رقم الموديل"}}</option>
                             <option *ngFor="let mdls of lstModels" [value]="mdls">
                                 {{ mdls }}
                             </option>
@@ -60,7 +60,7 @@
                         <label for="assetStatus" [translate]="'Asset.Status'"></label>
                         <select class="form-select" id="assetStatus" name="assetStatus" #assetStatus="ngModel"
                             [value]="0" [(ngModel)]="selectedAssetStatusId">
-                            <option value="0"> </option>
+                            <option value="0"> {{lang=="en"?"select Status":"اختر حالة"}}</option>
                             <option *ngFor="let sts of lstAssetStatus" [value]="sts.id">
                                 {{ lang == "en" ? sts.name : sts.nameAr }}
                             </option>
@@ -228,11 +228,11 @@
                         <label for="employeeId" [translate]="'Asset.Owner'"></label>
 
                         <p-multiSelect appendTo="body" [options]="lstEmployees" [(ngModel)]="selectedEmployees"
-                            [ngModelOptions]="{standalone: true}" optionLabel="name" optionValue="id" autoWidth="false"
+                            [ngModelOptions]="{standalone: true}" optionLabel="name" optionValue="id" autoWidth="false"   
                             [style]="{'width':'100%','height':'30px','margin-top':'3px','border-radius':'10px'}">
                         </p-multiSelect>
                     </div>
-                    <div [ngClass]="(isHospitalManager && canAddDepartment) == true ? 'col-2': 'col-3'">
+                    <div [ngClass]="canAddDepartment() == true ? 'col-2': 'col-3'">
                         <label for="departmentId" [translate]="'Asset.Departments'">Departments</label>
                         <select class="form-select" id="departmentId" name="departmentId" #departmentId="ngModel"
                             [value]="0" [(ngModel)]="assetObj.departmentId"
@@ -247,11 +247,11 @@
 
                     </div>
 
-                    <div style="margin-top: 25px;"
-                        [ngClass]="(isAdmin || isHospitalManager || canAddDepartment) == true ? 'col-1': ''"
-                        *ngIf="isAdmin || isHospitalManager || canAddDepartment">
-                        <span (click)="addDepartment()" style="display: inline;">
-                            <i class="fa fa-plus"></i>
+                    <div style="margin-top: 25px;" pTooltip="{{'Asset.AddDepartment' | translate}}"
+                        [ngClass]="canAddDepartment() == true ? 'col-1': ''"
+                        *ngIf="canAddDepartment()">
+                        <span (click)="addDepartment()" style="display: inline;" >
+                            <i class=" addbutton pi pi-plus-circle"></i>
                         </span>
                     </div>
                 </div>
@@ -259,11 +259,9 @@
                     <div class="col-4">
                         <label for="building" [translate]="'Asset.Buildings'">Buildings</label>
                         <select class="form-slecet" id="buildingId" name="buildingId" #buildingId="ngModel"
-                            [value]="null" [(ngModel)]="assetObj.buildingId" pTooltip="{{'Asset.BUilding' | translate}}"
+                            [value]="null" [(ngModel)]="assetObj.buildingId" pTooltip="{{'Asset.Building' | translate}}"
                             tooltipPosition="bottom" (change)="getFloorsByBuildId($event)">
-                            <option value="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Building' | translate
-                                }}
-                                --</option>
+                            <option value="null">-- {{ 'Asset.Select' | translate }} {{ 'Asset.Building' | translate}} --</option>
                             <option *ngFor="let build of lstBuildings" [value]="build.id">
                                 {{ lang == "en" ? build.name:build.nameAr}}
                             </option>
@@ -367,7 +365,6 @@
                             placeholder="Installation Date" [(ngModel)]="assetObj.receivingDate"
                             #receivingDate="ngModel" pTooltip="{{'Asset.ReceivingDate' | translate}}"
                             tooltipPosition="bottom">
-
                     </div>
                     <div class="col-3">
                         <label for="date" [translate]="'Asset.InstallationDate'">Installation Date</label>
@@ -430,7 +427,15 @@
     </form>
 </div>
 
-
+<p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessCreate" [style]="{ width: '350px' }">
+    <ng-template pTemplate="header">
+      <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
+        {{ "Asset.Save" | translate }}
+      </h6>
+    </ng-template>
+    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
+      {{ "Asset.SavedSuccess" | translate }}</span>
+  </p-dialog>
 
 <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
     <p-header style="color: rgb(181, 4, 4)"> {{ 'Asset.Error' | translate }} </p-header>
@@ -440,10 +445,10 @@
 
 <p-dialog appendTo="body" modal="true" [(visible)]="dateError">
     <ng-template pTemplate="header">
-        <h4 style="color: red;">{{ 'Asset.DateError' | translate }}</h4>
+        <h4 style="color: rgb(181, 4, 4);">{{ 'Asset.DateError' | translate }}</h4>
     </ng-template>
 
-    <span style="color: red;">
+    <span style="color: rgb(181, 4, 4);">
         {{error.errorMessage}}
 
     </span>

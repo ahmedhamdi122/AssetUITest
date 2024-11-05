@@ -31,6 +31,32 @@ export class CreateDepartmentComponent implements OnInit {
     });
   }
   onSubmit() {
+    if(this.deptObj.name=='')
+    {
+      this.errorDisplay=true;
+      if (this.lang == 'en') 
+        {
+        this.errorMessage="Please insert name"
+      }
+      else
+      {
+        this.errorMessage="من فضلك ادخل الاسم"
+      }
+      return;
+    }
+    if(this.deptObj.nameAr=='')
+    {
+      this.errorDisplay=true;
+      if (this.lang == 'en') 
+        {
+        this.errorMessage="Please insert name in Arabic"
+      }
+      else
+      {
+        this.errorMessage="من فضلك ادخل الاسم بالعربي"
+      }
+      return;
+    }
     if (this.currentUser.hospitalId != 0) {
       this.deptObj.hospitalId = this.currentUser.hospitalId;
       this.deptService.CreateDepartmentToHospital(this.deptObj).subscribe(addedObj => {

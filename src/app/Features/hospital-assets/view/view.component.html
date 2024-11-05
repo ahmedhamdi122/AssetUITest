@@ -1,7 +1,7 @@
 <div class="card">
     <div class="col-12" id="contentToConvert" id="printable">
         <div class="row top-buffer">
-            <div class="col-3">
+            <div class="col-3 d-flex justify-content-center align-items-center">
                 <img src="{{imgURL}}" width="80" height="80" name="assetImg" id="assetImg" />
             </div>
             <div class="col-4 text-center ">
@@ -11,12 +11,10 @@
                 <p> {{hospitalName}} </p>
             </div>
             <div class="col-4 " [ngStyle]="{'text-align': lang == 'en' ? 'right': 'left'}">
-                <!-- <ngx-barcode [bc-value]="assetObj.barcode" [bc-display-value]="true" height="1" width="14">
-                </ngx-barcode> -->
+                <ngx-barcode6     [bc-format]="'MSI'"[bc-value]="assetObj.barcode"[bc-display-value]="true"></ngx-barcode6>
             </div>
             <div class="col-1">
-                <button type="button" class="btn" (click)="convetToPDF()" id="non-printable"> <i
-                        class="fa-solid fa-print fa-2xl"></i></button>
+                <button type="button" pTooltip="{{'Asset.Print'| translate}}" class="btn mt-4" (click)="convetToPDF()" id="non-printable"> <i class="pi pi-print" style="font-size: 50px;color:black"></i></button>
             </div>
         </div>
 
@@ -314,32 +312,39 @@
                 </div>
             </div>
         </div>
-        <div class="card-body">
+        <div *ngIf="lstAttachment.length>0" class="card-body">
             <h3 class="card-title" style="font-weight: bold;background-color: #cedef1;  padding: 0px 10px;">
                 {{
                 'Asset.Attachments' | translate }}
             </h3>
-            <table class="table table-striped" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th [translate]="'Asset.Id'"> {{ 'Asset.Id' | translate }}</th>
-                        <th [translate]="'Asset.FileName'"> {{ 'Asset.FileName' | translate }}</th>
-                        <th [translate]="'Asset.FileName'"> {{ 'Asset.Title' | translate }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let item of lstAttachment">
-                        <td>{{item.id}}</td>
-                        <td>
-                            {{item.fileName}}
-                        </td>
-                        <td>
-                            {{item.title}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
+           
+            <div class="row mt-3">
+                <div class="col-12">
+                    <p-table [value]="lstAttachment" dataKey="id"     [rowHover]="true" [paginator]="true" [rows]="3" [totalRecords]="lstAttachment.length" [scrollable]="true" 
+                        styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="text-align: center;">{{ 'Asset.FileName' | translate }}</th>
+                                <th style="text-align: center;">{{ 'Asset.Title' | translate }}</th>
+                           
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-assetDetailDocument let-rowIndex="rowIndex" >
+                            <tr>
+                                <td style="text-align: center;">{{assetDetailDocument.fileName}}</td>
+                                <td style="text-align: center;" > {{assetDetailDocument.title}}</td>
+                              
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                              <td colspan="8" class="text-center">No data available</td>
+                            </tr>
+                          </ng-template>
+                    </p-table>
+                
+                </div>
+            </div> 
         </div>
     </div>
 </div>

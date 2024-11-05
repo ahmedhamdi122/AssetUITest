@@ -126,6 +126,8 @@
                 "Select": "Select",
                 "SavedSuccess": "Data is Saved Successfully",
                 "DeletedSuccess":"Data is Deleted Successfully",
+                "UpdatedSuccess":"Data is Updated Successfully",
+                "Update":"Update",
                 "Error": "Error",
                 "DirectorName": "Director Name",
                 "ArabicDirectorName": "Arabic Director Name",

@@ -33,6 +33,7 @@ export class ListComponent implements OnInit {
   errorMessage='';
   displaySuccessCreate=false;
   displaySuccessDelete=false;
+  displaySuccessUpdate:boolean=false;
   @ViewChild('table') dataTable: Table;
   dir=this.lang=='en'?'ltr':'rtl';
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
@@ -123,6 +124,7 @@ export class ListComponent implements OnInit {
         ref.onClose.subscribe((updated) => {
           if(updated)
           {
+            this.displaySuccessUpdate=true;
            this.reloadTableObj.first= this.rowsSkipped;
            this.LoadRoleCategories(this.reloadTableObj);
            this.dataTable.first= this.rowsSkipped;
