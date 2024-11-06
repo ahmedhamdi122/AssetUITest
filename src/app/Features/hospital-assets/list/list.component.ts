@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DialogService, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { AssetDetailVM, MainClass, EditAssetDetailVM, ListAssetDetailVM, SearchHospitalAssetVM, SortAssetDetailVM, SortAndFilterVM } from 'src/app/Shared/Models/assetDetailVM';
+import { AssetDetailVM, MainClass, EditAssetDetailVM, ListAssetDetailVM, SearchAssetDetailVM, SortAssetDetailVM, SortAndFilterVM } from 'src/app/Shared/Models/assetDetailVM';
 import { ListBrandVM } from 'src/app/Shared/Models/brandVM';
 import { ListDepartmentVM } from 'src/app/Shared/Models/departmentVM';
 import { ListCityVM } from 'src/app/Shared/Models/cityVM';
@@ -64,7 +64,7 @@ export class ListComponent implements OnInit {
   errorDisplay: boolean = false;
   errorMessage: string;
   selectedObj: EditAssetDetailVM;
-  searchObj: SearchHospitalAssetVM;
+  searchObj: SearchAssetDetailVM;
   public show: boolean = false;
   public buttonName: any = 'Show';
   lstAssets: ListAssetDetailVM[] = [];
@@ -300,11 +300,11 @@ this.onLoadByLogIn();
   }
   onLoad() {
   
-    this.searchObj = {
-      masterAssetName: '', masterAssetNameAr: '',
-      contractTypeId: 0, contractDate: '', contractEnd: '', contractStart: '', barCode: '', masterAssetId: 0, statusId: 0, departmentId: 0, warrantyTypeId: 0, end: '', start: '',
-      userId: '', model: '', code: '', cityId: 0, governorateId: 0, organizationId: 0, subOrganizationId: 0, originId: 0, supplierId: 0, brandId: 0, hospitalId: 0, assetName: '', serial: '', assetId: 0
-    }
+    // this.searchObj = {
+    //   masterAssetName: '', masterAssetNameAr: '',
+    //   contractTypeId: 0, contractStartDate: '', contractEndDate: '', barCode: '', masterAssetId: 0, statusId: 0, departmentId: 0, warrantyTypeId: 0, warrantyStartDate: '', warrantyEndDate: '',
+    //   userId: '', model: '', code: '', cityId: 0, governorateId: 0, organizationId: 0, subOrganizationId: 0, originId: 0, supplierId: 0, brandId: 0, hospitalId: 0, assetName: '', serial: '', assetId: 0
+    // }
     this.sortObj = {
       sortBy: '', model: '', departmentId: 0, masterAssetId: 0, brand: "", supplier: '', userId: '', barCodeValue: '', barCode: '', statusId: 0, hospitalId: 0, governorateId: 0, cityId: 0, subOrganizationId: 0, organizationId: 0, originId: 0, supplierId: 0, brandId: 0,
       serialValue: '', serial: '', Id: 0, assetName: '', assetNameAr: '', orgName: '', orgNameAr: '', cityName: '', cityNameAr: '', sortStatus: '', supplierName: '', supplierNameAr: '',
@@ -329,12 +329,12 @@ this.onLoadByLogIn();
         this.lstDepartments = items;
       });
     }
-    this.masterAssetService.GetMasterAssets().subscribe(lstmasters => {
-      this.lstMasterAssets = lstmasters;
-    });
+    // this.masterAssetService.GetMasterAssets().subscribe(lstmasters => {
+    //   this.lstMasterAssets = lstmasters;
+    // });
 
     this.sortFilterObjects = {
-      searchObj: { assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', contractDate: '', contractEnd: '', contractStart: '', contractTypeId: 0, departmentId: 0, end: '', governorateId: 0, hospitalId: 0, masterAssetId: 0, masterAssetName: '', masterAssetNameAr: '', model: '', organizationId: 0, originId: 0, serial: '', start: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: this.currentUser.id, warrantyTypeId: 0 },
+      searchObj: { assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', strContractStartDate: '', strContractEndDate: '', contractTypeId: 0, departmentId: 0, strWarrantyEndDate: '', governorateId: 0, hospitalId: 0, masterAssetId: 0, masterAssetName: '', masterAssetNameAr: '', model: '', organizationId: 0, originId: 0, serial: '', strWarrantyStartDate: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: this.currentUser.id, warrantyTypeId: 0 },
       sortObj: { sortBy: '', assetName: '', assetNameAr: '', barCode: '', barCodeValue: '', brand: '', brandId: 0, brandName: '', brandNameAr: '', cityId: 0, cityName: '', cityNameAr: '', Code: '', departmentId: 0, governorateId: 0, governorateName: '', governorateNameAr: '', hospitalId: 0, hospitalName: '', hospitalNameAr: '', Id: 0, masterAssetId: 0, model: '', organizationId: 0, orgName: '', orgNameAr: '', originId: 0, serial: '', serialValue: '', sortStatus: '', statusId: 0, subOrganizationId: 0, subOrgName: '', subOrgNameAr: '', supplier: '', supplierId: 0, supplierName: '', supplierNameAr: '', userId: '' },
       isSearchAndSort: false
     };
@@ -807,10 +807,15 @@ this.onLoadByLogIn();
     // }
     this.rowsSkipped=event.first;
     this.spinner.show()
+    console.log("this.sortFilterObjects :",this.sortFilterObjects,event.first, event.rows);
+    console.log("event.first :",event.first);
+    console.log("event.rows :",event.rows)
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
       this.lstAssets = items.results;
       this.count = items.count;
       this.loading = false;
+      console.log(" this.lstAssets :",);
+      
       this.spinner.hide();
     });
 
@@ -819,6 +824,8 @@ this.onLoadByLogIn();
   getAssetsByHospitalId($event) {
     this.masterAssetService.GetMasterAssets().subscribe(lstmasters => {
       this.lstMasterAssets = lstmasters;
+      console.log("call this.lstMasterAssets :",this.lstMasterAssets);
+      
     });
   }
   reset() {
@@ -885,9 +892,14 @@ this.onLoadByLogIn();
     this.warrantyEndSearch = false;
   }
   getCitiesByGovId(govId: number) {
-    this.cityService.GetCitiesByGovernorateId(govId).subscribe(cities => {
-      this.lstCities = cities;
-    });  
+    if(govId!=0)
+    {
+      this.cityService.GetCitiesByGovernorateId(govId).subscribe(cities => {
+        this.lstCities = cities;
+        console.log(" this.lstCities :", this.lstCities);
+        
+      }); 
+    }
   }
   getSubOrgByOrgId($event) {
     this.subOrganizationService.GetSubOrganizationByOrgId($event.target.value).subscribe(suborgs => {
@@ -897,14 +909,21 @@ this.onLoadByLogIn();
     this.lstHospitals =[];
     this.hospitalService.GetHospitalsByGovCityOrgSubOrgId(this.sortFilterObjects.searchObj.governorateId,this.sortFilterObjects.searchObj.cityId,this.sortFilterObjects.searchObj.organizationId,this.sortFilterObjects.searchObj.subOrganizationId).subscribe(lstHosts => {
       this.lstHospitals = lstHosts;
+      
     });
   }
   getHospitalsByGovCityOrgSubOrgId()
   {
     this.lstHospitals =[];
-    this.hospitalService.GetHospitalsByGovCityOrgSubOrgId(this.sortFilterObjects.searchObj.governorateId,this.sortFilterObjects.searchObj.cityId,this.sortFilterObjects.searchObj.organizationId,this.sortFilterObjects.searchObj.subOrganizationId).subscribe(lstHosts => {
-      this.lstHospitals = lstHosts;
-    });
+    if(this.sortFilterObjects.searchObj.governorateId!=0 || this.sortFilterObjects.searchObj.cityId!=0 || this.sortFilterObjects.searchObj.organizationId!=0 ||this.sortFilterObjects.searchObj.subOrganizationId!=0)
+    {
+      this.hospitalService.GetHospitalsByGovCityOrgSubOrgId(this.sortFilterObjects.searchObj.governorateId,this.sortFilterObjects.searchObj.cityId,this.sortFilterObjects.searchObj.organizationId,this.sortFilterObjects.searchObj.subOrganizationId).subscribe(lstHosts => {
+        this.lstHospitals = lstHosts;
+        console.log("this.lstHospitals :",this.lstHospitals);
+  
+      });
+    }
+
   }
   // getHospitalsBySubOrgId($event) {
   //   if (this.sortFilterObjects.searchObj.subOrganizationId != 0) {
@@ -951,6 +970,17 @@ this.onLoadByLogIn();
   }
   onSearch() {
 
+    if(this.sortFilterObjects.searchObj.governorateId==0 && this.sortFilterObjects.searchObj.cityId==0 && this.sortFilterObjects.searchObj.organizationId==0 && this.sortFilterObjects.searchObj.subOrganizationId==0 && this.sortFilterObjects.searchObj.hospitalId==0 &&  this.sortFilterObjects.searchObj.masterAssetId==0 && this.assetBarCodeObj==null && this.assetSerailNumberObj==null && this.sortFilterObjects.searchObj.originId==0 && this.sortFilterObjects.searchObj.supplierId==0 && this.sortFilterObjects.searchObj.brandId==0 && this.sortFilterObjects.searchObj.departmentId==0 && this.selectedContractType==0 && this.sortFilterObjects.searchObj.strContractStartDate=='' && this.sortFilterObjects.searchObj.strContractEndDate=="" && this.selectedWarrantyType==0 && this.sortFilterObjects.searchObj.strWarrantyStartDate=="" && this.sortFilterObjects.searchObj.strWarrantyEndDate=="" )
+    {
+      this.errorDisplay=true;
+      if (this.lang == "en") {
+        this.errorMessage = "Please enter a search term before clicking 'Search'.";
+      }
+      else {
+        this.errorMessage = "'يرجى الادخال قبل النقر على 'بحث";
+      }
+      return ;
+    }
     this.lstStatuses = [];
     this.lstMainStatuses = [];
 
@@ -961,30 +991,30 @@ this.onLoadByLogIn();
       this.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
     }
 
-  
-    this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
-      this.lstStatuses = statuses.listStatus;
-      this.countNeedRepair = statuses.countNeedRepair
-      this.countInActive = statuses.countInActive;
-      this.countWorking = statuses.countWorking;
-      this.countUnderMaintenance = statuses.countUnderMaintenance;
-      this.countUnderInstallation = statuses.countUnderInstallation;
-      this.countNotWorking = statuses.countNotWorking;
-      this.countShutdown = statuses.countShutdown;
-      this.countExecluded = statuses.countExecluded;
-      this.countHold = statuses.countHold;
-      this.lstStatus10 = statuses.lstStatus10;
-      this.lstStatus11 = statuses.lstStatus11;
-      this.lstStatus12 = statuses.lstStatus12;
-      this.lstStatus13 = statuses.lstStatus13;
-      this.lstStatus14 = statuses.lstStatus14;
-      this.lstStatus15 = statuses.lstStatus15;
-      this.lstStatus16 = statuses.lstStatus16;
-      this.lstStatus17 = statuses.lstStatus17;
-      this.lstStatus18 = statuses.lstStatus18;
-      this.lstStatus19 = statuses.lstStatus19;
-      this.totalCount = statuses.totalCount;
-    });
+    
+    // this.assetStatusService.GetHospitalAssetStatus(this.statusId, this.currentUser.id, this.hospitalId).subscribe(statuses => {
+    //   this.lstStatuses = statuses.listStatus;
+    //   this.countNeedRepair = statuses.countNeedRepair
+    //   this.countInActive = statuses.countInActive;
+    //   this.countWorking = statuses.countWorking;
+    //   this.countUnderMaintenance = statuses.countUnderMaintenance;
+    //   this.countUnderInstallation = statuses.countUnderInstallation;
+    //   this.countNotWorking = statuses.countNotWorking;
+    //   this.countShutdown = statuses.countShutdown;
+    //   this.countExecluded = statuses.countExecluded;
+    //   this.countHold = statuses.countHold;
+    //   this.lstStatus10 = statuses.lstStatus10;
+    //   this.lstStatus11 = statuses.lstStatus11;
+    //   this.lstStatus12 = statuses.lstStatus12;
+    //   this.lstStatus13 = statuses.lstStatus13;
+    //   this.lstStatus14 = statuses.lstStatus14;
+    //   this.lstStatus15 = statuses.lstStatus15;
+    //   this.lstStatus16 = statuses.lstStatus16;
+    //   this.lstStatus17 = statuses.lstStatus17;
+    //   this.lstStatus18 = statuses.lstStatus18;
+    //   this.lstStatus19 = statuses.lstStatus19;
+    //   this.totalCount = statuses.totalCount;
+    // });
 
     this.sortFilterObjects.searchObj.statusId = this.statusId;
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
@@ -992,13 +1022,11 @@ this.onLoadByLogIn();
     this.sortFilterObjects.searchObj.contractTypeId = this.selectedContractType;
     this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
     // this.reloadTableObj={}
-    this.spinner.show();
-    this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
-      this.lstAssets = items.results;
-      this.count = items.count;
-      this.loading = false;
-      this.spinner.hide();
-    });
+    // this.spinner.show();
+    console.log("sortFilterObjects :",this.sortFilterObjects);
+   console.log("",typeof(this.sortFilterObjects.searchObj.governorateId));
+   
+    this.LoadHospitalAssets(this.reloadTableObj);
   }
   addAsset() {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
@@ -1556,41 +1584,41 @@ this.onLoadByLogIn();
     this.sortFilterObjects.searchObj.masterAssetId = event["id"];
   }
   getStartDate($event) {
-    this.sortFilterObjects.searchObj.start = this.datePipe.transform($event, "MM-dd-yyyy");
+    this.sortFilterObjects.searchObj.strWarrantyStartDate = this.datePipe.transform($event, "MM-dd-yyyy");
     this.warrantyTypeRadio = false;
   }
   getEndDate($event) {
-    this.sortFilterObjects.searchObj.end = this.datePipe.transform($event, "MM-dd-yyyy");
+    this.sortFilterObjects.searchObj.strWarrantyEndDate = this.datePipe.transform($event, "MM-dd-yyyy");
     this.warrantyTypeRadio = false;
   }
   getContractStartDate($event) {
-    this.sortFilterObjects.searchObj.contractStart = this.datePipe.transform($event, "yyyy-MM-dd");
+    this.sortFilterObjects.searchObj.strContractStartDate = this.datePipe.transform($event, "yyyy-MM-dd");
     this.contractTypeRadio = false;
   }
   getContractEndDate($event) {
-    this.sortFilterObjects.searchObj.contractEnd = this.datePipe.transform($event, "yyyy-MM-dd");
+    this.sortFilterObjects.searchObj.strContractEndDate = this.datePipe.transform($event, "yyyy-MM-dd");
   }
   clearWarrantyType() {
     this.selectedWarrantyType = 0;
     this.warrantyEndSearch = true;
     this.warrantyTypeRadio = true;
-    this.sortFilterObjects.searchObj.start = "";
-    this.sortFilterObjects.searchObj.end = "";
+    this.sortFilterObjects.searchObj.strWarrantyStartDate = "";
+    this.sortFilterObjects.searchObj.strWarrantyEndDate = "";
   }
   clearEndWarrantyType() {
     this.selectedWarrantyType = 0;
     this.warrantyEndSearch = true;
     this.warrantyTypeRadio = true;
 
-    this.sortFilterObjects.searchObj.start = "";
-    this.sortFilterObjects.searchObj.end = "";
+    this.sortFilterObjects.searchObj.strWarrantyStartDate = "";
+    this.sortFilterObjects.searchObj.strWarrantyEndDate = "";
   }
   clearContractType() {
     this.selectedContractType = 0;
     this.contractDateSearch = true;
     this.contractTypeRadio = true;
-    this.sortFilterObjects.searchObj.contractStart = "";
-    this.sortFilterObjects.searchObj.contractEnd = "";
+    this.sortFilterObjects.searchObj.strContractStartDate = "";
+    this.sortFilterObjects.searchObj.strContractEndDate = "";
 
   }
   onContractTypeChanged($event) {

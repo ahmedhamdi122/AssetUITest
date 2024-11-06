@@ -5,7 +5,7 @@ import { environment } from '../../../environments/environment';
 import {
   AssetDetailAttachmentVM, AssetDetailVM, AssetOwnerVM, CountAssetVM, CreateAssetDetailAttachmentVM,
   CreateAssetDetailVM, EditAssetDetailVM, FilterAssetDetail, filterDto, GeneratedAssetDetailBCVM, HospitalAssetAge,
-  ListAssetDetailVM, ListPMAssetTaskScheduleVM, MainClass, RequestMainClass, SearchHospitalAssetVM, SortAndFilterVM, SortAssetDetailsVM, SortAssetDetailVM,
+  ListAssetDetailVM, ListPMAssetTaskScheduleVM, MainClass, RequestMainClass, SearchAssetDetailVM, SortAndFilterVM, SortAssetDetailsVM, SortAssetDetailVM,
   SortAssetVM,
   ViewAssetDetailVM, ViewAssetForReportVM
 } from '../Models/assetDetailVM';
@@ -44,7 +44,7 @@ export class AssetDetailService {
     return this.httpClient.get<HospitalAssetAge[]>(`${environment.GetAssetsByAgeGroup}${hospitalId}`, this.httpHeader);
   }
 
-  GetGeneralAssetsByAgeGroup(searchObj: SearchHospitalAssetVM): Observable<HospitalAssetAge[]> {
+  GetGeneralAssetsByAgeGroup(searchObj: SearchAssetDetailVM): Observable<HospitalAssetAge[]> {
     return this.httpClient.post<HospitalAssetAge[]>(`${environment.GetGeneralAssetsByAgeGroup}`, searchObj, this.httpHeader);
   }
 
@@ -216,17 +216,17 @@ export class AssetDetailService {
     return this.httpClient.post<MainClass>(`${environment.GetHospitalAssetsBySupplierId}${supplierId}/${pagenumber}/${pagesize}`, this.httpHeader);
   }
 
-  SearchHospitalAssetsBySupplierId(searchObj: SearchHospitalAssetVM, pagenumber: number, pagesize: number): Observable<MainClass> {
+  SearchHospitalAssetsBySupplierId(searchObj: SearchAssetDetailVM, pagenumber: number, pagesize: number): Observable<MainClass> {
     return this.httpClient.post<MainClass>(`${environment.SearchHospitalAssetsBySupplierId}${pagenumber}/${pagesize}`, searchObj, this.httpHeader);
   }
   getCount(userId: string): Observable<number> {
     return this.httpClient.get<number>(`${environment.getAssetDetailcount}/${userId}`);
   }
 
-  SearchAssetDetails(pagenumber: number, pagesize: number, model: SearchHospitalAssetVM): Observable<MainClass> {
+  SearchAssetDetails(pagenumber: number, pagesize: number, model: SearchAssetDetailVM): Observable<MainClass> {
     return this.httpClient.post<MainClass>(`${environment.SearchAssetDetails}${pagenumber}/${pagesize}`, model, this.httpHeader);
   }
-  SearchAssetDetailsCount(searchObj: SearchHospitalAssetVM): Observable<number> {
+  SearchAssetDetailsCount(searchObj: SearchAssetDetailVM): Observable<number> {
     return this.httpClient.post<number>(`${environment.SearchAssetDetailsCount}`, searchObj, this.httpHeader);
   }
   GenerateQrCodeForAllAssets(): Observable<any> {
@@ -265,7 +265,7 @@ export class AssetDetailService {
     return this.httpClient.post<any>(`${environment.UpdateSelectedQrCode}`, selectedAssets, this.httpHeader);
   }
 
-  SearchAssetDetailsByHospitalId(model: SearchHospitalAssetVM): Observable<ListAssetDetailVM[]> {
+  SearchAssetDetailsByHospitalId(model: SearchAssetDetailVM): Observable<ListAssetDetailVM[]> {
     return this.httpClient.post<ListAssetDetailVM[]>(`${environment.SearchAssetDetailsByHospitalId}`, model, this.httpHeader);
   }
 

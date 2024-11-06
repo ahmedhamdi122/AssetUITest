@@ -444,39 +444,76 @@ export class AssetDetailAttachmentVM {
     fileName: string;
     title: string;
 }
-export class SearchHospitalAssetVM {
-    governorateId: number;
-    cityId: number;
-    subOrganizationId: number;
-    organizationId: number;
-    originId: number;
-    supplierId: number;
-    brandId: number;
-    hospitalId: number;
-    departmentId: number;
-    code: string;
-    barCode: string;
-    model: string;
-    assetId: number;
-    assetName: string;
-    serial: string;
-    userId: string;
-    masterAssetId: number;
-
-    masterAssetName: string;
-    masterAssetNameAr: string;
-
-
-    statusId: number;
-    warrantyTypeId: number;
-    contractTypeId: number;
-    start: string;
-    end: string;
-
-
-    contractDate: string;
-    contractStart: string;
-    contractEnd: string;
+// export class SearchHospitalAssetVM {
+//     governorateId: number=0;
+//     cityId: number=0;
+//     subOrganizationId: number=0;
+//     organizationId: number=0;
+//     originId: number=0;
+//     supplierId: number=0;
+//     brandId: number=0;
+//     hospitalId: number=0;
+//     departmentId: number=0;
+//     code: string="";
+//     barCode: string="";
+//     model: string="";
+//     assetId: number=0;
+//     assetName: string="";
+//     serial: string="";
+//     userId: string="";
+//     masterAssetId: number=0;
+//     masterAssetName: string="";
+//     masterAssetNameAr: string="";
+//     statusId: number=0;
+//     warrantyTypeId: number=0;
+//     contractTypeId: number=0;
+//     contractStartDate: string="";
+//     contractEndDate: string="";
+//     WarrantyStartDate: string="";
+//     WarrantyEndDate: string="";
+// }
+export class SearchAssetDetailVM {
+    warrantyTypeId?: number;
+    contractTypeId?: number;
+    periorityId?: number;
+    originId?: number;
+    brandId?: number;
+    departmentId?: number;
+    supplierId?: number;
+    hospitalId?: number;
+    governorateId?: number;
+    cityId?: number;
+    statusId?: number;
+    organizationId?: number;
+    subOrganizationId?: number;
+    assetId?: number;
+    masterAssetId?: number;
+    userId?: string;
+    assetName?: string;
+    assetNameAr?: string;
+    serial?: string;
+    code?: string;
+    barCode?: string;
+    model?: string;
+    sortField?: string;
+    sortStatus?: string;
+  
+    masterAssetNameAr?: string;
+    masterAssetName?: string;
+  
+    strWarrantyStartDate?: string;
+    strWarrantyEndDate?: string;
+    strPurchaseStartDate?: string;
+    strPurchasEndDate?: string;
+  
+    purchaseDateFrom?: Date;
+    purchaseDateTo?: Date;
+    strContractStartDate?: string;
+    strContractEndDate?: string;
+    startDate?: Date;
+    endDate?: Date;
+    contractStartDate?: Date;
+    contractEndDate?: Date;
 }
 export class AssetOwnerVM {
     assetDetailId: number;
@@ -607,7 +644,7 @@ export class SortAssetDetailsVM {
 }
 export class SortAndFilterVM {
     sortObj: SortAssetDetailVM;
-    searchObj: SearchHospitalAssetVM;
+    searchObj: SearchAssetDetailVM;
     isSearchAndSort: boolean;
 
 }

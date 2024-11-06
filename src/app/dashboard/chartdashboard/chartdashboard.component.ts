@@ -255,7 +255,7 @@ export class ChartdashboardComponent implements OnInit {
 
 
     this.sortFilterObjects = {
-      searchObj: { assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', contractDate: '', contractEnd: '', contractStart: '', contractTypeId: 0, departmentId: 0, end: '', governorateId: 0, hospitalId: 0, masterAssetId: 0, masterAssetName: '', masterAssetNameAr: '', model: '', organizationId: 0, originId: 0, serial: '', start: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: '', warrantyTypeId: 0 },
+      searchObj: {masterAssetName:"",masterAssetNameAr:"", assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', strContractStartDate: '', strContractEndDate: '', contractTypeId: 0, departmentId: 0, strWarrantyEndDate: '', governorateId: 0, hospitalId: 0, masterAssetId: 0,  model: '', organizationId: 0, originId: 0, serial: '', strWarrantyStartDate: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: '', warrantyTypeId: 0 },
       sortObj: { sortBy: '', assetName: '', assetNameAr: '', barCode: '', barCodeValue: '', brand: '', brandId: 0, brandName: '', brandNameAr: '', cityId: 0, cityName: '', cityNameAr: '', Code: '', departmentId: 0, governorateId: 0, governorateName: '', governorateNameAr: '', hospitalId: 0, hospitalName: '', hospitalNameAr: '', Id: 0, masterAssetId: 0, model: '', organizationId: 0, orgName: '', orgNameAr: '', originId: 0, serial: '', serialValue: '', sortStatus: '', statusId: 0, subOrganizationId: 0, subOrgName: '', subOrgNameAr: '', supplier: '', supplierId: 0, supplierName: '', supplierNameAr: '', userId: '' },
       isSearchAndSort: false
     };

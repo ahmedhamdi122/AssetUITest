@@ -156,12 +156,10 @@ export class ListComponent implements OnInit {
         }
         return ;
      }
-   
   //  this.SearchSortMasterAsset.modelNumber=this.SearchSortMasterAsset.modelNumber?.trim() ?? ''
   //  this.SearchSortMasterAsset.assetName=this.SearchSortMasterAsset.assetName?.trim() ?? ''
   this.reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10}
-   this.LoadMasterAssets(this.reloadTableObj);
-    
+  this.LoadMasterAssets(this.reloadTableObj);
   }
   addMasterAsset () {
     const dialogRef2 = this.dialogService.open(CreateComponent, {
