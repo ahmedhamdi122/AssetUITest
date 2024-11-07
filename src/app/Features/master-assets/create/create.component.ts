@@ -97,7 +97,7 @@ export class CreateComponent implements OnInit {
   @ViewChild('tabGroup') tabGroup: MatTabGroup;
   isAdmin: boolean = false;
   isHospitalManager: boolean = false;
-  canAddBrand: boolean = false;
+  canAddBrand: boolean = true;
   lstRoleNames: string[] = [];
   invalidAssetName=false;
   invalidAssetNameAr=false;

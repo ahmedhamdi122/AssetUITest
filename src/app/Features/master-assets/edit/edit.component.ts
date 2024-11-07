@@ -139,7 +139,8 @@ export class EditComponent implements OnInit {
     this.masterAssetService.GetMasterAssetById(id).subscribe((data) => {
       this.masterAssetObj = data;
       this.masterAssetId = this.masterAssetObj.id;
-
+      console.log(" this.masterAssetObj :", this.masterAssetObj);
+      
       if (this.masterAssetObj.assetImg == null) {
         this.imgURL = `${environment.Domain}UploadedAttachments/MasterAssets/UploadMasterAssetImage/UnknownAsset.png`;
       }
@@ -161,11 +162,13 @@ export class EditComponent implements OnInit {
           this.masterAssetObj.categoryTypeId = categoryObj["categoryTypeId"]
         })
       }
-      this.masterAssetService
-        .GetAttachmentByMasterAssetId(this.masterId)
+      console.log("this.masterId :",this.masterId);
+      this.masterAssetService.GetAttachmentByMasterAssetId(this.masterId)
         .subscribe(
           (files) => {
             this.lstAttachment = files;
+            console.log("lstAttachment :",this.lstAttachment);
+            
           },
           (error) => console.log(error)
         );
@@ -174,10 +177,8 @@ export class EditComponent implements OnInit {
         .GetPMAssetTaskByMasterAssetId(id)
         .subscribe((tasks) => {
           this.lstPMTaskItems = tasks;
+          console.log("this.lstPMTaskItems :",this.lstPMTaskItems);
         });
-
-
-
       this.masterAssetComponentService.ListMasterAssetComponentsByMasterAssetId(this.masterId)
         .subscribe((components) => {
           this.lstSavedComponents = components;
@@ -723,9 +724,11 @@ export class EditComponent implements OnInit {
       }
     });
   }
-  removeFileFromObjectArray(doc) {
-    const index: number = this.lstMasterAssetDocuments.indexOf(doc);
-    this.lstMasterAssetDocuments.splice(index, 1);
+  removeFileFromObjectArray(rowIndex) {
+    console.log("rowIndex :",rowIndex);
+    
+    this.lstMasterAssetDocuments.splice(rowIndex, 1);
+
   }
   uploadMultipleFile = (event: any) => {
     const files: FileList = event.target.files;

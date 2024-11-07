@@ -112,8 +112,8 @@ import { NgxBarcode6Module } from 'ngx-barcode6';
     MatBadgeModule,
     MatListModule,
     MatButtonModule,
-     CalendarModule,DialogModule
-    // RadioButtonModule,
+     CalendarModule,DialogModule,
+     RadioButtonModule,
     // MatProgressSpinnerModule,
     // MatInputModule
   ],

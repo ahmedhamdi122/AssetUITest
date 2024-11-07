@@ -807,14 +807,10 @@ this.onLoadByLogIn();
     // }
     this.rowsSkipped=event.first;
     this.spinner.show()
-    console.log("this.sortFilterObjects :",this.sortFilterObjects,event.first, event.rows);
-    console.log("event.first :",event.first);
-    console.log("event.rows :",event.rows)
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
       this.lstAssets = items.results;
       this.count = items.count;
       this.loading = false;
-      console.log(" this.lstAssets :",);
       
       this.spinner.hide();
     });
@@ -824,7 +820,6 @@ this.onLoadByLogIn();
   getAssetsByHospitalId($event) {
     this.masterAssetService.GetMasterAssets().subscribe(lstmasters => {
       this.lstMasterAssets = lstmasters;
-      console.log("call this.lstMasterAssets :",this.lstMasterAssets);
       
     });
   }
@@ -835,6 +830,17 @@ this.onLoadByLogIn();
     this.router.navigate([currentUrl]);
   }
   clearSearch() {
+    if(this.sortFilterObjects.searchObj.governorateId==0 && this.sortFilterObjects.searchObj.cityId==0 && this.sortFilterObjects.searchObj.organizationId==0 && this.sortFilterObjects.searchObj.subOrganizationId==0 && this.sortFilterObjects.searchObj.hospitalId==0 &&  this.sortFilterObjects.searchObj.masterAssetId==0 && this.assetBarCodeObj==null && this.assetSerailNumberObj==null && this.sortFilterObjects.searchObj.originId==0 && this.sortFilterObjects.searchObj.supplierId==0 && this.sortFilterObjects.searchObj.brandId==0 && this.sortFilterObjects.searchObj.departmentId==0 && this.selectedContractType==0 && this.sortFilterObjects.searchObj.strContractStartDate=='' && this.sortFilterObjects.searchObj.strContractEndDate=="" && this.selectedWarrantyType==0 && this.sortFilterObjects.searchObj.strWarrantyStartDate=="" && this.sortFilterObjects.searchObj.strWarrantyEndDate=="" )
+      {
+        this.errorDisplay=true;
+        if (this.lang == "en") {
+          this.errorMessage = "No data to clear.";
+        }
+        else {
+          this.errorMessage = ".لا يوجد بيانات للحذف";
+        }
+        return ;
+      }
     this.lstassetDetailBarcodes = [];
     this.lstAssetSerailNumberObj = [];
     this.lstMasterAssetNames = [];
@@ -873,19 +879,25 @@ this.onLoadByLogIn();
       this.sortFilterObjects.searchObj.hospitalId = 0;
       this.sortFilterObjects.searchObj.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
     }
-
-    this.spinner.show();
-    this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
-      this.lstAssets = items.results;
-      this.count = items.count;
-      this.loading = false;
-      this.spinner.hide();
-
-
-    });
-
-
-
+    this.sortFilterObjects.searchObj.governorateId=0 
+    this.sortFilterObjects.searchObj.cityId=0 
+    this.sortFilterObjects.searchObj.organizationId=0 
+    this.sortFilterObjects.searchObj.subOrganizationId=0 
+    this.sortFilterObjects.searchObj.hospitalId=0
+    this.sortFilterObjects.searchObj.masterAssetId=0
+    this.assetBarCodeObj==null
+     this.assetSerailNumberObj=null 
+     this.sortFilterObjects.searchObj.originId=0 
+      this.sortFilterObjects.searchObj.supplierId=0 
+      this.sortFilterObjects.searchObj.brandId=0 
+       this.sortFilterObjects.searchObj.departmentId=0 
+        this.selectedContractType=0 
+         this.sortFilterObjects.searchObj.strContractStartDate='' ;
+          this.sortFilterObjects.searchObj.strContractEndDate="" 
+           this.selectedWarrantyType=0 ;
+            this.sortFilterObjects.searchObj.strWarrantyStartDate="" 
+             this.sortFilterObjects.searchObj.strWarrantyEndDate==""
+    this.LoadHospitalAssets(this.reloadTableObj);
 
   }
   onWarrantyTypeChanged($event) {
@@ -896,7 +908,6 @@ this.onLoadByLogIn();
     {
       this.cityService.GetCitiesByGovernorateId(govId).subscribe(cities => {
         this.lstCities = cities;
-        console.log(" this.lstCities :", this.lstCities);
         
       }); 
     }
@@ -919,7 +930,6 @@ this.onLoadByLogIn();
     {
       this.hospitalService.GetHospitalsByGovCityOrgSubOrgId(this.sortFilterObjects.searchObj.governorateId,this.sortFilterObjects.searchObj.cityId,this.sortFilterObjects.searchObj.organizationId,this.sortFilterObjects.searchObj.subOrganizationId).subscribe(lstHosts => {
         this.lstHospitals = lstHosts;
-        console.log("this.lstHospitals :",this.lstHospitals);
   
       });
     }
@@ -1021,11 +1031,6 @@ this.onLoadByLogIn();
     this.sortFilterObjects.searchObj.warrantyTypeId = this.selectedWarrantyType;
     this.sortFilterObjects.searchObj.contractTypeId = this.selectedContractType;
     this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    // this.reloadTableObj={}
-    // this.spinner.show();
-    console.log("sortFilterObjects :",this.sortFilterObjects);
-   console.log("",typeof(this.sortFilterObjects.searchObj.governorateId));
-   
     this.LoadHospitalAssets(this.reloadTableObj);
   }
   addAsset() {
@@ -1073,7 +1078,6 @@ this.onLoadByLogIn();
             },
             error => {
               this.spinner.hide()
-              console.log("error :",error);
               
               this.errorDisplay=true;
               this.errorMessage=`${this.lang == 'en'?`${error.error.message}`:`${error.error.messageAr}`}`;

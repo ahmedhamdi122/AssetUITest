@@ -89,6 +89,8 @@ export class ViewComponent implements OnInit {
   }
 
   downloadFile(fileName) {
+    console.log("fileName :",fileName);
+    
     var filePath = `${environment.Domain}UploadedAttachments/`;
     this.uploadService.downloadMasterAssetFile(fileName).subscribe((file) => {
       var dwnldFile = filePath + 'MasterAssets/' + fileName;

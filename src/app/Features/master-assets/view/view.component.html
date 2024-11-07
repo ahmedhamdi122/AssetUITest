@@ -133,14 +133,14 @@
                 <tr>
                   <th class="text-center">{{ 'Asset.FileName' | translate }}</th>
                   <th class="text-center">{{ 'Asset.Title' | translate }}</th>
-                  <th></th>
+                  <th class="text-center">{{ 'Asset.Download' | translate }}</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-masterAssetDocument let-rowIndex="rowIndex">
                 <tr>
                   <td class="text-center">{{masterAssetDocument.fileName}}</td>
                   <td class="text-center">{{masterAssetDocument.title}}</td>
-                  <td class="text-center"><i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download" style="color: #61bb20"></i>
+                  <td class="text-center" (click)="downloadFile(masterAssetDocument.fileName)"><i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download" style="color: #61bb20"></i>
                   </td>        
                 </tr>
                       </ng-template>

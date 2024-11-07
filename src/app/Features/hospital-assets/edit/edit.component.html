@@ -398,7 +398,7 @@
                     </div>
                 </div>
                 <div class="col-3">
-                    <input type="file" multiple #file placeholder="Choose file" (change)="uploadMultipleFile($event)"
+                    <input type="file" multiple #file (change)="uploadMultipleFile($event)"
                         style="display: none;">
                     <button type="button" style="background-color: #51A351;color: white;padding: 7px 30px ;" name="upload" class="btn" style="margin:0px 10px"
                         (click)="file.click()"> <i class="pi pi-upload"></i> {{'Asset.SelectUploadFiles' |translate }}
@@ -407,7 +407,6 @@
             </div>
             <div class="row">
                 <div class="col-12 mt-3">
-
                     <p-table [value]="lstAssetDetailDocument" dataKey="id"
                         styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
                         <ng-template pTemplate="header">
@@ -435,7 +434,7 @@
                                 </td>
                                 <td  style="text-align: inherit;" >
                                     <span (click)="removeFileFromObjectArray(rowIndex)"><i
-                                            class="fa-solid fa-times-circle" style="color: rgb(123, 9, 9);"></i></span>
+                                        pTooltip="{{'Asset.Delete'| translate}}" class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
                                 </td>
                             </tr>
                         </ng-template>
@@ -460,13 +459,11 @@
                                 <td  style="text-align: inherit;" >{{item.fileName}}</td>
                                 <td  style="text-align: inherit;" >{{item.title}}</td>
                                 <td style="cursor: pointer;text-align: center;">
-                                    <a (click)="DeleteFile(item.id)" class="deleteIcon" [translate]="'Asset.Delete'"> <i
-                                            class="fa-solid fa-trash"></i>
+                                    <a (click)="DeleteFile(item.id)"><i pTooltip="{{'Asset.Delete'| translate}}" class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i>
                                     </a>
                                 </td>
                                 <td style="cursor: pointer;text-align: center;">
-                                    <a (click)="downloadFile(item.fileName)"><i class="fas fa-download"
-                                            class="downloadIcon"></i></a>
+                                    <a (click)="downloadFile(item.fileName)"><i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download" style="color: #61bb20"></i></a>
                                 </td>
                             </tr>
                         </tbody>

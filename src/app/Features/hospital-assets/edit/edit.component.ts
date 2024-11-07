@@ -93,7 +93,6 @@ export class EditComponent implements OnInit {
   lstAssetOwners: AssetOwnerVM[] = [];
   selectedEmployees: number[] = [];
   lstRequests: ListRequestVM[] = [];
-
   errorMessage: string;
   errorDisplay: boolean = false;
   loading: boolean = true;
@@ -402,6 +401,8 @@ export class EditComponent implements OnInit {
     });
 
     this.masterAssetService.GetMasterAssets().subscribe(masters => {
+      console.log(" this.lstMasterAssets :", this.lstMasterAssets);
+      
       this.lstMasterAssets = masters;
       if (this.lang == "en") {
         this.lstMasterAssets.forEach(item => item.name = item.name + " - " + item.model + " - " + item.brandName);
@@ -836,8 +837,11 @@ export class EditComponent implements OnInit {
     }
   }
   downloadFile(fileName) {
+    console.log("fileName :",fileName);
     var filePath = `${environment.Domain}UploadedAttachments/`;
     this.uploadService.downloadAssetDetailFile(fileName).subscribe(file => {
+      console.log("after req file :",file);
+      
       var dwnldFile = filePath + 'AssetDetails/' + fileName;
       if (fileName != "" || fileName != null)
         window.open(dwnldFile);

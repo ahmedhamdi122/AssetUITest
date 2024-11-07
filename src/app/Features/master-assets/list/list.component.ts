@@ -63,7 +63,7 @@ export class ListComponent implements OnInit {
   showFilter=false;
   reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
   SectionModulePermisisons:SectionModulePermisisons[];
-  constructor(private spinner:NgxSpinnerService,private confirmationService: ConfirmationService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private ConfirmationService:ConfirmationService,private route: Router,
+  constructor(private spinner:NgxSpinnerService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private confirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
   ngOnInit(): void {
@@ -190,11 +190,12 @@ export class ListComponent implements OnInit {
       acceptIcon:"none",
       rejectIcon:"none",
       accept: ()=>{
+        this.spinner.show();
         this.masterAssetService.DeleteMasterAsset(masterAsset.id).subscribe(deleted => {
+          this.spinner.hide();
           this.reloadTableObj.first= this.rowsSkipped;
           this.LoadMasterAssets(this.reloadTableObj);
           this.dataTable.first= this.rowsSkipped;
-        this.displaySuccessDelete=true;
         },
           (error) => {
             this.errorDisplay=true;

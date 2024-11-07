@@ -208,7 +208,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   MatInputModule,
     // A11yModule,
     TableModule,
-    DynamicDialogModule ,
      NgxUiLoaderModule,
      FileUploadModule,
      DropdownModule,

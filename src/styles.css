@@ -24,6 +24,7 @@ body {
   background-color: #5CB85C;
   color: white !important;
   padding: 7px;
+  text-decoration: none;
 }
 
 .addbutton:hover {

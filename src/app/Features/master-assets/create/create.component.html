@@ -13,23 +13,27 @@
                 <h5 for="Main">{{ "Asset.Main" | translate }}:</h5>
               </div>
               <div class="col-2">
+                <label for="code" >{{'Asset.Code' | translate}}</label>
                 <input type="text" class="form-control" id="code" name="code" #code="ngModel"
-                  [(ngModel)]="masterAssetObj.code" disabled placeholder="{{'Asset.Code' | translate}}" />
+                  [(ngModel)]="masterAssetObj.code" disabled  />
               </div>
               <div class="col-2">
+                <label for="name" >{{'Asset.Name' | translate}}</label>
                 <input type="text" class="form-control" id="name" name="name" [(ngModel)]="masterAssetObj.name"
-                  #name="ngModel" [class.is-invalid]=" (name.touched && name.errors)"  placeholder="{{'Asset.Name' | translate}}"
+                  #name="ngModel" [class.is-invalid]=" (name.touched && name.errors)"  
                   autofocus required />
               </div>
               <div class="col-2">
-                <input type="text" class="form-control" id="nameAr" name="nameAr" #nameAr="ngModel"
+                <label for="name" >{{'Asset.ArabicName' | translate}}</label>
+                <input type="text" class="form-control" id="name" name="name" #nameAr="ngModel"
                   [(ngModel)]="masterAssetObj.nameAr" autofocus required [class.is-invalid]="  nameAr.errors" 
-                  placeholder="{{'Asset.ArabicName' | translate}}" />
+               />
               </div>
               <div class="col-2">
+                <label for="ecriId" >{{'Asset.ECRI' | translate}}</label>
                 <select class="form-select" id="ecriId" name="ecriId" #ecriId="ngModel"  
                   [(ngModel)]="masterAssetObj.ecriId">
-                  <option selected [value]="null">{{ "Asset.ECRI" | translate }}</option>
+                  <option selected [value]="null">{{ "Asset.Select" | translate }}</option>
                   <option *ngFor="let ecri of lstECRIs" [value]="ecri.id">
                     {{ lang == "en" ? ecri.name : ecri.nameAr }}
                   </option>
@@ -105,26 +109,18 @@
         </div>
         <div class="container mt-4">
         <div class="row">
-          <div class="col-12">
-            <div class="row">
               <div class="col-2">
                 <h5 for="IndustryData">{{ "Asset.IndustryData" | translate }}:</h5>
               </div>
-              <div [ngClass]="(isHospitalManager && canAddBrand) == true ? 'col-1': 'col-2'">
-                <select class="form-select" id="brandId" #brandId="ngModel" name="brandId" [(ngModel)]="masterAssetObj.brandId"   (ngModelChange)="validateBrand()" [ngClass]="{'is-invalid': isInvalidBrand}"
-                  >
+              <div class="col-2">
+                <select class="form-select" id="brandId" #brandId="ngModel" name="brandId" [(ngModel)]="masterAssetObj.brandId"   (ngModelChange)="validateBrand()" [ngClass]="{'is-invalid': isInvalidBrand}">
                   <option selected [ngValue]="null">{{ "Asset.Brand" | translate }}</option>
                   <option *ngFor="let brand of lstBrands" [value]="brand.id">
                     {{ lang == "en" ? brand.name : brand.nameAr }}
                   </option>
                 </select>
               </div>
-              <div [ngClass]="(isHospitalManager && canAddBrand) == true ? 'col-1': ''"
-                *ngIf="(isHospitalManager && canAddBrand)" style="margin-top: 25px;">
-                <span (click)="addBrand()">
-                  <i class="pi pi-plus-circle add" style="margin-top: 30px;"></i>
-                </span>
-              </div>
+             
               <div class="col-2">
                 <select class="form-select" id="origin" #origin="ngModel" name="origin"
                   [(ngModel)]="masterAssetObj.originId">
@@ -139,20 +135,32 @@
                   [ngModelOptions]="{ standalone: true }" [(ngModel)]="masterAssetObj.versionNumber"
                   placeholder="{{'Asset.Version' | translate}}" />
               </div>
-              <div class="col-2">
-                <input type="text" pInputText id="modelNumber" class="form-control"
-                  [ngModelOptions]="{ standalone: true }" [(ngModel)]="masterAssetObj.modelNumber"
-                  placeholder="{{'Asset.Model' | translate}}" />
               </div>
-              <div class="col-2">
-                <input type="number" pInputText id="ExpectedLifeTime" [ngModelOptions]="{ standalone: true }"
-                  class="form-control" [(ngModel)]="masterAssetObj.expectedLifeTime"
-                  placeholder="{{'Asset.ExpectedLifeTime' | translate}}" />
-              </div>
+          <div class="row mt-4">
+            <div class="col-2"></div>
+            <div class="col-2">
+              <input type="text" pInputText id="modelNumber" class="form-control"
+                [ngModelOptions]="{ standalone: true }" [(ngModel)]="masterAssetObj.modelNumber"
+                placeholder="{{'Asset.Model' | translate}}" />
+            </div>
+            <div Class="col-2">
+              <input type="number" pInputText id="ExpectedLifeTime" [ngModelOptions]="{ standalone: true }"
+                class="form-control" [(ngModel)]="masterAssetObj.expectedLifeTime"
+                placeholder="{{'Asset.ExpectedLifeTime' | translate}}" />
+            </div>
+            <div class="col-2" *ngIf="(canAddBrand)" >
+              <!-- <span (click)="addBrand()" class="btn btnUpload" style="margin: 0px 10px;">
+                {{'Asset.AddBrand'| translate}}  <i class="pi pi-plus-circle" ></i>
+              </span> -->
+              <span (click)="addBrand()" class="addbutton"> <i  class="pi pi-plus-circle"></i> {{ "Asset.AddBrand" | translate }}</span>
+              <!-- <button type="button" name="btnUpload" class="addbutton"  (click)="addBrand()">
+                <i style="font-size: 20px;margin-top: 2px;" class="pi pi-plus-circle"></i> {{'Asset.AddBrand' |translate }}
+              </button> -->
             </div>
           </div>
+
         </div> 
-        </div>
+  
 
         <div class="container mt-4">
         <div class="row ">
@@ -323,14 +331,14 @@
           <div class="col-5">
 
             <label> {{ "Asset.Name" | translate }}</label>
-            <input class="form-control mt-2" #taskname="ngModel" [(ngModel)]="pmTaskObj.taskname"   [class.is-invalid]="pmTaskObj.taskname==''" placeholder="task name"
+            <input class="form-control mt-2" #taskname="ngModel" [(ngModel)]="pmTaskObj.taskname"   [class.is-invalid]="pmTaskObj.taskname==''" 
               [ngModelOptions]="{standalone: true}">
           </div>
           <div class="col-5">
 
 
             <label> {{ "Asset.ArabicName" | translate }}</label>
-            <input class="form-control mt-2" #tasknameAr="ngModel" [(ngModel)]="pmTaskObj.tasknameAr" placeholder="task name"  [class.is-invalid]="pmTaskObj.tasknameAr==''"
+            <input class="form-control mt-2" #tasknameAr="ngModel" [(ngModel)]="pmTaskObj.tasknameAr"   [class.is-invalid]="pmTaskObj.tasknameAr==''"
               [ngModelOptions]="{standalone: true}">
           </div>
 
@@ -386,17 +394,17 @@
           <div class="col">
             <label> {{ "Asset.Code" | translate }}</label>
             <input class="form-control" #compCode="ngModel" [(ngModel)]="compObj.compCode"  required=""  type="text" maxlength="5" [ngClass]="{'is-invalid':compCode.invalid}"
-              placeholder="{{'Asset.Code' |  translate}}" [ngModelOptions]="{standalone: true}">
+              [ngModelOptions]="{standalone: true}">
           </div>
           <div class="col">
             <label> {{ "Asset.Name" | translate }}</label>
             <input class="form-control" #compname="ngModel" [(ngModel)]="compObj.compName"  [ngClass]="{'is-invalid': compObj.compName==''}"
-              placeholder="{{'Asset.Name' |  translate}}" [ngModelOptions]="{standalone: true}">
+              [ngModelOptions]="{standalone: true}">
           </div>
           <div class="col">
             <label> {{ "Asset.ArabicName" | translate }}</label>
             <input class="form-control" #compnameAr="ngModel" [(ngModel)]="compObj.compNameAr" [ngClass]="{'is-invalid': compObj.compNameAr==''}" 
-              placeholder="{{'Asset.ArabicName' |  translate}}" [ngModelOptions]="{standalone: true}">
+              [ngModelOptions]="{standalone: true}">
           </div>
         </div>
         </div>
@@ -482,7 +490,7 @@
     </mat-tab-group>
   <div class="row top-buffer">
     <div class="col-12 text-center">
-      <button type="submit" (click)="onSubmit()" class="btn btn-success" value="save">
+      <button type="submit" (click)="onSubmit()" class="btn" style="  background-color: #5CB85C;color: white;" value="save">
         {{ "Asset.Save" | translate }}
       </button>
     </div>
