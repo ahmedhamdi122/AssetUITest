@@ -291,6 +291,7 @@
                 "ServiceRequests": "بلاغ الأعطال",
                 "SRNumber": "رقم بلاغ العطل",
                 "brands": "المصنعين",
+                "SavedBrand":"تم إضافة ماركة بنجاح",
                 "RequestStatus": "حالة بلاغ العطل",
                 "WOSubject": "عنوان أمر الشغل",
                 "WorkOrderType": "نوع أمر الشغل",

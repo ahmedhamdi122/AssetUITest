@@ -31,6 +31,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateBrandComponent } from 'src/app/Features/brands/create-brand/create-brand.component';
 import { PMTimeService } from 'src/app/Shared/Services/pmtime.service';
 import { MatTabGroup } from '@angular/material/tabs';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-create',
@@ -73,7 +74,7 @@ export class CreateComponent implements OnInit {
 
   uploadFileName: string;
   fileName = '';
-
+  savedBrandDisplay:boolean=false;
   masterAssetDocument: CreateMasterAssetAttachmentVM;
   lstMasterAssetDocuments: CreateMasterAssetAttachmentVM[] = [];
 
@@ -106,7 +107,7 @@ export class CreateComponent implements OnInit {
   public taskForm: FormGroup;
   constructor(
     private authenticationService: AuthenticationService, private masterAssetService: MasterAssetService, private masterAssetComponentService: MasterAssetComponentService, private uploadService: UploadFilesService, private categoryTypeService: CategoryTypeService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private originService: OriginService,
-    private brandService: BrandService, private ecriService: ECRIService, private assetPeriorityService: AssetPeriorityService, private pmTimeService: PMTimeService, private assetWorkOrderTaskService: AssetWorkOrderTaskService, private dialogService: DialogService,
+    private brandService: BrandService, private ecriService: ECRIService, private assetPeriorityService: AssetPeriorityService, private pmTimeService: PMTimeService, private assetWorkOrderTaskService: AssetWorkOrderTaskService, private dialogService: DialogService,private spinner:NgxSpinnerService,
     private route: Router, private ref: DynamicDialogRef) {
     this.currentUser = this.authenticationService.currentUserValue;
   }
@@ -578,12 +579,20 @@ export class CreateComponent implements OnInit {
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-    dialogRef2.onClose.subscribe((res) => {
+    dialogRef2.onClose.subscribe((brandId) => {
       this.lstBrands = [];
-      this.brandService.GetBrands().subscribe(brands => {
-        this.lstBrands = brands;
-        this.masterAssetObj.brandId = res;
-      });
+      if(brandId)
+      {
+        this.savedBrandDisplay=true;
+        this.spinner.show();
+        this.brandService.GetBrands().subscribe(brands => {
+          this.lstBrands = brands;
+          this.masterAssetObj.brandId = brandId;
+          this.isInvalidBrand=false;
+          this.spinner.hide();
+        });
+      }
+    
     });
   }
   
