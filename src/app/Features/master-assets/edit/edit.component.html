@@ -251,7 +251,6 @@
               </ng-template>
               <div class="container mt-4">
               <div class="row ">
-         
                 <div class="col-3 mt-3">
                   <input type="file" multiple #file placeholder="Choose file" (change)="uploadMultipleFile($event)"
                     style="display: none;">
@@ -262,14 +261,15 @@
               </div>
               <div class="row">
                 <div class="col-12 mt-3">
-              
-                    <!-- <p-table    [paginator]="true"
-                    [rows]="5"[totalRecords]="lstAttachment.length" [value]="lstAttachment" dataKey="id">
+                  <div style="font-size: 1rem;" class="mb-3">    <i class="pi pi-paperclip"></i>
+                    {{ 'Asset.AddNewDocuments' | translate }}</div>
+                    <p-table    [paginator]="true"
+                    [rows]="5"[totalRecords]="lstMasterAssetDocuments.length" [value]="lstMasterAssetDocuments" dataKey="id">
                       <ng-template pTemplate="header">
                         <tr>
                           <th class="text-center">{{ 'Asset.FileName' | translate }}</th>
                           <th class="text-center">{{ 'Asset.Title' | translate }}</th>
-                          <th></th>
+                          <th class="text-center">{{ 'Asset.Delete' | translate }}</th>
                         </tr>
                       </ng-template>
                       <ng-template pTemplate="body" let-masterAssetDocument let-rowIndex="rowIndex" let-editing="editing">
@@ -297,41 +297,33 @@
                           <td colspan="3" class="text-center">No data available</td>
                         </tr>
                       </ng-template>
-                    </p-table> -->
-                    <table class="table table-striped" style="width: 100%;">
-                      <thead>
+                    </p-table>
+                    <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i class="pi pi-paperclip"></i>
+                      {{ 'Asset.SavedDocuments' | translate }}</div>
+                    <p-table   [paginator]="true"
+                    [rows]="5"[totalRecords]="lstAttachment.length" [value]="lstAttachment" dataKey="id">
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th class="text-center">{{ 'Asset.FileName' | translate }}</th>
+                          <th class="text-center">{{ 'Asset.Title' | translate }}</th>
+                          <th style="text-align: center;" [translate]="'Asset.Download'"> {{'Asset.Download' | translate }}</th>
+                          <th style="text-align: center;" [translate]="'Asset.Delete'"> {{'Asset.Delete' | translate }}</th>                                                
+                        </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-masterAssetDocument let-rowIndex="rowIndex">
                           <tr>
-                              <th [translate]="'Asset.Id'"> {{ 'Asset.Id' | translate }}</th>
-                              <th [translate]="'Asset.FileName'"> {{ 'Asset.FileName' | translate }}</th>
-
-                              <th [translate]="'Asset.FileName'"> {{ 'Asset.Title' | translate }}</th>
-                              <th style="text-align: center;" [translate]="'Asset.Delete'"> {{ 'Asset.Delete'
-                                  | translate }}</th>
-                              <th style="text-align: center;" [translate]="'Asset.Download'"> {{
-                                  'Asset.Download' | translate }}</th>
+                            <td class="text-center">{{masterAssetDocument.fileName}}</td>
+                            <td class="text-center"> {{masterAssetDocument.title}}</td>
+                            <td class="text-center" (click)="downloadFile(masterAssetDocument.fileName)"><i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download viewIcon" style="color: #61bb20;font-size: 1rem;"></i></td> 
+                            <td style="cursor: pointer;text-align: center;"><span (click)="DeleteFile(masterAssetDocument,rowIndex)"><i pTooltip="{{'Asset.Delete'| translate}}" class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span></td>
                           </tr>
-                      </thead>
-                      <tbody>
-                          <tr *ngFor="let item of lstAttachment">
-                              <td>{{item.id}}</td>
-                              <td>
-                                  {{item.fileName}}
-                              </td>
-                              <td>
-                                  {{item.title}}
-                              </td>
-                              <td style="cursor: pointer;text-align: center;">
-                                  <span (click)="DeleteFile(item.id)"><i pTooltip="{{'Asset.Delete'| translate}}" class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
-
-                              </td>
-                              <td style="cursor: pointer;text-align: center;" pTooltip="Download File"
-                                  tooltipPosition="bottom">
-                                  <a (click)="downloadFile(item.fileName)"><i class="fas fa fa-download"
-                                          style="color: #61bb20;"></i></a>
-                              </td>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                          <tr>
+                            <td colspan="5" class="text-center">No data available</td>
                           </tr>
-                      </tbody>
-                  </table>
+                        </ng-template>
+                      </p-table> 
                 </div>
               </div>
               </div>
@@ -358,14 +350,14 @@
                 <div class="col-5">
       
                   <label> {{ "Asset.Name" | translate }}</label>
-                  <input class="form-control mt-2" #taskname="ngModel" [(ngModel)]="pmTaskObj.taskname"   [class.is-invalid]="pmTaskObj.taskname==''" placeholder="task name"
+                  <input class="form-control mt-2" #taskname="ngModel" [(ngModel)]="pmTaskObj.taskname"   [class.is-invalid]="pmTaskObj.taskname==''" 
                     [ngModelOptions]="{standalone: true}">
                 </div>
                 <div class="col-5">
       
       
                   <label> {{ "Asset.ArabicName" | translate }}</label>
-                  <input class="form-control mt-2" #tasknameAr="ngModel" [(ngModel)]="pmTaskObj.tasknameAr" placeholder="task name"  [class.is-invalid]="pmTaskObj.tasknameAr==''"
+                  <input class="form-control mt-2" #tasknameAr="ngModel" [(ngModel)]="pmTaskObj.tasknameAr" [class.is-invalid]="pmTaskObj.tasknameAr==''"
                     [ngModelOptions]="{standalone: true}">
                 </div>
       
@@ -379,22 +371,51 @@
           
               <div class="row mt-3">
                 <div class="col-12">
+                  <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i class="pi pi-paperclip"></i>
+                    {{ 'Asset.AddPreventiveMaintenance' | translate }}</div>
                   <p-table    [paginator]="true"
-                  [rows]="3"[totalRecords]="lstPMTaskItems.length" [value]="lstPMTaskItems" dataKey="id">
+                  [rows]="3"[totalRecords]="CreatelstPMTasks.length" [value]="CreatelstPMTasks" dataKey="id">
                     <ng-template pTemplate="header">
                       <tr>
                         <th class="text-center">{{ "Asset.Name" | translate }}</th>
                         <th class="text-center">{{ "Asset.ArabicName" | translate }}</th>
-                        <th></th>
+                        <th class="text-center">{{ 'Asset.Delete' | translate }}</th>
                       </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-task let-rowIndex="rowIndex">
                       <tr>
-                        <td class="text-center">{{ task.taskname }}</td>
-                        <td class="text-center">{{ task.tasknameAr }}</td>
+                        <td class="text-center">{{ task.taskname}}</td>
+                        <td class="text-center">{{ task.tasknameAr}}</td>
                       
                         <td class="text-center">
-                          <span (click)="removeTaskFromObjectArray(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
+                          <span (click)="removeFromCreatelstPMTasks(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"pTooltip="{{'Asset.Delete' | translate}}"></i></span>
+                        </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="3" class="text-center">No data available</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                  <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i class="pi pi-paperclip"></i>
+                    {{ 'Asset.SavedPreventiveMaintenance' | translate }}</div>
+                  <p-table    [paginator]="true"
+                  [rows]="3"[totalRecords]="SavedlstPMTaskItems.length" [value]="SavedlstPMTaskItems" dataKey="id">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th class="text-center">{{ "Asset.Name" | translate }}</th>
+                        <th class="text-center">{{ "Asset.ArabicName" | translate }}</th>
+                        <th class="text-center">{{ 'Asset.Delete' | translate }}</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-task let-rowIndex="rowIndex">
+                      <tr>
+                        <td class="text-center">{{ task. name}}</td>
+                        <td class="text-center">{{ task.nameAr}}</td>
+                      
+                        <td class="text-center">
+                          <span (click)="DeletePreventiveMaintenance(task.id,rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"pTooltip="{{'Asset.Delete' | translate}}"></i></span>
                         </td>
                       </tr>
                     </ng-template>
@@ -421,17 +442,17 @@
                 <div class="col">
                   <label> {{ "Asset.Code" | translate }}</label>
                   <input class="form-control" #compCode="ngModel" [(ngModel)]="compObj.compCode"  required=""  type="text" maxlength="5" [ngClass]="{'is-invalid':compCode.invalid}"
-                    placeholder="{{'Asset.Code' |  translate}}" [ngModelOptions]="{standalone: true}">
+                     [ngModelOptions]="{standalone: true}">
                 </div>
                 <div class="col">
                   <label> {{ "Asset.Name" | translate }}</label>
                   <input class="form-control" #compname="ngModel" [(ngModel)]="compObj.compName"  [ngClass]="{'is-invalid': compObj.compName==''}"
-                    placeholder="{{'Asset.Name' |  translate}}" [ngModelOptions]="{standalone: true}">
+                     [ngModelOptions]="{standalone: true}">
                 </div>
                 <div class="col">
                   <label> {{ "Asset.ArabicName" | translate }}</label>
                   <input class="form-control" #compnameAr="ngModel" [(ngModel)]="compObj.compNameAr" [ngClass]="{'is-invalid': compObj.compNameAr==''}" 
-                    placeholder="{{'Asset.ArabicName' |  translate}}" [ngModelOptions]="{standalone: true}">
+                     [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               </div>
@@ -440,12 +461,12 @@
                 <div class="col">
                   <label> {{ "Asset.Price" | translate }}</label>
                   <input class="form-control" #price="ngModel" [(ngModel)]="compObj.price"
-                    placeholder="{{'Asset.Price' |  translate}}" [ngModelOptions]="{standalone: true}">
+                   [ngModelOptions]="{standalone: true}">
                 </div>
                 <div class="col">
                   <label> {{ "Asset.PartNo" | translate }}</label>
                   <input class="form-control" #partNo="ngModel" [(ngModel)]="compObj.partNo"
-                    placeholder="{{'Asset.PartNo' |  translate}}" [ngModelOptions]="{standalone: true}">
+                   [ngModelOptions]="{standalone: true}">
                 </div>
               </div>
               </div>
@@ -478,7 +499,8 @@
               <div class="container">
               <div class="row mt-3">
                 <div class="col-12">
-            
+                  <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i class="pi pi-paperclip"></i>
+                    {{ 'Asset.SavedAssetCompoenets' | translate }}</div>
                   <p-table    [paginator]="true"
                   [rows]="2"[totalRecords]="lstSavedComponents.length" [value]="lstSavedComponents" dataKey="id">
                     <ng-template pTemplate="header">
@@ -487,17 +509,17 @@
                         <th class="text-center">{{ "Asset.ArabicName" | translate }}</th>
                         <th class="text-center">{{ "Asset.Price" | translate }}</th>
                         <th class="text-center">{{ "Asset.PartNo" | translate }}</th>
-                        <th></th>
+                        <th class="text-center">{{ 'Asset.Delete' | translate }}</th>
                       </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-Component let-rowIndex="rowIndex">
                       <tr>
-                        <td class="text-center">{{ Component.assetName }}</td>
-                        <td class="text-center">{{ Component.assetNameAr }}</td>
+                        <td class="text-center">{{ Component.name}}</td>
+                        <td class="text-center">{{ Component.nameAr }}</td>
                         <td class="text-center">{{ Component.price }}</td>
                         <td class="text-center">{{ Component.partNo}}</td>
-                        <td>
-                          <span (click)="removeComponentItem(rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"></i></span>
+                        <td class="text-center">
+                          <span (click)="DeleteAssetComponent(Component,rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"pTooltip="{{'Asset.Delete' | translate}}"></i></span>
                         </td>
                   
                       </tr>
@@ -516,39 +538,31 @@
             </mat-tab>
             
           </mat-tab-group>
-        <div class="row top-buffer">
-            <div class="col-12 text-center">
-                <button class="btn btn-success" value="save" type="button" (click)="onSubmit()">
-                    {{ 'Asset.Save' | translate }} </button>
-            </div>
+  
+        <div class="row mt-3 d-flex justify-content-center">
+          <div class="col-2" (click)="onSubmit()">
+            <a type="submit" class="addbutton">
+              {{ "Asset.Save" | translate }}
+            </a>
+          </div>
         </div>
     </form>
 </div>
 
-<p-dialog appendTo="body" modal="true" [(visible)]="savedfilesdisplay">
-    <ng-template pTemplate="header">
-        <h6 style="color: #04527e;font-weight: bold;font-size: 16pt;"> {{ 'Asset.Save' | translate }}</h6>
-    </ng-template>
-    <span style="color: green;font-weight: bold;font-size: 12pt;text-align: center;">{{ 'Asset.SavedFiles' | translate
-        }}</span>
-</p-dialog>
 
-<p-dialog appendTo="body" modal="true" [(visible)]="display" [style]="{width: '350px'}">
-    <ng-template pTemplate="header">
-        <h6 [translate]="'Asset.Save'" style="color: #04527e;font-weight: bold;font-size: 16pt;">
-        </h6>
-    </ng-template>
-    <span style="color: green;font-weight: bold;font-size: 12pt;text-align: center;"> {{ 'Asset.SavedSuccess' |
-        translate }}</span>
-</p-dialog>
 
+<p-dialog appendTo="body" modal="true" [(visible)]="showSuccessfullyMessage">
+  <ng-template pTemplate="header">
+    <h6 style="color: #04527e; font-weight: bold; font-size: 16pt">
+      {{ SuccessfullyHeader }}
+    </h6>
+  </ng-template>
+  <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">{{ SuccessfullyMessage}}</span>
+</p-dialog>
 <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
     <p-header style="color: rgb(181, 4, 4)"> {{ 'Asset.Error' | translate }} </p-header>
     <span style="color: rgb(181, 4, 4); font-weight: bold">
         {{ errorMessage }}</span>
 </p-dialog>
 
-
-
-<p-confirmDialog header="Are you sure you want to delete this Item">
-</p-confirmDialog>
+<p-confirmDialog />

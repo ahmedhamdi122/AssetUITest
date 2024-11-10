@@ -140,8 +140,7 @@
                 <tr>
                   <td class="text-center">{{masterAssetDocument.fileName}}</td>
                   <td class="text-center">{{masterAssetDocument.title}}</td>
-                  <td class="text-center" (click)="downloadFile(masterAssetDocument.fileName)"><i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download" style="color: #61bb20"></i>
-                  </td>        
+                  <td class="text-center" (click)="downloadFile(masterAssetDocument.fileName)"><i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download" style="color: #61bb20;cursor: pointer;"></i></td>        
                 </tr>
                       </ng-template>
             </p-table>

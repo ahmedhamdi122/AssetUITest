@@ -63,6 +63,9 @@ export class ListComponent implements OnInit {
   showFilter=false;
   reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
   SectionModulePermisisons:SectionModulePermisisons[];
+  SuccessfullyHeader:string='';
+  SuccessfullyMessage:string='';
+  showSuccessfullyMessage:boolean=false;
   constructor(private spinner:NgxSpinnerService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private confirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
@@ -177,7 +180,16 @@ export class ListComponent implements OnInit {
       this.reloadTableObj.first=lastPageIndex;
         this.LoadMasterAssets(this.reloadTableObj);
        this.dataTable.first=this.count;
-      this.displaySuccessCreate  =true;
+      this.showSuccessfullyMessage  =true;
+      if(this.lang=="en"){
+        this.SuccessfullyMessage="Added successfully";
+        this.SuccessfullyHeader="Add" 
+    }
+    else
+    {
+      this.SuccessfullyMessage="تم حفظ البيانات بنجاح"
+      this.SuccessfullyHeader="حفظ" 
+    }
     }});
   }
   deleteMasterAsset(masterAsset:any) {
@@ -196,6 +208,16 @@ export class ListComponent implements OnInit {
           this.reloadTableObj.first= this.rowsSkipped;
           this.LoadMasterAssets(this.reloadTableObj);
           this.dataTable.first= this.rowsSkipped;
+          this.showSuccessfullyMessage=true;
+          if(this.lang=="en"){
+            this.SuccessfullyMessage="Deleted Successfully";
+            this.SuccessfullyHeader="Delete" 
+        }
+        else
+        {
+          this.SuccessfullyMessage="تم حذف البيانات بنجاح";
+          this.SuccessfullyHeader="مسح" 
+        }
         },
           (error) => {
             this.errorDisplay=true;
@@ -223,6 +245,16 @@ export class ListComponent implements OnInit {
       this.reloadTableObj.first=first;
       this.dataTable.first=first;
       this.LoadMasterAssets(this.reloadTableObj)
+      this.showSuccessfullyMessage=true;
+      if(this.lang=="en"){
+        this.SuccessfullyMessage="Updated successfully";
+        this.SuccessfullyHeader="Update" 
+    }
+    else
+    {
+      this.SuccessfullyMessage="تم التعديل بنجاح";
+      this.SuccessfullyHeader="تعديل" 
+    }
       }
     });
   }

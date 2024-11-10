@@ -182,23 +182,11 @@
     <span style="color: rgb(181, 4, 4); font-weight: bold">
         {{ errorMessage }}</span>
 </p-dialog>
-<p-toast />
-
-<p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessCreate" [style]="{ width: '350px' }">
+<p-dialog appendTo="body" modal="true" [(visible)]="showSuccessfullyMessage">
     <ng-template pTemplate="header">
-      <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
-        {{ "Asset.Save" | translate }}
+      <h6 style="color: #04527e; font-weight: bold; font-size: 16pt">
+        {{ SuccessfullyHeader }}
       </h6>
     </ng-template>
-    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
-      {{ "Asset.SavedSuccess" | translate }}</span>
-  </p-dialog>
-  <p-dialog appendTo="body" modal="true" [(visible)]="displaySuccessDelete" [style]="{ width: '350px' }">
-    <ng-template pTemplate="header">
-      <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
-        {{ "Asset.Delete" | translate }}
-      </h6>
-    </ng-template>
-    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
-      {{ "Asset.DeletedSuccess" | translate }}</span>
+    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">{{ SuccessfullyMessage}}</span>
   </p-dialog>

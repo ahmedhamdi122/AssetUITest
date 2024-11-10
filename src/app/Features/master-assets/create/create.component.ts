@@ -274,6 +274,7 @@ export class CreateComponent implements OnInit {
       if (this.lstMasterAssetDocuments.length > 0) {
         this.lstMasterAssetDocuments.forEach((elemnt, index) => {
           elemnt.masterAssetId = this.masterAssetId;
+          
           this.masterAssetService.CreateMasterAssetAttachments(elemnt).subscribe(lstfiles => {
             this.uploadService.uploadMasterAssetFiles(elemnt.masterFile, elemnt.fileName).subscribe(
               (event) => {
@@ -382,12 +383,7 @@ export class CreateComponent implements OnInit {
       });
 
   } 
-  reload() {
-    let currentUrl = this.route.url;
-    this.route.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.route.onSameUrlNavigation = 'reload';
-    this.route.navigate([currentUrl]);
-  }
+ 
   onFileSelected(event) {
     this.file = event.target.files[0];
     if (this.file) {

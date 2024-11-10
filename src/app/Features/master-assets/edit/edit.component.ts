@@ -31,6 +31,7 @@ import { CategoryTypeService } from 'src/app/Shared/Services/categoryType.servic
 import { AuthenticationService } from 'src/app/Shared/Services/guards/authentication.service';
 import { CreateBrandComponent } from '../../brands/create-brand/create-brand.component';
 import { PMTimeService } from 'src/app/Shared/Services/pmtime.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-edit',
@@ -50,9 +51,9 @@ export class EditComponent implements OnInit {
   lstOrigins: ListOriginVM[] = [];
   lstPeriorities: ListAssetPeriorityVM[] = [];
   lstECRIs: ListECRIVM[] = [];
-  lstPMTaskItems: ListPMAssetTaskVM[] = [];
+  SavedlstPMTaskItems: ListPMAssetTaskVM[] = [];
   pmTaskObj: CreatePMAssetTaskVM;
-  lstPMTasks: CreatePMAssetTaskVM[] = [];
+  CreatelstPMTasks: CreatePMAssetTaskVM[] = [];
   lstTasks: CreatePMAssetTaskVM[] = [];
   lstWOTaskItems: IndexAssetWorkOrderTaskVM[] = [];
   woTaskObj: CreateAssetWorkOrderTaskVM;
@@ -64,7 +65,6 @@ export class EditComponent implements OnInit {
   errorMessage: string;
   errorDisplay: boolean = false;
   display: boolean = false;
-  savedfilesdisplay: boolean = false;
   masterAssetId: number;
   selectedFiles: FileList;
   progressInfos = [];
@@ -83,7 +83,7 @@ export class EditComponent implements OnInit {
   formData = new FormData();
   public file: File;
   compObj: CreateMasterAssetComponentVM;
-  lstComponents: CreateMasterAssetComponentVM[] = [];
+  CreateMasterAssetComponentVM: CreateMasterAssetComponentVM[] = [];
   lstSavedComponents: ListMasterAssetComponentVM[] = [];
   canAddBrand: boolean = false;
   isAdmin: boolean = false;
@@ -98,10 +98,14 @@ export class EditComponent implements OnInit {
   @ViewChild('fileUpload',{static:false})
   upfile: ElementRef;
   imagePath: any = "";
+  deletedSuccessfullyDisplay:boolean=false;
+  showSuccessfullyMessage:boolean=false;
+  SuccessfullyHeader:string='';
+  SuccessfullyMessage:string='';
   constructor(
     private authenticationService: AuthenticationService, private masterAssetService: MasterAssetService, private masterAssetComponentService: MasterAssetComponentService, private uploadService: UploadFilesService, private categoryTypeService: CategoryTypeService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private originService: OriginService, private brandService: BrandService, private ecriService: ECRIService, private assetPeriorityService: AssetPeriorityService,
     private pmTimeService: PMTimeService, private config: DynamicDialogConfig, private ref: DynamicDialogRef, private assetWorkOrderTaskService: AssetWorkOrderTaskService,
-    private confirmationService: ConfirmationService, private dialogService: DialogService, private route: Router
+    private confirmationService: ConfirmationService, private dialogService: DialogService, private route: Router,private spinner:NgxSpinnerService
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
   }
@@ -176,12 +180,14 @@ export class EditComponent implements OnInit {
       this.masterAssetService
         .GetPMAssetTaskByMasterAssetId(id)
         .subscribe((tasks) => {
-          this.lstPMTaskItems = tasks;
-          console.log("this.lstPMTaskItems :",this.lstPMTaskItems);
+          this.SavedlstPMTaskItems = tasks;
+          console.log("this.lstPMTaskItems :",this.SavedlstPMTaskItems);
         });
       this.masterAssetComponentService.ListMasterAssetComponentsByMasterAssetId(this.masterId)
         .subscribe((components) => {
           this.lstSavedComponents = components;
+          console.log("this.lstSavedComponents :",this.lstSavedComponents);
+
         });
 
 
@@ -230,9 +236,10 @@ export class EditComponent implements OnInit {
     }
   }
   deleteFile(id: number) {
+    this.spinner.show();
     this.masterAssetService.DeleteMasterAssetImage(id).subscribe((saved) => {
+      this.spinner.show();
       this.display = true;
-      this.ref.close();
     });
   }
   getSelecteditem() {
@@ -311,62 +318,7 @@ export class EditComponent implements OnInit {
     });
   }
   deleteTask(id: number) {
-    this.lstPMTaskItems.forEach((element) => {
-      if (element.id == id) {
-        if (this.lang == 'en') {
-          this.confirmationService.confirm({
-            message:
-              'Are you sure that you want to delete this item ' +
-              element['Name'] +
-              ' ?',
-            header: 'Delete Item Confirmation',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-              this.masterAssetService.GetPMAssetTaskByTaskIdAndMasterAssetId(this.masterId, id).subscribe(taskObj => {
-                this.masterAssetService.DeletePMAssetTask(taskObj.id).subscribe(deleted => {
-
-                  this.masterAssetService
-                    .GetPMAssetTaskByMasterAssetId(this.masterId)
-                    .subscribe((tasks) => {
-                      this.lstPMTaskItems = tasks;
-                    });
-                })
-              })
-            },
-            reject: () => {
-              this.confirmationService.close();
-              this.ngOnInit();
-            },
-          });
-        }
-
-        if (this.lang == 'ar') {
-          this.confirmationService.confirm({
-            message:
-              'هل أنت متأكد من مسح هذا العنصر ' +
-              element['NameAr'] +
-              ' ?',
-            header: 'تأكيد المسح',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-              this.masterAssetService.GetPMAssetTaskByTaskIdAndMasterAssetId(this.masterId, id).subscribe(taskObj => {
-                this.masterAssetService.DeletePMAssetTask(taskObj.id).subscribe(deleted => {
-                  this.masterAssetService
-                    .GetPMAssetTaskByMasterAssetId(this.masterId)
-                    .subscribe((tasks) => {
-                      this.lstPMTaskItems = tasks;
-                    });
-                })
-              })
-            },
-            reject: () => {
-              this.confirmationService.close();
-              this.ngOnInit();
-            },
-          });
-        }
-      }
-    });
+   
   }
   onSubmit() {
 
@@ -378,11 +330,11 @@ export class EditComponent implements OnInit {
       let newIndex = this.pad((this.masterAssetObj.id).toString(), 2);
       let HospitalAssetFileName = hCode + "MA" + srCode + newIndex;
       let masterFileName = HospitalAssetFileName + "." + ext;
-      this.masterAssetObj.assetImg = masterFileName;
     }
     else {
       this.masterAssetObj.assetImg = this.masterAssetObj.assetImg;
     }
+    this.spinner.show();
     this.masterAssetService.UpdateMasterAsset(this.masterAssetObj).subscribe(assetObj => {
       if (this.file) {
         let ext = this.file.name.split('.').pop();
@@ -391,6 +343,7 @@ export class EditComponent implements OnInit {
         let newIndex = this.pad((this.masterAssetObj.id).toString(), 2);
         let HospitalAssetFileName = hCode + "MA" + srCode + newIndex;
         let masterFileName = HospitalAssetFileName + "." + ext;
+        this.masterAssetObj.assetImg = masterFileName;
 
         this.uploadService
           .uploadMasterAssetImage(this.file, masterFileName)
@@ -407,7 +360,7 @@ export class EditComponent implements OnInit {
           this.masterAssetService.CreateMasterAssetAttachments(elemnt).subscribe(lstfiles => {
             this.uploadService.uploadMasterAssetFiles(elemnt.masterFile, elemnt.fileName).subscribe(
               (event) => {
-                this.display = true;
+               
               },
               (err) => {
                 if (this.lang == "en") {
@@ -421,24 +374,15 @@ export class EditComponent implements OnInit {
               });
           });
         });
-
         this.lstMasterAssetDocuments = [];
       }
-      if (this.lstAddWOTasks.length > 0) {
-        this.lstAddWOTasks.forEach((elemnt) => {
-          elemnt.masterAssetId = this.masterAssetObj.id;
-          this.assetWorkOrderTaskService.CreateAssetWorkOrderTask(elemnt)
-            .subscribe(() => {
-            });
-        });
-      }
-      if (this.lstComponents.length > 0) {
-        this.lstComponents.forEach((elemnt) => {
+     
+      if (this.CreateMasterAssetComponentVM.length > 0) {
+        this.CreateMasterAssetComponentVM.forEach((elemnt) => {
           elemnt.masterAssetId = this.masterAssetObj.id;
 
           this.masterAssetComponentService.CreateMasterAssetComponent(elemnt)
             .subscribe(() => {
-              this.display = true;
             }, error => {
               this.errorDisplay = true;
               if (this.lang == "en") {
@@ -455,15 +399,14 @@ export class EditComponent implements OnInit {
             });
         });
       }
-      if (this.lstPMTasks.length > 0) {
-        this.lstPMTasks.forEach((elemnt) => {
+      if (this.CreatelstPMTasks.length > 0) {
+        this.CreatelstPMTasks.forEach((elemnt) => {
           elemnt.masterAssetId = this.masterAssetId;
           this.masterAssetService.AddPMAssetTask(elemnt)
             .subscribe(() => {
             });
         });
       }
-      this.display = true;
       this.ref.close("edit");
 
     },
@@ -497,46 +440,128 @@ export class EditComponent implements OnInit {
       }
     );
   }
-  reload() {
-    let currentUrl = this.route.url;
-    this.route.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.route.onSameUrlNavigation = 'reload';
-    this.route.navigate([currentUrl]);
+  DeletePreventiveMaintenance(id:number,rowIndex:number)
+  {
+    this.confirmationService.confirm({
+      header:`${this.lang == 'en' ? 'Delete Confirmation':'تأكيد المسح'}`,
+     message: `${this.lang == 'en' ? `Are you sure that you want to delete this Preventive Maintenance?` : `هل أنت متأكد أنك تريد حذف هذه الصيانة الوقائية؟`}`,
+     rejectButtonStyleClass:"p-button-text style='margin:0 15'",
+     rejectLabel: this.lang === 'en' ? 'No' : 'لا', 
+     acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+     acceptIcon:"none",
+     rejectIcon:"none",
+     accept: ()=>{
+       this.confirmationService.close();
+       this.spinner.show();
+      this.masterAssetService.DeletePMAssetTask(id).subscribe(
+        deleted => {
+          this.SavedlstPMTaskItems.splice(rowIndex,1);
+          this.spinner.hide();
+          this.showSuccessfullyMessage=true;
+          if(this.lang=="en"){
+            this.SuccessfullyMessage="Preventive Maintenance record deleted successfully";
+            this.SuccessfullyHeader="Delete" 
+        }
+        else
+        {
+          this.SuccessfullyMessage="تم حذف مهمة الصيانة الوقائية بنجاح";
+          this.SuccessfullyHeader="مسح" 
+        }
+      (error)=>{
+                  this.errorDisplay=true;
+                  if(this.lang=="en")
+                  {this.errorMessage="An error occurred while deleting the file"}
+                  else
+                  {this.errorMessage="حدث خطأ أثناء حذف الملف."}
+    }})},
+  reject:()=>{
+    this.confirmationService.close();
+  }})
   }
-  DeleteFile(id: number) {
-    if (this.lang == 'en') {
-      this.confirmationService.confirm({
-        message: 'Are you sure that you want to delete this file?',
-        header: 'Delete Item Confirmation',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-          this.masterAssetService
-            .DeleteMasterAssetAttachmentById(id)
-            .subscribe((result) => {
-              this.ngOnInit();
-            });
-        },
-        reject: () => {
-          this.confirmationService.close();
-        },
-      });
-    } else {
-      this.confirmationService.confirm({
-        message: 'هل أنت متأكد من مسح هذا الملف',
-        header: 'تأكيد المسح',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-          this.masterAssetService
-            .DeleteMasterAssetAttachmentById(id)
-            .subscribe((result) => {
-              this.ngOnInit();
-            });
-        },
-        reject: () => {
-          this.confirmationService.close();
-        },
-      });
+DeleteAssetComponent(assetCompoenet:any,rowIndex:number)
+{
+  console.log("assetCompoenet :",assetCompoenet);
+  
+  this.confirmationService.confirm({
+    header:`${this.lang == 'en' ? 'Delete Confirmation':'تأكيد المسح'}`,
+   message: `${this.lang == 'en' ? `Are you sure that you want to delete ${assetCompoenet.name}?` : `هل انت متأكد انك تريد حذف ${assetCompoenet.nameAr}`}`,
+   rejectButtonStyleClass:"p-button-text style='margin:0 15'",
+   rejectLabel: this.lang === 'en' ? 'No' : 'لا', 
+   acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+   acceptIcon:"none",
+   rejectIcon:"none",
+   accept: ()=>{
+     this.confirmationService.close();
+     this.spinner.show();
+     this.masterAssetComponentService.DeleteMasterAssetComponent(assetCompoenet.id).subscribe(
+      deletedObj => {
+      this.lstSavedComponents.splice(rowIndex,1);
+      this.spinner.hide();
+      this.showSuccessfullyMessage=true;
+      if(this.lang=="en"){
+        this.SuccessfullyMessage="Asset Component eleted successfully";
+        this.SuccessfullyHeader="Delete" 
     }
+    else
+    {
+      this.SuccessfullyMessage="تم حذف مكون الأصل بنجاح"
+      this.SuccessfullyHeader="مسح" 
+    }
+   },
+   (error)=>{
+    this.errorDisplay=true;
+    if(this.lang=="en")
+    {this.errorMessage="An error occurred while deleting the file"}
+    else
+    {this.errorMessage="حدث خطأ أثناء حذف الملف."}
+})},
+reject:()=>{
+  this.confirmationService.close();
+}})
+}
+  DeleteFile(masterAssetDocument: any,rowIndex:number) {
+
+    
+    this.confirmationService.confirm({
+      header:`${this.lang == 'en' ? 'Delete Confirmation':'تأكيد المسح'}`,
+     message: `${this.lang == 'en' ? `Are you sure that you want to delete ${masterAssetDocument.title}?` : `هل أنت متأكد أنك تريد حذف ${masterAssetDocument.title}؟`}`,
+     rejectButtonStyleClass:"p-button-text style='margin:0 15'",
+     rejectLabel: this.lang === 'en' ? 'No' : 'لا', 
+     acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+     acceptIcon:"none",
+     rejectIcon:"none",
+     accept: ()=>{
+      this.confirmationService.close();
+       this.spinner.show();
+       this.masterAssetService
+               .DeleteMasterAssetAttachmentById(masterAssetDocument.id)
+               .subscribe((result) => {
+                this.lstAttachment.splice(rowIndex, 1);
+                this.spinner.hide();
+                this.showSuccessfullyMessage=true;
+                if(this.lang=="en"){
+                  this.SuccessfullyMessage="File deleted successfully";
+                  this.SuccessfullyHeader="Delete" 
+              }
+              else
+              {
+                this.SuccessfullyMessage="تم حذف الملف بنجاح";
+                this.SuccessfullyHeader="مسح" 
+              }
+               },
+              (error)=>{
+                this.errorDisplay=true;
+                if(this.lang=="en")
+                {this.errorMessage="An error occurred while deleting the file"}
+                else
+                {this.errorMessage="حدث خطأ أثناء حذف الملف."}
+              });
+    },
+    reject:()=>{
+      this.confirmationService.close();
+
+    }
+  })
   }
   validateBrand()
   {
@@ -593,7 +618,7 @@ export class EditComponent implements OnInit {
         this.errorMessage = "رمز المكون موجود بالفعل. يرجى إدخال رمز فريد";
         return false;
     }
-    const compNameexists = this.lstComponents.some((Component) =>
+    const compNameexists = this.CreateMasterAssetComponentVM.some((Component) =>
       Component.compName==this.compObj.compName
     );
     if(compNameexists)
@@ -605,7 +630,7 @@ export class EditComponent implements OnInit {
         this.errorMessage = "اسم المكون موجود بالفعل. يرجى إدخال اسم فريد";
         return false;
     }
-  const compNameArexists = this.lstComponents.some((Component) =>
+  const compNameArexists = this.CreateMasterAssetComponentVM.some((Component) =>
       Component.compNameAr==this.compObj.compNameAr
     );
     if(compNameArexists)
@@ -618,21 +643,20 @@ export class EditComponent implements OnInit {
         return false;
     }
   
-      // let componentObj = new CreateMasterAssetComponentVM();
-      // componentObj.masterAssetId = Number(this.masterAssetId);
-      // componentObj.compName = this.compObj.compName;
-      // componentObj.compNameAr = this.compObj.compNameAr;
-      // componentObj.compDescription = this.compObj.compDescription;
-      // componentObj.compDescriptionAr = this.compObj.compDescriptionAr;
-      // componentObj.compCode = this.compObj.compCode;
-      // componentObj.price = this.compObj.price;
-      // componentObj.partNo = this.compObj.partNo;
-      // this.lstSavedComponents.push(componentObj);
+      let componentObj = new CreateMasterAssetComponentVM();
+      componentObj.masterAssetId = Number(this.masterAssetId);
+      componentObj.compName = this.compObj.compName;
+      componentObj.compNameAr = this.compObj.compNameAr;
+      componentObj.compDescription = this.compObj.compDescription;
+      componentObj.compDescriptionAr = this.compObj.compDescriptionAr;
+      componentObj.compCode = this.compObj.compCode;
+      componentObj.price = this.compObj.price;
+      componentObj.partNo = this.compObj.partNo;
+      this.CreateMasterAssetComponentVM.push(componentObj);
     
   }
-  removeComponentItem(index) {
-
-      this.lstSavedComponents.splice(index, 1);
+  removeFromCreatelstPMTasks(index) {
+      this.CreatelstPMTasks.splice(index, 1);
     }
   saveComponentToDB() {
     // this.lstSavedComponents.forEach((elemnt) => {
@@ -657,51 +681,7 @@ export class EditComponent implements OnInit {
     //     });
     // });
   }
-  deleteComponent(id: number) {
-    this.lstSavedComponents.forEach((element) => {
-      if (element.id == id) {
-        if (this.lang == 'en') {
-          this.confirmationService.confirm({
-            message:
-              'Are you sure that you want to delete this item ' +
-              element['name'] +
-              ' ?',
-            header: 'Delete Item Confirmation',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-              this.masterAssetComponentService.DeleteMasterAssetComponent(id).subscribe(deletedObj => {
 
-              });
-            },
-            reject: () => {
-              this.confirmationService.close();
-              this.ngOnInit();
-            },
-          });
-        }
-
-        if (this.lang == 'ar') {
-          this.confirmationService.confirm({
-            message:
-              'هل أنت متأكد من مسح هذا العنصر ' +
-              element['nameAr'] +
-              ' ?',
-            header: 'تأكيد المسح',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-              this.masterAssetComponentService.DeleteMasterAssetComponent(id).subscribe(deletedObj => {
-              });
-            },
-            reject: () => {
-              this.confirmationService.close();
-              this.ngOnInit();
-            },
-          });
-        }
-      }
-    });
-  }
- 
   addBrand() {
     const dialogRef2 = this.dialogService.open(CreateBrandComponent, {
       width: '50%',
@@ -725,7 +705,6 @@ export class EditComponent implements OnInit {
     });
   }
   removeFileFromObjectArray(rowIndex) {
-    console.log("rowIndex :",rowIndex);
     
     this.lstMasterAssetDocuments.splice(rowIndex, 1);
 
@@ -828,16 +807,78 @@ export class EditComponent implements OnInit {
     }
   }
   removePMItem(idx) {
-    const index: number = this.lstPMTasks.indexOf(idx);
+    const index: number = this.CreatelstPMTasks.indexOf(idx);
     if (index !== -1) {
-      this.lstPMTasks.splice(index, 1);
+      this.CreatelstPMTasks.splice(index, 1);
     }
   }
   addTaskToList() {
+    if(this.pmTaskObj.taskname=='')
+    {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "Please Insert taskname";
+    
+      }
+      else {
+        this.errorMessage = "من فضلك ادخل اسم";
+  
+      }
+      return false;
+    }
+    if(this.pmTaskObj.tasknameAr=='')
+      {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please Insert tasknameAr";
+      
+        }
+        else {
+          this.errorMessage = "من فضلك ادخل اسم بالعربي";
+        }
+        return false;
+      }
+      const tasknameexists = this.CreatelstPMTasks.some((task) =>
+        task.taskname === this.pmTaskObj.taskname    
+      );
+    if(tasknameexists)
+    {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "A task with this name already exists. Please choose a different name.";
+    
+      }
+      else {
+        this.errorMessage = "هذا الاسم موجود بالفعل, من فضلك ادخل اسم مختلف";
+  
+      }
+      this.pmTaskObj.taskname='';
+      return false;
+    }
+    const tasknameArexists = this.CreatelstPMTasks.some((task) =>
+      task.tasknameAr === this.pmTaskObj.tasknameAr
+    );
+  if(tasknameArexists)
+  {
+    this.errorDisplay = true;
+    if (this.lang == "en") {
+      this.errorMessage = "A task with this nameAr already exists. Please choose a different nameAr.";
+  
+    }
+    else {
+      this.errorMessage = "هذا الاسم موجود بالفعل, من فضلك ادخل اسم مختلف";
+
+    }
+    this.pmTaskObj.tasknameAr='';
+    return false;
+  }
     let pmObj = new CreatePMAssetTaskVM();
     pmObj.masterAssetId = Number(this.masterAssetId);
     pmObj.taskname = this.pmTaskObj.taskname;
     pmObj.tasknameAr = this.pmTaskObj.tasknameAr;
-    this.lstPMTasks.push(pmObj);
+    this.CreatelstPMTasks.push(pmObj);
+    console.log("this.CreatelstPMTasks :",this.CreatelstPMTasks);
+    
   }
+
 }
