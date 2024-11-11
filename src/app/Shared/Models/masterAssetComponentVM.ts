@@ -7,6 +7,8 @@ export class ListMasterAssetComponentVM {
     assetNameAr: string;
     price: string;
     partNo: string;
+    description:string;
+    descriptionAr:string;
 }
 
 export class CreateMasterAssetComponentVM {

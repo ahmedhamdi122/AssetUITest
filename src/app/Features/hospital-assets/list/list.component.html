@@ -1,4 +1,4 @@
-<div class="col-12 p-3" id="non-printable">
+<div class="col-12 p-3" id="non-printable"[ngStyle]="{ display: loading ? 'none' : 'block' }">
     <div class="ng-container">
         <div class="row mt-3">
             <div class="col-2"> <h4 class="card-title"> {{'Asset.HospitalAssets' | translate }} </h4></div>
@@ -387,7 +387,7 @@
  
     </div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-12" >
             <p-table #dtAssets [rowHover]="true" [value]="lstAssets"  
                 styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" [paginator]="true" [lazy]="true"
                 [rows]="10" [rowsPerPageOptions]="[10,25,50]" [totalRecords]="count" pageLinks="10"

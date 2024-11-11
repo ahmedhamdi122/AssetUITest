@@ -605,10 +605,16 @@ reject:()=>{
         this.errorMessage = "ادخل اسم المكون بالعربي";
       return false;
     }
+    console.log(" this.CreateMasterAssetComponentVM :", this.CreateMasterAssetComponentVM);
     
-    const compCodeexists = this.lstSavedComponents.some((Component) =>
-      Component.code==this.compObj.compCode
+    const compCodeexists = this.CreateMasterAssetComponentVM.some((Component) =>
+      Component.compCode==this.compObj.compCode
     );
+    if(!compCodeexists)
+    {
+      this.lstSavedComponents.some((Component) =>Component.code==this.compObj.compCode);
+    }
+ 
     if(compCodeexists)
     {
       this.errorDisplay = true;
@@ -621,6 +627,12 @@ reject:()=>{
     const compNameexists = this.CreateMasterAssetComponentVM.some((Component) =>
       Component.compName==this.compObj.compName
     );
+    if(!compNameexists)
+      {
+        this.lstSavedComponents.some((Component) =>
+          Component.name==this.compObj.compName
+        );
+      }
     if(compNameexists)
     {
       this.errorDisplay = true;
@@ -633,6 +645,10 @@ reject:()=>{
   const compNameArexists = this.CreateMasterAssetComponentVM.some((Component) =>
       Component.compNameAr==this.compObj.compNameAr
     );
+    if(!compNameArexists)
+      {
+        this.lstSavedComponents.some((Component) =>Component.nameAr==this.compObj.compNameAr);
+      }
     if(compNameArexists)
     {
       this.errorDisplay = true;
@@ -642,7 +658,6 @@ reject:()=>{
         this.errorMessage = "اسم المكون بالعربي موجود بالفعل. يرجى إدخال اسم فريد";
         return false;
     }
-  
       let componentObj = new CreateMasterAssetComponentVM();
       componentObj.masterAssetId = Number(this.masterAssetId);
       componentObj.compName = this.compObj.compName;
@@ -653,7 +668,20 @@ reject:()=>{
       componentObj.price = this.compObj.price;
       componentObj.partNo = this.compObj.partNo;
       this.CreateMasterAssetComponentVM.push(componentObj);
-    
+      // reset Fileds
+      this.compObj.compCode='';
+      this.compObj.compName='';
+      this.compObj.compNameAr='';
+      this.compObj.compDescription='';
+      this.compObj.compDescriptionAr='';
+      this.compObj.price=0;
+      this.compObj.partNo='';
+      
+  }
+  DeleteNewAssetComponent(rowIndex:number)
+  {
+    this.CreateMasterAssetComponentVM.splice(rowIndex,1)
+
   }
   removeFromCreatelstPMTasks(index) {
       this.CreatelstPMTasks.splice(index, 1);

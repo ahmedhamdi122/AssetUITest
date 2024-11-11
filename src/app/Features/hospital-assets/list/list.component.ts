@@ -318,6 +318,7 @@ this.onLoadByLogIn();
     });
     this.brandService.GetBrands().subscribe(items => {
       this.lstBrands = items;
+      console.log("this.lstBrands :",this.lstBrands )
     });
     if (this.currentUser.hospitalId != 0) {
       this.departmentService.DepartmentsByHospitalId(this.currentUser.hospitalId).subscribe(items => {

@@ -3,8 +3,9 @@
         <mat-tab-group mat-align-tabs="start" #tabGroup>
             <mat-tab >
               <ng-template mat-tab-label>
-                <i class="pi pi-database"></i>
-                {{ "Asset.Identification" | translate }}
+                <span style="color: black;font-weight: bold;"><i class="pi pi-database" style="margin: 0px 20px;"></i>
+                  {{ 'Asset.Identification' | translate }}</span>
+    
               </ng-template>
               <div class="container mt-5">
                   <div class="row">
@@ -246,8 +247,8 @@
             </mat-tab>
             <mat-tab>
               <ng-template mat-tab-label>
-                <i class="pi pi-paperclip" style="margin: 0px 20px;"></i>
-                {{ 'Asset.Attachments' | translate }}
+                <span style="color: black;font-weight: bold;"><i class="pi pi-paperclip" style="margin: 0px 20px;"></i>
+                  {{ 'Asset.Attachments' | translate }}</span>
               </ng-template>
               <div class="container mt-4">
               <div class="row ">
@@ -330,8 +331,9 @@
             </mat-tab>
             <mat-tab>
               <ng-template mat-tab-label>
-                <i class="pi pi-wrench" ></i>
-                {{'Asset.PreventiveMaintainance' | translate}}
+                <span style="color: black;font-weight: bold;"><i class="pi pi-wrench" style="margin: 0px 20px;"></i>
+                  {{ 'Asset.PreventiveMaintainance' | translate }}</span>
+   
               </ng-template>
               <div class="container mt-4">
               <div class="row">
@@ -371,7 +373,7 @@
           
               <div class="row mt-3">
                 <div class="col-12">
-                  <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i class="pi pi-paperclip"></i>
+                  <div style="font-size: 1rem;" class="mt-3">    <i class="pi pi-wrench"></i>
                     {{ 'Asset.AddPreventiveMaintenance' | translate }}</div>
                   <p-table    [paginator]="true"
                   [rows]="3"[totalRecords]="CreatelstPMTasks.length" [value]="CreatelstPMTasks" dataKey="id">
@@ -398,7 +400,7 @@
                       </tr>
                     </ng-template>
                   </p-table>
-                  <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i class="pi pi-paperclip"></i>
+                  <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i class="pi pi-wrench"></i>
                     {{ 'Asset.SavedPreventiveMaintenance' | translate }}</div>
                   <p-table    [paginator]="true"
                   [rows]="3"[totalRecords]="SavedlstPMTaskItems.length" [value]="SavedlstPMTaskItems" dataKey="id">
@@ -434,8 +436,8 @@
       
             <mat-tab>
               <ng-template mat-tab-label>
-                <i class="pi pi-sitemap"></i>
-                {{ "Asset.Components" | translate }}
+                <span style="color: black;font-weight: bold;"><i class="pi pi-sitemap" style="margin: 0px 20px;"></i>
+                  {{ 'Asset.Components' | translate }}</span>
               </ng-template>
               <div class="container">
               <div class="row top-buffer">
@@ -499,34 +501,67 @@
               <div class="container">
               <div class="row mt-3">
                 <div class="col-12">
-                  <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i class="pi pi-paperclip"></i>
-                    {{ 'Asset.SavedAssetCompoenets' | translate }}</div>
+                  <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i style="color: black;" class="pi pi-sitemap"></i>
+                    {{ 'Asset.AddAssetCompoenet' | translate }}</div>
                   <p-table    [paginator]="true"
-                  [rows]="2"[totalRecords]="lstSavedComponents.length" [value]="lstSavedComponents" dataKey="id">
+                  [rows]="2"[totalRecords]="CreateMasterAssetComponentVM.length" [value]="CreateMasterAssetComponentVM" dataKey="id">
                     <ng-template pTemplate="header">
                       <tr>
+                        <th class="text-center">{{ "Asset.Code" | translate }}</th>
                         <th class="text-center">{{ "Asset.Name" | translate }}</th>
-                        <th class="text-center">{{ "Asset.ArabicName" | translate }}</th>
                         <th class="text-center">{{ "Asset.Price" | translate }}</th>
                         <th class="text-center">{{ "Asset.PartNo" | translate }}</th>
+                        <th class="text-center">{{ "Asset.Description" | translate }}</th>
                         <th class="text-center">{{ 'Asset.Delete' | translate }}</th>
                       </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-Component let-rowIndex="rowIndex">
                       <tr>
-                        <td class="text-center">{{ Component.name}}</td>
-                        <td class="text-center">{{ Component.nameAr }}</td>
+                        <td class="text-center">{{Component.compCode}}</td>
+                        <td class="text-center">{{lang=="en"? Component.name:Component.nameAr}}</td>
                         <td class="text-center">{{ Component.price }}</td>
                         <td class="text-center">{{ Component.partNo}}</td>
+                        <td class="text-center">{{ lang=="en"? Component.compDescription :Component.compDescriptionAr}}</td>
                         <td class="text-center">
-                          <span (click)="DeleteAssetComponent(Component,rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"pTooltip="{{'Asset.Delete' | translate}}"></i></span>
+                          <span (click)="DeleteNewAssetComponent(Component,rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"pTooltip="{{'Asset.Delete' | translate}}"></i></span>
                         </td>
-                  
                       </tr>
                     </ng-template>
                     <ng-template pTemplate="emptymessage">
                       <tr>
-                        <td colspan="5" class="text-center">No data available</td>
+                        <td colspan="6" class="text-center">No data available</td>
+                      </tr>
+                    </ng-template>
+                  </p-table>
+                  <div style="font-size: 1rem;" style="margin: 20px 0px;">    <i style="color: black;" class="pi pi-sitemap"></i>
+                    {{ 'Asset.SavedAssetCompoenets' | translate }}</div>
+                  <p-table    [paginator]="true"
+                  [rows]="2"[totalRecords]="lstSavedComponents.length" [value]="lstSavedComponents" dataKey="id">
+                    <ng-template pTemplate="header">
+                      <tr>
+                        <th class="text-center">{{ "Asset.Code" | translate }}</th>
+                        <th class="text-center">{{ "Asset.Name" | translate }}</th>
+                        <th class="text-center">{{ "Asset.Price" | translate }}</th>
+                        <th class="text-center">{{ "Asset.PartNo" | translate }}</th>
+                        <th class="text-center">{{ "Asset.Description" | translate }}</th>
+                        <th class="text-center">{{ 'Asset.Delete' | translate }}</th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-Component let-rowIndex="rowIndex">
+                      <tr>
+                        <td class="text-center">{{Component.code}}</td>
+                        <td class="text-center">{{lang=="en"? Component.name:Component.nameAr}}</td>
+                        <td class="text-center">{{ Component.price }}</td>
+                        <td class="text-center">{{ Component.partNo}}</td>
+                        <td class="text-center">{{ lang=="en"? Component.description:Component.descriptionAr}}</td>
+                        <td class="text-center">
+                          <span (click)="DeleteAssetComponent(Component,rowIndex)"><i class="pi pi-trash deleteIcon" style="color: red;font-size: 1rem;"pTooltip="{{'Asset.Delete' | translate}}"></i></span>
+                        </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                      <tr>
+                        <td colspan="6" class="text-center">No data available</td>
                       </tr>
                     </ng-template>
                   </p-table>

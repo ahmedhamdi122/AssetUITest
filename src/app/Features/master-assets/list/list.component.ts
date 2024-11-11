@@ -66,6 +66,7 @@ export class ListComponent implements OnInit {
   SuccessfullyHeader:string='';
   SuccessfullyMessage:string='';
   showSuccessfullyMessage:boolean=false;
+  loading:boolean=false;
   constructor(private spinner:NgxSpinnerService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private confirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }

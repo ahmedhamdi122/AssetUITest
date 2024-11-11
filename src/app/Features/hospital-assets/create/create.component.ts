@@ -771,7 +771,8 @@ export class CreateComponent implements OnInit {
     //     this.lstMasterAssets.forEach(item => item.name = item.nameAr + " - " + item.model + " - " + item.brandNameAr);
     //   }
     // });
-
+    console.log("event :",event);
+    
     this.masterAssetService.DistinctAutoCompleteMasterAssetName(event.query).subscribe(masters => {
       this.lstMasterAssets = masters;
       if (this.lang == "en") {
