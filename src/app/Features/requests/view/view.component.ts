@@ -83,6 +83,8 @@ export class ViewComponent implements OnInit {
     this.workorderTracking.GetAllWorkOrderFromTrackingByServiceRequestUserId(id, this.currentUser.id).subscribe(listworkorders => {
       if (listworkorders.length > 0) {
         this.lstWO = listworkorders;
+        console.log("this.lstWO :",this.lstWO);
+        
         this.workOrderOj.workOrderNumber = listworkorders[0].workOrderNumber;
         this.workOrderOj.serialNumber = listworkorders[0].serialNumber;
         this.workOrderOj.subject = listworkorders[0].subject;

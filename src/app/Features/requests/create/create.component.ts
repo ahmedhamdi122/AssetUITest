@@ -234,33 +234,17 @@ export class CreateComponent implements OnInit {
   }
  
   AddRequest() {
-    console.log("this.assetStatusId :",this.assetStatusId);
     var validStatus=true;
-    console.log("this.assetBarCodeObj :",this.assetBarCodeObj);
-    
-    if(this.assetBarCodeObj!=null)
+     if(this.assetBarCodeObj!=null)
     {
        validStatus=this.findAssetStatusByStatusId(this.assetStatusId);
     }
-    console.log("validStatus :",validStatus);
-
     if(!validStatus)
     {
       return;
     }
-    
-    if (this.currentUser.hospitalId!=0) {
-      if (this.reqObj.hospitalId == 0) {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = "Please select hospital";
-        }
-        else {
-          this.errorMessage = "من فضلك اختر مستشفى ";
-        }
-        return false;
-      }
-    }
+    console.log("this.selectedType :",this.selectedType);
+  
     if (this.selectedType == 1) {
       if (this.assetBarCodeObj == undefined) {
         this.resetAssetDetailsFields();
@@ -273,12 +257,10 @@ export class CreateComponent implements OnInit {
         }
         return false;
       }
-    
     }
     if (this.selectedType == 2) {
       if (this.assetSerialObj == undefined) {
         this.resetAssetDetailsFields();
- 
         this.errorDisplay = true;
         if (this.lang == "en") {
           this.errorMessage = "Please select asset serial";
@@ -384,7 +366,6 @@ export class CreateComponent implements OnInit {
     
     this.reqObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
     this.reqObj.createdById = this.currentUser.id;
-    console.log("this.reqObj :",this.reqObj);
     
     this.requestService.inserRequest(this.reqObj).subscribe(e => {
       this.reqId = e;
@@ -638,7 +619,6 @@ export class CreateComponent implements OnInit {
 
   }
   onSerialSelectionChanged(event) {
-    console.log("serial");
     
     this.assetSerialObj=undefined;
     this.applicationStatus='';

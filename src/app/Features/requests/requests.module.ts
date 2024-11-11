@@ -30,7 +30,6 @@ import { TrackworkordersComponent } from './trackworkorders/trackworkorders.comp
 import { MatIconModule } from '@angular/material/icon';
 import { PaginatorModule } from 'primeng/paginator';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
-import { MatBadgeModule } from '@angular/material/badge';
 import { MatRadioModule } from '@angular/material/radio';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FieldsetModule } from 'primeng/fieldset';
@@ -84,7 +83,6 @@ import { BadgeModule } from 'primeng/badge';
     DynamicDialogModule,
     PaginatorModule,
     MatIconModule,
-    MatBadgeModule,
     MatRadioModule,
     MultiSelectModule,
     FieldsetModule,

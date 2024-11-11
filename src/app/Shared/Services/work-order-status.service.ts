@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Paging } from '../Models/paging';
-import { CreateWorkOrderStatusVM, EditWorkOrderStatusVM, ListWorkOrderStatusVM, SortWOStatusVM } from '../Models/WorkOrderStatusVM';
+import { CreateWorkOrderStatusVM, EditWorkOrderStatusVM, ListWorkOrderStatusVM, SortWOStatusVM, WorkOrderStatusVM } from '../Models/WorkOrderStatusVM';
 import { SearchWorkOrderDateVM } from '../Models/WorkOrderVM';
 @Injectable({
   providedIn: 'root'
@@ -24,8 +24,8 @@ export class WorkOrderStatusService {
   GetWorkOrderStatuss(): Observable<ListWorkOrderStatusVM[]> {
     return this.httpClient.get<ListWorkOrderStatusVM[]>(`${environment.WorkOrderStatus}`, this.httpHeader);
   }
-  GetWorkOrderStatusByUserId(userId: string): Observable<ListWorkOrderStatusVM> {
-    return this.httpClient.get<ListWorkOrderStatusVM>(`${environment.GetWorkOrderStatusByUserId}${userId}`, this.httpHeader);
+  GetWorkOrderStatusByUserId(userId: string): Observable<WorkOrderStatusVM[]> {
+    return this.httpClient.get<WorkOrderStatusVM[]>(`${environment.GetWorkOrderStatusByUserId}${userId}`, this.httpHeader);
   }
 
 

@@ -159,38 +159,11 @@ export class ViewWorkorderComponent implements OnInit {
     }
     this.CreateWorkOrderAttachmentObj = { documentName: '', fileName: '', workOrderTrackingId: 0, workOrderFile: File, hospitalId: 0 }
     this.CreateWorkOrderattach = { documentName: '', fileName: '', workOrderTrackingId: 0, workOrderFile: File, hospitalId: 0 }
-
-
     this.editWorkOrderTrackingObj = {
       id: 0, notes: '', createdById: '', creationDate: new Date, workOrderDate: new Date, workOrderId: 0, workOrderStatusId: 1
     }
 
 
-
-
-    this.workOrderStatusService.GetWorkOrderStatuss().subscribe((res) => {
-      this.lstWOStatus = res;
-      console.log("this.lstWOStatus  :",this.lstWOStatus );
-    });
-    this.workOrderType.GetWorkOrderTypes().subscribe(
-      res => {
-        this.lstWorkOrderType = res
-      });
-
-    this.workOrderPeriorityService.GetWorkOrderPerioritys().subscribe(
-      res => {
-        this.lstWorkOrderPeriority = res
-      });
-
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
-    this.thirdFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
 
 
     if (this.config.data != null || this.config.data != undefined) {
@@ -261,7 +234,8 @@ export class ViewWorkorderComponent implements OnInit {
     this.workOrderId = this.config.data.id;
     this.workOrderservice.GetWorkOrderById(this.workOrderId).subscribe(woObj => {
       this.editWorkOrderObj = woObj;
-
+      console.log("woObj :",woObj);
+      
 
 
 

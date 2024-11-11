@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { LoggedUser } from 'src/app/Shared/Models/userVM';
-import { ListWorkOrderStatusVM } from 'src/app/Shared/Models/WorkOrderStatusVM';
 import { ExportWorkOrderVM, IndexWorkOrderVM, ListWorkOrderVM, PrintPDFWorkOrderVM, PrintWorkOrderVM, SearchWorkOrderVM, SortAndFilterWorkOrderVM } from 'src/app/Shared/Models/WorkOrderVM';
 import { WorkOrderStatusService } from 'src/app/Shared/Services/work-order-status.service';
 import { WorkOrderService } from 'src/app/Shared/Services/work-order.service';
@@ -47,6 +46,7 @@ import * as jsPDF from 'jspdf';
 // import { DetailsComponent } from '../../hospital-assets/details/details.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { WorkOrderStatusVM } from 'src/app/Shared/Models/WorkOrderStatusVM';
 @Component({
   selector: 'app-listwo',
   templateUrl: './listwo.component.html',
@@ -62,11 +62,10 @@ export class ListWOComponent implements OnInit {
   printWorkOrderObj: PrintWorkOrderVM;
   page: Paging;
   lstWorkOrders: ListWorkOrderVM[] = [];
-  woStatusObj: ListWorkOrderStatusVM;
+  lstWorkOrderStatus: WorkOrderStatusVM[]=[];
   createRequestTrackingObj: CreateRequestTracking;
 
   lstWorkOrderPeriority: IndexWorkOrderPeriorityVM[] = [];
-  lstStatuses: ListWorkOrderStatusVM[] = [];
   currentUser: LoggedUser;
   isAssetOwner: boolean = false;
   isEng: boolean = false;
@@ -211,7 +210,6 @@ export class ListWOComponent implements OnInit {
       warrantyExpires: '', warrantyStart: '', workOrderPeriorityId: 0, workOrderPeriorityName: '', workOrderPeriorityNameAr: '', workOrderStatusId: 0, workOrderSubject: '', workOrderTrackingId: 0, workOrderTypeId: 0
       , workOrderTypeName: '', workOrderTypeNameAr: '',brandId:0
     }
-    this.woStatusObj = { id: 0, code: '', color: '', icon: '', name: '', nameAr: '', countAssigned: 0, countClosed: 0, countDone: 0, countEscalate: 0, countExternalSupport: 0, countInProgress: 0, countPending: 0, countReAssigned: 0, countReview: 0, countSparePart: 0, countTechApprove: 0, countUserApprove: 0, countAll: 0, listStatus: [] }
     this.governorateService.GetGovernorates().subscribe(items => {
       this.lstGovernorates = items;
     });
@@ -223,17 +221,16 @@ export class ListWOComponent implements OnInit {
       printedBy: '', hospitalName: '', hospitalNameAr: '',
     }
 
-    this.workOrderStatusService.GetWorkOrderStatuss().subscribe(statuses => {
-      this.lstStatuses = statuses;
-    });
+
 
     this.organizationService.GetOrganizations().subscribe(items => {
       this.lstOrganizations = items;
     });
 
 
-    this.workOrderStatusService.GetWorkOrderStatusByUserId(this.currentUser.id).subscribe(statuses => {
-      this.woStatusObj = statuses;
+    this.workOrderStatusService.GetWorkOrderStatusByUserId(this.currentUser.id).subscribe(lstWorkOrderStatus => {
+      console.log("lstWorkOrderStatus :",lstWorkOrderStatus);
+      this.lstWorkOrderStatus = lstWorkOrderStatus;
     });
 
     this.workOrderPeriorityService.GetWorkOrderPerioritys().subscribe((res) => {

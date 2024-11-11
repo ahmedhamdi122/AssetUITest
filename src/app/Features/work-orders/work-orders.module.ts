@@ -32,7 +32,6 @@ import { ViewWorkorderComponent } from './view-workorder/view-workorder.componen
 import { MatRadioModule } from '@angular/material/radio';
 import { ReassignworkorderComponent } from './reassignworkorder/reassignworkorder.component';
 import { PaginatorModule } from 'primeng/paginator';
-import { MatBadgeModule } from '@angular/material/badge';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { FieldsetModule } from "primeng/fieldset";
 import { MatSelectModule } from '@angular/material/select';
@@ -42,6 +41,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { AuthGuard } from 'src/app/Shared/Services/guards/authGuard.guard';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { BadgeModule } from 'primeng/badge';
 
 @NgModule({
   declarations: [
@@ -81,14 +81,14 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     CheckboxModule,
     TranslateModule,
     TableModule,
-    MatBadgeModule,
     MultiSelectModule,
     FieldsetModule,
     AutoCompleteModule,
     MatCheckboxModule,
     MatIconModule,
     MatListModule,
-    MatSidenavModule
+    MatSidenavModule,
+    BadgeModule
   ],
   providers: [MessageService, ConfirmationService, DatePipe, DynamicDialogRef, DynamicDialogConfig, AuthGuard]
 

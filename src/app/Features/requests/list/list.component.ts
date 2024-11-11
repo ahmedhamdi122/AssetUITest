@@ -634,7 +634,6 @@ export class ListComponent implements OnInit {
         this.listRequestStatus[0].isActive=true;
       })
 
-  
       this.showSuccessfullyMessage=true;
           if(this.lang=="en"){
             this.SuccessfullyMessage="Added Successfully";
@@ -814,13 +813,7 @@ export class ListComponent implements OnInit {
     Status.isActive=true;
     this.sortFilterObjects.searchObj.statusId = Status.id;
     this.LoadRequests(this.reloadTableObj);
-    // this.spinner.show();
-    // this.requestService.ListRequests(this.sortFilterObjects, 0,10).subscribe(items => {
-    //   this.lstRequests = items.results;
-    //   this.count = items.count;      
-    //   this.dataTable.first=0;
-    //   this.spinner.hide();
-    // });
+  
   }
 
   printServiceRequest(id: number) {

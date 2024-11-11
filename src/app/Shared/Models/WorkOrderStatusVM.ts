@@ -25,6 +25,14 @@ export class ListWorkOrderStatusVM {
 
 
 }
+export class WorkOrderStatusVM {
+    id: number;
+    name: string;
+    nameAr: string;
+    color: string;
+    icon: string;
+    count: number;
+}
 export class EditWorkOrderStatusVM {
     id: number
     name: string

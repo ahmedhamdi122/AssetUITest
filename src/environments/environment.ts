@@ -644,7 +644,7 @@ export const environment = {
   GetAllWorkOrderFromTrackingByUserId: 'http://localhost:25813/api/WorkOrderTracking/GetAllWorkOrderFromTrackingByUserId/',
   WorkOrderPeriority: 'http://localhost:25813/api/WorkOrderPeriority',
   WorkOrderStatus: 'http://localhost:25813/api/WorkOrderStatus/',
-  GetWorkOrderStatusByUserId: 'http://localhost:25813/api/WorkOrderStatus/GetAll/',
+  GetWorkOrderStatusByUserId: 'http://localhost:25813/api/WorkOrderStatus/GetWorkOrderStatusByUserId/',
   GetAllWOForReportByDate: 'http://localhost:25813/api/WorkOrderStatus/GetAllWOForReportByDate',
   UpdateWorkOrderStatus: 'http://localhost:25813/api/WorkOrderStatus/UpdateWorkOrderStatus',
   ListWOStatusesWithPaging: "http://localhost:25813/api/WorkOrderStatus/GetWOStatusWithPaging",

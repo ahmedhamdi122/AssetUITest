@@ -20,67 +20,13 @@
 
 
 
-    <!-- <div class="row p-3">
+    <div class="row">
         <div class="col-10">
-            <button mat-stroked-button [matBadge]="woStatusObj.countAll" (click)="getWOByStatusId(0,$event)">
-                {{'Asset.All' | translate }}</button>
-            <mat-action-list role="listitem" *ngFor="let sts of woStatusObj.listStatus">
-                <button *ngIf="sts.id===1" mat-stroked-button [matBadge]="woStatusObj.countAssigned"
-                    (click)="getWOByStatusId(sts.id,$event)" [ngStyle]="{'color': sts.color}">
-                    <span><i [ngClass]="sts.icon"></i></span>
-                    {{lang=="en"?sts.name:sts.nameAr}}
-                </button>
-                <button *ngIf="sts.id===2" mat-stroked-button [matBadge]="woStatusObj.countInProgress"
-                    (click)="getWOByStatusId(sts.id,$event)" [ngStyle]="{'color': sts.color}">
-                    <span><i [ngClass]="sts.icon"></i></span>
-                    {{lang=="en"?sts.name:sts.nameAr}}
-                </button>
-
-                <button *ngIf="sts.id===6" mat-stroked-button [matBadge]="woStatusObj.countPending"
-                    (click)="getWOByStatusId(sts.id,$event)" [ngStyle]="{'color': sts.color}">
-                    <span><i [ngClass]="sts.icon"></i></span>
-                    {{lang=="en"?sts.name:sts.nameAr}}
-                </button>
-
-                <button *ngIf="sts.id===7" mat-stroked-button [matBadge]="woStatusObj.countDone"
-                    (click)="getWOByStatusId(sts.id,$event)" [ngStyle]="{'color': sts.color}">
-                    <span><i [ngClass]="sts.icon"></i></span>
-                    {{lang=="en"?sts.name:sts.nameAr}}
-                </button>
-
-                <button *ngIf="sts.id===8" mat-stroked-button [matBadge]="woStatusObj.countReview"
-                    (click)="getWOByStatusId(sts.id,$event)" [ngStyle]="{'color': sts.color}">
-                    <span><i [ngClass]="sts.icon"></i></span>
-                    {{lang=="en"?sts.name:sts.nameAr}}
-                </button>
-
-                <button *ngIf="sts.id===9" mat-stroked-button [matBadge]="woStatusObj.countReAssigned"
-                    (click)="getWOByStatusId(sts.id,$event)" [ngStyle]="{'color': sts.color}">
-                    <span><i [ngClass]="sts.icon"></i></span>
-                    {{lang=="en"?sts.name:sts.nameAr}}
-                </button>
-
-                <button *ngIf="sts.id===10" mat-stroked-button [matBadge]="woStatusObj.countTechApprove"
-                    (click)="getWOByStatusId(sts.id)" [ngStyle]="{'color': sts.color}">
-                    <span><i [ngClass]="sts.icon"></i></span>
-                    {{lang=="en"?sts.name:sts.nameAr}}
-                </button>
-
-                <button *ngIf="sts.id===11" mat-stroked-button [matBadge]="woStatusObj.countUserApprove"
-                    (click)="getWOByStatusId(sts.id)" [ngStyle]="{'color': sts.color}">
-                    <span><i [ngClass]="sts.icon"></i></span>
-                    {{lang=="en"?sts.name:sts.nameAr}}
-                </button>
-
-                <button *ngIf="sts.id===12" mat-stroked-button [matBadge]="woStatusObj.countClosed"
-                    (click)="getWOByStatusId(sts.id)" [ngStyle]="{'color': sts.color}">
-                    <span><i [ngClass]="sts.icon"></i></span>
-                    {{lang=="en"?sts.name:sts.nameAr}}
-                </button>
-            </mat-action-list>
+            <button class="status p-1" *ngFor="let Status of lstWorkOrderStatus" pBadge [name]="Status.name" [value]="Status.count"  (click)="getWOByStatusId(Status)"  [ngStyle]="{'color': Status.color,'border-radius':'10px','background-color':'white'}" [ngClass]="{'statusIsActive':Status.isActive}"
+            style="margin: 0px 10px;">{{lang=="en"? Status.name :   Status.nameAr}} <i class="Status.icon"></i></button>
         </div>
+    </div>
 
-    </div> -->
     <div class="col-12 ">
         <div id="collapseExample" class="collapse row card-filter">
             <form (ngSubmit)="onSearch()" #searchForm="ngForm">
@@ -256,7 +202,7 @@
             </form>
         </div>
     </div>
-    <div class="row p-1">
+    <div class="row p-2">
         <p-multiSelect [options]="cols" name="ddlCols" [(ngModel)]="selectedColumns" optionLabel="header"
         selectedItemsLabel="{0} {{columnsSelected}}" [style]="{minWidth: '200px'}"
         [placeholder]="'Asset.ChooseColumns' |translate">
@@ -341,7 +287,7 @@
                                 </span>
                             </span>
                             <span *ngIf="item.workOrderStatusId >= 2">
-                                <span  class="viewIcon" pTooltip="{{'Asset.Note' | translate}}" tooltipPosition="top"
+                                <span  class="viewIcon" pTooltip="{{'Asset.addNotes' | translate}}" tooltipPosition="top"
                                     (click)="addNotes(item.id)"
                                     *ngIf=" ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))">
                                     <i class="pi pi-address-book" style="color: #89272a;cursor: pointer;"></i>
