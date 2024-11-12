@@ -18,7 +18,7 @@ const routes: Routes = [
         { path: 'hospitalassets', loadChildren: () => import('src/app/Features/hospital-assets/hospital-assets.module').then(m => m.HospitalAssetsModule) },
       // { path: 'hospitalcontract', loadChildren: () => import('src/app/Features/contracts/contracts.module').then(m => m.ContractsModule) },
       // { path: 'servicerequests/:assetdetailId', loadChildren: () => import('src/app/Features/requests/requests.module').then(m => m.RequetsModule) },
-      // { path: 'servicerequests', loadChildren: () => import('src/app/Features/requests/requests.module').then(m => m.RequetsModule) },
+       { path: 'servicerequests', loadChildren: () => import('src/app/Features/requests/requests.module').then(m => m.RequetsModule) },
       // { path: 'buildings', loadChildren: () => import('src/app/Features/hospital-buildings/hospital-buildings.module').then(m => m.HospitalBuildingsModule) },
       // { path: 'employees', loadChildren: () => import('src/app/Features/employees/employees.module').then(m => m.EmployeesModule) },
       // { path: 'workorders', loadChildren: () => import('src/app/Features/work-orders/work-orders.module').then(m => m.WorkOrdersModule) },

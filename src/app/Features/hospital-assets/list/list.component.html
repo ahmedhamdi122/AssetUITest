@@ -395,11 +395,12 @@
                 <ng-template pTemplate="header" let-cols>
                     <tr>
                         <th></th>
+                    
                         <ng-container *ngFor="let col of cols">
-                            <th style="text-align: inherit;" [sortable]="true">
+                            <th style="text-align: center;" [pSortableColumn]="col.header">
                                 {{col.header}}
-                                <p-sortIcon id="{{col.header | translate}}" (click)="sort($event)">
-                                </p-sortIcon>
+                                <p-sortIcon id="{{col.header | translate}}" [field]="col.header"/>
+                               
                             </th>
                         </ng-container>
                         <th>{{ 'Asset.Actions' | translate }}</th>
@@ -413,16 +414,16 @@
                             </mat-checkbox>
                         </td>
                         <ng-container *ngFor="let col of columns">
-                            <td style="text-align: inherit;" *ngIf="col.field =='barCode'">
+                            <td style="text-align: center;" *ngIf="col.field =='barCode'">
                                 {{item.barCode}}
                             </td>
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="col.field =='assetName' || col.field =='assetNameAr'">
                                 <span style="text-decoration-line: underline;" (click)="viewDetail(item.id)">
                                     {{lang=="en" ? item.assetName:item.assetNameAr}}
                                 </span>
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field != 'barCode' && col.field != 'assetName' && col.field != 'assetNameAr'  
+                            <td style="text-align: center;" *ngIf="col.field != 'barCode' && col.field != 'assetName' && col.field != 'assetNameAr'  
                                   && col.field != 'brandName' && col.field != 'brandNameAr' &&  col.field != 'supplierName' && col.field != 'supplierNameAr' 
                                   && ((col.field != 'hospitalName' || col.field != 'hospitalNameAr') && !showHospital)
                                   && col.field != 'serial'  && col.field != 'model'    
@@ -433,45 +434,45 @@
                                   && ((col.field != 'subOrgName' || col.field != 'subOrgNameAr') && !showSubOrg)">
                                 {{item[col.field]}}
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field == 'serial'"
+                            <td style="text-align: center;" *ngIf="col.field == 'serial'"
                                 [ngStyle]="{'direction': lang === 'en' ? 'ltr': 'ltr'}">
                                 {{item.serial}}
                             </td>
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="showHospital  && ((col.field == 'hospitalName') || (col.field == 'hospitalNameAr'))">
                                 {{lang=="en" ? item.hospitalName:item.hospitalNameAr}}
                             </td>
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="showGov && ((col.field == 'governorateName') || (col.field == 'governorateNameAr'))">
                                 {{lang=="en" ? item.governorateName:item.governorateNameAr}}
                             </td>
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="showCity && ((col.field == 'cityName') || (col.field == 'cityNameAr'))">
                                 {{lang=="en" ? item.cityName:item.cityNameAr}}
                             </td>
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="showOrg  && ((col.field == 'orgName') || (col.field == 'orgNameAr'))">
                                 {{lang==" en" ? item.orgName:item.orgNameAr}} </td>
                             <td *ngIf="showSubOrg && ((col.field == 'subOrgName') || (col.field == 'subOrgNameAr'))">
                                 {{lang=="en" ? item.subOrgName:item.subOrgNameAr}}
                             </td>
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="(col.field == 'supplierName') || (col.field == 'supplierNameAr')">
                                 {{lang=="en" ? item.supplierName:item.supplierNameAr}}
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field == 'model'">{{item.model}}
+                            <td style="text-align: center;" *ngIf="col.field == 'model'">{{item.model}}
                             </td>
 
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="(col.field == 'brandName') || (col.field == 'brandNameAr')">
                                 {{lang=="en" ? item.brandName:item.brandNameAr}}
                             </td>
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="(col.field == 'departmentName') || (col.field == 'departmentNameAr')">
                                 {{lang=="en" ? item.departmentName:item.departmentNameAr}}
                             </td>
                         </ng-container>
-                        <td style="text-align: inherit;">
+                        <td style="text-align: center;">
                             <span *ngIf="CanView()" class="viewIcon" (click)="viewAsset(item.id)">
                                 <i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i>
                             </span>
@@ -488,8 +489,8 @@
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <td style="text-align: inherit;" colspan="12"
-                            style="text-align: inherit; color: red;font-size: 20px;font-weight: bold;">
+                        <td style="text-align: center;" colspan="12"
+                            style="text-align: center; color: red;font-size: 20px;font-weight: bold;">
                             {{'Asset.NoData' | translate }}
                         </td>
                     </tr>

@@ -643,8 +643,8 @@ export class SortAssetDetailsVM {
     sortBy: string;
 }
 export class SortAndFilterVM {
-    sortObj: SortAssetDetailVM;
+    sortOrder: number;
+    sortFiled: string;
     searchObj: SearchAssetDetailVM;
-    isSearchAndSort: boolean;
 
 }

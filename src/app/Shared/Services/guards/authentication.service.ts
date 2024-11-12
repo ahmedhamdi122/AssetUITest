@@ -199,6 +199,27 @@ export class AuthenticationService {
               ],
             },
             {
+              icon: "pi pi-wrench",  
+              sectionName: "Maintainance",
+              sectionNameAr: "الصيانة",
+              moduleWithPermissionNames: [
+                {
+                  icon: "pi pi-ticket",
+                  route: "servicerequests",
+                  moduleName: "Requests",
+                  moduleNameAr: "طلبات",
+                  permissionNames: ["add", "edit", "delete"],
+                },
+                {
+                  icon: "pi pi-cog",
+                  route: "workorders",
+                  moduleName: "Work Orders",
+                  moduleNameAr: "أوامر الشغل",
+                  permissionNames: ["add", "edit", "delete"],
+                }
+              ]
+            },
+            {
               icon: "pi pi-settings",  
               sectionName: "Settings",
               sectionNameAr: "الإعدادات",

@@ -221,8 +221,10 @@ export class ListComponent implements OnInit {
     
   }
   ngOnInit(): void {
-
-    this.sortFilterObjects={sortObj:null,searchObj:null,isSearchAndSort:false}
+    this.sortFilterObjects = {
+      sortFiled:'',sortOrder:1,
+      searchObj: { assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', strContractStartDate: '', strContractEndDate: '', contractTypeId: 0, departmentId: 0, strWarrantyEndDate: '', governorateId: 0, hospitalId: 0, masterAssetId: 0, masterAssetName: '', masterAssetNameAr: '', model: '', organizationId: 0, originId: 0, serial: '', strWarrantyStartDate: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: this.currentUser.id, warrantyTypeId: 0 },
+    };
     this.authenticationService.AllModulesPermissionsForCurrentUser$.subscribe(
       res=>{this.SectionModulePermisisons=res
       }
@@ -318,7 +320,6 @@ this.onLoadByLogIn();
     });
     this.brandService.GetBrands().subscribe(items => {
       this.lstBrands = items;
-      console.log("this.lstBrands :",this.lstBrands )
     });
     if (this.currentUser.hospitalId != 0) {
       this.departmentService.DepartmentsByHospitalId(this.currentUser.hospitalId).subscribe(items => {
@@ -334,11 +335,7 @@ this.onLoadByLogIn();
     //   this.lstMasterAssets = lstmasters;
     // });
 
-    this.sortFilterObjects = {
-      searchObj: { assetName: '', assetId: 0, barCode: '', brandId: 0, cityId: 0, code: '', strContractStartDate: '', strContractEndDate: '', contractTypeId: 0, departmentId: 0, strWarrantyEndDate: '', governorateId: 0, hospitalId: 0, masterAssetId: 0, masterAssetName: '', masterAssetNameAr: '', model: '', organizationId: 0, originId: 0, serial: '', strWarrantyStartDate: '', statusId: 0, subOrganizationId: 0, supplierId: 0, userId: this.currentUser.id, warrantyTypeId: 0 },
-      sortObj: { sortBy: '', assetName: '', assetNameAr: '', barCode: '', barCodeValue: '', brand: '', brandId: 0, brandName: '', brandNameAr: '', cityId: 0, cityName: '', cityNameAr: '', Code: '', departmentId: 0, governorateId: 0, governorateName: '', governorateNameAr: '', hospitalId: 0, hospitalName: '', hospitalNameAr: '', Id: 0, masterAssetId: 0, model: '', organizationId: 0, orgName: '', orgNameAr: '', originId: 0, serial: '', serialValue: '', sortStatus: '', statusId: 0, subOrganizationId: 0, subOrgName: '', subOrgNameAr: '', supplier: '', supplierId: 0, supplierName: '', supplierNameAr: '', userId: '' },
-      isSearchAndSort: false
-    };
+    
 
     this.hideShowControls();
    
@@ -806,6 +803,9 @@ this.onLoadByLogIn();
     //   this.sortFilterObjects.searchObj.brandId = 0;
     //   this.showTitle = true;
     // }
+
+    this.sortFilterObjects.sortFiled=event.sortField;
+    this.sortFilterObjects.sortOrder=event.sortOrder;
     this.rowsSkipped=event.first;
     this.spinner.show()
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
@@ -845,7 +845,6 @@ this.onLoadByLogIn();
     this.lstassetDetailBarcodes = [];
     this.lstAssetSerailNumberObj = [];
     this.lstMasterAssetNames = [];
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
     this.sortFilterObjects.searchObj.warrantyTypeId = 0;
     this.sortFilterObjects.searchObj.contractTypeId = 0;
     this.sortFilterObjects.searchObj.departmentId = 0;
@@ -1031,7 +1030,6 @@ this.onLoadByLogIn();
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.warrantyTypeId = this.selectedWarrantyType;
     this.sortFilterObjects.searchObj.contractTypeId = this.selectedContractType;
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
     this.LoadHospitalAssets(this.reloadTableObj);
   }
   addAsset() {
@@ -1115,29 +1113,7 @@ this.onLoadByLogIn();
      }
     });
   }
-  sort(event) {
-    if (this.sortStatus == "descending") {
-      this.sortStatus = "ascending";
-      this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    }
-    else {
-      this.sortStatus = "descending";
-      this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    }
-
-    this.sortFilterObjects.searchObj.statusId = this.statusId;
-    this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.sortFilterObjects.searchObj.warrantyTypeId = this.selectedWarrantyType;
-    this.sortFilterObjects.searchObj.contractTypeId = this.selectedContractType;
-
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    this.sortFilterObjects.sortObj.sortBy = event.currentTarget.id;
-    this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
-      this.lstAssets = items.results;
-      this.count = items.count;
-      this.loading = false;
-    });
-  }
+ 
   addServiceRequest(assetId: number) {
 
     // const dialogRef2 = this.dialogService.open(CreaterequestComponent, {
@@ -1166,7 +1142,6 @@ this.onLoadByLogIn();
     this.loading = true;
     this.sortFilterObjects.searchObj.statusId = id;
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
     this.sortFilterObjects.searchObj.warrantyTypeId = this.selectedWarrantyType;
     this.sortFilterObjects.searchObj.contractTypeId = this.selectedContractType;
     this.assetDetailService.ListHospitalAssets(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
