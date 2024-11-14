@@ -4,7 +4,7 @@
             <h4 class="card-title" *ngIf="showSR"> {{ 'Asset.Requests' | translate }} </h4>
             <h4 class="card-title" *ngIf="showIncomeSR"> {{'Asset.IncomeRequests' |translate}}</h4>
         </div>
-        <div class="col-2"> <a class="addbutton" *ngIf="isAssetOwner || isSRCreator" (click)="addRequest()">
+        <div class="col-2"> <a class="addbutton"  (click)="addRequest()">
                 <i class="fa-solid fa-plus"></i> {{'Asset.Create'|translate }}</a>
         </div>
         <div class="col-2">
@@ -255,7 +255,7 @@
             <p-table [value]="lstRequests" name="requestTbl"
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" responsiveLayout="scroll"
                 [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" pageLinks="10" [rowHover]="true"
-                (onLazyLoad)="clicktbl($event)" [loading]="loading" [columns]="selectedColumns">
+                (onLazyLoad)="LoadRequests($event)" [loading]="loading" [columns]="selectedColumns">
                 <ng-template pTemplate="caption">
                     <p-multiSelect [options]="cols" name="ddlCols" [(ngModel)]="selectedColumns" optionLabel="header"
                         selectedItemsLabel="{0} {{columnsSelected}}" [style]="{minWidth: '200px'}"
@@ -399,5 +399,5 @@
 </p-dialog>
 
 
-<p-confirmDialog header="Are you sure you want to delete this item?" appendTo="body">
+<p-confirmDialog>
 </p-confirmDialog>

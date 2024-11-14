@@ -161,30 +161,27 @@ export class CreateComponent implements OnInit {
     }
     this.sortFilterObjects = {
       searchObj: { assetDetailId: 0, userName: '', lang: '', hospitalName: '', hospitalNameAr: '', printedBy: '', strEndDate: '', strStartDate: '', masterAssetId: 0, woLastTrackDescription: '', modelNumber: '', serialNumber: '', code: '', periorityId: 0, statusId: 0, modeId: 0, userId: '', cityId: 0, governorateId: 0, hospitalId: 0, barcode: '', organizationId: 0, subOrganizationId: 0, subject: '', start: '', end: '', assetOwnerId: 0, departmentId: 0 },
-      sortObj: {
-        userId: '', assetId: 0, hospitalId: 0, closedDate: '', createdBy: '', serial: '', requestCode: '', masterAssetId: 0, assetName: '', assetNameAr: '', barCode: '', modeName: '', periorityName: '', periorityNameAr: '', requestDate: '',
-        statusName: '', statusNameAr: '', subject: '', sortStatus: '', modeNameAr: '', description: '', woLastTrackDescription: '', strSerial: '', strSubject: '', strRequestCode: '', periorityId: 0, statusId: 0, strBarCode: '', strModel: '', sortBy: ''
-      }
+     sortFiled:"",sortOrder:1
     };
 
-    if (this.currentUser) {
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
+    // if (this.currentUser) {
+    //   this.currentUser["roleNames"].forEach(element => {
+    //     this.lstRoleNames.push(element["name"]);
+    //   });
 
-      this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
-      this.isEngManager = (['EngDepManager'].some(r => this.lstRoleNames.includes(r)));
-      this.isEng = (['Eng'].some(r => this.lstRoleNames.includes(r)));
-      this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-    }
+    //   this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
+    //   this.isEngManager = (['EngDepManager'].some(r => this.lstRoleNames.includes(r)));
+    //   this.isEng = (['Eng'].some(r => this.lstRoleNames.includes(r)));
+    //   this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
+    // }
 
     if (this.currentUser.hospitalId > 0) {
 
       this.lstMasterAsset = [];
-      this.masterAssetService.GetMasterAssets().subscribe(
-        res => {
-          this.lstMasterAsset = res
-        });
+      // this.masterAssetService.GetMasterAssets().subscribe(
+      //   res => {
+      //     this.lstMasterAsset = res
+      //   });
 
       this.assetDetailService.GetAllAssetDetailsByHospitalId(this.currentUser.hospitalId).subscribe(masters => {
         this.lstassetDetailBarcodes = masters;
@@ -197,10 +194,10 @@ export class CreateComponent implements OnInit {
       });
     }
     else {
-      this.masterAssetService.GetMasterAssets().subscribe(
-        res => {
-          this.lstMasterAsset = res
-        });
+      // this.masterAssetService.GetMasterAssets().subscribe(
+      //   res => {
+      //     this.lstMasterAsset = res
+      //   });
     }
 
     let assetId = this.activeRoute.snapshot.params['assetId'];
@@ -1110,68 +1107,7 @@ export class CreateComponent implements OnInit {
       this.reqObj.masterAssetId = 0;
     }
   }
-  sort($event) {
-    if (this.sortStatus === "descending") {
-      this.sortStatus = "ascending";
-      this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    }
-    else {
-      this.sortStatus = "descending"
-      this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    }
-    if ($event.currentTarget.id == "BarCode" || $event.currentTarget.id == "الباركود") {
-      this.sortFilterObjects.sortObj.barCode = $event.currentTarget.id;
-    }
-    if ($event.currentTarget.id == "RequestCode" || $event.currentTarget.id == "الباركود") {
-      this.sortFilterObjects.sortObj.barCode = $event.currentTarget.id;
-    }
 
-
-    if ($event.currentTarget.id == "Serial" || $event.currentTarget.id == "السيريال") {
-      this.sortFilterObjects.sortObj.serial = $event.currentTarget.id;
-    }
-
-    if ($event.currentTarget.id == "Subject") {
-      this.sortFilterObjects.sortObj.subject = $event.currentTarget.id;
-    }
-
-    if ($event.currentTarget.id == "Date" || $event.currentTarget.id == "التاريخ") {
-      this.sortFilterObjects.sortObj.requestDate = $event.currentTarget.id;
-    }
-
-    if ($event.currentTarget.id == 'Status') {
-      this.sortFilterObjects.sortObj.statusName = $event.currentTarget.id;
-    }
-    else if ($event.currentTarget.id === "الحاله") {
-      this.sortFilterObjects.sortObj.statusNameAr = $event.currentTarget.id;
-    }
-    if ($event.currentTarget.id == "Periority") {
-      this.sortFilterObjects.sortObj.periorityName = $event.currentTarget.id;
-    }
-    else if ($event.currentTarget.id == "الأولوية") {
-      this.sortFilterObjects.sortObj.periorityNameAr = $event.currentTarget.id;
-    }
-    if ($event.currentTarget.id == "Mode") {
-      this.sortFilterObjects.sortObj.modeName = $event.currentTarget.id;
-    }
-    else if ($event.currentTarget.id == "طريقة الإبلاغ") {
-      this.sortFilterObjects.sortObj.modeNameAr = $event.currentTarget.id;
-    }
-
-    this.lstRequests = [];
-    this.sortFilterObjects.sortObj.userId = this.currentUser.id;
-    this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.sortFilterObjects.sortObj.hospitalId = this.currentUser.hospitalId;
-    this.sortFilterObjects.sortObj.assetId = this.assetId;
-    this.sortFilterObjects.sortObj.sortBy = $event.currentTarget.id;
-    this.sortFilterObjects.searchObj.assetDetailId = this.assetId;
-
-
-    this.requestService.ListRequests(this.sortFilterObjects, 0, 0).subscribe(data => {
-      this.lstRequests = data.results;
-    });
-
-  }
   closeDialogue() {
     this.ref.close();
   }

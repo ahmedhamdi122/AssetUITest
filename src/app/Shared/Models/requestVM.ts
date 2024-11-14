@@ -200,6 +200,7 @@ export class MainClass2 {
     count: number;
 }
 export class SortAndFilterRequestVM {
-    sortObj: SortRequestVM;
+    sortOrder: number;
+    sortFiled: string;
     searchObj: SearchRequestVM;
 }

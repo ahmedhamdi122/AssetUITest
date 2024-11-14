@@ -54,6 +54,7 @@ import { Workbook } from 'exceljs';
 import * as fs from 'file-saver';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
 import { PrintsrComponent } from '../printsr/printsr.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -175,7 +176,7 @@ export class ListComponent implements OnInit {
     private departmentService: DepartmentService, private authenticationService: AuthenticationService, private assetDetailService: AssetDetailService,
     private governorateService: GovernorateService, private cityService: CityService, private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService,
     private hospitalService: HospitalService, private requestStatusService: RequestStatusService, public dialogService: DialogService, private uploadService: UploadFilesService,
-    private requestPeriorityService: RequestPeriorityService, private route: Router, private dialog: MatDialog, private datePipe: DatePipe,
+    private requestPeriorityService: RequestPeriorityService, private route: Router, private dialog: MatDialog, private datePipe: DatePipe,private spinner:NgxSpinnerService,
     private requestModeService: RequestModeService, private requestService: RequestService,
     private employeeService: EmployeeService, private masterAssetService: MasterAssetService,
     private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute) {
@@ -398,10 +399,7 @@ export class ListComponent implements OnInit {
     this.creatWorkOrderTrackingObj = { strWorkOrderDate: '', id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: new Date(), workOrderId: 0, workOrderStatusId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: '', plannedStartDate: '', hospitalId: 0 };
     this.sortFilterObjects = {
       searchObj: { assetDetailId: 0, userName: '', lang: '', hospitalName: '', hospitalNameAr: '', printedBy: '', strEndDate: '', strStartDate: '', masterAssetId: 0, woLastTrackDescription: '', modelNumber: '', serialNumber: '', code: '', periorityId: 0, statusId: 0, modeId: 0, userId: '', cityId: 0, governorateId: 0, hospitalId: 0, barcode: '', organizationId: 0, subOrganizationId: 0, subject: '', start: '', end: '', assetOwnerId: 0, departmentId: 0 },
-      sortObj: {
-        userId: '', assetId: 0, hospitalId: 0, closedDate: '', createdBy: '', serial: '', requestCode: '', masterAssetId: 0, assetName: '', assetNameAr: '', barCode: '', modeName: '', periorityName: '', periorityNameAr: '', requestDate: '',
-        statusName: '', statusNameAr: '', subject: '', sortStatus: '', modeNameAr: '', description: '', woLastTrackDescription: '', strSerial: '', strSubject: '', strRequestCode: '', periorityId: 0, statusId: 0, strBarCode: '', strModel: '', sortBy: ''
-      }
+     sortFiled:"",sortOrder:1
     };
 
     if (this.lang == "en") {
@@ -493,17 +491,18 @@ export class ListComponent implements OnInit {
       this.lstDepartments = items;
     });
   }
-  clicktbl(event) {
-    this.page.pagenumber = (event.first + 10) / 10;
-    this.page.pagesize = event.rows;
+  LoadRequests(event) {
 
     this.sortFilterObjects.searchObj.statusId = this.statusId;
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
     this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
-    this.requestService.ListRequests(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
+    console.log(" this.sortFilterObjects. :", this.sortFilterObjects);
+    this.spinner.show();
+    this.requestService.ListRequests(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
       this.lstRequests = items.results;
       this.count = items.count;
+      this.spinner.hide();
+      console.log("items :",items)
       this.loading = false;
     });
 
@@ -550,7 +549,6 @@ export class ListComponent implements OnInit {
   onSearch() {
     this.sortFilterObjects.searchObj.statusId = this.statusId;
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
     this.requestService.ListRequests(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
       this.lstRequests = items.results;
       this.count = items.count;
@@ -833,77 +831,7 @@ export class ListComponent implements OnInit {
       this.lstExportRequestsToExcel = exportReq;
     });
   }
-  sort(field) {
-    if (this.sortStatus == "descending") {
-      this.sortStatus = "ascending";
-      this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    }
-    else {
-      this.sortStatus = "descending";
-      this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    }
 
-    if (field.currentTarget.id == "Asset Name") {
-      this.sortFilterObjects.sortObj.assetName = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == "اسم الأصل") {
-      this.sortFilterObjects.sortObj.assetNameAr = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "BarCode" || field.currentTarget.id == "الباركود") {
-      this.sortFilterObjects.sortObj.barCode = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "Serial" || field.currentTarget.id == "السيريال") {
-      this.sortFilterObjects.sortObj.serial = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "Subject" || field.currentTarget.id == "الموضوع") {
-      this.sortFilterObjects.sortObj.subject = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "Request Code" || field.currentTarget.id == "رقم الطلب") {
-      this.sortFilterObjects.sortObj.requestCode = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "Date" || field.currentTarget.id == "التاريخ") {
-      this.sortFilterObjects.sortObj.requestDate = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "CreatedBy" || field.currentTarget.id == "تم بواسطة") {
-      this.sortFilterObjects.sortObj.createdBy = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "Periority") {
-      this.sortFilterObjects.sortObj.periorityName = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == "الأولوية") {
-      this.sortFilterObjects.sortObj.periorityNameAr = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "Mode") {
-      this.sortFilterObjects.sortObj.modeName = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == "طريقة الإبلاغ") {
-      this.sortFilterObjects.sortObj.modeNameAr = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == 'Desc' || field.currentTarget.id == 'الوصف') {
-      this.sortFilterObjects.sortObj.description = field.currentTarget.id
-    }
-    else if (field.currentTarget.id == 'WO Desc' || field.currentTarget.id == 'وصف أمر الشغل') {
-      this.sortFilterObjects.sortObj.woLastTrackDescription = field.currentTarget.id
-    }
-    if (field.currentTarget.id == "ClosedDate" || field.currentTarget.id == "تاريخ الإغلاق") {
-      this.sortFilterObjects.sortObj.closedDate = field.currentTarget.id
-    }
-    if (field.currentTarget.id == 'Status') {
-      this.sortFilterObjects.sortObj.statusName = field.currentTarget.id
-    }
-    else if (field.currentTarget.id === "الحاله") {
-      this.sortFilterObjects.sortObj.statusNameAr = field.currentTarget.id
-    }
-    this.sortFilterObjects.searchObj.statusId = this.statusId;
-    this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
-    this.sortFilterObjects.sortObj.sortBy = field.currentTarget.id;
-    this.requestService.ListRequests(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
-      this.lstRequests = items.results;
-      this.count = items.count;
-      this.loading = false;
-    });
-  }
   printServiceRequest(id: number) {
 
     // var doc = new jspdf('p', "mm", "a4");
@@ -1766,7 +1694,6 @@ export class ListComponent implements OnInit {
     this.sortFilterObjects.searchObj.end = "";
     this.sortFilterObjects.searchObj.statusId = 0;
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.sortFilterObjects.sortObj.sortStatus = this.sortStatus;
     this.sortFilterObjects.searchObj.departmentId = 0;
     this.sortFilterObjects.searchObj.assetOwnerId = 0;
     this.sortFilterObjects.searchObj.barcode = "";

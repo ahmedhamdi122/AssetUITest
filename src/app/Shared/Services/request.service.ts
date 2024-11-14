@@ -288,8 +288,8 @@ export class RequestService {
     return this.httpClient.get<ExportRequestVM>(`${environment.GetRequestById}${id}`, this.httpHeader);
   }
 
-  ListRequests(data: SortAndFilterRequestVM, pageNumber: number, pageSize: number): Observable<MainClass> {
-    return this.httpClient.post<MainClass>(`${environment.ListRequests}${pageNumber}/${pageSize}`, data, this.httpHeader)
+  ListRequests(data: SortAndFilterRequestVM, first: number, rows: number): Observable<MainClass> {
+    return this.httpClient.post<MainClass>(`${environment.ListRequests}${first}/${rows}`, data, this.httpHeader)
   }
 
 
