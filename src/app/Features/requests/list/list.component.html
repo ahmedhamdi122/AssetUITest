@@ -348,17 +348,17 @@
                         </ng-container>
                         <td style="text-align: inherit;">
                             <span class="viewIcon" (click)="viewRequest(item.id)">
-                                <i class="fa-solid fa-eye"></i>
+                                <i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i>
                             </span>
                             <span class="editIcon"
                                 *ngIf="(isSRCreator || isAssetOwner || isSRCreator) &&  (item.countWorkOrder == 0)"
                                 (click)="editRequest(item.id)">
-                                <i class="fa-solid fa-edit"></i>
+                                <i class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i>
                             </span>
                             <span class="deleteIcon"
                                 *ngIf="(isAssetOwner  || isSRCreator) &&  (item.countWorkOrder == 0)"
                                 (click)="deleteRequest(item.id)">
-                                <i class="fa-solid fa-trash"></i>
+                                <i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i>
                             </span>
                             <span (click)="ApproveRequest(item.id)"
                                 *ngIf="(isAssetOwner || isSRReviewer) && (item.latestWorkOrderStatusId == 11  && item.statusId ==4) ">
@@ -369,7 +369,6 @@
                                 *ngIf="(isSRCreator || isAssetOwner || isSRReviewer) && item.statusId == 5">
                                 <i class="fa-solid fa-check-double" style="color: #0d4f28;margin: 0px 5px;"></i>
                             </span>
-
                             <span pTooltip="{{'Asset.ReAssign'| translate}}" tooltipPosition="top"
                                 *ngIf="isAssetOwner && (item.latestWorkOrderStatusId == 9)">
                                 <i class="fa-solid fa-redo" style="color: #0d4f28;margin: 0px 5px;"></i>
