@@ -9,6 +9,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { PickListModule } from 'primeng/picklist';
 import { MatStepperModule } from '@angular/material/stepper';
 import { DropdownModule } from 'primeng/dropdown';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
 import { CalendarModule } from 'primeng/calendar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -21,7 +23,7 @@ import { CreateComponent } from './create/create.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { ViewComponent } from './view/view.component';
 import { AddStatusComponent } from './add-status/add-status.component';
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { DashboardModule } from 'src/app/dashboard/dashboard.module';
 import { CloseComponent } from './close/close.component';
 import { TrackworkordersComponent } from './trackworkorders/trackworkorders.component';
@@ -36,12 +38,13 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ApproverequestComponent } from './approverequest/approverequest.component';
 
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthGuard } from 'src/app/Shared/Services/guards/authGuard.guard';
 
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
 import { PrintsrComponent } from './printsr/printsr.component';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 @NgModule({
   declarations: [
     EditComponent,
@@ -66,13 +69,11 @@ import { PrintsrComponent } from './printsr/printsr.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    PickListModule,
+
     DialogModule,
     ListboxModule,
     RequetsRoutingModule,
-    MatStepperModule,
+    
     DropdownModule,
     CalendarModule,
     DialogModule,
@@ -80,7 +81,6 @@ import { PrintsrComponent } from './printsr/printsr.component';
     TooltipModule,
     ToastModule,
     TableModule,
-    MatExpansionModule,
     TranslateModule,
     DashboardModule,
     DynamicDialogModule,
@@ -91,10 +91,11 @@ import { PrintsrComponent } from './printsr/printsr.component';
     MultiSelectModule,
     FieldsetModule,
     AutoCompleteModule,
-    MatStepperModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    DialogModule,
+    ConfirmDialogModule
   ],
-  providers: [MessageService, AuthGuard]
+  providers: [MessageService, AuthGuard,DialogService]
 
 })
 export class RequetsModule { }

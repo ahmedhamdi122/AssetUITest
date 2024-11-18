@@ -8,14 +8,11 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatRadioModule } from '@angular/material/radio';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { ToastModule } from 'primeng/toast';
 import { ListComponent } from './list/list.component';
 import { CreateComponent } from './create/create.component';
 import { EditComponent } from './edit/edit.component';
-import { MatIconModule } from '@angular/material/icon';
 import { ViewComponent } from './view/view.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { PaginatorModule } from 'primeng/paginator';
@@ -47,9 +44,7 @@ import { DialogService ,DynamicDialogModule} from 'primeng/dynamicdialog'; // Im
     MatTabsModule,
     TranslateModule,
     MatRadioModule,
-    MatSnackBarModule,
     ConfirmDialogModule,
-    MatIconModule,
     TableModule,
     TooltipModule,
     MasterAssetsRoutingModule,
@@ -58,7 +53,6 @@ import { DialogService ,DynamicDialogModule} from 'primeng/dynamicdialog'; // Im
     InputTextModule,
     FloatLabelModule,
     RadioButtonModule,
-    ToastModule,
   ],
   providers:[MessageService,DialogService]
 })

@@ -19,6 +19,7 @@
                 "View": "View",
                 "viewDetails":"view Details",
                 "Name": "Name",
+                "ExtractAsPDF":"Extract As PDF",
                 "ArabicName": "Arabic Name",
                 "AddNewDocuments":"Add New Documents",
                 "UpdatedSuccessfully":"Updated Successfully",

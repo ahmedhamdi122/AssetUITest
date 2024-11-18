@@ -193,8 +193,9 @@ export class ListComponent implements OnInit {
   reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
   displaySuccessUpdate:boolean=false;
   showTitle: boolean = false;
-  displaySuccessCreate:boolean=false;
-  displaySuccessDelete:boolean=false;
+  SuccessfullyMessage:string="";
+  showSuccessfullyMessage:boolean=false;
+  SuccessfullyHeader:string=""
   constructor(public dialogService: DialogService, private dialog: MatDialog, private masterAssetService: MasterAssetService,private spinner :NgxSpinnerService,
     private authenticationService: AuthenticationService, private assetStatusService: AssetStatusService,
     private activeRoute: ActivatedRoute, private cdr: ChangeDetectorRef,
@@ -1045,7 +1046,16 @@ this.onLoadByLogIn();
     dialogRef2.onClose.subscribe((created) => {
       if(created)
       {        
-        this.displaySuccessCreate=true;
+        this.showSuccessfullyMessage=true;
+        if(this.lang=="en"){
+         this.SuccessfullyMessage="Added Successfully";
+         this.SuccessfullyHeader="Add" 
+     }
+     else
+     {
+       this.SuccessfullyMessage="تم إضافة البيانات بنجاح";
+       this.SuccessfullyHeader="إضافة" 
+     }
         const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
        this.reloadTableObj.first=lastPageIndex;
        this.LoadHospitalAssets(this.reloadTableObj);
@@ -1069,7 +1079,16 @@ this.onLoadByLogIn();
           this.assetDetailService.DeleteAsset(item.id).subscribe(
             deleted => {
                this.spinner.hide()
-               this.displaySuccessDelete=true;
+               this.showSuccessfullyMessage=true;
+               if(this.lang=="en"){
+                this.SuccessfullyMessage="Deleted Successfully";
+                this.SuccessfullyHeader="Delete" 
+            }
+            else
+            {
+              this.SuccessfullyMessage="تم حذف البيانات بنجاح";
+              this.SuccessfullyHeader="مسح" 
+            }
               this.reloadTableObj.first= this.rowsSkipped;
                this.LoadHospitalAssets(this.reloadTableObj);
                this.dataTable.first= this.rowsSkipped;
@@ -1106,7 +1125,16 @@ this.onLoadByLogIn();
     ref.onClose.subscribe((updated) => {
      if(updated)
      {
-      this.displaySuccessUpdate=true;
+      this.showSuccessfullyMessage=true;
+      if(this.lang=="en"){
+       this.SuccessfullyMessage="Updated Successfully";
+       this.SuccessfullyHeader="Update" 
+   }
+   else
+   {
+     this.SuccessfullyMessage="تم تعديل البيانات بنجاح";
+     this.SuccessfullyHeader="تعديل" 
+   }
       this.reloadTableObj.first= this.rowsSkipped;
       this.LoadHospitalAssets(this.reloadTableObj);
       this.dataTable.first= this.rowsSkipped;

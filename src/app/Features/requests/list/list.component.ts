@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -9,7 +9,7 @@ import { ListCityVM } from 'src/app/Shared/Models/cityVM';
 import { ListEmployees } from 'src/app/Shared/Models/employeeVM';
 import { ListGovernorateVM } from 'src/app/Shared/Models/governorateVM';
 import { ListHospitalVM } from 'src/app/Shared/Models/hospitalVM';
-import { ListMasterAssetVM } from 'src/app/Shared/Models/masterAssetVM';
+import { ListMasterAssetVM, reloadTableObj } from 'src/app/Shared/Models/masterAssetVM';
 import { ListOrganizationVM } from 'src/app/Shared/Models/organizationVM';
 import { Paging } from 'src/app/Shared/Models/paging';
 import { ExportRequestVM, ListRequestModeVM, ListRequestVM, PrintServiceRequestVM, SearchRequestVM } from 'src/app/Shared/Models/requestModeVM';
@@ -55,6 +55,8 @@ import * as fs from 'file-saver';
 import { BreadcrumbService } from 'src/app/Shared/Services/Breadcrumb.service';
 import { PrintsrComponent } from '../printsr/printsr.component';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ConfirmationService } from 'primeng/api';
+import { Table } from 'primeng/table';
 
 
 @Component({
@@ -144,26 +146,18 @@ export class ListComponent implements OnInit {
   lstRequestIds: number[] = [];
   lstCheckedRequests: ListRequestVM[] = [];
   lstExportCheckedRequests: ExportRequestVM[] = [];
-
   exportCheckedRequest: ExportRequestVM;
-
-
   checkedRequest2: ListRequestVM;
   lstExportRequestsToExcel: ListRequestVM[] = [];
   printedBy: string = "";
-
   lstMasterAssets: ListMasterAssetVM[] = [];
   isValidDate: boolean = false;
   error: any = { isError: false, errorMessage: '' };
-
   showSR: boolean = false;
   showIncomeSR: boolean = false;
-
   lstSelectedColumns: any[] = [];
-
   sortFilterObjects: SortAndFilterRequestVM;
   assetBarCodeObj = null;
-
   countOpen: number = 0;
   countClosed: number = 0;
   countInProgress: number = 0;
@@ -171,8 +165,14 @@ export class ListComponent implements OnInit {
   countAll: number = 0;
   countApproved: number = 0;
   printServiceRequestObj: PrintServiceRequestVM;
-
-  constructor(
+  showFilter:boolean=false;
+  SuccessfullyMessage:string="";
+  SuccessfullyHeader:string="";
+  showSuccessfullyMessage:boolean=false;
+  reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
+  @ViewChild("dtRequests") dataTable: Table;
+  rowsSkipped:number=0;
+  constructor(private confirmationService:ConfirmationService,
     private departmentService: DepartmentService, private authenticationService: AuthenticationService, private assetDetailService: AssetDetailService,
     private governorateService: GovernorateService, private cityService: CityService, private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService,
     private hospitalService: HospitalService, private requestStatusService: RequestStatusService, public dialogService: DialogService, private uploadService: UploadFilesService,
@@ -198,23 +198,7 @@ export class ListComponent implements OnInit {
       // this.currentUser["roleNames"].forEach(element => {
       //   this.lstRoleNames.push(element["name"]);
       // });
-      this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
-      this.isEng = (['Eng'].some(r => this.lstRoleNames.includes(r)));
-      this.isEngManager = (['EngDepManager'].some(r => this.lstRoleNames.includes(r)));
-      this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-      this.isSRCreator = (['Admin', 'SRCreator'].some(r => this.lstRoleNames.includes(r)));
-      this.isSRReviewer = (['Admin', 'SRReviewer'].some(r => this.lstRoleNames.includes(r)));
-    }
-    if (this.isSRCreator || this.isAssetOwner || this.isSRReviewer) {
-      this.showSR = true;
-      this.showIncomeSR = false;
-      const translationKeys = ['Asset.Maintainance', 'Asset.Requests'];
-      const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
-      this.breadcrumbService.addBreadcrumb(this.activateRoute.snapshot, parentUrlArray, translationKeys);
-    }
-    if (this.isEngManager || this.isAdmin) {
-      this.showSR = false;
-      this.showIncomeSR = true;
+    
 
       const translationKeys = ['Asset.Maintainance', 'Asset.IncomeRequests'];
       const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
@@ -497,6 +481,7 @@ export class ListComponent implements OnInit {
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
     console.log(" this.sortFilterObjects. :", this.sortFilterObjects);
+    this.rowsSkipped=event.first;
     this.spinner.show();
     this.requestService.ListRequests(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
       this.lstRequests = items.results;
@@ -629,9 +614,7 @@ export class ListComponent implements OnInit {
         "font-family": "sans-serif"
       }
     });
-    ref.onClose.subscribe(res => {
-      this.reload();
-    })
+   
   }
   downloadFile(fileName) {
     var filePath = `${environment.Domain}UploadedAttachments/`;
@@ -678,8 +661,11 @@ export class ListComponent implements OnInit {
       }
     });
 
-    dialogRef2.onClose.subscribe((res) => {
-      this.reload();
+    dialogRef2.onClose.subscribe((created) => {
+     if(created)
+     {
+      //reload
+     }
     });
   }
   editRequest(id: number) {
@@ -698,8 +684,11 @@ export class ListComponent implements OnInit {
         "font-size": 40
       }
     });
-    ref.onClose.subscribe((statusId: number) => {
-      this.reload();
+    ref.onClose.subscribe((Edited: number) => {
+      if(Edited)
+      {
+        //relod
+      }
     });
   }
   ApproveRequest(id: number) {
@@ -718,28 +707,61 @@ export class ListComponent implements OnInit {
         "font-size": 40
       }
     });
-    dialogRef2.onClose.subscribe((res) => {
-      this.reload();
+    dialogRef2.onClose.subscribe((Approved) => {
+      if(Approved)
+      {
+        //get updated requests
+      }
     });
   }
-  deleteRequest(id: number) {
+  deleteRequest(id: number,requestCode:any) {
 
-    this.requestService.GetRequestById(id).subscribe((data) => {
-      this.selectedObj = data;
-      const reqDialog = this.dialog
-        .open(DeleteconfirmationComponent, {
-          width: '70%',
-          autoFocus: true,
-          data: {
-            id: this.selectedObj.id,
-            subject: this.selectedObj.subject
-          },
+
+    this.confirmationService.confirm({
+      message: `${this.lang === 'en' ? `Are you sure you want to delete the request with code ${requestCode}?` : `هل أنت متأكد أنك تريد حذف الطلب رقم${requestCode}؟`}`,
+      header: `${this.lang === 'en' ? 'Delete Confirmation' : 'تأكيد المسح'}`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon: 'none', 
+      rejectIcon: 'none', 
+      acceptButtonStyleClass: 'btn btn-primary m-2', 
+      rejectButtonStyleClass: 'btn btn-light m-2',
+      rejectLabel: this.lang === 'en' ? 'No' : 'لا',
+      acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+      accept: () => {
+        this.spinner.show()
+        this.requestService.DeleteRequest(id).subscribe(async deleted => {
+          this.reloadTableObj.first= this.rowsSkipped;
+          await this.LoadRequests(this.reloadTableObj);
+          this.dataTable.first= this.rowsSkipped;
+          this.showSuccessfullyMessage=true;
+          if(this.lang=="en"){
+            this.SuccessfullyMessage="Deleted Successfully";
+            this.SuccessfullyHeader="Delete" 
+        }
+        else
+        {
+          this.SuccessfullyMessage="تم حذف البيانات بنجاح";
+          this.SuccessfullyHeader="مسح" 
+        }
+        }, (error) => {
+          this.errorDisplay = true;
+    
+          if (this.lang == 'en') {
+            if (error.error.status == 'req') {
+              this.errorMessage = error.error.message;
+            }
+          } if (this.lang == 'ar') {
+            if (error.error.status == 'req') {
+              this.errorMessage = error.error.messageAr;
+            }
+          }
+          return false;
         });
-
-      reqDialog.afterClosed().subscribe(deleted => {
-        this.reload();
-      });
+      },
+      reject: () => {
+      }
     });
+
   }
   viewRequest(id: number) {
     const ref = this.dialogService.open(ViewComponent, {
@@ -758,8 +780,6 @@ export class ListComponent implements OnInit {
       }
     });
 
-    ref.onClose.subscribe((statusId: number) => {
-    });
   }
   addWorkOrder(requestId: number) {
 
@@ -777,8 +797,11 @@ export class ListComponent implements OnInit {
         "font-size": 40
       }
     });
-    ref.onClose.subscribe(res => {
-      this.reload();
+    ref.onClose.subscribe(Added => {
+      if(Added)
+      {
+        //reload 
+      }
     });
 
   }

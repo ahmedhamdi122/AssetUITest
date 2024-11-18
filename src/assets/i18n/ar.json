@@ -20,6 +20,7 @@
                 "Filter": "فلتر",
                 "View": "شاهد",
                 "Name": "الاسم",
+                "ExtractAsPDF":"استخراج كملف PDF",
                 "ArabicName": "الاسم بالعربي",
                 "StartDate": "تاريخ البداية",
                 "EndDate": "تاريخ النهاية",

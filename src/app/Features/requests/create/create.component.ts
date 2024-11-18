@@ -1022,6 +1022,7 @@ export class CreateComponent implements OnInit {
     }
   }
   onMasterAssetSelectionChanged(event) {
+    console.log("masset Auto com")
     this.masterAssetService.AutoCompleteMasterAssetName3(event.query, this.currentUser.hospitalId).subscribe(masters => {
       this.lstMasterAssets = masters;
       if (this.lang == "en") {
@@ -1033,6 +1034,8 @@ export class CreateComponent implements OnInit {
     });
   }
   getMasterAssetObject(event) {
+    console.log("select master asset");
+    
     this.lstHospitalAssets = [];
     this.masterAssetObj1.id = event["id"];
     this.reqObj.assetDetailId = event["id"];
@@ -1040,6 +1043,8 @@ export class CreateComponent implements OnInit {
     this.assetId = event["id"];
     this.requestService.GetOldRequestsByHospitalAssetId(event["id"]).subscribe(items => {
       this.lstRequests = items;
+      console.log("this.lstRequests :",this.lstRequests);
+      
     });
     this.brandName = this.lang == 'en' ? event["brandName"] : event["brandNameAr"];
     this.modelNumber = event["model"];
@@ -1049,6 +1054,8 @@ export class CreateComponent implements OnInit {
 
     this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(event["id"], this.currentUser.hospitalId).subscribe(assets => {
       this.lstHospitalAssets = assets;
+      console.log("this.lstHospitalAssets :",this.lstHospitalAssets);
+      
     });
   }
   onTypeChange($event) {
