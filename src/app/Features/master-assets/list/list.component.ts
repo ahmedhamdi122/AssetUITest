@@ -66,7 +66,7 @@ export class ListComponent implements OnInit {
   SuccessfullyHeader:string='';
   SuccessfullyMessage:string='';
   showSuccessfullyMessage:boolean=false;
-  loading:boolean=false;
+  loading:boolean=true;
   constructor(private spinner:NgxSpinnerService,private dialogService: DialogService, private dialog: MatDialog, private authenticationService: AuthenticationService,private confirmationService:ConfirmationService,private route: Router,
     private ecriService: ECRIService, private categoryService: CategoryService, private subCategoryService: SubCategoryService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,
     private masterAssetService: MasterAssetService, private originService: OriginService, private brandService: BrandService,private MessageService:MessageService) { this.currentUser = this.authenticationService.currentUserValue; }
@@ -139,6 +139,7 @@ export class ListComponent implements OnInit {
       this.masterAssetService.GetListMasterAssets(event.first, event.rows,this.SearchSortMasterAsset).subscribe((items) => {
       this.lstMasterAssets = items.results;     
       this.count = items.count;
+      this.loading=false;
       this.spinner.hide();
       
     },error=>{

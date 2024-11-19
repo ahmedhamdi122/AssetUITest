@@ -65,6 +65,7 @@ export class ListComponent implements OnInit {
       this.UserResult = res;
       this.users=this.UserResult.results;
       this.count=this.UserResult.count;
+      this.loading=false;      
       this.spinner.hide();
 
     });

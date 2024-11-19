@@ -2,8 +2,8 @@
 <div class="col-12 p-3" [ngStyle]="{ display: loading ? 'none' : 'block' }">
     <div class="row top-buffer">
         <div class="col-8">
-            <h4 class="card-title" *ngIf="showSR"> {{ 'Asset.Requests' | translate }} </h4>
-            <h4 class="card-title" *ngIf="showIncomeSR"> {{'Asset.IncomeRequests' |translate}}</h4>
+            <!-- <h4 class="card-title" > {{ 'Asset.Requests' | translate }} </h4> -->
+            <h4 class="card-title"> {{'Asset.IncomeRequests' |translate}}</h4>
         </div>
         <div class="col-2">   <a class="addbutton"(click)="addRequest()"><i class="pi pi-plus-circle"></i> {{'Asset.Create'|
                     translate}}</a>
@@ -14,11 +14,11 @@
         </div>
     </div>
     <div class="row top-buffer">
+     
         <div class="col-10">
-            <button mat-stroked-button name="btnAll" [matBadge]="countAll" (click)="getRequestsByStatusId(0,$event)"
+            <button pBadge name="btnAll" [value]="countAll" (click)="getRequestsByStatusId(0,$event)"
                 style="margin: 0px 15px;">{{'Asset.All'
                 |translate}}</button>
-
             <mat-nav-list id="app-nav" aria-label="Main navigation" *ngFor="let sts of lstMainStatuses">
                 <a mat-list-item *ngIf=" sts.id==1" (click)="getRequestsByStatusId(sts.id,$event)" mat-stroked-button
                     [ngStyle]="{'color': sts.color}" autofocus [matBadge]="countOpen">
@@ -252,48 +252,48 @@
 
     <div class="row">
         <div class="col-12">
+            <div class="mb-3">
+                <p-multiSelect [options]="cols" name="ddlCols" [(ngModel)]="selectedColumns" optionLabel="header"
+                selectedItemsLabel="{0} {{columnsSelected}}" [style]="{minWidth: '200px'}"
+                [placeholder]="'Asset.ChooseColumns' |translate">
+            </p-multiSelect>
+            </div>
+           
             <p-table #dtRequests [value]="lstRequests" name="requestTbl"
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" responsiveLayout="scroll"
                 [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" pageLinks="10" [rowHover]="true"
                 (onLazyLoad)="LoadRequests($event)" [loading]="loading" [columns]="selectedColumns">
-                <ng-template pTemplate="caption">
-                    <p-multiSelect [options]="cols" name="ddlCols" [(ngModel)]="selectedColumns" optionLabel="header"
-                        selectedItemsLabel="{0} {{columnsSelected}}" [style]="{minWidth: '200px'}"
-                        [placeholder]="'Asset.ChooseColumns' |translate">
-                    </p-multiSelect>
-                </ng-template>
+                 
                 <ng-template pTemplate="header" let-cols>
                     <tr>
-                        <th></th>
-                        <th style="text-align: inherit;display: none;"></th>
-                        <th style="text-align: inherit;width: 500px;" [sortable]="true" *ngFor="let col of cols">
+                        <th style="text-align: center;"></th>
+                        <th style="text-align: center;" [sortable]="true" *ngFor="let col of cols">
                             {{col.header}}
                             <p-sortIcon id="{{col.header | translate}}" (click)="sort($event)">
                             </p-sortIcon>
                         </th>
-
                         <th>{{'Asset.Actions' | translate }}</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-item let-columns="columns">
                     <tr>
-                        <td style="text-align: inherit;display: none;">
+                        <td style="text-align: center;display: none;">
                             <ngx-barcode [bc-value]="item.requestCode" id="barcode_{{item.id}}" class="barcode"
                                 [bc-display-value]="true" width="20" height="10" [bc-element-type]="elementType">
                             </ngx-barcode>
                         </td>
-                        <td style="text-align: inherit;">
+                        <td style="text-align: center;">
                             <mat-checkbox id="ckbx{{item.id}}" name="ckbx{{item.id}}"
                                 (change)="checkedRequest($event, item.id)" [value]="item.id">
                             </mat-checkbox>
                         </td>
                         <ng-container *ngFor="let col of columns">
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="col.field !='woLastTrackDescription' && col.field !='requestDate' && col.field !== 'statusName' && col.field !== 'statusNameAr' && col.field !=='createdBy' && col.field !=='closedDate'
                                      && col.field !== 'periorityName'  && col.field !== 'periorityNameAr' && col.field !='assetName' && col.field !='assetNameAr' && col.field !=='description' && col.field !=='modelNumber'">
                                 {{item[col.field]}}
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field=='requestDate'">
+                            <td style="text-align: center;" *ngIf="col.field=='requestDate'">
                                 {{item.requestDate | date:'dd-MM-yyyy HH:mm'}}
                             </td>
                             <td *ngIf="col.field=='assetName'" [frozen]="true">
@@ -301,52 +301,52 @@
                                     item.assetName:item.assetNameAr}}
                                 </a>
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field=='assetNameAr'">
+                            <td style="text-align: center;" *ngIf="col.field=='assetNameAr'">
                                 <a [routerLink]="['/dash/hospitalassets/detail/',item.assetDetailId]">{{lang=="en" ?
                                     item.assetName:item.assetNameAr}}
                                 </a>
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field =='statusNameAr'">
+                            <td style="text-align: center;" *ngIf="col.field =='statusNameAr'">
                                 <span [ngStyle]="{'color':item.statusColor}">
                                     <span><i [ngClass]="item.statusIcon"></i></span>
                                     {{lang=="en" ? item.statusName:item.statusNameAr}}
                                 </span>
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field =='modelNumber'">
+                            <td style="text-align: center;" *ngIf="col.field =='modelNumber'">
                                 {{item.modelNumber}}
                             </td>
 
-                            <td style="text-align: inherit;width:500px" *ngIf="col.field =='statusName'">
+                            <td style="text-align: center;width:500px" *ngIf="col.field =='statusName'">
                                 <span [ngStyle]="{'color':item.statusColor}">
                                     <span><i [ngClass]="item.statusIcon"></i></span>
                                     {{lang=="en" ? item.statusName:item.statusNameAr}}
                                 </span>
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field =='periorityName'">
+                            <td style="text-align: center;" *ngIf="col.field =='periorityName'">
                                 <i [ngClass]="item.periorityIcon" [ngStyle]="{'color': item.periorityColor}"></i>
                                 {{lang=="en" ? item.periorityName: item.periorityNameAr}}
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field =='createdBy'">
+                            <td style="text-align: center;" *ngIf="col.field =='createdBy'">
                                 {{item.createdBy}}
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field =='closedDate'">
+                            <td style="text-align: center;" *ngIf="col.field =='closedDate'">
                                 {{item.closedDate}}
                             </td>
 
-                            <td style="text-align: inherit;" *ngIf="col.field =='description'">
+                            <td style="text-align: center;" *ngIf="col.field =='description'">
                                 {{item.description}}
                             </td>
 
-                            <td style="text-align: inherit;" *ngIf="col.field =='woLastTrackDescription'">
+                            <td style="text-align: center;" *ngIf="col.field =='woLastTrackDescription'">
                                 {{item.woLastTrackDescription}}
                             </td>
 
-                            <td style="text-align: inherit;" *ngIf="col.field =='periorityNameAr'">
+                            <td style="text-align: center;" *ngIf="col.field =='periorityNameAr'">
                                 <i [ngClass]="item.periorityIcon" [ngStyle]="{'color': item.periorityColor}"></i>
                                 {{lang=="en" ? item.periorityName: item.periorityNameAr}}
                             </td>
                         </ng-container>
-                        <td style="text-align: inherit;">
+                        <td style="text-align: center;">
                             <span class="viewIcon" (click)="viewRequest(item.id)">
                                 <i class="pi pi-eye"style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i>
                             </span>

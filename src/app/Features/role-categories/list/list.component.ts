@@ -164,6 +164,7 @@ export class ListComponent implements OnInit {
     this.sortObj = { SortField: event.sortField, SortOrder: event.sortOrder ,Search:''}
     this.rolecategoryService.LoadRoleCategories(event.first,event.rows, this.sortObj).subscribe(items => {
       this.RoleCategoriesResult = items;
+      this.loading=false;
      this.lstRoleCategories=this.RoleCategoriesResult.results;
       this.count=this.RoleCategoriesResult.count;
       this.spinner.hide()

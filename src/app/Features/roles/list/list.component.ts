@@ -53,7 +53,8 @@ export class ListComponent implements OnInit {
     this.spinner.show()
     this.SearchSortRoleObj={ SortField:event.sortField, SortOrder: event.sortOrder ,Search:''};
       this.roleService.GetRoles(event.first, event.rows,this.SearchSortRoleObj).subscribe((items) => {
-      this.lstRoles = items.results;           
+      this.lstRoles = items.results;     
+      this.loading=false;      
       this.count = items.count;
       this.spinner.hide()
     },error=>{

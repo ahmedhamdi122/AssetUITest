@@ -42,7 +42,6 @@ import { ListWOComponent } from '../../work-orders/list/listwo.component';
 import { AddStatusComponent } from '../add-status/add-status.component';
 import { CloseComponent } from '../close/close.component';
 import { CreateComponent } from '../create/create.component';
-import { DeleteconfirmationComponent } from '../deleteconfirmation/deleteconfirmation.component';
 import { EditComponent } from '../edit/edit.component';
 import { TrackworkordersComponent } from '../trackworkorders/trackworkorders.component';
 import { ViewComponent } from '../view/view.component';
@@ -454,22 +453,26 @@ export class ListComponent implements OnInit {
     //     { field: 'modelNumber', header: 'الموديل' }
     //   ];
     // }
-    // this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(statusObj => {
-    //   this.lstMainStatuses = statusObj.listStatus;
-    //   this.countOpen = statusObj.countOpen;
-    //   this.countApproved = statusObj.countApproved;
-    //   this.countClosed = statusObj.countClosed;
-    //   this.countInProgress = statusObj.countInProgress;
-    //   this.countSolved = statusObj.countSolved;
-    //   this.countAll = statusObj.countAll;
-    // });
+    this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(statusObj => {
+      this.lstMainStatuses = statusObj.listStatus;
+      console.log("statusObj :",statusObj);
+      
+      this.countOpen = statusObj.countOpen;
+      this.countApproved = statusObj.countApproved;
+      this.countClosed = statusObj.countClosed;
+      this.countInProgress = statusObj.countInProgress;
+      this.countSolved = statusObj.countSolved;
+      this.countAll = statusObj.countAll;
+      console.log("this.countAll :",this.countAll );
+      
+    });
 
-    // this.requestPeriorityService.GetAllRequestPeriorties().subscribe(lst => {
-    //   this.lstPeriorities = lst
-    // });
-    // this.requestModeService.GetAllRequetsMode().subscribe(lst => {
-    //   this.lstModes = lst
-    // });
+    this.requestPeriorityService.GetAllRequestPeriorties().subscribe(lst => {
+      this.lstPeriorities = lst
+    });
+    this.requestModeService.GetAllRequetsMode().subscribe(lst => {
+      this.lstModes = lst
+    });
 
     this.departmentService.GetDepartments().subscribe(items => {
       this.lstDepartments = items;

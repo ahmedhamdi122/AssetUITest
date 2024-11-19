@@ -29,7 +29,6 @@ import { CloseComponent } from './close/close.component';
 import { TrackworkordersComponent } from './trackworkorders/trackworkorders.component';
 import { MatIconModule } from '@angular/material/icon';
 import { PaginatorModule } from 'primeng/paginator';
-import { DeleteconfirmationComponent } from './deleteconfirmation/deleteconfirmation.component';
 import { CreaterequestComponent } from './createrequest/createrequest.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatRadioModule } from '@angular/material/radio';
@@ -44,7 +43,7 @@ import { AuthGuard } from 'src/app/Shared/Services/guards/authGuard.guard';
 
 import { DeleteModule } from 'src/app/Shared/delete/delete.module';
 import { PrintsrComponent } from './printsr/printsr.component';
-import { ConfirmDialog } from 'primeng/confirmdialog';
+import { BadgeModule } from 'primeng/badge';
 @NgModule({
   declarations: [
     EditComponent,
@@ -54,7 +53,6 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
     AddStatusComponent,
     CloseComponent,
     TrackworkordersComponent,
-    DeleteconfirmationComponent,
     CreaterequestComponent,
     ApproverequestComponent,
     PrintsrComponent
@@ -73,7 +71,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
     DialogModule,
     ListboxModule,
     RequetsRoutingModule,
-    
+    BadgeModule,
     DropdownModule,
     CalendarModule,
     DialogModule,
