@@ -1,6 +1,6 @@
 
 <div class="col-12 p-3" [ngStyle]="{ display: loading ? 'none' : 'block' }">
-    <div class="row top-buffer">
+    <div class="row mt-2">
         <div class="col-8">
             <!-- <h4 class="card-title" > {{ 'Asset.Requests' | translate }} </h4> -->
             <h4 class="card-title"> {{'Asset.IncomeRequests' |translate}}</h4>
@@ -13,15 +13,15 @@
                 <i class="pi pi-filter-fill" ></i> {{'Asset.Filter'|translate}}</a>
         </div>
     </div>
-    <div class="row top-buffer">
+    <div class="row mt-2">
      
         <div class="col-10">
             <button pBadge name="btnAll" [value]="countAll" (click)="getRequestsByStatusId(0,$event)"
                 style="margin: 0px 15px;">{{'Asset.All'
                 |translate}}</button>
             <mat-nav-list id="app-nav" aria-label="Main navigation" *ngFor="let sts of lstMainStatuses">
-                <a mat-list-item *ngIf=" sts.id==1" (click)="getRequestsByStatusId(sts.id,$event)" mat-stroked-button
-                    [ngStyle]="{'color': sts.color}" autofocus [matBadge]="countOpen">
+                <a mat-list-item *ngIf=" sts.id==1" (click)="getRequestsByStatusId(sts.id,$event)" 
+                    [ngStyle]="{'color': sts.color}" autofocus pBadge [value]="countOpen">
                     <span mat-line>
                         <span><i [ngClass]="sts.icon"></i></span>
                         {{lang=="en"?sts.name:sts.nameAr}}
