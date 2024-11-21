@@ -1,3 +1,16 @@
-/* ::ng-deep .mat-horizontal-stepper-header {
-    pointer-events: none!important;
-  } */
+.container {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevent overflowing outside the container */
+}
+
+.content {
+  flex-grow: 1; /* Allow the content area to take up the remaining space */
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
+  padding: 15px; /* Optional padding */
+}
+.save-button-container {
+  margin-top: auto; /* Push the button container to the bottom */
+
+}

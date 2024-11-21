@@ -14,7 +14,7 @@ import { ListOrganizationVM } from 'src/app/Shared/Models/organizationVM';
 import { Paging } from 'src/app/Shared/Models/paging';
 import { ExportRequestVM, ListRequestModeVM, ListRequestVM, PrintServiceRequestVM, SearchRequestVM } from 'src/app/Shared/Models/requestModeVM';
 import { ListRequestPeriority } from 'src/app/Shared/Models/RequestPeriorityVM';
-import { IndexRequestStatus } from 'src/app/Shared/Models/RequestStatusVM';
+import { IndexRequestStatus, RequestStatus, RequestStatusVM } from 'src/app/Shared/Models/RequestStatusVM';
 import { CreateRequestTracking } from 'src/app/Shared/Models/RequestTrackingVM';
 import { RequestVM, SortAndFilterRequestVM, SortRequestVM } from 'src/app/Shared/Models/requestVM';
 import { ListSubOrganizationVM } from 'src/app/Shared/Models/subOrganizationVM';
@@ -86,7 +86,7 @@ export class ListComponent implements OnInit {
   lstRequests: ListRequestVM[] = [];
   lstRequests2: ListRequestVM[] = [];
   lstPeriorities: ListRequestPeriority[] = [];
-  lstMainStatuses: IndexRequestStatus[] = [];
+  listRequestStatus: RequestStatusVM[] = [];
   lstModes: ListRequestModeVM[] = [];
   lstAssetOwners: ListEmployees[] = [];
   lstassetDetails: AssetDetailVM[] = [];
@@ -453,18 +453,8 @@ export class ListComponent implements OnInit {
     //     { field: 'modelNumber', header: 'الموديل' }
     //   ];
     // }
-    this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(statusObj => {
-      this.lstMainStatuses = statusObj.listStatus;
-      console.log("statusObj :",statusObj);
-      
-      this.countOpen = statusObj.countOpen;
-      this.countApproved = statusObj.countApproved;
-      this.countClosed = statusObj.countClosed;
-      this.countInProgress = statusObj.countInProgress;
-      this.countSolved = statusObj.countSolved;
-      this.countAll = statusObj.countAll;
-      console.log("this.countAll :",this.countAll );
-      
+    this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
+      this.listRequestStatus = res;      
     });
 
     this.requestPeriorityService.GetAllRequestPeriorties().subscribe(lst => {
@@ -479,18 +469,16 @@ export class ListComponent implements OnInit {
     });
   }
   LoadRequests(event) {
+console.log("this.sortFilterObjects.searchObj.statusId :",this.sortFilterObjects.searchObj.statusId);
 
-    this.sortFilterObjects.searchObj.statusId = this.statusId;
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
-    console.log(" this.sortFilterObjects. :", this.sortFilterObjects);
     this.rowsSkipped=event.first;
     this.spinner.show();
     this.requestService.ListRequests(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
       this.lstRequests = items.results;
       this.count = items.count;
       this.spinner.hide();
-      console.log("items :",items)
       this.loading = false;
     });
 
@@ -517,9 +505,7 @@ export class ListComponent implements OnInit {
       this.lstSubOrganizations = suborgs;
     });
   }
-  reset() {
-    this.reload();
-  }
+
   validateDates(sDate: string, eDate: string) {
     this.isValidDate = true;
     if ((sDate != null && eDate != null) && (eDate) < (sDate)) {
@@ -545,14 +531,8 @@ export class ListComponent implements OnInit {
 
 
 
-    this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(statusObj => {
-      this.lstMainStatuses = statusObj.listStatus;
-      this.countOpen = statusObj.countOpen;
-      this.countApproved = statusObj.countApproved;
-      this.countClosed = statusObj.countClosed;
-      this.countInProgress = statusObj.countInProgress;
-      this.countSolved = statusObj.countSolved;
-      this.countAll = statusObj.countAll;
+    this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(listRequestStatus => {
+      this.listRequestStatus = listRequestStatus;
     });
   }
   getAssetsByHospitalId($event) {
@@ -582,7 +562,6 @@ export class ListComponent implements OnInit {
       }
     });
     ref.onClose.subscribe(res => {
-      this.reload();
     })
   }
   viewListWorkOrders(requestId: number) {
@@ -645,7 +624,6 @@ export class ListComponent implements OnInit {
     });
 
     dialogRef2.onClose.subscribe((res) => {
-      this.reload();
     });
   }
   addRequest() {
@@ -823,38 +801,20 @@ export class ListComponent implements OnInit {
       }
     });
     ref.onClose.subscribe(res => {
-      this.reload();
     });
   }
-  reload() {
-    let currentUrl = this.route.url;
-    this.route.routeReuseStrategy.shouldReuseRoute = () => false;
-    this.route.onSameUrlNavigation = 'reload';
-    this.route.navigate([currentUrl]);
-  }
-  getRequestsByStatusId(id: number, $event) {
-    this.statusId = id;
-    this.page.pagenumber = 1;
 
-    this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(statusObj => {
-      this.lstMainStatuses = statusObj.listStatus;
-      this.countOpen = statusObj.countOpen;
-      this.countApproved = statusObj.countApproved;
-      this.countClosed = statusObj.countClosed;
-      this.countInProgress = statusObj.countInProgress;
-      this.countSolved = statusObj.countSolved;
-      this.countAll = statusObj.countAll;
-    });
+  getRequestsByStatusId(id: number) {
+    console.log("id :",id);
+    console.log("this.sortFilterObjects :",this.sortFilterObjects);
     this.sortFilterObjects.searchObj.statusId = id;
-    this.requestService.ListRequests(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
+    this.spinner.show();
+    this.requestService.ListRequests(this.sortFilterObjects, 0,10).subscribe(items => {
       this.lstRequests = items.results;
-      this.count = items.count;
-      this.loading = false;
-    });
-
-
-    this.requestService.ExportRequestsByStatusId(this.sortFilterObjects).subscribe(exportReq => {
-      this.lstExportRequestsToExcel = exportReq;
+      console.log("  this.lstRequests :",  this.lstRequests);
+      this.count = items.count;      
+      this.dataTable.first=0;
+      this.spinner.hide();
     });
   }
 

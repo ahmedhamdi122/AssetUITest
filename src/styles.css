@@ -704,3 +704,14 @@ aside ::-webkit-scrollbar {
    border-bottom-left-radius: 0px !important; 
    border-bottom-right-radius: 0px !important
 }
+
+.btnUpload {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Paging } from '../Models/paging';
 import { SearchRequestDateVM } from '../Models/requestModeVM';
-import { EditRequestStatus, IndexRequestStatus, MainClass, SortRequestStatusesVM } from '../Models/RequestStatusVM';
+import { EditRequestStatus, IndexRequestStatus, MainClass, RequestStatusVM, SortRequestStatusesVM } from '../Models/RequestStatusVM';
 // import { MainClass } from '../Models/WorkOrderVM';
 @Injectable({
   providedIn: 'root'
@@ -45,8 +45,8 @@ export class RequestStatusService {
     return this.httpClient.get<IndexRequestStatus>(`${environment.GetAllRequestStatus}${userId}`, this.httpHeader);
   }
 
-  GetRequestStatusByUserId(userId: string): Observable<MainClass> {
-    return this.httpClient.get<MainClass>(`${environment.GetRequestStatusByUserId}${userId}`, this.httpHeader);
+  GetRequestStatusByUserId(userId: string): Observable<RequestStatusVM[]> {
+    return this.httpClient.get<RequestStatusVM[]>(`${environment.GetRequestStatusByUserId}${userId}`, this.httpHeader);
   }
 
 

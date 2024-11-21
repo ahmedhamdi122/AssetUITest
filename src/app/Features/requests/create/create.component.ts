@@ -126,6 +126,9 @@ export class CreateComponent implements OnInit {
   barCode: string;
   departmentName: string;
   sortFilterObjects: SortAndFilterRequestVM;
+  showSuccessfullyMessage:boolean=false;
+  SuccessfullyMessage:string='';
+  SuccessfullyHeader:string='';
   constructor(private requestService: RequestService, private authenticationService: AuthenticationService,
     private hospitalService: HospitalService,
     private assetStatusTransactionService: AssetStatusTransactionService, private formBuilder: FormBuilder, private activeRoute: ActivatedRoute, private requestStatusService: RequestStatusService,
@@ -163,61 +166,8 @@ export class CreateComponent implements OnInit {
       searchObj: { assetDetailId: 0, userName: '', lang: '', hospitalName: '', hospitalNameAr: '', printedBy: '', strEndDate: '', strStartDate: '', masterAssetId: 0, woLastTrackDescription: '', modelNumber: '', serialNumber: '', code: '', periorityId: 0, statusId: 0, modeId: 0, userId: '', cityId: 0, governorateId: 0, hospitalId: 0, barcode: '', organizationId: 0, subOrganizationId: 0, subject: '', start: '', end: '', assetOwnerId: 0, departmentId: 0 },
      sortFiled:"",sortOrder:1
     };
-
-    // if (this.currentUser) {
-    //   this.currentUser["roleNames"].forEach(element => {
-    //     this.lstRoleNames.push(element["name"]);
-    //   });
-
-    //   this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
-    //   this.isEngManager = (['EngDepManager'].some(r => this.lstRoleNames.includes(r)));
-    //   this.isEng = (['Eng'].some(r => this.lstRoleNames.includes(r)));
-    //   this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-    // }
-
-    if (this.currentUser.hospitalId > 0) {
-
-      this.lstMasterAsset = [];
-      // this.masterAssetService.GetMasterAssets().subscribe(
-      //   res => {
-      //     this.lstMasterAsset = res
-      //   });
-
-      this.assetDetailService.GetAllAssetDetailsByHospitalId(this.currentUser.hospitalId).subscribe(masters => {
-        this.lstassetDetailBarcodes = masters;
-        if (this.lang == "en") {
-          this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode + "-" + item.name);
-        }
-        else {
-          this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode + "-" + item.nameAr);
-        }
-      });
-    }
-    else {
-      // this.masterAssetService.GetMasterAssets().subscribe(
-      //   res => {
-      //     this.lstMasterAsset = res
-      //   });
-    }
-
-    let assetId = this.activeRoute.snapshot.params['assetId'];
-    if (assetId != undefined || assetId != null) {
-      this.assetId = assetId;
-      this.masterAssetService.ListMasterAssetsByHospitalUserId(this.currentUser.hospitalId, this.currentUser.id).subscribe(
-        res => {
-          this.lstMasterAsset = res;
-        });
-      this.assetDetailService.GetAssetById(assetId).subscribe(itemObj => {
-        this.reqObj.masterAssetId = itemObj["masterAssetId"];
-        this.problemService.GetProblemByMasterAssetId(itemObj["masterAssetId"]).subscribe(problems => this.lstProblems = problems)
-        this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(itemObj["masterAssetId"]), this.currentUser.hospitalId).subscribe(
-          res => {
-            this.lstassetDetails = res;
-            this.reqObj.assetDetailId = itemObj["id"];
-          });
-
-      });
-    }
+ 
+ 
   }
   onLoad() {
     this.requestService.GenerateRequestNumber().subscribe(num => {
@@ -234,10 +184,7 @@ export class CreateComponent implements OnInit {
         this.reqObj.requestModeId = 5;
       });
 
-    this.employeeService.GetEmployees().subscribe(
-      res => {
-        this.lstEmployees = res;
-      });
+   
     this.requestPeriorityService.GetAllRequestPeriorties().subscribe(
       res => {
         this.lstPeriorities = res;
@@ -681,6 +628,7 @@ export class CreateComponent implements OnInit {
     this.assetId = event["id"];
     this.requestService.GetOldRequestsByHospitalAssetId(assetId).subscribe(items => {
       this.lstRequests = items;
+      
     });
 
     this.brandName = this.lang == 'en' ? event["brandName"] : event["brandNameAr"];
@@ -768,6 +716,7 @@ export class CreateComponent implements OnInit {
     }
   }
   onSelectionChanged(event) {
+    console.log("insert barcode");
     this.isDisabled = false;
     if (this.currentUser.hospitalId != 0) {
       this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.currentUser.hospitalId).subscribe(assets => {
@@ -1022,7 +971,6 @@ export class CreateComponent implements OnInit {
     }
   }
   onMasterAssetSelectionChanged(event) {
-    console.log("masset Auto com")
     this.masterAssetService.AutoCompleteMasterAssetName3(event.query, this.currentUser.hospitalId).subscribe(masters => {
       this.lstMasterAssets = masters;
       if (this.lang == "en") {
@@ -1034,7 +982,6 @@ export class CreateComponent implements OnInit {
     });
   }
   getMasterAssetObject(event) {
-    console.log("select master asset");
     
     this.lstHospitalAssets = [];
     this.masterAssetObj1.id = event["id"];
@@ -1043,7 +990,6 @@ export class CreateComponent implements OnInit {
     this.assetId = event["id"];
     this.requestService.GetOldRequestsByHospitalAssetId(event["id"]).subscribe(items => {
       this.lstRequests = items;
-      console.log("this.lstRequests :",this.lstRequests);
       
     });
     this.brandName = this.lang == 'en' ? event["brandName"] : event["brandNameAr"];
@@ -1054,7 +1000,6 @@ export class CreateComponent implements OnInit {
 
     this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(event["id"], this.currentUser.hospitalId).subscribe(assets => {
       this.lstHospitalAssets = assets;
-      console.log("this.lstHospitalAssets :",this.lstHospitalAssets);
       
     });
   }

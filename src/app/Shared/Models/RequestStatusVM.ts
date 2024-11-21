@@ -14,6 +14,14 @@ export class IndexRequestStatus {
     listStatus: RequestStatus[];
 }
 
+export class RequestStatusVM{
+    id:string;
+    name:string;
+    nameAr:string;
+    color:string;
+    icon:string;
+    count:number;
+}
 export class CreateRequestStatus {
     id: number
     name: string;
