@@ -16,7 +16,7 @@
     <div class="row mt-2">
      
         <div class="col-10">
-            <button *ngFor="let Status of listRequestStatus" pBadge [name]="Status.name" [value]="Status.count"  (click)="getRequestsByStatusId(Status.id)"  [ngStyle]="{'color': Status.color,'border-radius':'10px','background-color':'white'}"
+            <button class="status" *ngFor="let Status of listRequestStatus" pBadge [name]="Status.name" [value]="Status.count"  (click)="getRequestsByStatusId(Status)"  [ngStyle]="{'color': Status.color,'border-radius':'10px','background-color':'white'}" [ngClass]="{'statusIsActive':Status.isActive}"
                 style="margin: 0px 10px;">{{lang=="en"? Status.name :   Status.nameAr}} <i class="Status.icon"></i></button>
         </div>
         <div class="col-2">

@@ -129,6 +129,7 @@ export class CreateComponent implements OnInit {
   showSuccessfullyMessage:boolean=false;
   SuccessfullyMessage:string='';
   SuccessfullyHeader:string='';
+  showHospital:boolean=false;
   constructor(private requestService: RequestService, private authenticationService: AuthenticationService,
     private hospitalService: HospitalService,
     private assetStatusTransactionService: AssetStatusTransactionService, private formBuilder: FormBuilder, private activeRoute: ActivatedRoute, private requestStatusService: RequestStatusService,
@@ -621,28 +622,33 @@ export class CreateComponent implements OnInit {
     }
     return false;
   }
-  getBarCode(event) {
-    this.assetBarCodeObj.barCode = event["barCode"];
-    this.assetBarCodeObj.id = event["id"];
-    var assetId = event["id"];
-    this.assetId = event["id"];
+  getBarCode(assetBarCodeObj:any) {
+    console.log("getBarCode this.lstassetDetailBarcodes:",this.lstassetDetailBarcodes);
+    console.log(":assetBarCodeObj :",assetBarCodeObj);
+
+    this.assetBarCodeObj.barCode = assetBarCodeObj["barCode"];
+    this.assetBarCodeObj.id = assetBarCodeObj["id"];
+    var assetId = assetBarCodeObj["id"];
+    console.log("assetId :",assetId);
+    
     this.requestService.GetOldRequestsByHospitalAssetId(assetId).subscribe(items => {
       this.lstRequests = items;
+      console.log("this.lstRequests :",this.lstRequests);
       
     });
 
-    this.brandName = this.lang == 'en' ? event["brandName"] : event["brandNameAr"];
-    this.modelNumber = event["model"];
-    this.serialNumber = event["serialNumber"];
-    this.barCode = event["barCode"];
-    this.departmentName = this.lang == 'en' ? event["departmentName"] : event["departmentNameAr"];
+    this.brandName = this.lang == 'en' ? assetBarCodeObj["brandName"] : assetBarCodeObj["brandNameAr"];
+    this.modelNumber = assetBarCodeObj["model"];
+    this.serialNumber = assetBarCodeObj["serialNumber"];
+    this.barCode = assetBarCodeObj["barCode"];
+    this.departmentName = this.lang == 'en' ? assetBarCodeObj["departmentName"] : assetBarCodeObj["departmentNameAr"];
 
     if (this.currentUser.hospitalId != 0) {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(event["masterAssetId"]), this.currentUser.hospitalId).subscribe(
+      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(assetBarCodeObj["masterAssetId"]), this.currentUser.hospitalId).subscribe(
         res => {
           this.lstassetDetails = res;
-          this.reqObj.assetDetailId = event["id"];
-          this.reqObj.masterAssetId = event["masterAssetId"];
+          this.reqObj.assetDetailId = assetBarCodeObj["id"];
+          this.reqObj.masterAssetId = assetBarCodeObj["masterAssetId"];
           this.lstRequests = [];
           this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
             this.assetBarCodeObj = assetObj;
@@ -675,11 +681,11 @@ export class CreateComponent implements OnInit {
         });
     }
     else {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(event["masterAssetId"]), this.reqObj.hospitalId).subscribe(
+      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(assetBarCodeObj["masterAssetId"]), this.reqObj.hospitalId).subscribe(
         res => {
           this.lstassetDetails = res;
-          this.reqObj.assetDetailId = event["id"];
-          this.reqObj.masterAssetId = event["masterAssetId"];
+          this.reqObj.assetDetailId = assetBarCodeObj["id"];
+          this.reqObj.masterAssetId = assetBarCodeObj["masterAssetId"];
           this.lstRequests = [];
           this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
             this.assetBarCodeObj = assetObj;
@@ -732,11 +738,14 @@ export class CreateComponent implements OnInit {
     else {
       this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.reqObj.hospitalId).subscribe(assets => {
         this.lstassetDetailBarcodes = assets;
+        console.log("111 this.lstassetDetailBarcodes:",this.lstassetDetailBarcodes);
+
         if (this.lang == "en") {
           this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);
         }
         else {
           this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);
+          console.log("222 this.lstassetDetailBarcodes:",this.lstassetDetailBarcodes);
         }
       });
     }

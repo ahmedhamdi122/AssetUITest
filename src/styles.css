@@ -320,12 +320,16 @@ ul.checkbox li.focus {
   background-color: #4CAF50;
   border: none;
   color: white;
-  padding: 5px 5px;
+  padding: 15px 10px;
   text-align: center;
   text-decoration: none;
+  border-radius: 10px;
   display: inline-block;
 }
-
+.btnUpload:hover {
+  background-color: #51a351;
+  cursor: pointer;
+}
 .cdk-overlay-container {
   z-index: 20000 !important;
   position: absolute;
@@ -713,5 +717,16 @@ aside ::-webkit-scrollbar {
   text-align: center;
   text-decoration: none;
   display: inline-block;
+}
+
+button.status:hover{
+  background-color: #2096F3 !important;
+  border-color: #2096F3 !important;
+  color: white !important;
+}
+.statusIsActive{
+  background-color: #2096F3 !important;
+  border-color: #2096F3 !important;
+  color: white !important;
 }
 

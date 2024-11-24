@@ -21,6 +21,7 @@ export class RequestStatusVM{
     color:string;
     icon:string;
     count:number;
+    isActive:boolean;
 }
 export class CreateRequestStatus {
     id: number

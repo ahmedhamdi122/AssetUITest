@@ -1,5 +1,6 @@
 {
         "Asset": {
+                "PreviousRequests":"Previous Requests",
                 "CreateRole":"Create Role",
                 "add":"add",
                 "showDetails":"show Details",

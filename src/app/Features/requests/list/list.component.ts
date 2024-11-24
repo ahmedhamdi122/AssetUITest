@@ -171,6 +171,7 @@ export class ListComponent implements OnInit {
   reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
   @ViewChild("dtRequests") dataTable: Table;
   rowsSkipped:number=0;
+  isActive:boolean=false;
   constructor(private confirmationService:ConfirmationService,
     private departmentService: DepartmentService, private authenticationService: AuthenticationService, private assetDetailService: AssetDetailService,
     private governorateService: GovernorateService, private cityService: CityService, private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService,
@@ -454,7 +455,7 @@ export class ListComponent implements OnInit {
     //   ];
     // }
     this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
-      this.listRequestStatus = res;      
+      this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})     
     });
 
     this.requestPeriorityService.GetAllRequestPeriorties().subscribe(lst => {
@@ -804,10 +805,12 @@ console.log("this.sortFilterObjects.searchObj.statusId :",this.sortFilterObjects
     });
   }
 
-  getRequestsByStatusId(id: number) {
-    console.log("id :",id);
+  getRequestsByStatusId(Status: any) {
+    this.listRequestStatus.forEach((s)=>{ s.isActive=false});    
+    Status.isActive=true;
+    console.log("id :",Status.id);
     console.log("this.sortFilterObjects :",this.sortFilterObjects);
-    this.sortFilterObjects.searchObj.statusId = id;
+    this.sortFilterObjects.searchObj.statusId = Status.id;
     this.spinner.show();
     this.requestService.ListRequests(this.sortFilterObjects, 0,10).subscribe(items => {
       this.lstRequests = items.results;
