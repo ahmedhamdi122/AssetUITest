@@ -111,15 +111,12 @@ export class CreateComponent implements OnInit {
   sortStatus: string = "ascending";
   lstRequests: ListRequestVM[] = [];
   itmIndex: any[] = [];
-
   selectedType: number = 1;
-
   lstTypes: FilterList[] = [];
   showBarcode: boolean = false;
   showSerial: boolean = false;
   showName: boolean = false;
   showDepartment: boolean = false;
-
   brandName: string;
   serialNumber: string;
   modelNumber: string;
@@ -130,6 +127,7 @@ export class CreateComponent implements OnInit {
   SuccessfullyMessage:string='';
   SuccessfullyHeader:string='';
   showHospital:boolean=false;
+  showStatus:boolean=false;
   constructor(private requestService: RequestService, private authenticationService: AuthenticationService,
     private hospitalService: HospitalService,
     private assetStatusTransactionService: AssetStatusTransactionService, private formBuilder: FormBuilder, private activeRoute: ActivatedRoute, private requestStatusService: RequestStatusService,
@@ -444,6 +442,8 @@ export class CreateComponent implements OnInit {
       }
       return false;
     }
+    console.log("this.reqObj.requestDate  :",this.reqObj.requestDate);
+    
     this.assetDetailService.GetAssetById(this.reqObj.assetDetailId).subscribe(hospitalAssetObj => {
       let end = this.datePipe.transform(this.reqObj.requestDate, "yyyy-MM-dd");
       let start = this.datePipe.transform(hospitalAssetObj["installationDate"], "yyyy-MM-dd");
@@ -503,12 +503,12 @@ export class CreateComponent implements OnInit {
             });
           });
           this.display = true;
-          this.ref.close();
+          this.ref.close("created");
           this.lstCreateRequestDocument = [];
         }
         else {
           this.display = true;
-          this.ref.close();
+          this.ref.close("created");
           // this.isDisabled = true;
         }
       });
@@ -623,20 +623,16 @@ export class CreateComponent implements OnInit {
     return false;
   }
   getBarCode(assetBarCodeObj:any) {
-    console.log("getBarCode this.lstassetDetailBarcodes:",this.lstassetDetailBarcodes);
-    console.log(":assetBarCodeObj :",assetBarCodeObj);
-
+    this.showStatus=true;
     this.assetBarCodeObj.barCode = assetBarCodeObj["barCode"];
     this.assetBarCodeObj.id = assetBarCodeObj["id"];
     var assetId = assetBarCodeObj["id"];
     console.log("assetId :",assetId);
-    
     this.requestService.GetOldRequestsByHospitalAssetId(assetId).subscribe(items => {
       this.lstRequests = items;
       console.log("this.lstRequests :",this.lstRequests);
-      
     });
-
+    
     this.brandName = this.lang == 'en' ? assetBarCodeObj["brandName"] : assetBarCodeObj["brandNameAr"];
     this.modelNumber = assetBarCodeObj["model"];
     this.serialNumber = assetBarCodeObj["serialNumber"];

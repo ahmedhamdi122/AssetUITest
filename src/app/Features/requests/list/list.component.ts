@@ -455,7 +455,9 @@ export class ListComponent implements OnInit {
     //   ];
     // }
     this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
-      this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})     
+      this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})  
+      this.listRequestStatus[this.listRequestStatus.length-1].isActive=true;
+      
     });
 
     this.requestPeriorityService.GetAllRequestPeriorties().subscribe(lst => {
@@ -470,8 +472,6 @@ export class ListComponent implements OnInit {
     });
   }
   LoadRequests(event) {
-console.log("this.sortFilterObjects.searchObj.statusId :",this.sortFilterObjects.searchObj.statusId);
-
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
     this.rowsSkipped=event.first;
@@ -643,10 +643,33 @@ console.log("this.sortFilterObjects.searchObj.statusId :",this.sortFilterObjects
       }
     });
 
-    dialogRef2.onClose.subscribe((created) => {
+    dialogRef2.onClose.subscribe(async (created) => {
      if(created)
      {
-      //reload
+      
+      this.sortFilterObjects.searchObj.statusId=1;
+      const lastPageIndex = Math.max(0, Math.floor((this.listRequestStatus[0].count) / 10) * 10);
+      this.reloadTableObj.first=lastPageIndex;
+      await this.LoadRequests(this.reloadTableObj);
+      
+      this.dataTable.first=lastPageIndex;
+      this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
+        this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})  
+        this.listRequestStatus.forEach((s)=>{ s.isActive=false});    
+        this.listRequestStatus[0].isActive=true;
+      })
+
+  
+      this.showSuccessfullyMessage=true;
+          if(this.lang=="en"){
+            this.SuccessfullyMessage="Added Successfully";
+            this.SuccessfullyHeader="Add" 
+        }
+        else
+        {
+          this.SuccessfullyMessage="تم حفظ البيانات بنجاح";
+          this.SuccessfullyHeader="حفظ" 
+        }
      }
     });
   }
@@ -713,8 +736,14 @@ console.log("this.sortFilterObjects.searchObj.statusId :",this.sortFilterObjects
         this.spinner.show()
         this.requestService.DeleteRequest(id).subscribe(async deleted => {
           this.reloadTableObj.first= this.rowsSkipped;
+          
           await this.LoadRequests(this.reloadTableObj);
+          
           this.dataTable.first= this.rowsSkipped;
+          this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
+            this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})  
+            this.listRequestStatus[0].isActive=true;
+          })
           this.showSuccessfullyMessage=true;
           if(this.lang=="en"){
             this.SuccessfullyMessage="Deleted Successfully";
@@ -808,17 +837,15 @@ console.log("this.sortFilterObjects.searchObj.statusId :",this.sortFilterObjects
   getRequestsByStatusId(Status: any) {
     this.listRequestStatus.forEach((s)=>{ s.isActive=false});    
     Status.isActive=true;
-    console.log("id :",Status.id);
-    console.log("this.sortFilterObjects :",this.sortFilterObjects);
     this.sortFilterObjects.searchObj.statusId = Status.id;
-    this.spinner.show();
-    this.requestService.ListRequests(this.sortFilterObjects, 0,10).subscribe(items => {
-      this.lstRequests = items.results;
-      console.log("  this.lstRequests :",  this.lstRequests);
-      this.count = items.count;      
-      this.dataTable.first=0;
-      this.spinner.hide();
-    });
+    this.LoadRequests(this.reloadTableObj);
+    // this.spinner.show();
+    // this.requestService.ListRequests(this.sortFilterObjects, 0,10).subscribe(items => {
+    //   this.lstRequests = items.results;
+    //   this.count = items.count;      
+    //   this.dataTable.first=0;
+    //   this.spinner.hide();
+    // });
   }
 
   printServiceRequest(id: number) {

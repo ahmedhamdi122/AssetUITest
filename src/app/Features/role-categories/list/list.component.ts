@@ -99,7 +99,9 @@ export class ListComponent implements OnInit {
          const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
         this.reloadTableObj.first=lastPageIndex;
         this.LoadRoleCategories(this.reloadTableObj);
-        this.dataTable.first=this.count;
+        this.dataTable.first=20;
+        console.log("this.dataTable.first :",this.dataTable.first);
+        
       }
     });
   }
