@@ -61,11 +61,14 @@ export class ViewComponent implements OnInit {
     this.requestTrackingService.GetAllDescByRequestID(id).subscribe(
       res => {
         this.requestDetailObj = res
+        console.log("this.requestDetailObj :",this.requestDetailObj)
       });
 
     this.workOrderTrackingService.GetAllWorkOrderFromTrackingByServiceRequestUserId(id, this.currentUser.id)
       .subscribe(items => {
         this.lstWorkOrders = items;
+        console.log("this.lstWorkOrders  :",this.lstWorkOrders );
+        
       });
 
     if (this.config.data != null || this.config.data != undefined) {

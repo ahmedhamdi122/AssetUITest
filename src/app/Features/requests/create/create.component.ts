@@ -462,7 +462,7 @@ export class CreateComponent implements OnInit {
     this.reqObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
     this.reqObj.requestPeriorityId = this.radioPerioritySelected;
     this.reqObj.createdById = this.currentUser.id;
-    this.reqObj.strRequestDate = this.datePipe.transform(new Date, "yyyy-MM-dd HH:mm");
+    console.log("strRequestDate :", this.reqObj.strRequestDate)
     this.requestService.inserRequest(this.reqObj).subscribe(e => {
       this.reqId = e;
       this.createRequestTrackingObj.requestId = Number(this.reqId)
@@ -470,13 +470,11 @@ export class CreateComponent implements OnInit {
       this.createRequestTrackingObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
       this.createRequestTrackingObj.description = this.reqObj.description;
       this.createRequestTrackingObj.createdById = this.currentUser.id;
-      this.createRequestTrackingObj.strDescriptionDate = this.datePipe.transform(new Date, "yyyy-MM-dd HH:mm");
       this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(e => {
         this.requestTrackingId = e
         var statusObj = new AssetStatusTransactionVM();
         statusObj.assetDetailId = this.reqObj.assetDetailId;
         statusObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
-        statusObj.statusDate = this.datePipe.transform(new Date, "yyyy-MM-dd HH:mm");
         statusObj.assetStatusId = 4;
         this.assetStatusTransactionService.AddAssetStatusTransaction(statusObj).subscribe(addedStatus => {
         });

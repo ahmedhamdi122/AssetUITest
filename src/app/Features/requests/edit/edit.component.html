@@ -1,15 +1,10 @@
 <div class="col-12">
-    <mat-horizontal-stepper #stepper>
-        <mat-step [stepControl]="firstFormGroup">
-            <ng-template matStepLabel> <i class="fa-solid fa-edit" style="margin: 0px 10px;"></i>
-                {{'Asset.EditRequest' |
-                translate }}
-            </ng-template>
-            <div class="row top-buffer">
+ 
+            <div class="row mt-3">
                 <div class="col-md-6">
                     <label for="MasterAsset" [translate]="'Asset.MasterAsset'">MasterAsset</label>
                     <select (change)="ViewAllAssetDetailByMasterId($event)" type="text" id="masterAssetId"
-                        class="form-control" name="masterAssetId" [(ngModel)]="reqObj.masterAssetId"
+                        class="form-select" name="masterAssetId" [(ngModel)]="reqObj.masterAssetId"
                         #masterAssetId="ngModel" [value]="0" pTooltip="Please,Select Master Asset"
                         tooltipPosition="bottom" [disabled]="isDisabled">
                         <option value="0">Select Master Asset</option>
@@ -22,7 +17,7 @@
                 <div class="col-md-6">
                     <label for="assetName" [translate]="'Asset.Serial'">
                     </label>
-                    <select id="Serial" class="form-control" name="Serial" [(ngModel)]="reqObj.assetDetailId"
+                    <select id="Serial" class="form-select" name="Serial" [(ngModel)]="reqObj.assetDetailId"
                         #Serial="ngModel" pTooltip="Please,Select Asset Serial" tooltipPosition="bottom"
                         [disabled]="isDisabled" (change)="getAssetCode($event)">
                         <option value="0">{{'Asset.Select' | translate }}{{'Asset.Serial' | translate }}</option>
@@ -36,7 +31,7 @@
                 <div class="col-md-6">
                     <label for="assetCode" [translate]="'Asset.Code'">
                     </label>
-                    <select id="assetCode" class="form-control" name="assetCode"
+                    <select id="assetCode" class="form-select" name="assetCode"
                         pTooltip="{{'Asset.Code' |  translate}}" tooltipPosition="bottom" [disabled]="true">
                         <option *ngFor="let item of lstassetDetails" [value]="item.id">
                             {{reqObj.assetCode}}
@@ -46,7 +41,7 @@
                 <div class="col-md-6">
                     <label for="assetCode" [translate]="'Asset.Barcode'">
                     </label>
-                    <select id="assetCode" class="form-control" name="assetCode"
+                    <select id="assetCode" class="form-select" name="assetCode"
                         pTooltip="{{'Asset.Code' |  translate}}" tooltipPosition="bottom" [disabled]="true">
                         <option *ngFor="let item of lstassetDetails" [value]="item.id">
                             {{reqObj.barcode}}
@@ -62,10 +57,9 @@
                         placeholder="{{'Asset.Subject' | translate}}" pInputText [ngModelOptions]="{standalone: true}"
                         [disabled]="isDisabled">
                 </div>
-
                 <div class="col-md-6">
                     <label for="type" [translate]="'Asset.Type'"></label>
-                    <select type="text" id="Type" class="form-control" name="Type" [(ngModel)]="reqObj.requestTypeId"
+                    <select type="text" id="Type" class="form-select" name="Type" [(ngModel)]="reqObj.requestTypeId"
                         #Type="ngModel" [value]="0" pTooltip="Please,Select Type Name" tooltipPosition="bottom"
                         [disabled]="isDisabled">
                         <option value="0">Select Type Name</option>
@@ -78,7 +72,7 @@
             <div class="row top-buffer">
                 <div class="col-md-6">
                     <label for="problem" [translate]="'Asset.Problem'"></label>
-                    <select type="text" id="Problem" class="form-control" name="Problem"
+                    <select type="text" id="Problem" class="form-select" name="Problem"
                         (change)="GetAllSubProblemsByProblemId($event)" [(ngModel)]="reqObj.problemId"
                         #problemId="ngModel" pTooltip="{{'Asset.Select' | translate}} {{'Asset.Problem' | translate}}"
                         tooltipPosition="bottom" [disabled]="isDisabled">
@@ -92,7 +86,7 @@
                 </div>
                 <div class="col-6">
                     <label for="subProblem" [translate]="'Asset.SubProblem'"> </label>
-                    <select type="text" id="subProblem" class="form-control" name="SubProblem"
+                    <select type="text" id="subProblem" class="form-select" name="SubProblem"
                         [(ngModel)]="reqObj.subProblemId" #SubCategory="ngModel" [value]="0"
                         pTooltip="Please,Select SubProblem" tooltipPosition="bottom" [disabled]="isDisabled">
                         <option [value]="0">Select SubProblem</option>
@@ -106,7 +100,7 @@
                 <div class="col-6">
                     <label for="periority" [translate]="'Asset.Periority'">
                     </label>
-                    <select type="text" id="eriorities" class="form-control" name="eriorities"
+                    <select type="text" id="eriorities" class="form-select" name="eriorities"
                         [(ngModel)]="reqObj.requestPeriorityId" #eriorities="ngModel" [value]="0"
                         pTooltip="Please,Request Periority" tooltipPosition="bottom" [disabled]="isDisabled">
                         <option value="0">Select Request Periority</option>
@@ -118,7 +112,7 @@
                 <div class="col-md-6">
                     <label for="mode" [translate]="'Asset.Mode'"> Mode
                     </label>
-                    <select type="text" id="Mode" class="form-control" name="Mode" [(ngModel)]="reqObj.requestModeId"
+                    <select type="text" id="Mode" class="form-select" name="Mode" [(ngModel)]="reqObj.requestModeId"
                         #Mode="ngModel" [value]="0" pTooltip="Please,Request Mode" tooltipPosition="bottom"
                         [disabled]="isDisabled">
                         <option value="0">Select Request Mode</option>
@@ -191,14 +185,13 @@
                                     <td style="text-align: center;">
                                         <a (click)="downloadFile(doc.fileName)"
                                             pTooltip="{{'Asset.Download' | translate }}" tooltipPosition="bottom">
-                                            <i class="fa-solid fa fa-download" style="color: #61bb20;"></i></a>
+                                            <i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download viewIcon" style="color: #61bb20;font-size: 1rem;"></i></a>
                                     </td>
 
                                     <td style="text-align: center;">
                                         <a (click)="deleteFile(doc.id)" pTooltip="{{'Asset.Delete' | translate }}"
                                             tooltipPosition="bottom">
-                                            <i class="fa-solid fa-trash"
-                                                style="color: #fe7f83; cursor: pointer;margin: 0px 5px;"></i></a>
+                                            <i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -206,7 +199,6 @@
                     </fieldset>
                 </div>
             </div>
-        </mat-step>
         <mat-step [stepControl]="secondFormGroup">
             <ng-template matStepLabel> <i class="fa fa-paperclip" aria-hidden="true" style="margin: 0px 10px;"></i>
                 {{'Asset.AddDocuments'| translate }}</ng-template>
@@ -284,7 +276,6 @@
                 </div>
             </div>
         </mat-step>
-    </mat-horizontal-stepper>
     <div class="row top-buffer">
         <div class="col-md-2"> <button mat-stroked-button (click)="EditRequest()" color="primary" mat-button>
                 {{'Asset.Save' | translate

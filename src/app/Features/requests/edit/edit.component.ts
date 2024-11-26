@@ -101,12 +101,12 @@ export class EditComponent implements OnInit {
 
 
   ngOnInit(): void {
-    if (this.currentUser) {
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
-      this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
-    }
+    // if (this.currentUser) {
+    //   this.currentUser["roleNames"].forEach(element => {
+    //     this.lstRoleNames.push(element["name"]);
+    //   });
+    //   this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
+    // }
 
     if (this.config.data != null || this.config.data != undefined) {
       let statusId = this.config.data.statusId;
