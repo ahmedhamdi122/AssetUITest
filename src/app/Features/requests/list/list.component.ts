@@ -680,7 +680,7 @@ export class ListComponent implements OnInit {
         id: id,
         statusId: this.statusId
       },
-      width: '85%',
+      width: '50%',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",

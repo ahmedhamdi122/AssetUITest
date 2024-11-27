@@ -115,15 +115,7 @@ export class EditComponent implements OnInit {
     } else if (this.lang == 'ar') {
       this.textDir = 'rtl';
     }
-    // if (this.currentUser) {
-    //   this.currentUser["roleNames"].forEach(element => {
-    //     this.lstRoleNames.push(element["name"]);
-    //   });
-
-    //   this.isAdmin = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-    //   this.isHospitalManager = (['TLHospitalManager'].some(r => this.lstRoleNames.includes(r)));
-    //   this.canAddBrand = (['AddBrand'].some(r => this.lstRoleNames.includes(r)));
-    // }
+ 
     this.masterAssetDocument = {
       fileName: '', masterAssetId: 0, title: '', masterFile: File
     };
@@ -137,8 +129,9 @@ export class EditComponent implements OnInit {
 
     this.createTask = { taskname: '', tasknameAr: '', masterAssetId: 0 };
     this.onLoad();
-
+    
     let id = this.config.data.id;
+
     this.masterId = id;
     this.masterAssetService.GetMasterAssetById(id).subscribe((data) => {
       this.masterAssetObj = data;

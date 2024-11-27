@@ -144,12 +144,7 @@ export class CreateComponent implements OnInit {
 
     this.radioPerioritySelected = 4;
     this.disabledButton = false;
-    this.firstFormGroup = this.formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
-    this.secondFormGroup = this.formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
+  
     this.reqObj = {
       strRequestDate: '', departmentId: 0,
       serialNumber: '', createdById: "", problemId: 0, masterAssetId: 0, requestCode: '', subject: '', requestPeriorityId: 0, requestStatusId: 0, requestTime: new Date().getHours() + ':' + new Date().getMinutes(), requestDate: new Date(),
@@ -1015,10 +1010,7 @@ export class CreateComponent implements OnInit {
       this.showName = false;
       this.showDepartment = false;
       this.lstMasterAsset = [];
-      this.masterAssetService.GetMasterAssets().subscribe(
-        res => {
-          this.lstMasterAsset = res
-        });
+    
       this.assetBarCodeObj = null;
       this.assetSerialObj = null;
       this.masterAssetObj1 = null;
@@ -1030,10 +1022,7 @@ export class CreateComponent implements OnInit {
       this.showName = false;
       this.showDepartment = false;
       this.lstMasterAsset = [];
-      this.masterAssetService.GetMasterAssets().subscribe(
-        res => {
-          this.lstMasterAsset = res
-        });
+    
       this.assetBarCodeObj = null;
       this.assetSerialObj = null;
       this.masterAssetObj1 = null;

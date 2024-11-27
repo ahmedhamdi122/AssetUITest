@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssetDetailVM } from 'src/app/Shared/Models/assetDetailVM';
 import { MasterAssetVM } from 'src/app/Shared/Models/masterAssetVM';
 import { EditRequest } from 'src/app/Shared/Models/requestVM';
-import { RequestModeVM } from 'src/app/Shared/Models/requestModeVM';
+import { ListRequestVM, RequestModeVM } from 'src/app/Shared/Models/requestModeVM';
 import { RequestPeriority } from 'src/app/Shared/Models/RequestPeriorityVM';
 import { AssetDetailService } from 'src/app/Shared/Services/assetDetail.service';
 import { MasterAssetService } from 'src/app/Shared/Services/masterAsset.service';
@@ -31,6 +31,9 @@ import { UploadFilesService } from 'src/app/Shared/Services/uploadfilesservice';
 import { MatStepper } from '@angular/material/stepper';
 import { AuthenticationService } from 'src/app/Shared/Services/guards/authentication.service';
 import { Paging } from 'src/app/Shared/Models/paging';
+import { HospitalService } from 'src/app/Shared/Services/hospital.service';
+import { ListHospitalVM } from 'src/app/Shared/Models/hospitalVM';
+import { FilterList } from '../create/create.component';
 
 @Component({
   selector: 'app-edit',
@@ -76,12 +79,7 @@ export class EditComponent implements OnInit {
   isAssetOwner: boolean = false;
   lstRoleNames: string[] = [];
 
-  //Requst Open Timer
-  startDateTime: Date;
-  startStamp: number;
-  newDate: Date = new Date();
-  newStamp = this.newDate.getTime();
-  timer;
+ 
 
   page: Paging;
   errorDisplay: boolean = false;
@@ -92,8 +90,32 @@ export class EditComponent implements OnInit {
   itmIndex: any[] = [];
   formData = new FormData();
   incremant: number = 0;
+  lstHospitals:ListHospitalVM[] = [];
+  selectedType: number
+  assetSerialObj:AssetDetailVM;
+  assetBarCodeObj:AssetDetailVM;
+  showBarcode:boolean=false;
+  showSerial:boolean=false;
+  showName:boolean=false;
+  showDepartment:boolean=false;
+  showStatus:boolean=false;
+  lstTypes: FilterList[] = [];
+  masterAssetObj1: any;
+  radioPerioritySelected: number;
+  lstRequests: ListRequestVM[] = [];
+  count: number;
+  SuccessfullyMessage:string='';
+  showSuccessfullyMessage:boolean=false;
+  brandName:string="";
+  modelNumber:string="";
+  serialNumber:string="";
+  barCode:string="";
+  departmentName:string="";
+  assetStatusId:number=0;
+  applicationStatus:string="";
+  assetDepartmentBarCodeObj: AssetDetailVM;
 
-  constructor(private authenticationService: AuthenticationService, private requestService: RequestService, private _formBuilder: FormBuilder,
+  constructor(private hospitalService:HospitalService,private authenticationService: AuthenticationService, private requestService: RequestService, private _formBuilder: FormBuilder,
     private assetDetailService: AssetDetailService, private masterAssetService: MasterAssetService, private requestPeriorityService: RequestPeriorityService,
     private requestModeService: RequestModeService, private requestDocumentService: RequestDocumentService, private requestTrackingService: RequestTrackingService,
     private config: DynamicDialogConfig, private ref: DynamicDialogRef, private uploadService: UploadFilesService, private messageService: MessageService, private httpClient: HttpClient, private requestStatusService: RequestStatusService,
@@ -101,13 +123,9 @@ export class EditComponent implements OnInit {
 
 
   ngOnInit(): void {
-    // if (this.currentUser) {
-    //   this.currentUser["roleNames"].forEach(element => {
-    //     this.lstRoleNames.push(element["name"]);
-    //   });
-    //   this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
-    // }
-
+   
+    console.log("id :",this.config.data.id);
+    
     if (this.config.data != null || this.config.data != undefined) {
       let statusId = this.config.data.statusId;
       if (statusId != undefined) {
@@ -122,79 +140,24 @@ export class EditComponent implements OnInit {
       pagenumber: 1,
       pagesize: 10,
     }
-
     this.onLoad();
     this.requestId = this.config.data.id;
-    if (this.currentUser.hospitalId == 0) {
-      this.masterAssetService.GetMasterAssets().subscribe(
-        res => {
-          this.lstMasterAsset = res
-        });
-    }
+
     this.requestService.GetRequestById(this.requestId).subscribe(
       res => {
         this.reqObj = res;
-        let reqDate = new Date(this.reqObj.requestDate);
-        this.startDateTime = new Date(reqDate.getFullYear(), reqDate.getMonth(), reqDate.getDate(), reqDate.getHours(), reqDate.getMinutes(), 0)
-        this.startStamp = this.startDateTime.getTime();
+        this.selectedType=this.reqObj.requestTypeId;
+        this.onTypeChange(this.selectedType);
+        console.log("showSerial :",this.showSerial);
+        
+        console.log("reqObj :",this.reqObj);
+        
         if (this.lang == "en") {
 
           this.requestService.GetAllRequestsWithTrackingByUserIdWithPaging(this.currentUser.id, this.page).subscribe((items) => {
-            items.forEach(element => {
-              if (element.statusId == 4) {
-                var firstItem = element.listTracks[0];
-                var lastItem = element.listTracks[element.listTracks.length - 1];
-                this.startDateTime = new Date(firstItem.date);
-                this.startStamp = new Date(firstItem.date).getTime();
-                this.newDate = new Date(lastItem.date);
-                this.newStamp = this.newDate.getTime();
-                var diff2 = Math.round((this.newStamp - this.startStamp) / 1000);
-                var d2 = Math.floor(diff2 / (24 * 60 * 60)); /* though I hope she won't be working for consecutive days :) */
-                diff2 = diff2 - (d2 * 24 * 60 * 60);
-                var h2 = Math.floor(diff2 / (60 * 60));
-                diff2 = diff2 - (h2 * 60 * 60);
-                var m2 = Math.floor(diff2 / (60));
-                diff2 = diff2 - (m2 * 60);
-                var s2 = diff2;
-                element.elapsedTime = d2 + " day(s), " + h2 + ":" + m2 + ":" + s2 + "";
-              }
-              else {
-                this.timer = window.setInterval(() => {
-                  this.updateClock()
-                }, 1000);
-              }
-            });
           });
         }
-        else {
-          this.requestService.GetAllRequestsWithTrackingByUserIdWithPaging(this.currentUser.id, this.page).subscribe((items) => {
-            items.forEach(element => {
-              if (element.statusId == 4) {
-                var firstItem = element.listTracks[0];
-                var lastItem = element.listTracks[element.listTracks.length - 1];
-                this.startDateTime = new Date(firstItem.date);
-                this.startStamp = new Date(firstItem.date).getTime();
-                this.newDate = new Date(lastItem.date);
-                this.newStamp = this.newDate.getTime();
-                var diff2 = Math.round((this.newStamp - this.startStamp) / 1000);
-                var d2 = Math.floor(diff2 / (24 * 60 * 60)); /* though I hope she won't be working for consecutive days :) */
-                diff2 = diff2 - (d2 * 24 * 60 * 60);
-                var h2 = Math.floor(diff2 / (60 * 60));
-                diff2 = diff2 - (h2 * 60 * 60);
-                var m2 = Math.floor(diff2 / (60));
-                diff2 = diff2 - (m2 * 60);
-                var s2 = diff2;
-                element.elapsedTime = d2 + " day(s), " + h2 + ":" + m2 + ":" + s2 + "";
-              }
-              else {
-                this.timer = window.setInterval(() => {
-                  this.updateClockInArabic()
-                }, 1000);
-              }
-            });
-          });
-        }
-
+        
         this.problemService.GetProblemByMasterAssetId(this.reqObj.masterAssetId).subscribe(problems => {
           this.lstProblems = problems;
           this.problemService.GetProblemBySubProblemId(this.reqObj.subProblemId).subscribe(problemObj => {
@@ -229,14 +192,13 @@ export class EditComponent implements OnInit {
   close() {
     this.ref.close({ data: this.statusId });
   }
+  
   onLoad() {
 
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required]
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required]
-    });
+    this.lstTypes = [{ id: 1, name: "Select By Barcode", nameAr: "بحث بالباركود" },
+      { id: 2, name: "Select By Serial", nameAr: "بحث بالسيريال" },
+      { id: 3, name: "Select By Name", nameAr: "بحث بالإسم" },
+      { id: 4, name: "Select By Department", nameAr: "بحث بالقسم" }]
     this.requestDetailsObj = {
       wONotes: '', departmentName: '', departmentNameAr: '',
       barcode: '', requestTypeName: '', subProblemName: '', modeName: '', periorityName: '', assetCode: '', hospitalId: 0,
@@ -258,10 +220,7 @@ export class EditComponent implements OnInit {
     this.editRequestTrackingObj = { createdById: '', description: '', descriptionDate: new Date, id: 0, requestId: 0, requestStatusId: 0, hospitalId: 0 }
 
 
-    this.requestStatusService.GetAllRequestStatus().subscribe(
-      res => {
-        this.lstRequestStatus = res
-      });
+
 
     this.requestPeriorityService.GetAllRequestPeriorties().subscribe(
       res => {
@@ -270,6 +229,7 @@ export class EditComponent implements OnInit {
     this.requestModeService.GetAllRequetsMode().subscribe(
       res => {
         this.lstRequestMode = res
+        
       });
 
 
@@ -282,7 +242,9 @@ export class EditComponent implements OnInit {
       res => {
         this.lstSubProblems = res
       });
-
+      this.hospitalService.GetHospitals().subscribe(hospitals => {
+        this.lstHospitals = hospitals;
+      });
 
   }
 
@@ -306,8 +268,8 @@ export class EditComponent implements OnInit {
         window.open(dwnldFile);
     })
   }
-  CloseStepper() {
-    this.ref.close();
+  getSelecteditem() {
+    this.reqObj.requestPeriorityId = Number(this.radioPerioritySelected);
   }
   GetAllSubProblemsByProblemId($event) {
     this.subProblemService.GetAllSubProblemsByProblemId($event.target.value).subscribe(
@@ -327,6 +289,186 @@ export class EditComponent implements OnInit {
     this.assetDetailService.GetAssetById($event.target.value).subscribe(assetObj => {
       this.reqObj.assetCode = assetObj["code"];
     })
+  }
+  getBarCode(assetBarCodeObj:any) {
+    this.showStatus=true;
+    this.assetBarCodeObj.barCode = assetBarCodeObj["barCode"];
+    this.assetBarCodeObj.id = assetBarCodeObj["id"];
+    var assetId = assetBarCodeObj["id"];
+    console.log("assetId :",assetId);
+    this.requestService.GetOldRequestsByHospitalAssetId(assetId).subscribe(items => {
+      this.lstRequests = items;
+      console.log("this.lstRequests :",this.lstRequests);
+    });
+    
+    this.brandName = this.lang == 'en' ? assetBarCodeObj["brandName"] : assetBarCodeObj["brandNameAr"];
+    this.modelNumber = assetBarCodeObj["model"];
+    this.serialNumber = assetBarCodeObj["serialNumber"];
+    this.barCode = assetBarCodeObj["barCode"];
+    this.departmentName = this.lang == 'en' ? assetBarCodeObj["departmentName"] : assetBarCodeObj["departmentNameAr"];
+
+    if (this.currentUser.hospitalId != 0) {
+      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(assetBarCodeObj["masterAssetId"]), this.currentUser.hospitalId).subscribe(
+        res => {
+          this.lstassetDetails = res;
+          this.reqObj.assetDetailId = assetBarCodeObj["id"];
+          this.reqObj.masterAssetId = assetBarCodeObj["masterAssetId"];
+          this.lstRequests = [];
+          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
+            this.assetBarCodeObj = assetObj;
+
+            if (this.assetBarCodeObj["assetStatusAr"] == null) {
+              this.isDisabled = true;
+              this.errorDisplay = true;
+              this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
+              return false;
+            }
+            if (this.assetBarCodeObj["assetStatus"] == null) {
+              this.isDisabled = true;
+              this.errorDisplay = true;
+              this.errorMessage = "This asset is not working in system";
+              return false;
+            }
+
+            this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
+            this.assetBarCodeObj.name = assetObj["barcode"];
+            this.assetStatusId = this.assetBarCodeObj["assetStatusId"];
+
+            var isWorking = this.findAssetStatusByStatusId(this.assetStatusId);
+            if (isWorking == false) {
+              return false;
+            }
+            else {
+              this.isDisabled = false;
+            }
+          });
+        });
+    }
+    else {
+      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(assetBarCodeObj["masterAssetId"]), this.reqObj.hospitalId).subscribe(
+        res => {
+          this.lstassetDetails = res;
+          this.reqObj.assetDetailId = assetBarCodeObj["id"];
+          this.reqObj.masterAssetId = assetBarCodeObj["masterAssetId"];
+          this.lstRequests = [];
+          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
+            this.assetBarCodeObj = assetObj;
+
+            if (this.assetBarCodeObj["assetStatusAr"] == null) {
+              this.isDisabled = true;
+              this.errorDisplay = true;
+              this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
+              return false;
+            }
+            if (this.assetBarCodeObj["assetStatus"] == null) {
+              this.isDisabled = true;
+              this.errorDisplay = true;
+              this.errorMessage = "This asset is not working in system";
+              return false;
+            }
+            else if (this.assetBarCodeObj["assetStatusAr"] != null && this.assetBarCodeObj["assetStatus"] != null){
+              this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
+              this.assetBarCodeObj.name = assetObj["barcode"];
+              this.assetStatusId = this.assetBarCodeObj["assetStatusId"];
+
+              var isWorking = this.findAssetStatusByStatusId(this.assetStatusId);
+              if (this.assetStatusId == 3) {
+                isWorking = true;
+                this.isDisabled = false;
+              }
+              else
+              {
+                return false;
+              }
+            }
+          });
+        });
+    }
+  }
+  findAssetStatusByStatusId(assetStatusId: number): boolean {
+    switch (assetStatusId) {
+      case 1:
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "You cannot make ticket for this asset because it Needs Repair";
+        }
+        else {
+          this.errorMessage = "لا يمكن عمل بلاغ لهذا الأصل لأنه يحتاج لإصلاح ";
+        }
+        this.isDisabled = true;
+        break;
+      case 2:
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "You cannot make ticket for this asset because it is Scrap";
+        }
+        else {
+          this.errorMessage = "لا يمكن عمل بلاغ لهذا الأصل لأنه مكهن ";
+        }
+        this.isDisabled = true;
+        break;
+      case 4:
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "You cannot make ticket for this asset because it is Under Maintenance";
+        }
+        else {
+          this.errorMessage = "لا يمكن عمل بلاغ لهذا الأصل لأنه تحت الصيانة";
+        }
+        this.isDisabled = true;
+        break;
+      case 5:
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "You cannot make ticket for this asset because it is Under Installation";
+        }
+        else {
+          this.errorMessage = "لا يمكن عمل بلاغ لهذا الأصل لأنه  تحت الإنشاء";
+        }
+        this.isDisabled = true;
+        break;
+      case 6:
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "You cannot make ticket for this asset because it is not working ";
+        }
+        else {
+          this.errorMessage = "لا يمكن عمل بلاغ لهذا الأصل لأنه لا يعمل ";
+        }
+        this.isDisabled = true;
+        break;
+      case 7:
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "You cannot make ticket for this asset because it is Shut Down";
+        }
+        else {
+          this.errorMessage = "لا يمكن عمل بلاغ لهذا الأصل لأنه متوقف ";
+        }
+        this.isDisabled = true;
+        break;
+      case 8:
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "You cannot make ticket for this asset because it is Excluded";
+        }
+        else {
+          this.errorMessage = "لا يمكن عمل بلاغ لهذا الأصل لأنه مستبعد ";
+        }
+        this.isDisabled = true;
+        break;
+      case 9:
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "You cannot make ticket for this asset because it is Hold";
+        }
+        else {
+          this.errorMessage = "لا يمكن عمل بلاغ لهذا الأصل لأنه في حالة إيقاف مؤقت ";
+        }
+        this.isDisabled = true;
+        break;
+    }
+    return false;
   }
   EditRequest() {
     this.reqObj.hospitalId = this.currentUser.hospitalId;
@@ -390,6 +532,57 @@ export class EditComponent implements OnInit {
       }
     }
     this.addMultiFilesToList();
+  }
+  onTypeChange($event) {
+    console.log("event:",$event)
+    let typeId = $event.value;
+    this.selectedType = typeId;
+    if (this.selectedType == 1) {
+      this.showBarcode = true;
+      this.showSerial = false;
+      this.showName = false;
+      this.showDepartment = false;
+      this.lstMasterAsset = [];
+    
+      this.assetBarCodeObj = null;
+      this.assetSerialObj = null;
+      this.masterAssetObj1 = null;
+      this.reqObj.masterAssetId = 0;
+    }
+    if (this.selectedType == 2) {
+      this.showBarcode = false;
+      this.showSerial = true;
+      this.showName = false;
+      this.showDepartment = false;
+      this.lstMasterAsset = [];
+    
+      this.assetBarCodeObj = null;
+      this.assetSerialObj = null;
+      this.masterAssetObj1 = null;
+      this.reqObj.masterAssetId = 0;
+    }
+    if (this.selectedType == 3) {
+      this.showBarcode = false;
+      this.showSerial = false;
+      this.showName = true;
+      this.showDepartment = false;
+      this.assetBarCodeObj = null;
+      this.masterAssetObj1 = null;
+      this.assetSerialObj = null;
+      this.reqObj.masterAssetId = 0;
+    }
+    if (this.selectedType == 4) {
+      this.showBarcode = false;
+      this.showSerial = false;
+      this.showName = false;
+      this.showDepartment = true;
+
+      this.assetBarCodeObj = null;
+      this.masterAssetObj1 = null;
+      this.assetSerialObj = null;
+      this.assetDepartmentBarCodeObj = null;
+      this.reqObj.masterAssetId = 0;
+    }
   }
   addMultiFilesToList() {
     this.createRequestDocument.requestTrackingId = this.requestTrackId;
@@ -594,48 +787,4 @@ export class EditComponent implements OnInit {
 
 
 
-  updateClock() {
-    this.newDate = new Date();
-    this.newStamp = this.newDate.getTime();
-    var diff = Math.round((this.newStamp - this.startStamp) / 1000);
-
-    var d = Math.floor(diff / (24 * 60 * 60)); /* though I hope she won't be working for consecutive days :) */
-    diff = diff - (d * 24 * 60 * 60);
-    var h = Math.floor(diff / (60 * 60));
-    diff = diff - (h * 60 * 60);
-    var m = Math.floor(diff / (60));
-    diff = diff - (m * 60);
-    var s = diff;
-    //document.getElementById("time-elapsed").innerHTML = d + " day(s), " + h + " hour(s), " + m + " minute(s), " + s + " second(s)";
-  }
-  updateClockInArabic() {
-    this.newDate = new Date();
-    this.newStamp = this.newDate.getTime();
-    var diff = Math.round((this.newStamp - this.startStamp) / 1000);
-
-    var d = Math.floor(diff / (24 * 60 * 60)); /* though I hope she won't be working for consecutive days :) */
-    diff = diff - (d * 24 * 60 * 60);
-    var h = Math.floor(diff / (60 * 60));
-    diff = diff - (h * 60 * 60);
-    var m = Math.floor(diff / (60));
-    diff = diff - (m * 60);
-    var s = diff;
-    //  document.getElementById("time-elapsed").innerHTML = d + " يوم ، " + h + " ساعة ، " + m + " دقيقة ، " + s + " ثانية";
-  }
-  // saveStatus() {
-  //   this.createRequestTrackingObj.requestId = this.requestId;
-  //   this.createRequestTrackingObj.createdById = this.currentUser.id;
-  //   this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(savedTrackId => {
-  //     this.requestTrackId = savedTrackId;
-  //   }, error => {
-  //     this.errorDisplay = true;
-  //     if (this.lang == "en") {
-  //       this.errorMessage = error.error.message;
-  //     }
-  //     else {
-  //       this.errorMessage = error.error.messageAr;
-  //     }
-  //     return false;
-  //   });
-  // }
 }
