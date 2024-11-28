@@ -91,7 +91,7 @@ export class EditComponent implements OnInit {
   formData = new FormData();
   incremant: number = 0;
   lstHospitals:ListHospitalVM[] = [];
-  selectedType: number
+  selectedType: number=0;
   assetSerialObj:AssetDetailVM;
   assetBarCodeObj:AssetDetailVM;
   showBarcode:boolean=false;
@@ -136,28 +136,42 @@ export class EditComponent implements OnInit {
       this.statusId = 0;
     }
 
-    this.page = {
-      pagenumber: 1,
-      pagesize: 10,
-    }
+    
     this.onLoad();
     this.requestId = this.config.data.id;
 
     this.requestService.GetRequestById(this.requestId).subscribe(
       res => {
+        console.log("res :",res);
         this.reqObj = res;
-        this.selectedType=this.reqObj.requestTypeId;
-        this.onTypeChange(this.selectedType);
-        console.log("showSerial :",this.showSerial);
+        this.selectedType=1;
+        this.showBarcode = true;
+        this.showSerial = false;
+        this.showName = false;
+        this.showDepartment = false;
+        this.lstMasterAsset = [];
+        this.assetSerialObj = null;
+        this.masterAssetObj1 = null;
+        this.assetBarCodeObj=new AssetDetailVM()
+        this.showStatus=true;
+        this.assetBarCodeObj.name =  this.reqObj.barcode;
+        this.assetBarCodeObj.id =  this.reqObj.id;
+        var assetId =  this.reqObj.assetDetailId;
+         this.applicationStatus=this.lang=='en'?"Working":"يعمل"
+        this.requestService.GetOldRequestsByHospitalAssetId(assetId).subscribe(items => {
+          this.lstRequests = items;
+          console.log("this.lstRequests :",this.lstRequests);
+        });
+        console.log("lang :",this.lang);
         
-        console.log("reqObj :",this.reqObj);
+        this.brandName = this.lang == 'en' ? this.assetBarCodeObj.brandName : this.assetBarCodeObj.brandNameAr;
+        console.log(" this.brandName :", this.brandName );
         
-        if (this.lang == "en") {
-
-          this.requestService.GetAllRequestsWithTrackingByUserIdWithPaging(this.currentUser.id, this.page).subscribe((items) => {
-          });
-        }
-        
+    this.modelNumber = this.assetBarCodeObj.model;
+    this.serialNumber = this.assetBarCodeObj.serialNumber;
+    this.barCode = this.assetBarCodeObj.barcode;
+    this.departmentName = this.lang == 'en' ? this.assetBarCodeObj["departmentName"] : this.assetBarCodeObj["departmentNameAr"];
+    
         this.problemService.GetProblemByMasterAssetId(this.reqObj.masterAssetId).subscribe(problems => {
           this.lstProblems = problems;
           this.problemService.GetProblemBySubProblemId(this.reqObj.subProblemId).subscribe(problemObj => {
@@ -543,7 +557,6 @@ export class EditComponent implements OnInit {
       this.showName = false;
       this.showDepartment = false;
       this.lstMasterAsset = [];
-    
       this.assetBarCodeObj = null;
       this.assetSerialObj = null;
       this.masterAssetObj1 = null;

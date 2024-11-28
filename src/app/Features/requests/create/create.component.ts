@@ -631,7 +631,7 @@ export class CreateComponent implements OnInit {
     this.serialNumber = assetBarCodeObj["serialNumber"];
     this.barCode = assetBarCodeObj["barCode"];
     this.departmentName = this.lang == 'en' ? assetBarCodeObj["departmentName"] : assetBarCodeObj["departmentNameAr"];
-
+    
     if (this.currentUser.hospitalId != 0) {
       this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(assetBarCodeObj["masterAssetId"]), this.currentUser.hospitalId).subscribe(
         res => {
