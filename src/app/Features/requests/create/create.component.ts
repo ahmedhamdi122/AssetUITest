@@ -129,6 +129,12 @@ export class CreateComponent implements OnInit {
   showHospital:boolean=false;
   showStatus:boolean=false;
   departmentId:number;
+  roomName:string='';
+  roomNameAr:string='';
+  floorName:string='';
+  floorNameAr:string='';
+  buildName:string=''; 
+  buildNameAr:string='';
   constructor(private requestService: RequestService, private authenticationService: AuthenticationService,
     private hospitalService: HospitalService,
     private assetStatusTransactionService: AssetStatusTransactionService, private formBuilder: FormBuilder, private activeRoute: ActivatedRoute, private requestStatusService: RequestStatusService,
@@ -147,20 +153,10 @@ export class CreateComponent implements OnInit {
     this.disabledButton = false;
   
     this.reqObj = {
-      strRequestDate: '',
-      serialNumber: '', createdById: "", problemId: 0, masterAssetId: 0, requestCode: '', subject: '', requestPeriorityId: 0, requestStatusId: 0, requestTime: new Date().getHours() + ':' + new Date().getMinutes(), requestDate: new Date(),
+      serialNumber: '', createdById: "", problemId: 0, masterAssetId: 0, requestCode: '', subject: '', requestPeriorityId: 0, requestStatusId: 0, requestTime: new Date().getHours() + ':' + new Date().getMinutes(),
       subProblemId: 0, description: '', requestModeId: 0, assetDetailId: 0, requestTypeId: 0, hospitalId: 0
     }
-    this.onLoad();
-
-    this.page = {
-      pagenumber: 1,
-      pagesize: 10
-    }
-    this.sortFilterObjects = {
-      searchObj: { assetDetailId: 0, userName: '', lang: '', hospitalName: '', hospitalNameAr: '', printedBy: '', strEndDate: '', strStartDate: '', masterAssetId: 0, woLastTrackDescription: '', modelNumber: '', serialNumber: '', code: '', periorityId: 0, statusId: 0, modeId: 0, userId: '', cityId: 0, governorateId: 0, hospitalId: 0, barcode: '', organizationId: 0, subOrganizationId: 0, subject: '', start: '', end: '', assetOwnerId: 0, departmentId: 0 },
-     sortFiled:"",sortOrder:1
-    };
+    this.onLoad()
  
  
   }
@@ -169,7 +165,6 @@ export class CreateComponent implements OnInit {
       this.reqObj.requestCode = num.requestCode;
     });
 
-    this.reqObj = {  strRequestDate: '', hospitalId: 0, assetDetailId: 0, createdById: '', description: '', masterAssetId: 0, problemId: 0, requestCode: '', requestDate: new Date, requestModeId: 0, requestPeriorityId: 0, requestStatusId: 0, requestTime: '', requestTypeId: 0, serialNumber: "", subProblemId: 0, subject: '' };
     this.createRequestDocument = { id: 0, requestTrackingId: 0, fileName: '', documentName: '', requestFile: File, hospitalId: 0 }
     this.createRequestTrackingObj = { strDescriptionDate: '', id: 0, createdById: "", description: '', descriptionDate: new Date(), requestId: 0, requestStatusId: 0, hospitalId: 0 }
 
@@ -448,6 +443,8 @@ export class CreateComponent implements OnInit {
     this.reqObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
     this.reqObj.requestPeriorityId = this.radioPerioritySelected;
     this.reqObj.createdById = this.currentUser.id;
+    console.log("this.reqObj :",this.reqObj);
+    
     this.requestService.inserRequest(this.reqObj).subscribe(e => {
       this.reqId = e;
       this.createRequestTrackingObj.requestId = Number(this.reqId)
@@ -695,7 +692,28 @@ export class CreateComponent implements OnInit {
         });
     }
   }
+
+  resetAssetDetailsFields()
+  {
+    this.brandName='';
+    this.modelNumber='';
+    this.serialNumber='';
+    this.barCode='';
+    this.departmentName='';
+    this.roomName='';
+    this.roomNameAr='';
+    this.floorName='';
+    this.floorNameAr='';
+    this.buildName=''; 
+    this.buildNameAr='';
+  }
   onSelectionChanged(event) {
+    console.log("event.query :",event.query);
+    this.applicationStatus='';
+    this.showStatus=false;
+    console.log("this.assetBarCodeObj :",this.assetBarCodeObj);
+    
+    //this.resetAssetDetailsFields();
     this.isDisabled = false;
     var hospitalId=this.currentUser.hospitalId != 0? this.currentUser.hospitalId:this.reqObj.hospitalId
       this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId).subscribe(assets => {

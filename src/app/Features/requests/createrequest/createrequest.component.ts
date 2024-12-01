@@ -138,9 +138,8 @@ export class CreaterequestComponent implements OnInit {
       secondCtrl: ['', Validators.required]
     });
     this.reqObj = {
-      strRequestDate: '', departmentId: 0,
       serialNumber: '', createdById: "", problemId: 0, masterAssetId: 0, requestCode: '', hospitalId: 0, subject: '', requestPeriorityId: 0, requestStatusId: 0,
-      requestTime: new Date().getHours() + ':' + new Date().getMinutes(), requestDate: new Date(), subProblemId: 0, description: '', requestModeId: 0, assetDetailId: 0, requestTypeId: 0
+      requestTime: new Date().getHours() + ':' + new Date().getMinutes(), subProblemId: 0, description: '', requestModeId: 0, assetDetailId: 0, requestTypeId: 0
     }
 
     this.page = {
@@ -493,13 +492,7 @@ export class CreaterequestComponent implements OnInit {
             this.lstassetDetails = res;
             this.reqObj.assetDetailId = assetId;
             this.problemService.GetProblemByMasterAssetId(itemObj["masterAssetId"]).subscribe(problems => { this.lstProblems = problems; });
-            let end = this.datePipe.transform(this.reqObj.requestDate, "yyyy-MM-dd");
-            let start = this.datePipe.transform(itemObj["installationDate"], "yyyy-MM-dd");
-            this.isValidDate = this.validateDates(start, end);
-            if (!this.isValidDate) {
-              this.dateError = true;
-              return false;
-            }
+           
           });
       });
     }
@@ -515,7 +508,7 @@ export class CreaterequestComponent implements OnInit {
       this.reqObj.requestCode = num.requestCode;
     });
 
-    this.reqObj = { departmentId: 0, strRequestDate: '', hospitalId: 0, assetDetailId: 0, createdById: '', description: '', masterAssetId: 0, problemId: 0, requestCode: '', requestDate: new Date, requestModeId: 0, requestPeriorityId: 0, requestStatusId: 0, requestTime: '', requestTypeId: 0, serialNumber: "", subProblemId: 0, subject: '' };
+    this.reqObj = {   hospitalId: 0, assetDetailId: 0, createdById: '', description: '', masterAssetId: 0, problemId: 0, requestCode: '',  requestModeId: 0, requestPeriorityId: 0, requestStatusId: 0, requestTime: '', requestTypeId: 0, serialNumber: "", subProblemId: 0, subject: '' };
     this.createRequestDocument = { id: 0, requestTrackingId: 0, fileName: '', documentName: '', requestFile: File, hospitalId: 0 }
     this.createRequestTrackingObj = { strDescriptionDate: '', id: 0, createdById: "", description: '', descriptionDate: new Date(), requestId: 0, requestStatusId: 0, hospitalId: 0 }
 
@@ -712,15 +705,7 @@ export class CreaterequestComponent implements OnInit {
         }
         return false;
       }
-      this.assetDetailService.GetAssetById(this.reqObj.assetDetailId).subscribe(hospitalAssetObj => {
-        let end = this.datePipe.transform(this.reqObj.requestDate, "yyyy-MM-dd");
-        let start = this.datePipe.transform(hospitalAssetObj.installationDate, "yyyy-MM-dd");
-        this.isValidDate = this.validateDates(start, end);
-        if (!this.isValidDate) {
-          this.dateError = true;
-          return false;
-        }
-      });
+      
 
 
 
@@ -966,15 +951,7 @@ export class CreaterequestComponent implements OnInit {
         this.isDisabled = true;
         return false;
       }
-      this.assetDetailService.GetAssetById(this.assetId).subscribe(hospitalAssetObj => {
-        let end = this.datePipe.transform(this.reqObj.requestDate, "yyyy-MM-dd");
-        let start = this.datePipe.transform(hospitalAssetObj["installationDate"], "yyyy-MM-dd");
-        this.isValidDate = this.validateDates(start, end);
-        if (!this.isValidDate) {
-          this.dateError = true;
-          return false;
-        }
-      });
+    
       this.assetStatusTransactionService.GetLastTransactionByAssetId(this.reqObj.assetDetailId).subscribe(lsttrans => {
         if (lsttrans.length > 0) {
           if (lsttrans[0].assetStatusId == 4) {

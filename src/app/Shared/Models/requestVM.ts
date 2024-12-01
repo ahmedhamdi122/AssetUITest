@@ -29,8 +29,6 @@ export class CreateRequest {
     subject: string
     requestCode: string
     description: string
-    requestDate: Date;
-    strRequestDate: string;
     requestTime: any
     problemId: number
     subProblemId?: number
