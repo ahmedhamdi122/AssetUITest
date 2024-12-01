@@ -43,7 +43,6 @@ export class CreateRequest {
     createdById: string
     requestModeId: number
     requestTypeId: number;
-    departmentId: number;
 }
 export class EditRequest {
     id: number
@@ -71,6 +70,7 @@ export class EditRequest {
     assetCode: string;
     barcode: string;
     hospitalId: number;
+
 }
 export class RequestVM {
     id: number;

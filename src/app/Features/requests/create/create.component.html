@@ -116,7 +116,7 @@
         <div class="row top-buffer" *ngIf="showDepartment">
             <div class="col-12">
                 <label for="departments" [translate]="'Asset.Departments'">Departments</label>
-                <select  class="form-select" id="departmentId" name="departmentId" [(ngModel)]="reqObj.departmentId"
+                <select  class="form-select" id="departmentId" name="departmentId" [(ngModel)]="departmentId"
                     #departmentId="ngModel" [value]="0">
                     <option value="0">{{'Asset.Select' | translate}} {{'Asset.Department' | translate}}
                     </option>
@@ -330,7 +330,7 @@
             <div style="font-size: 1rem;" class="mb-3">    <i class="pi pi-wrench"></i>
                 {{ 'Asset.PreviousRequests' | translate }}</div>
             <div class="col-12">
-                <p-table [value]="lstRequests" name="requestTbl"
+                <p-table [value]="lstOldRequests" name="requestTbl"
                     styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
                     [paginator]="true" [lazy]="false" [rows]="10" [totalRecords]="count" pageLinks="10">
     
@@ -386,7 +386,7 @@
                         </tr>
                     </ng-template>
     
-                    <ng-template pTemplate="emptymessage" *ngIf="lstRequests.length === 0">
+                    <ng-template pTemplate="emptymessage" *ngIf="lstOldRequests.length === 0">
                         <tr>
                             <td colspan="6" style="text-align: center;">
                                 {{'Asset.NoData' | translate}}

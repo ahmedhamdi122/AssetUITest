@@ -114,6 +114,8 @@ export class EditComponent implements OnInit {
   assetStatusId:number=0;
   applicationStatus:string="";
   assetDepartmentBarCodeObj: AssetDetailVM;
+  lstassetDetailBarcodes: AssetDetailVM[] = [];
+  departmentId:number;
 
   constructor(private hospitalService:HospitalService,private authenticationService: AuthenticationService, private requestService: RequestService, private _formBuilder: FormBuilder,
     private assetDetailService: AssetDetailService, private masterAssetService: MasterAssetService, private requestPeriorityService: RequestPeriorityService,
@@ -125,21 +127,8 @@ export class EditComponent implements OnInit {
   ngOnInit(): void {
    
     console.log("id :",this.config.data.id);
-    
-    if (this.config.data != null || this.config.data != undefined) {
-      let statusId = this.config.data.statusId;
-      if (statusId != undefined) {
-        this.statusId = statusId;
-      }
-    }
-    else {
-      this.statusId = 0;
-    }
-
-    
     this.onLoad();
     this.requestId = this.config.data.id;
-
     this.requestService.GetRequestById(this.requestId).subscribe(
       res => {
         console.log("res :",res);
@@ -163,14 +152,15 @@ export class EditComponent implements OnInit {
           console.log("this.lstRequests :",this.lstRequests);
         });
         console.log("lang :",this.lang);
+        console.log("this.assetBarCodeObj :",this.assetBarCodeObj);
         
         this.brandName = this.lang == 'en' ? this.assetBarCodeObj.brandName : this.assetBarCodeObj.brandNameAr;
         console.log(" this.brandName :", this.brandName );
         
-    this.modelNumber = this.assetBarCodeObj.model;
-    this.serialNumber = this.assetBarCodeObj.serialNumber;
-    this.barCode = this.assetBarCodeObj.barcode;
-    this.departmentName = this.lang == 'en' ? this.assetBarCodeObj["departmentName"] : this.assetBarCodeObj["departmentNameAr"];
+        this.modelNumber = this.assetBarCodeObj.model;
+        this.serialNumber = this.assetBarCodeObj.serialNumber;
+        this.barCode = this.assetBarCodeObj.barcode;
+        this.departmentName = this.lang == 'en' ? this.assetBarCodeObj["departmentName"] : this.assetBarCodeObj["departmentNameAr"];
     
         this.problemService.GetProblemByMasterAssetId(this.reqObj.masterAssetId).subscribe(problems => {
           this.lstProblems = problems;
@@ -330,7 +320,6 @@ export class EditComponent implements OnInit {
           this.lstRequests = [];
           this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
             this.assetBarCodeObj = assetObj;
-
             if (this.assetBarCodeObj["assetStatusAr"] == null) {
               this.isDisabled = true;
               this.errorDisplay = true;
@@ -481,10 +470,179 @@ export class EditComponent implements OnInit {
         }
         this.isDisabled = true;
         break;
+        default:
+          return true;
     }
-    return false;
   }
   EditRequest() {
+
+    var validStatus=this.findAssetStatusByStatusId(this.assetStatusId);
+    if(!validStatus)
+    {
+      return;
+    }
+    if (this.currentUser.hospitalId!=0) {
+      if (this.reqObj.hospitalId == 0) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select hospital";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر مستشفى ";
+        }
+        return false;
+      }
+    }
+    if (this.selectedType == 1) {
+      if (this.assetBarCodeObj == undefined) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select asset barcode";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر باركود الجهاز";
+        }
+        return false;
+      }
+      if (this.reqObj.assetDetailId == 0) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select asset";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر جهاز";
+        }
+        return false;
+      }
+      else {
+        this.reqObj.assetDetailId = this.assetBarCodeObj.id;
+      }
+    }
+    if (this.selectedType == 2) {
+      if (this.assetSerialObj == undefined) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select asset serial";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر سيريال الجهاز";
+        }
+        return false;
+      }
+      if (this.reqObj.assetDetailId == 0) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select asset";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر جهاز";
+        }
+        return false;
+      }
+      else {
+        this.reqObj.assetDetailId = this.assetSerialObj.id;
+      }
+    }
+    if (this.selectedType == 3) {
+      if (this.masterAssetObj1 == undefined) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select asset";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر جهاز";
+        }
+        return false;
+      }
+      if (this.reqObj.assetDetailId == 0) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select asset";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر جهاز";
+        }
+        return false;
+      }
+      else {
+        this.reqObj.assetDetailId = this.masterAssetObj1.id;
+      }
+    }
+    if (this.selectedType == 4) {
+      if (this.assetDepartmentBarCodeObj == undefined) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select asset";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر جهاز";
+        }
+        return false;
+      }
+      if (this.departmentId == 0) {
+        this.errorDisplay = true;
+        if (this.lang == "en") {
+          this.errorMessage = "Please select department";
+        }
+        else {
+          this.errorMessage = "من فضلك اختر قسم";
+        }
+        return false;
+      }
+      else {
+        this.reqObj.assetDetailId = this.assetDepartmentBarCodeObj.id;
+      }
+    }
+    if (this.reqObj.subject == "") {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "Please add subject";
+      }
+      else {
+        this.errorMessage = "من فضلك اكتب عنوان لبلاغ العطل";
+      }
+      return false;
+    }
+    if (this.reqObj.requestModeId == 0) {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "Please select mode";
+      }
+      else {
+        this.errorMessage = "من فضلك اختر طريقة التواصل";
+      }
+      return false;
+    }
+    if (this.reqObj.requestTypeId == 0) {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "Please select type";
+      }
+      else {
+        this.errorMessage = "من فضلك اختر نوع البلاغ";
+      }
+      return false;
+    }
+    if (this.radioPerioritySelected == 0) {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "Please select periority";
+      }
+      else {
+        this.errorMessage = "من فضلك اختر الأولوية";
+      }
+      return false;
+    }
+    if (this.reqObj.description == "") {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = "Please write description";
+      }
+      else {
+        this.errorMessage = "من فضلك اكتب وصف للعطل";
+      }
+      return false;
+    }
     this.reqObj.hospitalId = this.currentUser.hospitalId;
     this.requestService.updateRequest(this.reqObj).subscribe(res => { });
     this.requestTrackingService.GetFirstTrackForRequestByRequestId(this.reqObj.id).subscribe(trackObj => {
@@ -547,9 +705,23 @@ export class EditComponent implements OnInit {
     }
     this.addMultiFilesToList();
   }
+  onSelectionChanged(event) {
+    this.isDisabled = false;
+    var hospitalId=this.currentUser.hospitalId != 0? this.currentUser.hospitalId:this.reqObj.hospitalId
+      this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId).subscribe(assets => {
+        this.lstassetDetailBarcodes = assets;
+        if (this.lang == "en") {
+          this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);
+        }
+        else {
+          this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);
+        }
+      });
+  }
   onTypeChange($event) {
     console.log("event:",$event)
     let typeId = $event.value;
+    this.showStatus=false;
     this.selectedType = typeId;
     if (this.selectedType == 1) {
       this.showBarcode = true;
