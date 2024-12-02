@@ -148,7 +148,7 @@ export class CreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.showHospital=this.currentUser.hospitalId!=0?false:true;
     this.radioPerioritySelected = 4;
     this.disabledButton = false;
   
@@ -201,9 +201,10 @@ export class CreateComponent implements OnInit {
         this.lstDepartments = departments
       });
     }
-
-    this.hospitalService.GetHospitals().subscribe(hospitals => {
+    var UserId=this.currentUser.id;
+    this.hospitalService.GetHospitals(UserId).subscribe(hospitals => {
       this.lstHospitals = hospitals;
+      console.log("this.lstHospitals :",this.lstHospitals);
     });
 
     this.lstTypes = [{ id: 1, name: "Select By Barcode", nameAr: "بحث بالباركود" },
@@ -716,6 +717,7 @@ export class CreateComponent implements OnInit {
     //this.resetAssetDetailsFields();
     this.isDisabled = false;
     var hospitalId=this.currentUser.hospitalId != 0? this.currentUser.hospitalId:this.reqObj.hospitalId
+    console.log("hospitalId :",hospitalId)
       this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId).subscribe(assets => {
         this.lstassetDetailBarcodes = assets;
         if (this.lang == "en") {

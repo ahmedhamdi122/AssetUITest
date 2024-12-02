@@ -132,6 +132,7 @@ export class EditComponent implements OnInit {
     this.requestService.GetRequestById(this.requestId).subscribe(
       res => {
         console.log("res :",res);
+        console.log("res.hospitalId :",res.hospitalId);
         this.reqObj = res;
         this.selectedType=1;
         this.showBarcode = true;
