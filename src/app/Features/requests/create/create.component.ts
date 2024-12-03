@@ -207,6 +207,9 @@ export class CreateComponent implements OnInit {
       console.log("this.lstHospitals :",this.lstHospitals);
     });
 
+
+
+    
     this.lstTypes = [{ id: 1, name: "Select By Barcode", nameAr: "بحث بالباركود" },
     { id: 2, name: "Select By Serial", nameAr: "بحث بالسيريال" },
     { id: 3, name: "Select By Name", nameAr: "بحث بالإسم" },
