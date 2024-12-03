@@ -201,8 +201,7 @@ export class CreateComponent implements OnInit {
         this.lstDepartments = departments
       });
     }
-    var UserId=this.currentUser.id;
-    this.hospitalService.GetHospitals(UserId).subscribe(hospitals => {
+    this.hospitalService.GetHospitals(this.currentUser.id).subscribe(hospitals => {
       this.lstHospitals = hospitals;
       console.log("this.lstHospitals :",this.lstHospitals);
     });
@@ -718,7 +717,7 @@ export class CreateComponent implements OnInit {
     this.isDisabled = false;
     var hospitalId=this.currentUser.hospitalId != 0? this.currentUser.hospitalId:this.reqObj.hospitalId
     console.log("hospitalId :",hospitalId)
-      this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId).subscribe(assets => {
+      this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstassetDetailBarcodes = assets;
         if (this.lang == "en") {
           this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);

@@ -24,7 +24,7 @@ export class HospitalService {
   };
 
   GetHospitals(UserId:string): Observable<ListHospitalVM[]> {
-    return this.httpClient.post<ListHospitalVM[]>(`${environment.ListHospitals}`,UserId, this.httpHeader);
+    return this.httpClient.get<ListHospitalVM[]>(`${environment.ListHospitals}/${UserId}`, this.httpHeader);
   }
 
 

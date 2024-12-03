@@ -293,7 +293,7 @@ export class ViewWorkorderComponent implements OnInit {
 
       if (this.isAdminRole) {
         this.isAdminDisabled = true;
-        this.hospitalService.GetHospitals().subscribe(lst => {
+        this.hospitalService.GetHospitals(this.currentUser.id).subscribe(lst => {
           this.lstHospitals = lst;
         });
         this.editWorkOrderObj.hospitalId = woObj.hospitalId;

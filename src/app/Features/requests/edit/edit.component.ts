@@ -247,7 +247,7 @@ export class EditComponent implements OnInit {
       res => {
         this.lstSubProblems = res
       });
-      this.hospitalService.GetHospitals().subscribe(hospitals => {
+      this.hospitalService.GetHospitals(this.currentUser.id).subscribe(hospitals => {
         this.lstHospitals = hospitals;
       });
 
@@ -709,7 +709,7 @@ export class EditComponent implements OnInit {
   onSelectionChanged(event) {
     this.isDisabled = false;
     var hospitalId=this.currentUser.hospitalId != 0? this.currentUser.hospitalId:this.reqObj.hospitalId
-      this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId).subscribe(assets => {
+      this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstassetDetailBarcodes = assets;
         if (this.lang == "en") {
           this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);

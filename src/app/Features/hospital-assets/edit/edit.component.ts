@@ -423,7 +423,7 @@ export class EditComponent implements OnInit {
       });
     }
 
-    this.hospitalService.GetHospitals().subscribe(hosts => {
+    this.hospitalService.GetHospitals(this.currentUser.id).subscribe(hosts => {
       this.lstHospitals = hosts;
     });
 

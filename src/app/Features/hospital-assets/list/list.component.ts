@@ -1184,7 +1184,7 @@ this.onLoadByLogIn();
   }
   onBarCodeSelectionChanged(event) {
     if (this.currentUser.hospitalId != 0) {
-      this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.currentUser.hospitalId).subscribe(assets => {
+      this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.currentUser.hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstassetDetailBarcodes = assets;
         if (this.lang == "en") {
           this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);
@@ -1195,7 +1195,7 @@ this.onLoadByLogIn();
       });
     }
     if (this.sortFilterObjects.searchObj.hospitalId != 0) {
-      this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.sortFilterObjects.searchObj.hospitalId).subscribe(assets => {
+      this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.sortFilterObjects.searchObj.hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstassetDetailBarcodes = assets;
         if (this.lang == "en") {
           this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);
@@ -1206,7 +1206,7 @@ this.onLoadByLogIn();
       });
     }
     else {
-      this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.hospitalId).subscribe(assets => {
+      this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstassetDetailBarcodes = assets;
         if (this.lang == "en") {
           this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);

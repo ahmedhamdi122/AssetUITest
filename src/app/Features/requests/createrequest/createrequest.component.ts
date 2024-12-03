@@ -1349,7 +1349,7 @@ export class CreaterequestComponent implements OnInit {
       });
   }
   onSelectionChanged(event) {
-    this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.currentUser.hospitalId).subscribe(assets => {
+    this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.currentUser.hospitalId,this.currentUser.id).subscribe(assets => {
       this.lstassetDetailBarcodes = assets;
       if (this.lang == "en") {
         this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);
@@ -1535,7 +1535,7 @@ export class CreaterequestComponent implements OnInit {
       });
   }
   onSerialSelectionChanged(event) {
-    this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.currentUser.hospitalId).subscribe(assets => {
+    this.assetDetailService.AutoCompleteAssetBarCode(event.query, this.currentUser.hospitalId,this.currentUser.id).subscribe(assets => {
       this.lstSerials = assets;
       if (this.lang == "en") {
         this.lstSerials.forEach(item => item.name = item.serialNumber);

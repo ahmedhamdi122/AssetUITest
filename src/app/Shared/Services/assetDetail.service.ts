@@ -119,8 +119,8 @@ export class AssetDetailService {
     return this.httpClient.get<AssetDetailVM[]>(`${environment.GetAllAssetDetailsByHospitalId}${hospitalId}`, this.httpHeader);
   }
 
-  AutoCompleteAssetBarCode(barcode: string, hospitaId: number): Observable<AssetDetailVM[]> {
-    return this.httpClient.get<AssetDetailVM[]>(`${environment.AutoCompleteAssetBarCode}${barcode}/${hospitaId}`, this.httpHeader);
+  AutoCompleteAssetBarCode(barcode: string, hospitaId: number,UserId:string): Observable<AssetDetailVM[]> {
+    return this.httpClient.get<AssetDetailVM[]>(`${environment.AutoCompleteAssetBarCode}${barcode}/${hospitaId}/${UserId}`, this.httpHeader);
   }
   AutoCompleteAssetBarCodeByDepartmentId(barcode: string, hospitaId: number, departmentId: number): Observable<AssetDetailVM[]> {
     return this.httpClient.get<AssetDetailVM[]>(`${environment.AutoCompleteAssetBarCodeByDepartmentId}${barcode}/${hospitaId}/${departmentId}`, this.httpHeader);
