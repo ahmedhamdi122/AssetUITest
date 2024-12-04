@@ -21,7 +21,7 @@ const routes: Routes = [
        { path: 'servicerequests', loadChildren: () => import('src/app/Features/requests/requests.module').then(m => m.RequetsModule) },
       // { path: 'buildings', loadChildren: () => import('src/app/Features/hospital-buildings/hospital-buildings.module').then(m => m.HospitalBuildingsModule) },
       // { path: 'employees', loadChildren: () => import('src/app/Features/employees/employees.module').then(m => m.EmployeesModule) },
-      // { path: 'workorders', loadChildren: () => import('src/app/Features/work-orders/work-orders.module').then(m => m.WorkOrdersModule) },
+      { path: 'workorders', loadChildren: () => import('src/app/Features/work-orders/work-orders.module').then(m => m.WorkOrdersModule) },
       // { path: 'brands', loadChildren: () => import('src/app/Features/brands/brands.module').then(m => m.BrandsModule) },
       // { path: 'AssetStatus', loadChildren: () => import('src/app/Features/assets-status/assets-status.module').then(m => m.AssetsStatusModule) },
       // { path: 'origins', loadChildren: () => import('src/app/Features/origins/origins.module').then(m => m.OriginsModule) },

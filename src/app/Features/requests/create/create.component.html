@@ -3,10 +3,10 @@
     <div >
         <div class="row mt-2"*ngIf="showHospital">
             <div class="col-12">
-                <label for="hospitalId" [translate]="'Asset.Hospitals'">{{'Asset.SRNumber' | translate }}
+                <label for="hospitalId" [translate]="'Asset.Hospitals'">
                 </label>
                 <select  class="form-select" id="hospitalId"  name="hospitalId" [(ngModel)]="reqObj.hospitalId"
-                #hospitalId="ngModel" [value]="0">
+                #hospitalId="ngModel" [value]="0" (change)="onHospitalChange()">
                 <option value="0">{{'Asset.Select' | translate}} {{'Asset.Hospital' | translate}}
                 </option>
                 <option *ngFor="let host of lstHospitals" [value]="host.id">
@@ -20,7 +20,7 @@
     
         <div class="row mt-2">
             <div class="col-12">
-                <label for="code" [translate]="'Asset.Code'">{{'Asset.SRNumber' | translate }}
+                <label for="code" [translate]="'Asset.SRNumber'">
                 </label>
                 <input class="form-control" type="text" id="code"  name="code" [(ngModel)]="reqObj.requestCode"
                     #code="ngModel" [value]="0" pTooltip="Request Code" tooltipPosition="bottom" disabled

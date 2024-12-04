@@ -204,17 +204,10 @@ export class ListComponent implements OnInit {
       const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
       this.breadcrumbService.addBreadcrumb(this.activateRoute.snapshot, parentUrlArray, translationKeys);
     }
+    console.log("this.sortFilterObjects.searchObj.governorateId :",this.sortFilterObjects.searchObj.governorateId);
 
 
 
-    // this.requestService.GetTotalOpenRequest(this.currentUser.id).subscribe(c => {
-    //   this.countOpenRequests = c;
-    // });
-
-    this.page = {
-      pagenumber: 1,
-      pagesize: 10,
-    }
   }
   onLoadByLogIn() {
     if (this.currentUser.hospitalId > 0 && this.currentUser.organizationId > 0 && this.currentUser.subOrganizationId > 0) {
@@ -244,6 +237,7 @@ export class ListComponent implements OnInit {
       this.governorateService.GetGovernorates().subscribe(items => {
         this.lstGovernorates = items;
       });
+
       this.hospitalService.GetHospitalById(this.currentUser.hospitalId).subscribe(hospitalObj => {
         this.sortFilterObjects.searchObj.governorateId = hospitalObj.governorateId;
         this.isGov = true;
@@ -472,6 +466,8 @@ export class ListComponent implements OnInit {
     });
   }
   LoadRequests(event) {
+    console.log("xx this.sortFilterObjects.searchObj.governorateId :",this.sortFilterObjects.searchObj.governorateId);
+
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
     this.rowsSkipped=event.first;
@@ -482,8 +478,6 @@ export class ListComponent implements OnInit {
       this.spinner.hide();
       this.loading = false;
     });
-
-
     // this.requestService.ExportRequestsByStatusId(this.sortFilterObjects).subscribe(list => {
     //   this.lstRequests2 = list;
     // });

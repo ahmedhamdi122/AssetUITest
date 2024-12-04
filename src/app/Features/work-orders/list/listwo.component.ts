@@ -167,14 +167,7 @@ export class ListWOComponent implements OnInit {
 
 
     this.onLoad();
-    if (this.currentUser) {
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
-      this.isAssetOwner = (['AssetOwner'].some(r => this.lstRoleNames.includes(r)));
-      this.isEng = (['Eng'].some(r => this.lstRoleNames.includes(r)));
-      this.isEngManager = (['EngDepManager'].some(r => this.lstRoleNames.includes(r)));
-    }
+    
 
     const translationKeys = ['Asset.Maintainance', 'Asset.WorkOrders'];
     const parentUrlArray = this.breadcrumbService.getParentUrlSegments();

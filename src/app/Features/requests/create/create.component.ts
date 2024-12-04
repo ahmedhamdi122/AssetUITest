@@ -203,7 +203,6 @@ export class CreateComponent implements OnInit {
     }
     this.hospitalService.GetHospitals(this.currentUser.id).subscribe(hospitals => {
       this.lstHospitals = hospitals;
-      console.log("this.lstHospitals :",this.lstHospitals);
     });
 
 
@@ -446,7 +445,6 @@ export class CreateComponent implements OnInit {
     this.reqObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
     this.reqObj.requestPeriorityId = this.radioPerioritySelected;
     this.reqObj.createdById = this.currentUser.id;
-    console.log("this.reqObj :",this.reqObj);
     
     this.requestService.inserRequest(this.reqObj).subscribe(e => {
       this.reqId = e;
@@ -455,6 +453,7 @@ export class CreateComponent implements OnInit {
       this.createRequestTrackingObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
       this.createRequestTrackingObj.description = this.reqObj.description;
       this.createRequestTrackingObj.createdById = this.currentUser.id;
+      
       this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(e => {
         this.requestTrackingId = e
         var statusObj = new AssetStatusTransactionVM();
@@ -605,9 +604,16 @@ export class CreateComponent implements OnInit {
           return true;
     }
   }
+  onHospitalChange()
+  {    
+    this.assetBarCodeObj=undefined;
+    this.applicationStatus='';
+    this.resetAssetDetailsFields();
+    this.isDisabled=false;
+    this.showStatus=false;
+  }
   getBarCode(assetBarCodeObj:any) {
-
-
+    this.reqObj.hospitalId=assetBarCodeObj.hospitalId
     this.showStatus=true;
     this.assetBarCodeObj.barCode = assetBarCodeObj["barCode"];
     this.assetBarCodeObj.id = assetBarCodeObj["id"];
@@ -711,15 +717,11 @@ export class CreateComponent implements OnInit {
     this.buildNameAr='';
   }
   onSelectionChanged(event) {
-    console.log("event.query :",event.query);
     this.applicationStatus='';
     this.showStatus=false;
-    console.log("this.assetBarCodeObj :",this.assetBarCodeObj);
-    
     //this.resetAssetDetailsFields();
     this.isDisabled = false;
     var hospitalId=this.currentUser.hospitalId != 0? this.currentUser.hospitalId:this.reqObj.hospitalId
-    console.log("hospitalId :",hospitalId)
       this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstassetDetailBarcodes = assets;
         if (this.lang == "en") {

@@ -1,13 +1,12 @@
+
 <div class="col-12">
-    <div class="row top-buffer">
+    <div class="row p-3">
         <div class="col-8">
             <h4 class="card-title"> {{'Asset.ListWorkOrders' | translate }} </h4>
         </div>
         <div class="col-2">
-            <button type="button" class="btn excelIcon" (click)="exportExcel()"><i
-                    class="fa-solid fa-file-excel fa-2xl"></i></button>
-            <button type="button" class="btn pdfIcon" (click)="generatePDF()"><i
-                    class="fa-solid fa-file-pdf fa-2xl"></i></button>
+            <button type="button" class="btn excelIcon" (click)="exportExcel()">   <i class="pi pi-file-excel"  style="font-size: 2rem; color: green;"></i></button>
+            <button type="button" class="btn pdfIcon" (click)="generatePDF()" pTooltip="{{'Asset.ExtractAsPDF'| translate}}"><i class="pi pi-file-pdf" style="font-size: 2rem; color: red;"></i></button>
 
             <!-- <button type="button" class="btn wordIcon" (click)="generatePMPDF()" ><i
                 class="fa-solid fa-file-word fa-2xl"></i></button> -->
@@ -24,8 +23,8 @@
 
 
 <div class="card-body">
-    <div class="row top-buffer">
-        <div class="col-10">
+    <div class="row p-3">
+        <!-- <div class="col-10">
             <button mat-stroked-button [matBadge]="woStatusObj.countAll" (click)="getWOByStatusId(0,$event)">
                 {{'Asset.All' | translate }}</button>
             <mat-action-list role="listitem" *ngFor="let sts of woStatusObj.listStatus">
@@ -82,7 +81,7 @@
                     {{lang=="en"?sts.name:sts.nameAr}}
                 </button>
             </mat-action-list>
-        </div>
+        </div> -->
 
     </div>
     <div class="col-12  top-buffer">
