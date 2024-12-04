@@ -615,7 +615,7 @@ export const environment = {
 
   GetWorkOrdersCountByStatusIdAndPaging: "http://localhost:25813/api/WorkOrder/GetWorkOrdersCountByStatusIdAndPaging/",
 
-
+  
   ListWorkOrders: "http://localhost:25813/api/WorkOrder/ListWorkOrders/",
 
   ExportWorkOrdersByStatusId: 'http://localhost:25813/api/WorkOrder/ExportWorkOrdersByStatusId/',

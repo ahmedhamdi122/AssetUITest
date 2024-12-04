@@ -607,6 +607,7 @@ export class CreateComponent implements OnInit {
   onHospitalChange()
   {    
     this.assetBarCodeObj=undefined;
+    this.assetSerialObj=undefined;
     this.applicationStatus='';
     this.resetAssetDetailsFields();
     this.isDisabled=false;
@@ -719,9 +720,10 @@ export class CreateComponent implements OnInit {
   onSelectionChanged(event) {
     this.applicationStatus='';
     this.showStatus=false;
-    //this.resetAssetDetailsFields();
+    this.resetAssetDetailsFields();
     this.isDisabled = false;
-    var hospitalId=this.currentUser.hospitalId != 0? this.currentUser.hospitalId:this.reqObj.hospitalId
+    var hospitalId=this.reqObj.hospitalId;
+    
       this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstassetDetailBarcodes = assets;
         if (this.lang == "en") {
@@ -732,23 +734,26 @@ export class CreateComponent implements OnInit {
         }
       });
   }
-  getSerial(event) {
-    this.assetSerialObj.serialNumber = event["serialNumber"];
-    this.assetSerialObj.id = event["id"];
-    this.brandName = this.lang == 'en' ? event["brandName"] : event["brandNameAr"];
-    this.modelNumber = event["model"];
-    this.serialNumber = event["serialNumber"];
-    this.barCode = event["barCode"];
+  getSerial(assetSerialObj) {
+    this.reqObj.hospitalId=assetSerialObj.hospitalId
+    this.showStatus=true;
+    this.assetSerialObj.serialNumber = assetSerialObj["serialNumber"];
+    this.assetSerialObj.id = assetSerialObj["id"];
+    this.brandName = this.lang == 'en' ? assetSerialObj["brandName"] : assetSerialObj["brandNameAr"];
+    this.modelNumber = assetSerialObj["model"];
+    this.serialNumber = assetSerialObj["serialNumber"];
+    this.barCode = assetSerialObj["barCode"];
+    this.assetId = assetSerialObj["id"];
+    
+console.log("assetSerialObj :",assetSerialObj);
 
-    this.assetId = event["id"];
-
-
-    this.requestService.GetOldRequestsByHospitalAssetId(Number(event["id"])).subscribe(items => {
+    this.requestService.GetOldRequestsByHospitalAssetId(assetSerialObj.id).subscribe(items => {
       this.lstOldRequests = items;
     });
+    this.applicationStatus = this.lang == "en" ? this.assetSerialObj["assetStatus"] : this.assetSerialObj["assetStatusAr"];
 
     if (this.currentUser.hospitalId != 0) {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(event["masterAssetId"]), this.currentUser.hospitalId).subscribe(
+      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(assetSerialObj.masterAssetId, this.currentUser.hospitalId).subscribe(
         res => {
           this.lstassetDetails = res;
           this.reqObj.assetDetailId = event["id"];
@@ -774,8 +779,8 @@ export class CreateComponent implements OnInit {
               this.errorMessage = "This asset is not working in system";
               return false;
             }
-
-            this.applicationStatus = this.lang == "en" ? this.assetSerialObj["assetStatus"] : this.assetSerialObj["assetStatusAr"];
+            console.log("this.assetSerialObj['assetStatus'] : ",this.assetSerialObj["assetStatus"] );
+            
             this.assetSerialObj.serialNumber = assetObj["serialNumber"];
             this.assetStatusId = event["assetStatusId"];
             var isWorking = this.findAssetStatusByStatusId(this.assetStatusId);
@@ -831,9 +836,16 @@ export class CreateComponent implements OnInit {
     }
   }
   onSerialSelectionChanged(event) {
+    this.applicationStatus='';
+    this.showStatus=false;
+    this.resetAssetDetailsFields();
     this.isDisabled = false;
-    if (this.currentUser.hospitalId != 0) {
-      this.assetDetailService.AutoCompleteAssetSerial(event.query, this.currentUser.hospitalId).subscribe(assets => {
+    var hospitalId=this.reqObj.hospitalId;
+    this.isDisabled = false;
+   console.log("hospital :",hospitalId);
+   console.log("this.currentUser.id :",this.currentUser.id);
+   
+      this.assetDetailService.AutoCompleteAssetSerial(event.query, hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstSerials = assets;
         if (this.lang == "en") {
           this.lstSerials.forEach(item => item.serialNumber = item.serialNumber);
@@ -842,18 +854,8 @@ export class CreateComponent implements OnInit {
           this.lstSerials.forEach(item => item.serialNumber = item.serialNumber);
         }
       });
-    }
-    else {
-      this.assetDetailService.AutoCompleteAssetSerial(event.query, this.reqObj.hospitalId).subscribe(assets => {
-        this.lstSerials = assets;
-        if (this.lang == "en") {
-          this.lstSerials.forEach(item => item.serialNumber = item.serialNumber);
-        }
-        else {
-          this.lstSerials.forEach(item => item.serialNumber = item.serialNumber);
-        }
-      });
-    }
+    
+   
   }
   getDepartmentsBarcode(event) {
     this.assetDepartmentBarCodeObj.barCode = event["barCode"];

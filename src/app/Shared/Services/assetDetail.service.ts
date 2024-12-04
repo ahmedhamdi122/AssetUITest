@@ -126,8 +126,8 @@ export class AssetDetailService {
     return this.httpClient.get<AssetDetailVM[]>(`${environment.AutoCompleteAssetBarCodeByDepartmentId}${barcode}/${hospitaId}/${departmentId}`, this.httpHeader);
   }
 
-  AutoCompleteAssetSerial(serial: string, hospitaId: number): Observable<AssetDetailVM[]> {
-    return this.httpClient.get<AssetDetailVM[]>(`${environment.AutoCompleteAssetSerial}${serial}/${hospitaId}`, this.httpHeader);
+  AutoCompleteAssetSerial(serial: string, hospitaId: number,UserId:string): Observable<AssetDetailVM[]> {
+    return this.httpClient.get<AssetDetailVM[]>(`${environment.AutoCompleteAssetSerial}${serial}/${hospitaId}/${UserId}`, this.httpHeader);
   }
 
 

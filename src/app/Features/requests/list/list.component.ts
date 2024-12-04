@@ -1200,7 +1200,7 @@ export class ListComponent implements OnInit {
   }
   onSerialNumberSelectionChanged(event) {
     if (this.currentUser.hospitalId != 0) {
-      this.assetDetailService.AutoCompleteAssetSerial(event.query, this.currentUser.hospitalId).subscribe(assets => {
+      this.assetDetailService.AutoCompleteAssetSerial(event.query, this.currentUser.hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstAssetSerailNumberObj = assets;
         if (this.lang == "en") {
           this.lstAssetSerailNumberObj.forEach(item => item.name = item.serialNumber);
@@ -1211,7 +1211,7 @@ export class ListComponent implements OnInit {
       });
     }
     else {
-      this.assetDetailService.AutoCompleteAssetSerial(event.query, this.hospitalId).subscribe(assets => {
+      this.assetDetailService.AutoCompleteAssetSerial(event.query, this.hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstAssetSerailNumberObj = assets;
         if (this.lang == "en") {
           this.lstAssetSerailNumberObj.forEach(item => item.name = item.serialNumber);

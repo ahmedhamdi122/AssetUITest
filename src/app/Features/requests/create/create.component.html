@@ -63,7 +63,7 @@
                 <label for="serial" [translate]="'Asset.Serial'">Serial</label>
                 <p-autoComplete [(ngModel)]="assetSerialObj" [ngModelOptions]="{standalone: true}"
                     [suggestions]="lstSerials" name="serialNumber" id="serialNumber" [autoWidth]="true"
-                    (completeMethod)="onSerialSelectionChanged($event)" (onSelect)="getSerial($event)" field="serialNumber"
+                    (completeMethod)="onSerialSelectionChanged($event)" (onSelect)="getSerial(assetSerialObj)" field="serialNumber"
                     placeholder="{{'Asset.Serial' |  translate}}" [dropdown]="false" [showClear]="true">
                     <ng-template let-assetSerialObj pTemplate="item">
                         {{assetSerialObj.serialNumber}}
