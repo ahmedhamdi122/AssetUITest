@@ -221,7 +221,6 @@ export const environment = {
   AutoCompleteMasterAssetName: "http://localhost:25813/api/MasterAsset/AutoCompleteMasterAssetName/",
 
   AutoCompleteMasterAssetName2: "http://localhost:25813/api/MasterAsset/AutoCompleteMasterAssetName2/",
-  AutoCompleteMasterAssetName3: "http://localhost:25813/api/MasterAsset/AutoCompleteMasterAssetName3/",
   DistinctAutoCompleteMasterAssetName: "http://localhost:25813/api/MasterAsset/DistinctAutoCompleteMasterAssetName/",
 
   GetDistintMasterAssetModels: "http://localhost:25813/api/MasterAsset/GetDistintMasterAssetModels/",

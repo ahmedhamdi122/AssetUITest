@@ -61,10 +61,10 @@
         </div>
     </fieldset>
 
-    <div class="row top-buffer" *ngIf="isAdmin">
+    <div class="row top-buffer">
         <div class="col-6">
             <label for="governorate"> {{ 'Asset.Governorate' | translate }} </label>
-            <select class="form-control" id="governorateId" pTooltip="select governorate" tooltipPosition="bottom"
+            <select class="form-select" id="governorateId" pTooltip="select governorate" tooltipPosition="bottom"
                 name="governorateId" [value]="0" (change)="getCitiesByGovId($event)">
                 <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.Governorate' | translate }}
                 </option>
@@ -75,7 +75,7 @@
         </div>
         <div class="col-6">
             <label for="districtName"> {{ 'Asset.City' | translate }} </label>
-            <select class="form-control" id="city" pTooltip="select city" tooltipPosition="bottom" name="city"
+            <select class="form-select" id="city" pTooltip="select city" tooltipPosition="bottom" name="city"
                 [value]="0">
                 <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.City' | translate }} </option>
                 <option *ngFor="let city of lstCities" [value]="city.id">
@@ -87,7 +87,7 @@
     <div class="row top-buffer" *ngIf="isAdmin">
         <div class="col-6">
             <label for="organization"> {{ 'Asset.Organization' | translate }} </label>
-            <select class="form-control" id="organization" pTooltip="select organization" tooltipPosition="bottom"
+            <select class="form-select" id="organization" pTooltip="select organization" tooltipPosition="bottom"
                 name="organization" (change)="getSubOrgByOrgId($event)" [value]="0">
                 <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.Organization' | translate }}
                 </option>
@@ -98,7 +98,7 @@
         </div>
         <div class="col-6">
             <label for="organization"> {{ 'Asset.SubOrganization' | translate }} </label>
-            <select class="form-control" id="subOrganizationId" pTooltip="select sub organization"
+            <select class="form-select" id="subOrganizationId" pTooltip="select sub organization"
                 tooltipPosition="bottom" name="subOrganizationId" [value]="0" (change)="getHospitalsBySubOrgId($event)">
                 <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.SubOrganization' | translate }}
                 </option>
@@ -109,7 +109,7 @@
         </div>
         <div class="col-12">
             <label for="hospital"> {{ 'Asset.Hospital' | translate }} </label>
-            <select class="form-control" id="hospital" pTooltip="select hospital" tooltipPosition="bottom"
+            <select class="form-select" id="hospital" pTooltip="select hospital" tooltipPosition="bottom"
                 name="hospital" [value]="0" (change)="getHospitalId($event)">
                 <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.Hospital' | translate }} </option>
                 <option *ngFor="let host of lstHospitals" [value]="host.id">
@@ -122,7 +122,7 @@
         <div class="col-6">
             <label for="WorkOrderNumber">{{'Asset.WorkOrderNumber' | translate }}</label>
             <input id="name" name="WorkOrderNumber" [(ngModel)]="createWorkOrderObj.workOrderNumber"
-                class="form-control" placeholder="Enter Work Order Number" pInputText
+                class="form-select" placeholder="Enter Work Order Number" pInputText
                 [ngModelOptions]="{standalone: true}" disabled>
         </div>
         <div class="col-6">
@@ -146,7 +146,7 @@
         </div>
         <div class="col-4">
             <label for="periority">{{'Asset.Periority' | translate }}</label>
-            <select type="text" id="WorkOrderPeriority" class="form-control" name="WorkOrderPeriority"
+            <select type="text" id="WorkOrderPeriority" class="form-select" name="WorkOrderPeriority"
                 [(ngModel)]="createWorkOrderObj.workOrderPeriorityId" #SubCategory="ngModel" [value]="0"
                 pTooltip="Select SubProblem" tooltipPosition="bottom">
                 <option value="0">{{'Asset.Select' | translate }} {{'Asset.Periority' | translate }}
@@ -158,7 +158,7 @@
         </div>
         <div class="col-4">
             <label for="type">{{'Asset.TypeWO' | translate }}</label>
-            <select type="text" id="Type" class="form-control" name="Type"
+            <select type="text" id="Type" class="form-select" name="Type"
                 [(ngModel)]="createWorkOrderObj.workOrderTypeId" #Type="ngModel" [value]="0"
                 pTooltip="Please,Select Type Name" tooltipPosition="bottom" disabled>
                 <option value="0">{{'Asset.Select' | translate }} {{'Asset.Type' | translate }}</option>
@@ -235,10 +235,11 @@
         </div>
     </div>
 
-    <div class="row  top-buffer">
-        <div class="col-12">
-            <button mat-stroked-button [disabled]="isDisabled" (click)="AddworkOrder()" color="primary"
-                mat-button>{{'Asset.Save' | translate }} </button>
+  
+    <div class="row  mt-3  d-flex justify-content-center p-3">
+        <div class="col-2" >
+            <a class="addbutton" (click)="AddworkOrder()" 
+              >{{'Asset.Save' | translate }} </a>
         </div>
     </div>
 </div>

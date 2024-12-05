@@ -809,8 +809,6 @@ export class ListWOComponent implements OnInit {
     if (this.sortFilterObjects.searchObj.hospitalId > 0)
       this.sortFilterObjects.searchObj.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
 
-
-
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.statusId = this.statusId;
     this.workOrderService.ListWorkOrders(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(workorders => {

@@ -124,13 +124,6 @@ export class CreateWOComponent implements OnInit {
   ngOnInit(): void {
 
 
-    if (this.currentUser) {
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
-      this.isEngManager = (['EngDepManager'].some(r => this.lstRoleNames.includes(r)));
-    }
-
     this.onLoad();
     this.serviceRequestId = this.config.data.requestId;
 

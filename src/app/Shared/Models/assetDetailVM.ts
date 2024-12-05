@@ -245,6 +245,18 @@ export class AssetDetailVM {
     brandName: string;
     brandNameAr: string;
 }
+export class AssetDetailsWithMasterAssetVM {
+    barcode: string;
+    name:string;
+    id: number;
+    masterAsseName: string;
+    masterAsseNameAr: string;
+    masterAsseBrandName: string;
+    masterAsseBrandNameAr: string;
+    serialNumber: string;
+    masterAsseModelNumbe: string;
+    masterAssetCode: string;
+  }
 export class GeneratedAssetDetailBCVM {
     barCode: string;
 }

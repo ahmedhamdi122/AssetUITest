@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { AssetDetailVM } from 'src/app/Shared/Models/assetDetailVM';
+import { AssetDetailsWithMasterAssetVM, AssetDetailVM } from 'src/app/Shared/Models/assetDetailVM';
 import { AssetStatusTransactionVM } from 'src/app/Shared/Models/assetStatusTransactionVM';
 import { ListDepartmentVM } from 'src/app/Shared/Models/departmentVM';
 import { ListEmployeeVM } from 'src/app/Shared/Models/employeeVM';
@@ -81,7 +81,7 @@ export class CreateComponent implements OnInit {
   lstDepartments: ListDepartmentVM[] = [];
   masterAssetObj: any;
   masterAssetObj1: any;
-  lstMasterAssets: ListMasterAssetVM[] = [];
+  lsAssetDetailsWithMasterAsset: AssetDetailsWithMasterAssetVM[] = [];
   lstHospitalAssets: AssetDetailVM[] = [];
   lstHospitals: ListHospitalVM[] = [];
   firstFormGroup: FormGroup;
@@ -135,6 +135,7 @@ export class CreateComponent implements OnInit {
   floorNameAr:string='';
   buildName:string=''; 
   buildNameAr:string='';
+  assetIsWorking:boolean;
   constructor(private requestService: RequestService, private authenticationService: AuthenticationService,
     private hospitalService: HospitalService,
     private assetStatusTransactionService: AssetStatusTransactionService, private formBuilder: FormBuilder, private activeRoute: ActivatedRoute, private requestStatusService: RequestStatusService,
@@ -231,52 +232,23 @@ export class CreateComponent implements OnInit {
         this.lstSubProblems = res
       });
   }
-  ViewAllAssetDetailByMasterId($event) {
-    this.lstassetDetails = [];
-    this.lstProblems = [];
-    this.reqObj.problemId = 0;
-    this.reqObj.subProblemId = 0;
-    this.reqObj.assetDetailId = 0;
-    if (this.currentUser.hospitalId != 0) {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId($event.target.value, this.currentUser.hospitalId).subscribe(
-        res => {
-          this.lstassetDetails = res
-        });
-    }
-    else {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId($event.target.value, this.reqObj.hospitalId).subscribe(
-        res => {
-          this.lstassetDetails = res
-        });
-    }
-    this.problemService.GetProblemByMasterAssetId($event.target.value).subscribe(problems => this.lstProblems = problems)
-
-  }
-  validateData() {
-    if (this.reqObj.subject != "" && this.reqObj.subProblemId != 0 && this.reqObj.description != null
-      && this.reqObj.assetDetailId != 0 && this.reqObj.requestPeriorityId != 0
-      && this.reqObj.requestTypeId != 0 && this.reqObj.requestModeId != 0) {
-      this.disabledButton = true
-    }
-    else {
-      this.disabledButton = false
-      if (this.lang == "en") {
-        this.messageService.add({ key: 'er', severity: 'error', summary: 'Attention !!!', sticky: true, detail: 'Please Complete Data' });
-      }
-      else {
-        this.messageService.add({ key: 'er', severity: 'خطأ', summary: 'انتبه!!!', sticky: true, detail: 'من فضلك اختر اسم الملف والملف' });
-
-      }
-
-    }
-  }
+ 
   AddRequest() {
+    console.log("this.assetStatusId :",this.assetStatusId);
+    var validStatus=true;
+    console.log("this.assetBarCodeObj :",this.assetBarCodeObj);
     
-    var validStatus=this.findAssetStatusByStatusId(this.assetStatusId);
+    if(this.assetBarCodeObj!=null)
+    {
+       validStatus=this.findAssetStatusByStatusId(this.assetStatusId);
+    }
+    console.log("validStatus :",validStatus);
+
     if(!validStatus)
     {
       return;
     }
+    
     if (this.currentUser.hospitalId!=0) {
       if (this.reqObj.hospitalId == 0) {
         this.errorDisplay = true;
@@ -291,6 +263,7 @@ export class CreateComponent implements OnInit {
     }
     if (this.selectedType == 1) {
       if (this.assetBarCodeObj == undefined) {
+        this.resetAssetDetailsFields();
         this.errorDisplay = true;
         if (this.lang == "en") {
           this.errorMessage = "Please select asset barcode";
@@ -300,22 +273,12 @@ export class CreateComponent implements OnInit {
         }
         return false;
       }
-      if (this.reqObj.assetDetailId == 0) {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = "Please select asset";
-        }
-        else {
-          this.errorMessage = "من فضلك اختر جهاز";
-        }
-        return false;
-      }
-      else {
-        this.reqObj.assetDetailId = this.assetBarCodeObj.id;
-      }
+    
     }
     if (this.selectedType == 2) {
       if (this.assetSerialObj == undefined) {
+        this.resetAssetDetailsFields();
+ 
         this.errorDisplay = true;
         if (this.lang == "en") {
           this.errorMessage = "Please select asset serial";
@@ -325,32 +288,9 @@ export class CreateComponent implements OnInit {
         }
         return false;
       }
-      if (this.reqObj.assetDetailId == 0) {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = "Please select asset";
-        }
-        else {
-          this.errorMessage = "من فضلك اختر جهاز";
-        }
-        return false;
-      }
-      else {
-        this.reqObj.assetDetailId = this.assetSerialObj.id;
-      }
     }
     if (this.selectedType == 3) {
       if (this.masterAssetObj1 == undefined) {
-        this.errorDisplay = true;
-        if (this.lang == "en") {
-          this.errorMessage = "Please select asset";
-        }
-        else {
-          this.errorMessage = "من فضلك اختر جهاز";
-        }
-        return false;
-      }
-      if (this.reqObj.assetDetailId == 0) {
         this.errorDisplay = true;
         if (this.lang == "en") {
           this.errorMessage = "Please select asset";
@@ -443,8 +383,8 @@ export class CreateComponent implements OnInit {
 
     
     this.reqObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
-    this.reqObj.requestPeriorityId = this.radioPerioritySelected;
     this.reqObj.createdById = this.currentUser.id;
+    console.log("this.reqObj :",this.reqObj);
     
     this.requestService.inserRequest(this.reqObj).subscribe(e => {
       this.reqId = e;
@@ -614,11 +554,15 @@ export class CreateComponent implements OnInit {
     this.showStatus=false;
   }
   getBarCode(assetBarCodeObj:any) {
+    this.assetStatusId=this.assetBarCodeObj.assetStatusId;
+    this.findAssetStatusByStatusId( this.assetStatusId);
     this.reqObj.hospitalId=assetBarCodeObj.hospitalId
-    this.showStatus=true;
     this.assetBarCodeObj.barCode = assetBarCodeObj["barCode"];
     this.assetBarCodeObj.id = assetBarCodeObj["id"];
     var assetId = assetBarCodeObj["id"];
+    this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
+    this.showStatus=true;
+    this.assetIsWorking=this.assetBarCodeObj.assetStatus=="Working"?true:false;
     this.requestService.GetOldRequestsByHospitalAssetId(assetId).subscribe(items => {
       this.lstOldRequests = items;
     });
@@ -628,83 +572,18 @@ export class CreateComponent implements OnInit {
     this.serialNumber = assetBarCodeObj["serialNumber"];
     this.barCode = assetBarCodeObj["barCode"];
     this.departmentName = this.lang == 'en' ? assetBarCodeObj["departmentName"] : assetBarCodeObj["departmentNameAr"];
-    
-    if (this.currentUser.hospitalId != 0) {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(assetBarCodeObj["masterAssetId"]), this.currentUser.hospitalId).subscribe(
-        res => {
-          this.lstassetDetails = res;
-          this.reqObj.assetDetailId = assetBarCodeObj["id"];
-          this.reqObj.masterAssetId = assetBarCodeObj["masterAssetId"];
-          this.lstOldRequests = [];
-          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
-            this.assetBarCodeObj = assetObj;
+   
 
-            if (this.assetBarCodeObj["assetStatusAr"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
-              return false;
-            }
-            if (this.assetBarCodeObj["assetStatus"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "This asset is not working in system";
-              return false;
-            }
-
-            this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
-            this.assetBarCodeObj.name = assetObj["barcode"];
-            this.assetStatusId = this.assetBarCodeObj["assetStatusId"];
-
-          this.findAssetStatusByStatusId(this.assetStatusId);
           
-          });
-        });
-    }
-    else {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(assetBarCodeObj["masterAssetId"]), this.reqObj.hospitalId).subscribe(
-        res => {
-          this.lstassetDetails = res;
-          this.reqObj.assetDetailId = assetBarCodeObj["id"];
-          this.reqObj.masterAssetId = assetBarCodeObj["masterAssetId"];
-          this.lstOldRequests = [];
-          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
-            this.assetBarCodeObj = assetObj;
-
-            if (this.assetBarCodeObj["assetStatusAr"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
-              return false;
-            }
-            if (this.assetBarCodeObj["assetStatus"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "This asset is not working in system";
-              return false;
-            }
-            else if (this.assetBarCodeObj["assetStatusAr"] != null && this.assetBarCodeObj["assetStatus"] != null){
-              this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
-              this.assetBarCodeObj.name = assetObj["barcode"];
-              this.assetStatusId = this.assetBarCodeObj["assetStatusId"];
-
-              var isWorking = this.findAssetStatusByStatusId(this.assetStatusId);
-              if (this.assetStatusId == 3) {
-                isWorking = true;
-                this.isDisabled = false;
-              }
-              else
-              {
-                return false;
-              }
-            }
-          });
-        });
-    }
+  
   }
 
   resetAssetDetailsFields()
   {
+    this.isDisabled=false;
+    this.lstOldRequests=[];
+    this.applicationStatus='';
+    this.showStatus=false;
     this.brandName='';
     this.modelNumber='';
     this.serialNumber='';
@@ -718,10 +597,13 @@ export class CreateComponent implements OnInit {
     this.buildNameAr='';
   }
   onSelectionChanged(event) {
+    this.assetBarCodeObj=undefined;
+    this.lstOldRequests=[];
     this.applicationStatus='';
     this.showStatus=false;
-    this.resetAssetDetailsFields();
     this.isDisabled = false;
+    this.assetStatusId=0;
+    this.resetAssetDetailsFields();
     var hospitalId=this.reqObj.hospitalId;
     
       this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId,this.currentUser.id).subscribe(assets => {
@@ -735,115 +617,36 @@ export class CreateComponent implements OnInit {
       });
   }
   getSerial(assetSerialObj) {
-    this.reqObj.hospitalId=assetSerialObj.hospitalId
+    this.assetStatusId=this.assetSerialObj.assetStatusId;
+    this.findAssetStatusByStatusId( this.assetStatusId);
+
+    this.applicationStatus = this.lang == "en" ? this.assetSerialObj["assetStatus"] : this.assetSerialObj["assetStatusAr"];
     this.showStatus=true;
-    this.assetSerialObj.serialNumber = assetSerialObj["serialNumber"];
+    this.assetIsWorking=this.assetSerialObj.assetStatus=="Working"?true:false;
+    this.reqObj.hospitalId=assetSerialObj.hospitalId
+     this.assetSerialObj.serialNumber = assetSerialObj["serialNumber"];
     this.assetSerialObj.id = assetSerialObj["id"];
     this.brandName = this.lang == 'en' ? assetSerialObj["brandName"] : assetSerialObj["brandNameAr"];
     this.modelNumber = assetSerialObj["model"];
     this.serialNumber = assetSerialObj["serialNumber"];
     this.barCode = assetSerialObj["barCode"];
     this.assetId = assetSerialObj["id"];
-    
-console.log("assetSerialObj :",assetSerialObj);
 
     this.requestService.GetOldRequestsByHospitalAssetId(assetSerialObj.id).subscribe(items => {
       this.lstOldRequests = items;
     });
-    this.applicationStatus = this.lang == "en" ? this.assetSerialObj["assetStatus"] : this.assetSerialObj["assetStatusAr"];
 
-    if (this.currentUser.hospitalId != 0) {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(assetSerialObj.masterAssetId, this.currentUser.hospitalId).subscribe(
-        res => {
-          this.lstassetDetails = res;
-          this.reqObj.assetDetailId = event["id"];
-          this.reqObj.masterAssetId = event["masterAssetId"];
-          this.lstOldRequests = [];
-          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj1 => {
-            this.assetBarCodeObj = assetObj1;
-            this.assetBarCodeObj.name = assetObj1["barcode"];
-          });
-          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
-            this.assetSerialObj = assetObj;
-
-
-            if (this.assetBarCodeObj["assetStatusAr"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
-              return false;
-            }
-            if (this.assetBarCodeObj["assetStatus"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "This asset is not working in system";
-              return false;
-            }
-            console.log("this.assetSerialObj['assetStatus'] : ",this.assetSerialObj["assetStatus"] );
-            
-            this.assetSerialObj.serialNumber = assetObj["serialNumber"];
-            this.assetStatusId = event["assetStatusId"];
-            var isWorking = this.findAssetStatusByStatusId(this.assetStatusId);
-            if (isWorking == false) {
-              return false;
-            }
-            else {
-              this.isDisabled = false;
-            }
-          });
-        });
-    }
-    else {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(event["masterAssetId"]), this.reqObj.hospitalId).subscribe(
-        res => {
-          this.lstassetDetails = res;
-          this.reqObj.assetDetailId = event["id"];
-          this.reqObj.masterAssetId = event["masterAssetId"];
-          this.lstOldRequests = [];
-          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj1 => {
-            this.assetBarCodeObj = assetObj1;
-            this.assetBarCodeObj.name = assetObj1["barcode"];
-          });
-          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
-            this.assetSerialObj = assetObj;
-
-
-            if (this.assetBarCodeObj["assetStatusAr"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
-              return false;
-            }
-            if (this.assetBarCodeObj["assetStatus"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "This asset is not working in system";
-              return false;
-            }
-
-            this.applicationStatus = this.lang == "en" ? this.assetSerialObj["assetStatus"] : this.assetSerialObj["assetStatusAr"];
-            this.assetSerialObj.serialNumber = assetObj["serialNumber"];
-            this.assetStatusId = event["assetStatusId"];
-            var isWorking = this.findAssetStatusByStatusId(this.assetStatusId);
-            if (isWorking == false) {
-              return false;
-            }
-            else {
-              this.isDisabled = false;
-            }
-          });
-        });
-    }
   }
   onSerialSelectionChanged(event) {
+    console.log("serial");
+    
+    this.assetSerialObj=undefined;
     this.applicationStatus='';
     this.showStatus=false;
     this.resetAssetDetailsFields();
     this.isDisabled = false;
     var hospitalId=this.reqObj.hospitalId;
     this.isDisabled = false;
-   console.log("hospital :",hospitalId);
-   console.log("this.currentUser.id :",this.currentUser.id);
    
       this.assetDetailService.AutoCompleteAssetSerial(event.query, hospitalId,this.currentUser.id).subscribe(assets => {
         this.lstSerials = assets;
@@ -957,13 +760,19 @@ console.log("assetSerialObj :",assetSerialObj);
     }
   }
   onMasterAssetSelectionChanged(event) {
-    this.masterAssetService.AutoCompleteMasterAssetName3(event.query, this.currentUser.hospitalId).subscribe(masters => {
-      this.lstMasterAssets = masters;
+    
+    this.applicationStatus='';
+    this.showStatus=false;
+    this.resetAssetDetailsFields();
+    this.isDisabled = false;
+    var hospitalId=this.reqObj.hospitalId;
+    this.masterAssetService.AutoCompleteMasterAssetName(event.query, hospitalId,this.currentUser.id).subscribe(masters => {
+      this.lsAssetDetailsWithMasterAsset = masters;
       if (this.lang == "en") {
-        this.lstMasterAssets.forEach(item => item.name = item.name + " - " + item.brandName + " - " + item.model + " - " + item.serialNumber);
+        this.lsAssetDetailsWithMasterAsset.forEach(item => item.name = item.masterAsseName + " - " + item.masterAsseBrandName + " - " + item.masterAsseModelNumbe + " - " + item.serialNumber+" - "+item.barcode);
       }
       else {
-        this.lstMasterAssets.forEach(item => item.name = item.nameAr + " - " + item.brandNameAr + " - " + item.model + " - " + item.serialNumber);
+        this.lsAssetDetailsWithMasterAsset.forEach(item => item.name = item.masterAsseNameAr + " - " + item.masterAsseBrandNameAr + " - " + item.masterAsseModelNumbe + " - " + item.serialNumber+" - "+item.barcode);
       }
     });
   }
@@ -984,13 +793,13 @@ console.log("assetSerialObj :",assetSerialObj);
     this.barCode = event["barCode"];
 
 
-    this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(event["id"], this.currentUser.hospitalId).subscribe(assets => {
-      this.lstHospitalAssets = assets;
-      
-    });
   }
   onTypeChange($event) {
+    this.assetStatusId=0;
     this.showStatus=false;
+    this.resetAssetDetailsFields();
+    this.isDisabled=false;
+    this.lstOldRequests=[];
     let typeId = $event.value;
     this.selectedType = typeId;
     if (this.selectedType == 1) {

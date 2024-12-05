@@ -39,7 +39,7 @@
         </div>
         <div class="row mt-2"
             *ngIf="showStatus">
-            <div class="col-12" style="font-size: 16px;font-weight: bold;color: red;">
+            <div class="col-12" style="font-size: 16px;font-weight: bold;"[ngStyle]="{ 'color': assetIsWorking ? 'green' : 'red' }">
                 <label for="status" [translate]="'Asset.AssetStatus'"></label>:
                 {{applicationStatus}}
             </div>
@@ -74,29 +74,19 @@
                 </p-autoComplete>
             </div>
         </div>
-        <!-- <div class="row top-buffer" *ngIf="showBarcode || showSerial">
-            <div class="col-12">
-                <label for="MasterAsset" [translate]="'Asset.MasterAsset'">MasterAsset</label>
-                <select (change)="ViewAllAssetDetailByMasterId($event)" id="masterAssetId" class="form-control"
-                    name="masterAssetId" [(ngModel)]="reqObj.masterAssetId" #masterAssetId="ngModel" [value]="0"
-                    pTooltip="Please,Select Master Asset" tooltipPosition="bottom" disabled style="font-size: 13px;">
-                    <option value="0">{{'Asset.Select' | translate}} {{'Asset.MasterAsset' | translate}}
-                    </option>
-                    <option *ngFor="let master of lstMasterAsset" [value]="master.id">
-                        {{lang == "en" ? master.name: master.nameAr}}- {{lang == "en" ? master.brandName:
-                        master.brandNameAr}} - {{master.model}}
-                    </option>
-                </select>
-            </div>
-        </div> -->
+    
+
+    
+
+
         <div class="row top-buffer" *ngIf="showName">
             <div class="col-12">
                 <label for="masterCode" [translate]="'Asset.MasterAsset'">Master Asset</label>
-                <p-autoComplete [(ngModel)]="masterAssetObj1" appendTo="body" [ngModelOptions]="{standalone: true}"
-                    [suggestions]="lstMasterAssets" name="assetDetailId" id="assetDetailId"
+                <p-autoComplete [(ngModel)]="masterAssetObj1"  [ngModelOptions]="{standalone: true}" [autoWidth]="true"[showClear]="true"
+                    [suggestions]="lsAssetDetailsWithMasterAsset" name="assetDetailId" id="assetDetailId"
                     (completeMethod)="onMasterAssetSelectionChanged($event)" (onSelect)="getMasterAssetObject($event)"
                     field="name" placeholder="{{'Asset.AssetName' |  translate}}" [dropdown]="false">
-                    <ng-template let-masterAssetObj1 pTemplate="item">
+                    <!-- <ng-template let-masterAssetObj1 pTemplate="item">
                         {{lang=="en"
                         ?masterAssetObj1.name:masterAssetObj1.nameAr}} - {{lang
                         ==="en" ?
@@ -109,7 +99,7 @@
                         === "en" ?
                         masterAssetObj1.brandName:masterAssetObj1.brandNameAr}} - {{masterAssetObj1.model}} -
                         {{masterAssetObj1.serialNumber}}
-                    </ng-template>
+                    </ng-template> -->
                 </p-autoComplete>
             </div>
         </div>

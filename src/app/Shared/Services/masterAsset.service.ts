@@ -7,6 +7,7 @@ import { ListPMTimeVM } from '../Models/pmTimeVM';
 import { Paging } from '../Models/paging';
 import { ListBrandVM } from '../Models/brandVM';
 import { searchObjMasterAssetVM } from '../Models/searchObjMasterAssetVM';
+import { AssetDetailsWithMasterAssetVM } from '../Models/assetDetailVM';
 
 
 
@@ -86,15 +87,13 @@ export class MasterAssetService {
   }
 
 
-  AutoCompleteMasterAssetName(name: string): Observable<ListMasterAssetVM[]> {
-    return this.httpClient.get<ListMasterAssetVM[]>(`${environment.AutoCompleteMasterAssetName}${name}`, this.httpHeader);
-  }
+ 
 
   AutoCompleteMasterAssetName2(name: string): Observable<ListMasterAssetVM[]> {
     return this.httpClient.get<ListMasterAssetVM[]>(`${environment.AutoCompleteMasterAssetName2}${name}`, this.httpHeader);
   }
-  AutoCompleteMasterAssetName3(name: string, hospitalId: number): Observable<ListMasterAssetVM[]> {
-    return this.httpClient.get<ListMasterAssetVM[]>(`${environment.AutoCompleteMasterAssetName3}${name}/${hospitalId}`, this.httpHeader);
+  AutoCompleteMasterAssetName(name: string, hospitalId: number,userId:string): Observable<AssetDetailsWithMasterAssetVM[]> {
+    return this.httpClient.get<AssetDetailsWithMasterAssetVM[]>(`${environment.AutoCompleteMasterAssetName}${name}/${hospitalId}/${userId}`, this.httpHeader);
   }
   DistinctAutoCompleteMasterAssetName(name: string): Observable<ListMasterAssetVM[]> {
     return this.httpClient.get<ListMasterAssetVM[]>(`${environment.DistinctAutoCompleteMasterAssetName}${name}`, this.httpHeader);
