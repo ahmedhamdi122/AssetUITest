@@ -247,7 +247,7 @@ export class AuthenticationService {
                 },
                 {
                   icon: "",
-                  route: "",
+                  route: "employees",
                   moduleName: "Employees",
                   moduleNameAr: "الموظفين",
                   permissionNames: ["add", "delete"],

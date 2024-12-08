@@ -84,7 +84,7 @@
             </select>
         </div>
     </div>
-    <div class="row top-buffer" *ngIf="isAdmin">
+    <div class="row top-buffer">
         <div class="col-6">
             <label for="organization"> {{ 'Asset.Organization' | translate }} </label>
             <select class="form-select" id="organization" pTooltip="select organization" tooltipPosition="bottom"
@@ -114,8 +114,7 @@
                 <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.Hospital' | translate }} </option>
                 <option *ngFor="let host of lstHospitals" [value]="host.id">
                     {{ lang == "en" ? host.name : host.nameAr }}
-                </option>
-            </select>
+             </select>
         </div>
     </div>
     <div class="row top-buffer">

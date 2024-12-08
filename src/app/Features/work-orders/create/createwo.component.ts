@@ -60,7 +60,6 @@ export class CreateWOComponent implements OnInit {
   woTaskObj: CreateAssetWorkOrderTaskVM;
   lstWOTasks: CreateAssetWorkOrderTaskVM[] = [];
 
-
   createTaskObj: CreateTasks;
   lstAssetWorkOrderTask: IndexAssetWorkOrderTaskVM[] = [];
   lstSelectedCreateTasks: IndexAssetWorkOrderTaskVM[] = [];

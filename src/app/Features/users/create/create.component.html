@@ -104,15 +104,16 @@
           </select>
 
         </div>
-        <div class="col-12" *ngIf="showHospitals">
+    
+      </div>
+      <div class="row mt-2">
+        <div class="col-6" *ngIf="showHospitals">
           <label for="hospital"> {{ 'Asset.Hospitals' | translate }}</label>
           <p-dropdown 
           [options]="lstHospitals" [(ngModel)]="userObj.hospitalId" [ngModelOptions]="{standalone: true}" [optionLabel]="lang == 'en' ? 'name' : 'nameAr' "  optionValue="id" placeholder="{{ lang === 'en' ? 'select Hospital' : 'اختر مستشفى' }}" 
           (onChange)="getEmployeesByHospitalId(userObj.hospitalId)" [checkmark]="true" [showClear]="true"  [style]="{'width':'100%'}" [filter]="true" [filterBy]="lang === 'en' ? 'name' : 'nameAr'" [filterPlaceholder]="lang === 'en' ? 'Search...' : 'ابحث...'">
         </p-dropdown>
         </div>
-      </div>
-      <div class="row top-buffer">
         <div *ngIf="showEmployees" [ngClass]="selectedCategory == '5' || selectedCategory == '1'? 'col-4' : 'col-6'">
           <label class="myfont" [translate]="'Asset.Employee'"></label>
           <p-dropdown 
@@ -161,18 +162,13 @@
           <input type="text" class="form-control" [(ngModel)]="userObj.phoneNumber" id="phoneNumber" name="phoneNumber">
         </div>
       </div>
-      <div class="row mt-3">
-        <div class="col-offset-3 col-6 col-offset-3">
-          <button class="btn btn-primary pull-center " value="save" type="button" (click)="onSubmit()" style="
-            margin: 0px 5px;
-            background-color: #1483c2;
-            border-color: #1483c2;">
-            {{ 'Asset.Save' | translate }}
-          </button>
-
-
+     
+          <div class="row mt-3  d-flex justify-content-center p-3">
+            <div class="col-2"  (click)="addUser()">
+                <a  class="addbutton">{{'Asset.Save' | translate }}</a>
+            </div>
         </div>
-      </div>
+
     </form>
 
 

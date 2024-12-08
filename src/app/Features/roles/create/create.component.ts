@@ -124,7 +124,7 @@ export class CreateRoleComponent implements OnInit {
   anyPermissionChecked() {
     return this.CreateRole.ModuleIdsWithPermissions.length!=0
 }
-  onSubmit() {
+  addUser() {
     if(this.CreateRole.roleCategoryId == null)
     {
       this.isInvalidRoleCategory=true;

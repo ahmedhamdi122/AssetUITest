@@ -41,7 +41,7 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
                 <img src="../../../assets/images/MHP.png" class="user-image" alt="User Image">
-                <span>{{userName}}</span>
+                <span>{{lang=='en'?this.currentUser.userName:this.currentUser.userName}}</span>
             </a>
             <div class="dropdown-content">
                 <li class="dropdown-item" *ngIf="translate.currentLang ==='en'" (click)="selectLanguage('ar')">

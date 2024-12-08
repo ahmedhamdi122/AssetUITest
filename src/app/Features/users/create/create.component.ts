@@ -208,6 +208,8 @@ export class CreateComponent implements OnInit {
    else
    {
     this.spinner.show();
+    console.log("RoleCategoryId :",RoleCategoryId);
+    
     this.roleService.GetRolesByRoleCategoryId(RoleCategoryId).subscribe((roles) => {
 
     
@@ -440,7 +442,7 @@ export class CreateComponent implements OnInit {
       });
   }
 
-  onSubmit() {
+  addUser() {
     this.userObj.roleCategoryId = this.selectedRoleCategory;
     this.userObj.roleIds = this.addRoles;
      
@@ -477,13 +479,16 @@ export class CreateComponent implements OnInit {
       if(!this.validateEmail())return;
       
        this.spinner.show();
-       this.userService.AddUser(this.userObj).subscribe((user) => {
+       console.log("this.userObj ",this.userObj);
+       
+        this.userService.AddUser(this.userObj).subscribe((user) => {
         this.spinner.hide();
         this.ref.close('created');
         this.display = true;
       },
         error => {
           console.log("error :",error)
+          console.log("error :",error.error)
           this.spinner.hide();
           this.errorDisplay = true;
           if (this.lang == 'en') {

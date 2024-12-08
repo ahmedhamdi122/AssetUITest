@@ -80,8 +80,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 // import { HospitalFloorsModule } from './Features/hospital-floors/hospital-floors.module';
 // import { HospitalRoomsModule } from './Features/hospital-rooms/hospital-rooms.module';
 // import { HospitalRoomsRoutingModule } from './Features/hospital-rooms/hospital-rooms-routing.module';
-// import { EmployeesModule } from './Features/employees/employees.module';
-// import { EmployeesRoutingModule } from './Features/employees/employees-routing.module';
+ import { EmployeesModule } from './Features/employees/employees.module';
+ import { EmployeesRoutingModule } from './Features/employees/employees-routing.module';
 
 
   import { FullCalendarModule } from '@fullcalendar/angular';
@@ -199,6 +199,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
   BrandsModule,
   ToastModule,
    ChartModule,
+   EmployeesModule,
   MatCheckboxModule,
   MatExpansionModule,
   MatTabsModule,

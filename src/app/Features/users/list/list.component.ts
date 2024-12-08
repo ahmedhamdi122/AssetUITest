@@ -14,6 +14,7 @@ import { SectionModulePermisisons, SortSearchVM } from 'src/app/Shared/Models/Mo
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ConfirmationService } from 'primeng/api';
 import { ListGender } from 'src/app/Shared/Models/employeeVM';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-list',
@@ -38,6 +39,11 @@ export class ListComponent implements OnInit {
   errorDisplay:string;
   reloadTableObj={"sortOrder":1,"sortField":null,"first":0,"rows":10};
   SectionModulePermisisons:SectionModulePermisisons[];
+  SuccessfullyHeader:string;
+  SuccessfullyMessage:string;
+  showSuccessfullyMessage:boolean;
+  @ViewChild("dtUsers") dataTable: Table;
+
   constructor(
      private spinner:NgxSpinnerService,
     private authenticationService: AuthenticationService,
@@ -82,16 +88,26 @@ export class ListComponent implements OnInit {
         "direction": this.lang == "en" ? 'ltr' : "rtl"
       }
     });
-    dialogRef2.onClose.subscribe((created) => {
+    dialogRef2.onClose.subscribe(async(created) => {
       if(created)
       {
         this.displaySuccessCreate=true;
-        //  const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
-        // this.reloadTableObj.first=lastPageIndex;
-        // this.LoadUsers(this.reloadTableObj);
-        // this.dataTable.first=this.count;
+         const lastPageIndex = Math.max(0, Math.floor((this.count) / 10) * 10);
+        this.reloadTableObj.first=lastPageIndex;
+        await this.LoadUsers(this.reloadTableObj);
+        this.dataTable.first=this.count;
+        this.showSuccessfullyMessage=true;
+        if(this.lang=="en"){
+          this.SuccessfullyMessage="Added Successfully";
+          this.SuccessfullyHeader="Add" 
       }
-    });
+      else
+      {
+        this.SuccessfullyMessage="تم حفظ البيانات بنجاح";
+        this.SuccessfullyHeader="حفظ" 
+      }
+   }
+  })
   }
   deleteUser(item: any) {
    
