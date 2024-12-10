@@ -116,7 +116,7 @@
                                 <td style="text-align: center;">{{i.descriptionDate| date:'dd-MM-yyyy HH:mm'}}</td>
                                 <td style="text-align: center;">{{i.description}}</td>
                                 <td style="text-align: center;">
-                                    <a (click)="getDocuments(i.id)" pTooltip="View Files" tooltipPosition="bottom">
+                                    <a (click)="getDocuments(i.id)" [pTooltip]="lang=='en'?'view Documents':'عرض المستندات'" tooltipPosition="bottom">
                                         <i class="pi pi-file"
                                             style="color: #d58308; cursor: pointer;margin: 0px 5px;"></i></a>
                                 </td>
@@ -143,9 +143,9 @@
                                     <td style="text-align: center;">{{doc.fileName}}</td>
                                     <td style="text-align: center;">{{doc.documentName}}</td>
                                     <td style="text-align: center;">
-                                        <a (click)="downloadFile(doc.fileName)" pTooltip="View Files"
+                                        <a (click)="downloadFile(doc.fileName)"
                                             tooltipPosition="bottom">
-                                            <i class="fa-solid fa fa-download" style="color: #61bb20;"></i></a>
+                                            <i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download viewIcon" style="color: #61bb20;font-size: 1rem;"></i></a>
                                     </td>
                                 </tr>
                             </ng-template>

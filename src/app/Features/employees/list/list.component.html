@@ -1,4 +1,5 @@
-<div class="col-12 p-3">
+
+<div class="col-12 p-3" [ngStyle]="{ display: loading ? 'none' : 'block' }">
     <div class="row mt-3">
         <div class="col-2">
             <h1 class="card-title"> {{ 'Asset.Employees' | translate }} </h1>

@@ -61,62 +61,7 @@
         </div>
     </fieldset>
 
-    <div class="row top-buffer">
-        <div class="col-6">
-            <label for="governorate"> {{ 'Asset.Governorate' | translate }} </label>
-            <select class="form-select" id="governorateId" pTooltip="select governorate" tooltipPosition="bottom"
-                name="governorateId" [value]="0" (change)="getCitiesByGovId($event)">
-                <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.Governorate' | translate }}
-                </option>
-                <option *ngFor="let gov of lstGovernorates" [value]="gov.id">
-                    {{ lang == "en" ? gov.name : gov.nameAr }}
-                </option>
-            </select>
-        </div>
-        <div class="col-6">
-            <label for="districtName"> {{ 'Asset.City' | translate }} </label>
-            <select class="form-select" id="city" pTooltip="select city" tooltipPosition="bottom" name="city"
-                [value]="0">
-                <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.City' | translate }} </option>
-                <option *ngFor="let city of lstCities" [value]="city.id">
-                    {{ lang == "en" ? city.name : city.nameAr }}
-                </option>
-            </select>
-        </div>
-    </div>
-    <div class="row top-buffer">
-        <div class="col-6">
-            <label for="organization"> {{ 'Asset.Organization' | translate }} </label>
-            <select class="form-select" id="organization" pTooltip="select organization" tooltipPosition="bottom"
-                name="organization" (change)="getSubOrgByOrgId($event)" [value]="0">
-                <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.Organization' | translate }}
-                </option>
-                <option *ngFor="let org of lstOrganizations" [value]="org.id">
-                    {{ lang == "en" ? org.name : org.nameAr }}
-                </option>
-            </select>
-        </div>
-        <div class="col-6">
-            <label for="organization"> {{ 'Asset.SubOrganization' | translate }} </label>
-            <select class="form-select" id="subOrganizationId" pTooltip="select sub organization"
-                tooltipPosition="bottom" name="subOrganizationId" [value]="0" (change)="getHospitalsBySubOrgId($event)">
-                <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.SubOrganization' | translate }}
-                </option>
-                <option *ngFor="let suborg of lstSubOrganizations" [value]="suborg.id">
-                    {{ lang == "en" ? suborg.name : suborg.nameAr }}
-                </option>
-            </select>
-        </div>
-        <div class="col-12">
-            <label for="hospital"> {{ 'Asset.Hospital' | translate }} </label>
-            <select class="form-select" id="hospital" pTooltip="select hospital" tooltipPosition="bottom"
-                name="hospital" [value]="0" (change)="getHospitalId($event)">
-                <option value="0"> {{ 'Asset.Select' | translate }} {{ 'Asset.Hospital' | translate }} </option>
-                <option *ngFor="let host of lstHospitals" [value]="host.id">
-                    {{ lang == "en" ? host.name : host.nameAr }}
-             </select>
-        </div>
-    </div>
+   
     <div class="row top-buffer">
         <div class="col-6">
             <label for="WorkOrderNumber">{{'Asset.WorkOrderNumber' | translate }}</label>
@@ -183,30 +128,30 @@
                 [ngModelOptions]="{standalone: true}"></textarea>
         </div>
     </div>
-    <div class="row top-buffer">
+    <div class="row mt-3">
         <div class="col-12">
             <input type="file" multiple #file placeholder="Choose file" (change)="uploadMultipleFile($event)"
                 style="display: none;" (click)="$event.target.value=null">
-            <button type="button" name="btnUpload" class="btn btnUpload" style="margin:0px 10px" (click)="file.click()">
-                <i class="fa fa-upload"></i> {{'Asset.SelectUploadFiles' | translate }}
+            <button type="button" name="btnUpload" class="btnUpload" style="margin:0px 10px" (click)="file.click()">
+                <i class="pi pi-upload"></i> {{'Asset.SelectUploadFiles' | translate }}
             </button>
         </div>
     </div>
-    <div class="row top-buffer">
+    <div class="row mt-3">
         <div class="col-12">
             <p-table [value]="lstCreateWorkOrderTracking" dataKey="id"
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>{{ 'Asset.FileName' | translate }}</th>
-                        <th>{{ 'Asset.Title' | translate }}</th>
-                        <th>{{ 'Asset.Actions' | translate }}</th>
+                        <th style="text-align: center;">{{ 'Asset.FileName' | translate }}</th>
+                        <th style="text-align: center;">{{ 'Asset.Title' | translate }}</th>
+                        <th style="text-align: center;">{{ 'Asset.Actions' | translate }}</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-woDocumentObj let-rowIndex="rowIndex" let-editing="editing">
                     <tr>
-                        <td>{{woDocumentObj.fileName}}</td>
-                        <td [pEditableColumn]="woDocumentObj.documentName" pEditableColumnField="documentName"
+                        <td style="text-align: center;">{{woDocumentObj.fileName}}</td>
+                        <td style="text-align: center;" [pEditableColumn]="woDocumentObj.documentName" pEditableColumnField="documentName"
                             [pEditableColumnRowIndex]="rowIndex">
                             <p-cellEditor>
                                 <ng-template pTemplate="input">
@@ -218,15 +163,14 @@
                                 </ng-template>
                             </p-cellEditor>
                         </td>
-                        <td>
-                            <span (click)="removeFileFromObjectArray(rowIndex)"><i class="fa-solid fa-times-circle"
-                                    style="color: rgb(123, 9, 9);"></i></span>
+                        <td style="text-align: center;">
+                            <span  class="deleteIcon" (click)="removeFileFromObjectArray(rowIndex)"><i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i></span>
                         </td>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                     <tr *ngIf="lstCreateWorkOrderTracking.length == 0">
-                        <td colspan="4" style="color: rgb(102, 97, 23);" [translate]="'Asset.NoData'">
+                        <td style="text-align: center;" colspan="4"  [translate]="'Asset.NoData'">
                         </td>
                     </tr>
                 </ng-template>

@@ -1,3 +1,4 @@
+<div class="col-12 p-3" [ngStyle]="{ display: loading ? 'none' : 'block' }">
 
 <div class="col-12">
     <div class="row p-3">
@@ -10,19 +11,17 @@
 
         </div>
         <div class="col-2">
-
-            <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="true"
-                aria-controls="collapseExample" class="filterbutton">
-                <i class="fa-solid fa-filter"></i> {{'Asset.Filter'|translate}}</a>
-        </div>
+                <a  role="button" aria-expanded="false" aria-controls="filter" class="filterbutton">
+                    <i class="pi pi-filter-fill" ></i> {{'Asset.Filter'|translate}}</a>
+            </div>
+        
     </div>
 </div>
 
 
 
-<div class="card-body">
-    <div class="row p-3">
-        <!-- <div class="col-10">
+    <!-- <div class="row p-3">
+        <div class="col-10">
             <button mat-stroked-button [matBadge]="woStatusObj.countAll" (click)="getWOByStatusId(0,$event)">
                 {{'Asset.All' | translate }}</button>
             <mat-action-list role="listitem" *ngFor="let sts of woStatusObj.listStatus">
@@ -79,10 +78,10 @@
                     {{lang=="en"?sts.name:sts.nameAr}}
                 </button>
             </mat-action-list>
-        </div> -->
+        </div>
 
-    </div>
-    <div class="col-12  top-buffer">
+    </div> -->
+    <div class="col-12 ">
         <div id="collapseExample" class="collapse row card-filter">
             <form (ngSubmit)="onSearch()" #searchForm="ngForm">
                 <div class="row top-buffer">
@@ -257,24 +256,24 @@
             </form>
         </div>
     </div>
-
-    <div class="row">
+    <div class="row p-1">
+        <p-multiSelect [options]="cols" name="ddlCols" [(ngModel)]="selectedColumns" optionLabel="header"
+        selectedItemsLabel="{0} {{columnsSelected}}" [style]="{minWidth: '200px'}"
+        [placeholder]="'Asset.ChooseColumns' |translate">
+    </p-multiSelect>
+        </div>
+    <div class="row p-1">
         <div class="col-12">
             <p-table #wotable [value]="lstWorkOrders"
                 styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
                 [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" pageLinks="10"
-                (onLazyLoad)="clicktbl($event)" [loading]="loading" [columns]="selectedColumns" [rowHover]="true">
-                <ng-template pTemplate="caption">
-                    <p-multiSelect [options]="cols" name="ddlCols" [(ngModel)]="selectedColumns" optionLabel="header"
-                        selectedItemsLabel="{0} {{columnsSelected}}" [style]="{minWidth: '200px'}"
-                        [placeholder]="'Asset.ChooseColumns' |translate">
-                    </p-multiSelect>
-                </ng-template>
+                (onLazyLoad)="LoadWorkOrder($event)" [loading]="loading" [columns]="selectedColumns" [rowHover]="true">
+  
                 <ng-template pTemplate="header" let-cols>
                     <tr>
-                        <th style="text-align: inherit;display: none;"></th>
-                        <th style="text-align: inherit;"></th>
-                        <th style="text-align: inherit;" [sortable]="true" *ngFor="let col of cols">
+                        <th style="text-align: center;display: none;"></th>
+                        <th style="text-align: center;"></th>
+                        <th style="text-align: center;" [sortable]="true" *ngFor="let col of cols">
                             {{col.header}}
                             <p-sortIcon id="{{col.header | translate}}" (click)="sort($event)"
                                 *ngIf="col.field !== 'elapsedTime'">
@@ -285,82 +284,81 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-item let-columns="columns">
                     <tr>
-                        <!-- <td style="text-align: inherit;display: none;">
+                        <!-- <td style="text-align: center;display: none;">
                             <ngx-barcode [bc-value]="item.workOrderNumber" id="barcode_{{item.id}}"
                                 [bc-display-value]="true" width="30" height="10" [bc-element-type]="elementType">
                             </ngx-barcode>
                         </td> -->
-                        <td style="text-align: inherit;">
+                        <td style="text-align: center;">
                             <mat-checkbox id="ckbx{{item.id}}" name="ckbx{{item.id}}"
                                 (change)="checkedWO($event, item.id)" [value]="item.id">
                             </mat-checkbox>
                         </td>
                         <ng-container *ngFor=" let col of columns">
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="col.field =='assetName' || col.field =='assetNameAr'">
                                 <span style="text-decoration-line: underline;" (click)="viewDetail(item.id)">
                                     {{lang=="en" ? item.assetName:item.assetNameAr}}
                                 </span>
                             </td>
-                            <td style="text-align: inherit;"
+                            <td style="text-align: center;"
                                 *ngIf="col.field !='assetName' && col.field !='assetNameAr' &&col.field !='creationDate' && col.field !== 'statusName' && col.field !== 'statusNameAr' && col.field !='requestSubject'  && col.field !== 'closedDate'">
                                 {{item[col.field]}}
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field=='creationDate'">
+                            <td style="text-align: center;" *ngIf="col.field=='creationDate'">
                                 {{item.creationDate | date:'dd-MM-yyyy HH:mm'}}
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field=='closedDate'">
+                            <td style="text-align: center;" *ngIf="col.field=='closedDate'">
                                 {{item.closedDate | date:'dd-MM-yyyy HH:mm'}}
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field =='statusNameAr'">
+                            <td style="text-align: center;" *ngIf="col.field =='statusNameAr'">
                                 <span [ngStyle]="{'color':item.statusColor}">
                                     <span><i [ngClass]="item.statusIcon"></i></span>
                                     {{lang=="en" ? item.statusName:item.statusNameAr}}
                                 </span>
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field =='statusName'">
+                            <td style="text-align: center;" *ngIf="col.field =='statusName'">
                                 <span [ngStyle]="{'color':item.statusColor}">
                                     <span><i [ngClass]="item.statusIcon"></i></span>
                                     {{lang=="en" ? item.statusName:item.statusNameAr}}
                                 </span>
                             </td>
-                            <td style="text-align: inherit;" *ngIf="col.field =='requestSubject'"
+                            <td style="text-align: center;" *ngIf="col.field =='requestSubject'"
                                 (click)="gotoViewRequest(item.requestId)">
                                 {{item.requestSubject}}</td>
                         </ng-container>
-                        <td style="text-align: inherit;">
-                            <span pTooltip="{{'Asset.View' | translate}}" tooltipPosition="top"
+                        <td style="text-align: center;">
+                            <span class="viewIcon" 
                                 (click)="viewWorkOrder(item.id)">
-                                <i class="fa-solid fa-eye" style="color: #61bb20; cursor: pointer;margin: 0px 5px;"></i>
+                                <i class="pi pi-eye" style="color: green" pTooltip="{{'Asset.showDetails' | translate}}"></i>
                             </span>
                             <span *ngIf="item.workOrderStatusId < 2">
-                                <span pTooltip="{{'Asset.Start' | translate}}" tooltipPosition="top"
-                                    *ngIf="isEngManager && ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))"
+                                <span class="viewIcon" pTooltip="{{'Asset.Start' | translate}}" tooltipPosition="top"
+                                    *ngIf=" ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))"
                                     (click)="startWO(item.id)">
-                                    <i class="fa-solid fa-battery-half"
-                                        style="color: #F58840; cursor: pointer;margin: 0px 5px;"></i>
+                                    <i class="pi pi-play"
+                                        style="color: #F58840; cursor: pointer;"></i>
                                 </span>
                             </span>
                             <span *ngIf="item.workOrderStatusId >= 2">
-                                <span pTooltip="{{'Asset.Note' | translate}}" tooltipPosition="top"
-                                    (click)="woSparePart(item.id)"
-                                    *ngIf="isEngManager && ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))">
-                                    <i class=" fa fa-sticky-note" style="color: #89272a;margin: 0px 5px;"></i>
+                                <span  class="viewIcon" pTooltip="{{'Asset.Note' | translate}}" tooltipPosition="top"
+                                    (click)="addNotes(item.id)"
+                                    *ngIf=" ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))">
+                                    <i class="pi pi-address-book" style="color: #89272a;cursor: pointer;"></i>
                                 </span>
-                                <span pTooltip="{{'Asset.Done' | translate}}" tooltipPosition="top"
-                                    *ngIf="isEngManager && ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))"
+                                <span class="viewIcon" pTooltip="{{'Asset.Done' | translate}}" tooltipPosition="top"
+                                    *ngIf=" ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))"
                                     (click)="woDone(item.id)">
-                                    <i class="fa-solid fa-clipboard-check" style="color: #bb9b4c;margin: 0px 5px;"></i>
+                                    <i class="pi pi-list-check" style="color: #bb9b4c;"></i>
                                 </span>
                             </span>
-                            <span pTooltip="{{'Asset.Reviewed' | translate}}" tooltipPosition="top"
-                                *ngIf="isEngManager && item.workOrderStatusId == 11">
-                                <i class="fa-solid fa-check-double" style="color: #0d4f28;margin: 0px 5px;"></i>
+                            <span class="viewIcon" pTooltip="{{'Asset.Reviewed' | translate}}" tooltipPosition="top"
+                                *ngIf="item.workOrderStatusId == 11">
+                                <i class="pi pi-check-circle" style="color: #0d4f28;"></i>
                             </span>
-                            <span pTooltip="{{'Asset.Print'| translate}}" tooltipPosition="top"
-                                (click)="GetWOById(item.id)" *ngIf="isEngManager">
-                                <i class="fa-solid fa-print"
-                                    style="color: #052e55;margin: 0px 5px;cursor: pointer;"></i>
+                            <span  class="viewIcon" pTooltip="{{'Asset.Print'| translate}}" tooltipPosition="top"
+                                (click)="GetWOById(item.id)">
+                                <i class="pi pi-print"style="color: #052e55;cursor: pointer;"></i>
                             </span>
                         </td>
                     </tr>

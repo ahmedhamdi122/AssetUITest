@@ -143,6 +143,8 @@ export class CreateWOComponent implements OnInit {
         });
       this.workOrderservice.GenerateWorOrderNumber().subscribe(num => {
         this.createWorkOrderObj.workOrderNumber = num.woNumber;
+        console.log("num :",num);
+        
       })
 
       this.requestService
@@ -161,7 +163,7 @@ export class CreateWOComponent implements OnInit {
 
     }
     else {
-      this.isAdmin = true;
+     this.isAdmin = true;
 
       this.governorateService.GetGovernorates().subscribe((items) => {
         this.lstGovernorates = items;

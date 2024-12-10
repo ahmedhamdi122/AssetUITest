@@ -204,7 +204,6 @@ export class ListComponent implements OnInit {
       const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
       this.breadcrumbService.addBreadcrumb(this.activateRoute.snapshot, parentUrlArray, translationKeys);
     }
-    console.log("this.sortFilterObjects.searchObj.governorateId :",this.sortFilterObjects.searchObj.governorateId);
 
 
 
@@ -430,24 +429,7 @@ export class ListComponent implements OnInit {
       this.lstOrganizations = items;
     });
 
-    // if (this.lang == "en") {
-    //   this.frozenCols = [
-    //     { field: 'requestCode', header: 'Request Code' },
-    //     { field: 'assetName', header: 'AssetName' },
-    //     { field: 'barcode', header: 'BarCode' },
-    //     { field: 'serialNumber', header: 'Serial' },
-    //     { field: 'modelNumber', header: 'Model' }
-    //   ];
-    // }
-    // else {
-    //   this.frozenCols = [
-    //     { field: 'requestCode', header: 'رقم الطلب' },
-    //     { field: 'assetNameAr', header: 'اسم الأصل' },
-    //     { field: 'barcode', header: 'الباركود' },
-    //     { field: 'serialNumber', header: 'السيريال' },
-    //     { field: 'modelNumber', header: 'الموديل' }
-    //   ];
-    // }
+   
     this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
       this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})  
       this.listRequestStatus[this.listRequestStatus.length-1].isActive=true;
@@ -466,7 +448,6 @@ export class ListComponent implements OnInit {
     });
   }
   LoadRequests(event) {
-    console.log("xx this.sortFilterObjects.searchObj.governorateId :",this.sortFilterObjects.searchObj.governorateId);
 
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;

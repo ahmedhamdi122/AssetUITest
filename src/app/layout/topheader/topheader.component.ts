@@ -105,8 +105,7 @@ export class TopheaderComponent implements OnInit {
     public breadcrumbService: BreadcrumbService, public dialogService: DialogService,
 
   ) {
-    this.currentUser = this.authenticationService.currentUserValue; 
-    console.log("this.currentUser",this.currentUser);
+    this.currentUser = this.authenticationService.currentUserValue;
     
     translate.addLangs(['en', 'ar']);
     this.authenticationService.setAllModulesPermissionsforcurrentUser();

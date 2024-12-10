@@ -46,6 +46,7 @@ import * as jsPDF from 'jspdf';
 // import 'jspdf-autotable';
 // import { DetailsComponent } from '../../hospital-assets/details/details.component';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-listwo',
   templateUrl: './listwo.component.html',
@@ -144,7 +145,7 @@ export class ListWOComponent implements OnInit {
   error: any = { isError: false, errorMessage: '' };
 
   sortFilterObjects: SortAndFilterWorkOrderVM;
-  constructor(private authenticationService: AuthenticationService, private workOrderService: WorkOrderService, private assetDetailService: AssetDetailService, private masterAssetService: MasterAssetService, private governorateService: GovernorateService, private cityService: CityService,
+  constructor(private spinner:NgxSpinnerService,private authenticationService: AuthenticationService, private workOrderService: WorkOrderService, private assetDetailService: AssetDetailService, private masterAssetService: MasterAssetService, private governorateService: GovernorateService, private cityService: CityService,
     private workOrderPeriorityService: WorkOrderPeriorityService, private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService, private hospitalService: HospitalService, private workOrderStatusService: WorkOrderStatusService, private workOrderTrackingService: WorkOrderTrackingService,
     private departmentService: DepartmentService, private uploadService: UploadFilesService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,private ngxService: NgxUiLoaderService,
     private confirmationService: ConfirmationService, private route: Router, private datePipe: DatePipe, public dialogService: DialogService, private cdr: ChangeDetectorRef) {
@@ -798,7 +799,7 @@ export class ListWOComponent implements OnInit {
     // });
 
   }
-  clicktbl(event) {
+  LoadWorkOrder(event) {
     this.lstWorkOrders = [];
     this.page.pagenumber = (event.first + 10) / 10;
     this.page.pagesize = event.rows;
@@ -811,6 +812,7 @@ export class ListWOComponent implements OnInit {
 
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.statusId = this.statusId;
+    this.spinner.show();
     this.workOrderService.ListWorkOrders(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(workorders => {
 
       workorders.results.forEach(element => {
@@ -858,6 +860,7 @@ export class ListWOComponent implements OnInit {
 
       });
       this.count = workorders.count;
+      this.spinner.hide();
       this.loading = false;
     });
   }
@@ -876,16 +879,17 @@ export class ListWOComponent implements OnInit {
         "font-size": 40
       }
     });
-    dialogRef2.onClose.subscribe((res) => {
-
-      this.reload();
+    dialogRef2.onClose.subscribe((WoDone) => {
+      if(WoDone)
+      {
+        this.reload();
+      }
     });
 
   }
 
 
-  woSparePart(id: number) {
-
+  addNotes(id: number) {
     const dialogRef2 = this.dialogService.open(AddwotrackstatusComponent, {
       header: this.lang == "en" ? 'Note' : "ملاحظات",
       data: {
@@ -901,8 +905,11 @@ export class ListWOComponent implements OnInit {
         "font-size": 40
       }
     });
-    dialogRef2.onClose.subscribe((res) => {
-      this.reload();
+    dialogRef2.onClose.subscribe((created) => {
+      if(created)
+      {
+        this.reload();
+      }
     });
 
 
@@ -1831,7 +1838,6 @@ export class ListWOComponent implements OnInit {
   }
   closePrint() {
     this.displayWOObj = false;
-    this.reload();
   }
   validateDates(sDate: string, eDate: string) {
     this.isValidDate = true;

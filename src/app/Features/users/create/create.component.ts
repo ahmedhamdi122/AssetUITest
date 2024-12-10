@@ -81,6 +81,7 @@ export class CreateComponent implements OnInit {
   showMembers: boolean = false;
   showVisits: boolean = false;
   displaySuccessCreate=false;
+  UnregisteredUserEmail:string=null;
   constructor(
     private roleCategoryService: RoleCategoryService,
     private roleService: RoleService,
@@ -102,7 +103,7 @@ export class CreateComponent implements OnInit {
     
     this.userObj = {
       roleIds: [],
-   roleCategoryId: 0, cityId: null, subOrganizationId: 0, governorateId: null, organizationId: 0, hospitalId: null, email: '', phoneNumber: '', password: '', userName: '',
+   roleCategoryId: null, cityId: null, subOrganizationId: null, governorateId: null, organizationId: null, hospitalId: null, email: '', phoneNumber: '', password: '', userName: '',
     };
     if (this.lang == "en") {
       this.lstHospitalTypes = [
@@ -191,7 +192,7 @@ export class CreateComponent implements OnInit {
       this.showSubOrg = false;
       this.showHospitals = true;
     }
-    if (typeId == 2) {
+    else if (typeId == 2) {
       this.showGov = false;
       this.showCity = false;
       this.showOrg = true;
@@ -201,9 +202,23 @@ export class CreateComponent implements OnInit {
   }
 
   onRoleCategoryChange(RoleCategoryId) {   
+    console.log("RoleCategoryId :",RoleCategoryId);
+    
     if(RoleCategoryId==null)
       {
         this.addRoles=[];
+        this.lstRoles=[]
+        this.showGov=false;
+        this.showCity=false;
+        this.showOrg=false;
+        this.showSubOrg=false;
+        this.showEmployees=false;
+        this.showHospitals=false;
+        this.showRadioHospitals=false;
+        this.userObj.governorateId=null;
+        this.userObj.cityId=null;
+        this.userObj.hospitalId=null;
+        this.UnregisteredUserEmail=null;
       } 
    else
    {
@@ -214,7 +229,6 @@ export class CreateComponent implements OnInit {
 
     
         this.lstRoles = roles;
-        this.lstRoles2 = roles;
         
       
     if (RoleCategoryId == '1') {
@@ -228,10 +242,9 @@ export class CreateComponent implements OnInit {
       this.showSuppliers = false;
       this.showVisits = false;
       this.showRadioHospitals = false;
-
+      
     }
-
-    if (RoleCategoryId == '2') {
+    else if (RoleCategoryId == '2') {
       this.showGov = false;
       this.showCity = false;
       this.showOrg = true;
@@ -243,7 +256,7 @@ export class CreateComponent implements OnInit {
       this.showVisits = false;
 
     }
-    if (RoleCategoryId == '3') {
+    else if (RoleCategoryId == '3') {
       this.showGov = true;
       this.showCity = false;
       this.showOrg = false;
@@ -253,11 +266,9 @@ export class CreateComponent implements OnInit {
       this.showMembers = false;
       this.showSuppliers = false;
       this.showVisits = false;
-
-
     }
 
-    if (RoleCategoryId == '4') {
+   else if (RoleCategoryId == '4') {
       this.showGov = true;
       this.showCity = true;
       this.showOrg = false;
@@ -271,7 +282,7 @@ export class CreateComponent implements OnInit {
 
     }
 
-    if (RoleCategoryId == '5') {
+   else if (RoleCategoryId == '5') {
       
       this.selectedHospitalType = 1;
       this.showGov = true;
@@ -288,7 +299,7 @@ export class CreateComponent implements OnInit {
 
     }
 
-    if (RoleCategoryId == '6') {
+  else  if (RoleCategoryId == '6') {
       this.selectedHospitalType = 1;
       this.showGov = false;
       this.showCity = false;
@@ -303,7 +314,7 @@ export class CreateComponent implements OnInit {
 
     }
 
-    if (RoleCategoryId == '7') {
+  else  if (RoleCategoryId == '7') {
       this.showGov = false;
       this.showCity = false;
       this.showOrg = false;
@@ -316,7 +327,7 @@ export class CreateComponent implements OnInit {
       this.showVisits = false;
 
     }
-    if (RoleCategoryId == '8') {
+   else if (RoleCategoryId == '8') {
 
       this.showGov = false;
       this.showCity = false;
@@ -329,7 +340,7 @@ export class CreateComponent implements OnInit {
       this.showVisits = false;
 
     }
-    if (RoleCategoryId == '9') {
+ else   if (RoleCategoryId == '9') {
 
       this.showGov = false;
       this.showCity = false;
@@ -407,11 +418,15 @@ export class CreateComponent implements OnInit {
   
   }
   getHospitalsByCityId(cityId:number) {
+    console.log("cityId :",cityId);
+    
     if(cityId!=null)
     {
       this.spinner.show();
       this.hospitalService.GetHospitalsByCityId(cityId).subscribe((hospitals) => {
           this.lstHospitals = hospitals;
+          console.log("this.lstHospitals :",this.lstHospitals);
+          
           this.spinner.hide();
         });
     }
@@ -443,34 +458,11 @@ export class CreateComponent implements OnInit {
   }
 
   addUser() {
+    console.log("selectedHospitalType :",this.selectedHospitalType);
     this.userObj.roleCategoryId = this.selectedRoleCategory;
     this.userObj.roleIds = this.addRoles;
-     
-    if (this.selectedRoleCategory == null) {
-      this.errorDisplay = true;
-      if (this.lang == "en") {
-        this.errorMessage = 'Please select Role Category';
-        return false;
-      }
-      else {
-        this.errorMessage = 'من فضلك اختر فئة الدور';
-        return false;
-      }
-    }
-    if (this.addRoles.length == 0) {
-      this.errorDisplay = true;
-      if (this.lang == "en") {
-        this.errorMessage = 'Please select at least one Role';
-        return false;
-      }
-      else {
-        this.errorMessage = 'من فضلك اختر أحد المهام';
-        return false;
-      }
-    }
-  
-
-
+    if(!this.validateSelectedRoleCategory())return;
+    if(!this.validateListRoles())return;
     if (this.selectedRoleCategory == 1) {
       this.userObj.roleIds = this.addRoles;
       console.log("userObj.userName :",this.userObj.userName=='');
@@ -492,18 +484,26 @@ export class CreateComponent implements OnInit {
           this.spinner.hide();
           this.errorDisplay = true;
           if (this.lang == 'en') {
-            if (error.error.status == 'UserExists') {
+            if (error.error.status == 'UserNameExists') {
               this.errorMessage = error.error.message;
             }
+            else if(error.error.status =="emailExists")
+              {
+                this.errorMessage = error.error.message;
+              }
             else if(error.error.status =="Error")
             {
               this.errorMessage = error.error.message;
             }
           }
           else {
-            if (error.error.status == 'UserExists') {
+            if (error.error.status == 'UserNameExists') {
               this.errorMessage = error.error.messageAr;
             }
+            else if(error.error.status =="emailExists")
+              {
+                this.errorMessage = error.error.messageAr;
+              }
             else if(error.error.status =="Error")
               {
                 this.errorMessage = error.error.messageAr;
@@ -567,28 +567,24 @@ export class CreateComponent implements OnInit {
     //     });
     //   }
     // }
-    // else if (this.selectedCategory == 5) {
-    //   if (this.selectedHospitalType == 1) {
-    //     if (this.userObj.governorateId == 0) {
-    //       this.errorDisplay = true;
-    //       this.errorMessage = 'Please select governorate';
-    //       return false;
-    //     }
-    //     if (this.userObj.cityId == 0) {
-    //       this.errorDisplay = true;
-    //       this.errorMessage = 'Please select city';
-    //       return false;
-    //     } else {
-    //       this.userObj.roleIds = this.addRoles;
-    //       this.userService.AddUser(this.userObj).subscribe((user) => {
-    //         this.display = true;
-    //       }, error => {
-    //         this.errorDisplay = true;
-    //         this.errorMessage = error.error.message;
-    //         return false;
-    //       });
-    //     }
-    //   }
+    else if (this.selectedRoleCategory == 5) {
+      if (this.selectedHospitalType == 1) {
+        if(!this.validateGovernorate())return;
+        if(!this.validateCity())return;
+        if(!this.validateHospital())return;
+        if(!this.validateEmployee())return;
+        if(!this.validateUserName())return;
+        if(!this.validatePassword())return;
+        if(!this.validateEmail())return;
+          this.userObj.roleIds = this.addRoles;
+          this.userService.AddUser(this.userObj).subscribe((user) => {
+            this.display = true;
+          }, error => {
+            this.errorDisplay = true;
+            this.errorMessage = error.error.message;
+            return false;
+          });
+      }}
 
     //   if (this.selectedHospitalType == 2) {
     //     if (this.userObj.organizationId == 0) {
@@ -656,7 +652,110 @@ export class CreateComponent implements OnInit {
 
     // }
   }
+  validateListRoles():boolean
+  {
+    if (this.addRoles.length == 0) {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = 'Please select at least one Role';
+        return false;
+      }
+      else {
+        this.errorMessage = 'من فضلك اختر أحد المهام';
+        return false;
+      }
+    }
+      return true;
+  }
+  validateSelectedRoleCategory():boolean
+  {
+    if (this.selectedRoleCategory == null) {
+      this.errorDisplay = true;
+      if (this.lang == "en") {
+        this.errorMessage = 'Please select Role Category';
+        return false;
+      }
+      else {
+        this.errorMessage = 'من فضلك اختر فئة الدور';
+        return false;
+      }
+    }
+    return true;
+  }
+  validateGovernorate():boolean
+  {
+    if (this.userObj.governorateId == null) {
+      if(this.lang=='en')
+      {
+        this.errorDisplay = true;
+        this.errorMessage = 'Please select governorate';
+        return false;
+      }
+      else
+      {
+        this.errorDisplay = true;
+        this.errorMessage = 'من فضلك اختر محافظة';
+        return false;
+      }
 
+    }
+    return true;
+  }
+  validateCity():boolean
+  {
+    if (this.userObj.cityId == null) {
+      if(this.lang=='en')
+        {
+          this.errorDisplay = true;
+          this.errorMessage = 'Please select City';
+          return false;
+        }
+        else
+        {
+          this.errorDisplay = true;
+          this.errorMessage = 'من فضلك اختر مدينة';
+          return false;
+        }
+    } 
+    return true;
+  }
+  validateHospital():boolean
+  {
+    if (this.userObj.hospitalId == null) {
+      if(this.lang=='en')
+        {
+          this.errorDisplay = true;
+          this.errorMessage = 'Please select Hospital';
+          return false;
+        }
+        else
+        {
+          this.errorDisplay = true;
+          this.errorMessage = 'من فضلك اختر مستشفى';
+          return false;
+        }
+    } 
+    return true;
+  }
+  validateEmployee():boolean
+  {
+    if (this.UnregisteredUserEmail == null) {
+      if(this.lang=='en')
+        {
+          this.errorDisplay = true;
+          this.errorMessage = 'Please select Employee';
+          return false;
+        }
+        else
+        {
+          this.errorDisplay = true;
+          this.errorMessage = 'من فضلك اختر موظف';
+          return false;
+        }
+    } 
+    return true;
+
+  }
   validateUserName()
   {
     if (this.userObj.userName == '') {

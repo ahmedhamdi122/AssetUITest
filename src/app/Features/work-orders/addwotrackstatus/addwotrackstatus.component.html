@@ -1,17 +1,15 @@
-<div class="card">
 
-    <div class="card-body" style="margin-top: -20px;">
 
         <form (ngSubmit)="saveStatus()">
 
-            <div class="row top-buffer">
+            <div class="row mt-2">
                 <div class="col-12">
                     <label for="notes" [translate]="'Asset.Notes'"></label>
                     <textarea #notes="ngModel" name="notes" id="notes" class="form-control"
                         [(ngModel)]="woTrackObj.notes" [placeholder]="'Asset.Notes' | translate"></textarea>
                 </div>
             </div>
-            <div class="row top-buffer">
+            <div class="row mt-2">
                 <div class="col-12">
                     <button [disabled]="isDisabled" class="btn btn-primary pull-center btn-sm" value="save"
                         type="submit" style="margin-top: 20px;background-color: #1483c2;border-color: #1483c2;">
@@ -22,7 +20,7 @@
         </form>
 
 
-        <div class="row top-buffer">
+        <div class="row mt-2">
             <div class="col-10">
                 <label for="docmentName"> {{'Asset.DocumentTitle' | translate }}</label>
                 <input #documentName="ngModel" class="form-control" type="text" pInputText
@@ -33,14 +31,14 @@
             <div class="col-2">
                 <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)"
                     style="display:none;">
-                <button type="button" class="btn btn-outline-success" style="margin-top: 20px;margin-left: 10px;"
-                    (click)="file.click()"> <i class="fa fa-upload"
+                <button type="button" class="btnUpload"
+                    (click)="file.click()"> <i  class="pi pi-upload"
                         style="color: #61bb20; cursor: pointer;margin: 0px 5px;"></i>{{'Asset.SelectDocument' |
                     translate }}
                 </button>
             </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row mt-2">
             <div class="col-12">
                 <table class="table">
                     <thead>
@@ -75,8 +73,7 @@
 
 
 
-    </div>
-</div>
+
 <p-dialog [(visible)]="errorDisplay" [style]="{width: '350px'}">
     <p-header style="color: rgb(181, 4, 4);"> {{ 'Asset.Error' | translate }} </p-header>
     <span style="color: rgb(181, 4, 4);font-weight: bold;"> {{errorMessage}}</span>
@@ -90,9 +87,5 @@
         translate
         }}</span>
 
-    <br />
-    <br />
-    <button class="btn btn-primary pull-center btn-md"
-        style="margin: 0px 5px;background-color: #fe7f83 !important;border-color:#fe7f83" (click)="closeDialogue()"> {{
-        'Asset.Close' | translate }}</button>
+
 </p-dialog>

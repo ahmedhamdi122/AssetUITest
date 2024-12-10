@@ -170,9 +170,8 @@ export class ViewWorkorderComponent implements OnInit {
 
     this.workOrderStatusService.GetWorkOrderStatuss().subscribe((res) => {
       this.lstWOStatus = res;
+      console.log("this.lstWOStatus  :",this.lstWOStatus );
     });
-
-
     this.workOrderType.GetWorkOrderTypes().subscribe(
       res => {
         this.lstWorkOrderType = res
@@ -193,15 +192,6 @@ export class ViewWorkorderComponent implements OnInit {
       secondCtrl: ['', Validators.required]
     });
 
-
-
-    this.governorateService.GetGovernorates().subscribe((items) => {
-      this.lstGovernorates = items;
-    });
-
-    this.organizationService.GetOrganizations().subscribe((items) => {
-      this.lstOrganizations = items;
-    });
 
     if (this.config.data != null || this.config.data != undefined) {
       let statusId = this.config.data.statusId;
@@ -266,21 +256,7 @@ export class ViewWorkorderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.currentUser) {
-      // const roleNames = JSON.parse(localStorage.getItem('roleNames'));
-      // roleNames.forEach(element => {
-      //   this.lstRoleNames.push(element.name)
-      // });
-
-      this.currentUser["roleNames"].forEach(element => {
-        this.lstRoleNames.push(element["name"]);
-      });
-
-      this.isEng = (['Eng'].some(r => this.lstRoleNames.includes(r)));
-      this.isEngManager = (['EngDepManager'].some(r => this.lstRoleNames.includes(r)));
-      this.isAdminRole = (['Admin'].some(r => this.lstRoleNames.includes(r)));
-    }
-
+   
     this.onLoad();
     this.workOrderId = this.config.data.id;
     this.workOrderservice.GetWorkOrderById(this.workOrderId).subscribe(woObj => {
@@ -291,32 +267,12 @@ export class ViewWorkorderComponent implements OnInit {
 
 
 
-      if (this.isAdminRole) {
-        this.isAdminDisabled = true;
-        this.hospitalService.GetHospitals(this.currentUser.id).subscribe(lst => {
-          this.lstHospitals = lst;
-        });
-        this.editWorkOrderObj.hospitalId = woObj.hospitalId;
-        this.hospitalService.GetSubOrganizationsByHospitalId(woObj.hospitalId).subscribe(items => {
-          this.lstSubOrganizations = items;
-        });
-        this.hospitalService.GetHospitalById(woObj.hospitalId).subscribe(item => {
-          this.editWorkOrderObj.subOrganizationId = item["subOrganizationId"];
-          this.editWorkOrderObj.organizationId = item["organizationId"];
-          this.editWorkOrderObj.governorateId = item["governorateId"];
-          this.cityService.GetCitiesByGovernorateId(Number(item["governorateId"])).subscribe(cities => {
-            this.lstCities = cities;
-          });
-          this.editWorkOrderObj.cityId = item["cityId"];
-          this.editWorkOrderObj.hospitalId = item["id"];
-        });
-      }
+      
 
-
-
-
-
-      this.requestService.GetRequestByWorkOrderId(this.workOrderId).subscribe(reqObj => { this.requestObj = reqObj });
+      this.requestService.GetRequestByWorkOrderId(this.workOrderId).subscribe(reqObj => {
+        console.log("reqObj :",reqObj);
+        
+        this.requestObj = reqObj });
       this.assetWorkOrderTaskService.GetAllAssetWorkOrderTasksByMasterAssetId(this.editWorkOrderObj.masterAssetId).subscribe(
         res => {
           this.lstTasks = res
