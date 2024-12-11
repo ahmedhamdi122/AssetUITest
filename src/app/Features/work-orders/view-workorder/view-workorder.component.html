@@ -1,6 +1,6 @@
 <div class="col-12">
     <div class="card">
-        <h3 class="card-title" style="font-weight: bold;background-color: #cedef1;padding: 0px 10px;">
+        <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1;padding: 0px 10px;">
             {{'Asset.ServiceRequest' | translate }}</h3>
         <div class="card-body">
             <div class="row">
@@ -125,9 +125,9 @@
             </div>
         </div>
     </div>
-    <div class="row top-buffer"></div>
+    <div class="row mt-2"></div>
     <div class="card">
-        <h3 class="card-title" style="font-weight: bold;background-color: #cedef1; padding: 0px 10px;">
+        <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1; padding: 0px 10px;">
             {{ 'Asset.WorkOrderDetail' | translate }}</h3>
         <div class="card-body">
             <div class="row ">
@@ -182,71 +182,71 @@
 
         </div>
         <div class="card-body">
-            <h3 class="card-title" style="font-weight: bold;background-color: #cedef1; padding: 0px 10px;">
+            <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1;">
                 {{ 'Asset.WOTrackDetails' | translate }}</h3>
             <div class="row">
-                <div class="col-7">
+                <div class="col-8">
                     <p-table [value]="lstTracks" styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines">
                         <ng-template pTemplate="header">
                             <tr [ngStyle]="lang =='en' ? {'text-align': 'left'} : {  'text-align': 'right'}">
-                                <th>{{'Asset.Status' | translate }}</th>
-                                <th>{{'Asset.CreatedBy' | translate }}</th>
-                                <th>{{'Asset.Name' | translate }}</th>
-                                <th>{{'Asset.StartDate' | translate }}</th>
-                                <th>{{'Asset.EndDate' | translate }}</th>
-                                <th>{{'Asset.Notes' | translate }}</th>
-                                <th>{{'Asset.Documents' | translate }}</th>
-                                <th>{{'Asset.Actions' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.Status' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.CreatedBy' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.Name' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.StartDate' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.EndDate' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.Notes' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.Documents' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.Actions' | translate }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-trk>
                             <tr>
-                                <td [ngStyle]="{'color': trk.workOrderStatusColor}">
+                                <td  style="text-align: center;"[ngStyle]="{'color': trk.workOrderStatusColor}">
                                     <i [ngClass]="trk.workOrderStatusIcon"
                                         [ngStyle]="{'color': trk.workOrderStatusColor}"></i>
                                     {{lang== 'en'? trk.workOrderStatusName:trk.workOrderStatusNameAr}}
                                 </td>
-                                <td>{{trk.createdBy}}</td>
-                                <td>{{trk.assignedTo}}</td>
-                                <td> {{trk.actualStartDate| date:'dd-MM-yyyy HH:mm'}} </td>
-                                <td>{{trk.actualEndDate| date:'dd-MM-yyyy HH:mm'}} </td>
-                                <td>{{trk.notes}}</td>
-                                <td>
-                                    <a (click)="getDocuments(trk.id)" pTooltip="View Files" tooltipPosition="bottom">
-                                        <i class="fa-solid fa-file"
+                                <td style="text-align: center;">{{trk.createdBy}}</td>
+                                <td style="text-align: center;">{{trk.assignedTo}}</td>
+                                <td style="text-align: center;"> {{trk.actualStartDate| date:'dd-MM-yyyy HH:mm'}} </td>
+                                <td style="text-align: center;">{{trk.actualEndDate| date:'dd-MM-yyyy HH:mm'}} </td>
+                                <td style="text-align: center;">{{trk.notes}}</td>
+                                <td style="text-align: center;">
+                                    <a (click)="getDocuments(trk.id)" [pTooltip]="lang?:" tooltipPosition="bottom">
+                                        <i class="pi pi-file"
                                             style="color: #d58308; cursor: pointer;margin: 0px 5px;"></i></a>
                                 </td>
-                                <td>
+                                <td style="text-align: center;">
                                     <span class="editIcon" (click)="editWorkOrderTrack(trk.id)">
                                         <i class="fa-solid fa-edit"></i>
                                     </span>
                                     <span class="deleteIcon" (click)="deleteWorkOrderTrack(trk.trackId)">
-                                        <i class="fa-solid fa-trash"></i>
+                                        <i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i>
                                     </span>
                                 </td>
                             </tr>
                         </ng-template>
                     </p-table>
                 </div>
-                <div class="col-5" *ngIf="isShowFiles">
+                <div class="col-4" *ngIf="isShowFiles">
                     <p-fieldset legend="{{'Asset.TrackDocuments' | translate }}">
                         <p-table [value]="lstDocuments"
                             styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th> {{'Asset.Name' | translate }}</th>
-                                    <th> {{'Asset.Title' | translate }}</th>
-                                    <th> {{'Asset.Download' | translate }}</th>
+                                    <th style="text-align: center;"> {{'Asset.Name' | translate }}</th>
+                                    <th style="text-align: center;"> {{'Asset.Title' | translate }}</th>
+                                    <th style="text-align: center;"> {{'Asset.Download' | translate }}</th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-doc>
                                 <tr>
-                                    <td> {{doc.fileName}}</td>
-                                    <td>{{doc.documentName}}</td>
-                                    <td>
+                                    <td style="text-align: center;"> {{doc.fileName}}</td>
+                                    <td style="text-align: center;">{{doc.documentName}}</td>
+                                    <td style="text-align: center;">
                                         <a (click)="downloadFile(doc.fileName)" pTooltip="Download Files"
                                             tooltipPosition="bottom">
-                                            <i class="fa-solid fa fa-download" style="color: #61bb20;"></i></a>
+                                            <i pTooltip="{{'Asset.Download' | translate}}"class="pi pi-download viewIcon" style="color: #61bb20;font-size: 1rem;"></i></a>
                                     </td>
                                 </tr>
                             </ng-template>
