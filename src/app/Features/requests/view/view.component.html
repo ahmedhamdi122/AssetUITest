@@ -1,17 +1,14 @@
-<div class="top-buffer" [ngStyle]="lang =='en' ? {'text-align': 'left'} : {  'text-align': 'right'}">
-    <div class="card">
-        <div class="card-body">
-            <h3 class="card-title" style="font-weight: bold;background-color: #cedef1; padding: 0px 10px;">
+    <div class="row">
+    <div class="card  mt-2">
+            <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1;margin: 0px -12px;">
                 {{'Asset.Request' | translate }} </h3>
-
-
+                <div class="card-body">
             <div class="row mt-3">
                 <div class="col-md-12">
                     <span style="font-weight: bold;"> {{'Asset.SRNumber' | translate }} :
                     </span>&nbsp;{{requestDetailObj.requestCode}}
                 </div>
             </div>
-
             <div class="row mt-3">
                 <div class="col-md-3">
 
@@ -82,12 +79,14 @@
                 </div>
             </div>
         </div>
-        <div class="card-body">
-            <h3 class="card-title" style="font-weight: bold;background-color: #cedef1; padding: 0px 2px;">
+        </div>
+        <div class="card  mt-2">
+            <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1;margin: 0px -12px;">
                 {{
                 'Asset.SRTrackDetails' | translate }}
             </h3>
-            <div class="row">
+                <div class="card-body">
+                    <div class="row">
                 <div class="col-7">
 
                     <p-table [value]="requestDetailObj.lstTracking"
@@ -116,7 +115,7 @@
                                 <td style="text-align: center;">{{i.descriptionDate| date:'dd-MM-yyyy HH:mm'}}</td>
                                 <td style="text-align: center;">{{i.description}}</td>
                                 <td style="text-align: center;">
-                                    <a (click)="getDocuments(i.id)" [pTooltip]="lang=='en'?'view Documents':'عرض المستندات'" tooltipPosition="bottom">
+                                    <a (click)="getDocuments(i.id)" pTooltip="{{'Asset.ShowDocuments' | translate }}" tooltipPosition="bottom">
                                         <i class="pi pi-file"
                                             style="color: #d58308; cursor: pointer;margin: 0px 5px;"></i></a>
                                 </td>
@@ -127,8 +126,7 @@
                 </div>
                 <div class="col-5" *ngIf="isShowFiles">
 
-                    <p-fieldset legend="{{'Asset.TrackDocuments' | translate }}">
-                        <!-- <legend>{{'Asset.TrackDocuments' | translate }}</legend> -->
+            
                         <p-table [value]="lstDocuments" responsiveLayout="stack"
                             styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
                             <ng-template pTemplate="header">
@@ -149,18 +147,21 @@
                                     </td>
                                 </tr>
                             </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                  <td colspan="200" class="text-center">No data available</td>
+                                </tr>
+                              </ng-template>
                         </p-table>
-                    </p-fieldset>
+                </div>
                 </div>
             </div>
 
         </div>
-        <div class="card-body">
-            <h3 class="card-title" style="font-weight: bold;background-color: #cedef1; padding: 0px 2px;">
-                {{
-                'Asset.WOTrackDetails' | translate }}
+        <div class="card  mt-2">
+            <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1; margin: 0px -12px;">{{'Asset.WOTrackDetails' | translate }}
             </h3>
-            <div class="row top-buffer">
+            <div class="card-body">
                 <div class="col-12">
                     <div class="row">
                         <div class="col-2" style="font-weight: bold;">
@@ -221,13 +222,17 @@
                                     {{item.notes}}
                                 </td>
                                 <td style="text-align: center;">
-                                    <a (click)="getWODocuments(item.id)" pTooltip="View Files" tooltipPosition="bottom">
-                                        <i class="fa-solid fa-file"
-                                            style="color: #d58308; cursor: pointer;margin: 0px 5px;"></i></a>
+                                    <a (click)="getWODocuments(item.id)" pTooltip="{{'Asset.ShowDocuments' | translate }}" class="viewIcon" tooltipPosition="bottom">
+                                        <i class="pi pi-file" style="color: #d58308; cursor: pointer;margin: 0px 5px;"></i></a>
 
                                 </td>
                             </tr>
                         </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                              <td colspan="500" class="text-center"> {{'Asset.NoDataAvailable' | translate }}</td>
+                            </tr>
+                          </ng-template>
 
 
                     </p-table>
@@ -248,9 +253,9 @@
                                     <td style="text-align: center;"> {{doc.fileName}}</td>
                                     <td style="text-align: center;">{{doc.documentName}}</td>
                                     <td style="text-align: center;">
-                                        <a (click)="downloadWOFile(doc.fileName)" pTooltip="Download Files"
+                                        <a (click)="downloadWOFile(doc.fileName)" class="viewIcon"   pTooltip="{{'Asset.DownloadFile' | translate }}"
                                             tooltipPosition="bottom">
-                                            <i class="fa-solid fa fa-download" style="color: #61bb20;"></i></a>
+                                            <i class="pi pi-download viewIcon" style="color: #61bb20;font-size: 1rem;"></i></a>
 
                                     </td>
                                 </tr>
@@ -261,4 +266,3 @@
             </div>
         </div>
     </div>
-</div>

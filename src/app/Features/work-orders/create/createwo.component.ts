@@ -297,7 +297,7 @@ export class CreateWOComponent implements OnInit {
       }
       return false;
     }
-    else {
+ 
 
       this.createWorkOrderObj.createdById = this.currentUser.id;
       this.createWorkOrderObj.requestId = this.serviceRequestId;
@@ -392,7 +392,7 @@ export class CreateWOComponent implements OnInit {
           }
           return false;
         });
-    }
+    
   }
   // AddTasksToDB() {
   //   let lstTasks = [];

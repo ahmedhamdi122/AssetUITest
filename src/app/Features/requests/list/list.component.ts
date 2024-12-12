@@ -497,19 +497,15 @@ export class ListComponent implements OnInit {
     return this.isValidDate;
   }
   onSearch() {
-    this.sortFilterObjects.searchObj.statusId = this.statusId;
-    this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.requestService.ListRequests(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
-      this.lstRequests = items.results;
-      this.count = items.count;
-      this.loading = false;
-    });
+    // this.sortFilterObjects.searchObj.statusId = this.statusId;
+    // this.sortFilterObjects.searchObj.userId = this.currentUser.id;
+    // this.requestService.ListRequests(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(items => {
+    //   this.lstRequests = items.results;
+    //   this.count = items.count;
+    //   this.loading = false;
+    // });
 
 
-
-    this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(listRequestStatus => {
-      this.listRequestStatus = listRequestStatus;
-    });
   }
   getAssetsByHospitalId($event) {
     if (this.currentUser.hospitalId == 0 && this.currentUser.organizationId == 0 && this.currentUser.subOrganizationId == 0 && this.currentUser.governorateId == 0 && this.currentUser.cityId == 0) {

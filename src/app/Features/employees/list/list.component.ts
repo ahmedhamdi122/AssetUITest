@@ -8,6 +8,7 @@ import { LoggedUser } from 'src/app/Shared/Models/userVM';
 import { EmployeeService } from 'src/app/Shared/Services/employee.service';
 import { AuthenticationService } from 'src/app/Shared/Services/guards/authentication.service';
 import { CreateComponent } from '../create/create.component';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-list',
@@ -27,7 +28,12 @@ export class ListComponent implements OnInit {
   lstEmployees: ListEmployeeVM[] = [];
   first = 0;
   rows = 5;
-  constructor(private dialogService:DialogService,private authenticationService: AuthenticationService, private employeeService: EmployeeService, private route: Router) { this.currentUser = this.authenticationService.currentUserValue; }
+  errorMessage:string="";
+  errorDisplay:boolean=false;
+  SuccessfullyHeader:string='';
+  showSuccessfullyMessage:boolean=false;
+  SuccessfullyMessage:string="";
+  constructor(private confirmationService:ConfirmationService,private dialogService:DialogService,private authenticationService: AuthenticationService, private employeeService: EmployeeService, private route: Router) { this.currentUser = this.authenticationService.currentUserValue; }
 
   ngOnInit(): void {
     // this.sortObj = {
@@ -68,7 +74,26 @@ export class ListComponent implements OnInit {
   //     this.count = data;
   //   });
   // }
+  deleteEmployee()
+  {
+    this.confirmationService.confirm({
+      message: `${this.lang === 'en' ? `Are you sure you want to delete this Employee?` : `هل أنت متأكد أنك تريد حذف هذا الموظف`}`,
+      header: `${this.lang === 'en' ? 'Delete Confirmation' : 'تأكيد المسح'}`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon: 'none', 
+      rejectIcon: 'none', 
+      acceptButtonStyleClass: 'btn btn-primary m-2', 
+      rejectButtonStyleClass: 'btn btn-light m-2',
+      rejectLabel: this.lang === 'en' ? 'No' : 'لا',
+      acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+      accept: () => {
+        
+      },
+      reject: () => {
+      }
+    });
 
+  }
   addEmployee()
   {
     const dialogRef2 = this.dialogService.open(CreateComponent, {

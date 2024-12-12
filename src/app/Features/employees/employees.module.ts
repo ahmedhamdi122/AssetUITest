@@ -23,6 +23,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { PaginatorModule } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
+
 @NgModule({
   declarations: [
     ListComponent,
@@ -50,7 +51,8 @@ import { TableModule } from 'primeng/table';
     TooltipModule,
     EmployeesRoutingModule,
     PaginatorModule,
-    TableModule
+    TableModule,
+
   ]
 })
 export class EmployeesModule { }

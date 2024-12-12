@@ -32,7 +32,7 @@ import { IndexWorkOrderPeriorityVM } from 'src/app/Shared/Models/WorkOrderPerior
 import { WorkOrderTrackingService } from 'src/app/Shared/Services/work-order-tracking.service';
 import { CreateWorkOrderTrackingVM } from 'src/app/Shared/Models/WorkOrderTrackingVM';
 import { MasterAssetService } from 'src/app/Shared/Services/masterAsset.service';
-import { ListMasterAssetVM } from 'src/app/Shared/Models/masterAssetVM';
+import { ListMasterAssetVM, reloadTableObj } from 'src/app/Shared/Models/masterAssetVM';
 import { ListDepartmentVM } from 'src/app/Shared/Models/departmentVM';
 import { DepartmentService } from 'src/app/Shared/Services/department.service';
 import { environment } from 'src/environments/environment';
@@ -142,7 +142,7 @@ export class ListWOComponent implements OnInit {
   nextYear: number;
   isValidDate: boolean = false;
   error: any = { isError: false, errorMessage: '' };
-
+  reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
   sortFilterObjects: SortAndFilterWorkOrderVM;
   constructor(private spinner:NgxSpinnerService,private authenticationService: AuthenticationService, private workOrderService: WorkOrderService, private assetDetailService: AssetDetailService, private masterAssetService: MasterAssetService, private governorateService: GovernorateService, private cityService: CityService,
     private workOrderPeriorityService: WorkOrderPeriorityService, private organizationService: OrganizationService, private subOrganizationService: SubOrganizationService, private hospitalService: HospitalService, private workOrderStatusService: WorkOrderStatusService, private workOrderTrackingService: WorkOrderTrackingService,
@@ -230,7 +230,8 @@ export class ListWOComponent implements OnInit {
 
     this.workOrderStatusService.GetWorkOrderStatusByUserId(this.currentUser.id).subscribe(lstWorkOrderStatus => {
       console.log("lstWorkOrderStatus :",lstWorkOrderStatus);
-      this.lstWorkOrderStatus = lstWorkOrderStatus;
+      this.lstWorkOrderStatus = lstWorkOrderStatus.map((status)=>{return {...status,isActive:false}})  
+      this.lstWorkOrderStatus[this.lstWorkOrderStatus.length-1].isActive=true;
     });
 
     this.workOrderPeriorityService.GetWorkOrderPerioritys().subscribe((res) => {
@@ -561,6 +562,9 @@ export class ListWOComponent implements OnInit {
     // }
   }
   editWorkOrder(id: number) {
+
+
+    console.log('statusId :',this.statusId )
     const dialogRef2 = this.dialogService.open(EditComponent, {
       data: {
         id: id,
@@ -670,6 +674,7 @@ export class ListWOComponent implements OnInit {
     });
   }
   viewWorkOrder(id: number) {
+
     const dialogRef2 = this.dialogService.open(ViewWorkorderComponent, {
       header: this.lang == "en" ? "View Work Order" : "بيان أمر الشغل",
       data: {
@@ -709,62 +714,15 @@ export class ListWOComponent implements OnInit {
       this.reload();
     });
   }
-  getWOByStatusId(id: number, $event) {
-    this.statusId = id;
+  getWOByStatusId(Status: any) {
+    this.statusId = Status.id;
     this.lstWorkOrders = [];
     this.page.pagenumber = 1;
-    this.sortFilterObjects.searchObj.statusId = id;
-    this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-    this.workOrderService.ListWorkOrders(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(workorders => {
-      this.lstWorkOrders = [];
+    this.sortFilterObjects.searchObj.statusId = Status.id;
+    this.lstWorkOrderStatus.forEach((s)=>{ s.isActive=false});    
+    Status.isActive=true;
+    this.LoadWorkOrder(this.reloadTableObj);
 
-      workorders.results.forEach(element => {
-        if (element.workOrderStatusId < 12 && (element.workOrderStatusId != 0)) {
-          this.timer = window.setInterval(() => {
-            this.startStamp = new Date(element.creationDate).getTime();
-            this.newDate = new Date();
-            this.newStamp = this.newDate.getTime();
-            var diff = Math.round((this.newStamp - this.startStamp) / 1000);
-            var d = Math.floor(diff / (24 * 60 * 60));
-            diff = diff - (d * 24 * 60 * 60);
-            var h = Math.floor(diff / (60 * 60));
-            diff = diff - (h * 60 * 60);
-            var m = Math.floor(diff / (60));
-            diff = diff - (m * 60);
-            var s = diff;
-
-            if (this.lang == "en")
-              element.elapsedTime = d + " day(s), " + h + ":" + m + ":" + s + "";
-            else
-              element.elapsedTime = (d).toLocaleString("ar-SA") + " يوم و  " + (s).toLocaleString("ar-SA") + ":" + (m).toLocaleString("ar-SA") + ":" + (h).toLocaleString("ar-SA") + "";
-
-          }, 1000);
-        }
-        else if (element.workOrderStatusId == 12) {
-          var firstItem = element.firstTrackDate;
-          var lastItem = element.creationDate;
-          this.startStamp = new Date(firstItem).getTime();
-          this.newDate = new Date(lastItem);
-          this.newStamp = this.newDate.getTime();
-          var diff2 = Math.round((this.newStamp - this.startStamp) / 1000);
-          var d2 = Math.floor(diff2 / (24 * 60 * 60));
-          diff2 = diff2 - (d2 * 24 * 60 * 60);
-          var h2 = Math.floor(diff2 / (60 * 60));
-          diff2 = diff2 - (h2 * 60 * 60);
-          var m2 = Math.floor(diff2 / (60));
-          diff2 = diff2 - (m2 * 60);
-          var s2 = diff2;
-          if (this.lang == "en")
-            element.elapsedTime = d2 + " day(s), " + h2 + ":" + m2 + ":" + s2 + "";
-          else
-            element.elapsedTime = (d2).toLocaleString("ar-SA") + " يوم و  " + ":" + (m2).toLocaleString("ar-SA") + ":" + (h2).toLocaleString("ar-SA") + "";
-        }
-        this.lstWorkOrders.push(element);
-
-      });
-      this.count = workorders.count;
-      this.loading = false;
-    });
 
 
 
@@ -797,9 +755,7 @@ export class ListWOComponent implements OnInit {
 
   }
   LoadWorkOrder(event) {
-    this.lstWorkOrders = [];
-    this.page.pagenumber = (event.first + 10) / 10;
-    this.page.pagesize = event.rows;
+
 
 
     if (this.currentUser.hospitalId > 0)
@@ -810,7 +766,7 @@ export class ListWOComponent implements OnInit {
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.statusId = this.statusId;
     this.spinner.show();
-    this.workOrderService.ListWorkOrders(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(workorders => {
+    this.workOrderService.ListWorkOrders(this.sortFilterObjects, event.first, event.rows).subscribe(workorders => {
 
       workorders.results.forEach(element => {
         if (element.workOrderStatusId < 12 && (element.workOrderStatusId != 0)) {
@@ -854,11 +810,13 @@ export class ListWOComponent implements OnInit {
             element.elapsedTime = (d2).toLocaleString("ar-SA") + " يوم و  " + ":" + (m2).toLocaleString("ar-SA") + ":" + (h2).toLocaleString("ar-SA") + "";
         }
         this.lstWorkOrders.push(element);
+        
+        console.log('lstWorkOrders',this.lstWorkOrders )
 
       });
       this.count = workorders.count;
-      this.spinner.hide();
       this.loading = false;
+      this.spinner.hide();
     });
   }
   woDone(id: number) {

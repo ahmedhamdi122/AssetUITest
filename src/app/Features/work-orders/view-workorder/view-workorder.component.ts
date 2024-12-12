@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { IndexAssetWorkOrderTaskVM } from 'src/app/Shared/Models/AssetWorkOrderTaskVM';
 import { ListCityVM } from 'src/app/Shared/Models/cityVM';
@@ -39,6 +39,7 @@ import { WorkOrderService } from 'src/app/Shared/Services/work-order.service';
 import { environment } from 'src/environments/environment';
 import { RequestDocumentService } from 'src/app/Shared/Services/request-document.service';
 import { ListRequestDocumentVM } from 'src/app/Shared/Models/RequestDocumentVM';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -130,7 +131,7 @@ export class ViewWorkorderComponent implements OnInit {
   editWorkOrderTrackingObj: EditWorkOrderTrackingVM;
   statusId: number = 0;
   updateWorkOrderNote: boolean = false;
-  constructor(private authenticationService: AuthenticationService, private requestDocumentService: RequestDocumentService,
+  constructor(private confirmationService:ConfirmationService,private spinner:NgxSpinnerService,private authenticationService: AuthenticationService, private requestDocumentService: RequestDocumentService,
     private config: DynamicDialogConfig, private workOrderType: WorkOrderTypeService, private workOrderPeriorityService: WorkOrderPeriorityService, private _formBuilder: FormBuilder, private workOrderservice: WorkOrderService,
     private messageService: MessageService, private router: Router, private workOrderTrackingService: WorkOrderTrackingService,
     private uploadService: UploadFilesService, private httpClient: HttpClient, private workOrderStatusService: WorkOrderStatusService,
@@ -234,7 +235,6 @@ export class ViewWorkorderComponent implements OnInit {
     this.workOrderId = this.config.data.id;
     this.workOrderservice.GetWorkOrderById(this.workOrderId).subscribe(woObj => {
       this.editWorkOrderObj = woObj;
-      console.log("woObj :",woObj);
       
 
 
@@ -244,7 +244,6 @@ export class ViewWorkorderComponent implements OnInit {
       
 
       this.requestService.GetRequestByWorkOrderId(this.workOrderId).subscribe(reqObj => {
-        console.log("reqObj :",reqObj);
         
         this.requestObj = reqObj });
       this.assetWorkOrderTaskService.GetAllAssetWorkOrderTasksByMasterAssetId(this.editWorkOrderObj.masterAssetId).subscribe(
@@ -478,10 +477,65 @@ export class ViewWorkorderComponent implements OnInit {
       alert("record updated successfully");
     });
   }
-  deleteWorkOrderTrack(id: number) {
-    this.workOrderTrackingService.DeleteWorkOrderTracking(id).subscribe(deletedObj => {
-      alert("record deleted successfully");
+  deleteWorkOrderTrack(trk:any) {
+    
+    console.log('trk :',trk )
+    console.log('trk.workOrderNumber :',trk.workOrderNumber )
+    this.confirmationService.confirm({
+      message: `${this.lang === 'en' ? `Are you sure you want to delete the Work Order?` : `هل أنت متأكد أنك تريد حذف أمر الشغل`}`,
+      header: `${this.lang === 'en' ? 'Delete Confirmation' : 'تأكيد المسح'}`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptIcon: 'none', 
+      rejectIcon: 'none', 
+      acceptButtonStyleClass: 'btn btn-primary m-2', 
+      rejectButtonStyleClass: 'btn btn-light m-2',
+      rejectLabel: this.lang === 'en' ? 'No' : 'لا',
+      acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
+      accept: () => {
+        // this.spinner.show()
+        // this.requestService.DeleteRequest(id).subscribe(async deleted => {
+        //   this.reloadTableObj.first= this.rowsSkipped;
+          
+        //   await this.LoadRequests(this.reloadTableObj);
+          
+        //   this.dataTable.first= this.rowsSkipped;
+        //   this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
+        //     this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})  
+        //     this.listRequestStatus[0].isActive=true;
+        //   })
+        //   this.showSuccessfullyMessage=true;
+        //   if(this.lang=="en"){
+        //     this.SuccessfullyMessage="Deleted Successfully";
+        //     this.SuccessfullyHeader="Delete" 
+        // }
+        // else
+        // {
+        //   this.SuccessfullyMessage="تم حذف البيانات بنجاح";
+        //   this.SuccessfullyHeader="مسح" 
+        // }
+        // }, (error) => {
+        //   this.errorDisplay = true;
+    
+        //   if (this.lang == 'en') {
+        //     if (error.error.status == 'req') {
+        //       this.errorMessage = error.error.message;
+        //     }
+        //   } if (this.lang == 'ar') {
+        //     if (error.error.status == 'req') {
+        //       this.errorMessage = error.error.messageAr;
+        //     }
+        //   }
+        //   return false;
+        // });
+      },
+      reject: () => {
+      }
     });
+
+
+    // this.workOrderTrackingService.DeleteWorkOrderTracking(id).subscribe(deletedObj => {
+    //   alert("record deleted successfully");
+    // });
   }
   closeUpdate() {
     this.ref.close();

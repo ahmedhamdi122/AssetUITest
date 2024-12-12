@@ -42,6 +42,7 @@ import { MatListModule } from '@angular/material/list';
 import { AuthGuard } from 'src/app/Shared/Services/guards/authGuard.guard';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { BadgeModule } from 'primeng/badge';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -88,7 +89,8 @@ import { BadgeModule } from 'primeng/badge';
     MatIconModule,
     MatListModule,
     MatSidenavModule,
-    BadgeModule
+    BadgeModule,
+    ConfirmDialogModule
   ],
   providers: [MessageService, ConfirmationService, DatePipe, DynamicDialogRef, DynamicDialogConfig, AuthGuard]
 

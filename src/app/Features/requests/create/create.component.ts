@@ -364,6 +364,7 @@ export class CreateComponent implements OnInit {
     
 
     
+    console.log('this.reqObj.assetDetailId  :',this.reqObj.assetDetailId  )
     this.reqObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
     this.reqObj.createdById = this.currentUser.id;
     
@@ -535,11 +536,12 @@ export class CreateComponent implements OnInit {
     this.showStatus=false;
   }
   getBarCode(assetBarCodeObj:any) {
+
+    console.log('assetBarCodeObj :',assetBarCodeObj )
+    this.reqObj.assetDetailId=assetBarCodeObj.id;
     this.assetStatusId=this.assetBarCodeObj.assetStatusId;
     this.findAssetStatusByStatusId( this.assetStatusId);
     this.reqObj.hospitalId=assetBarCodeObj.hospitalId
-    this.assetBarCodeObj.barCode = assetBarCodeObj["barCode"];
-    this.assetBarCodeObj.id = assetBarCodeObj["id"];
     var assetId = assetBarCodeObj["id"];
     this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
     this.showStatus=true;

@@ -32,6 +32,8 @@ export class WorkOrderStatusVM {
     color: string;
     icon: string;
     count: number;
+    isActive:boolean;
+
 }
 export class EditWorkOrderStatusVM {
     id: number

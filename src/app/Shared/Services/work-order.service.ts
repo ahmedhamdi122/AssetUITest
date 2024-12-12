@@ -137,8 +137,8 @@ export class WorkOrderService {
 
 
 
-  ListWorkOrders(data: SortAndFilterWorkOrderVM, pageNumber: number, pageSize: number): Observable<MainClass> {
-    return this.httpClient.post<MainClass>(`${environment.ListWorkOrders}${pageNumber}/${pageSize}`, data, this.httpHeader);
+  ListWorkOrders(data: SortAndFilterWorkOrderVM, first: number, rows: number): Observable<MainClass> {
+    return this.httpClient.post<MainClass>(`${environment.ListWorkOrders}${first}/${rows}`, data, this.httpHeader);
   }
 
 

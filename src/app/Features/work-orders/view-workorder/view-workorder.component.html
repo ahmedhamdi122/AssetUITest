@@ -1,6 +1,6 @@
-<div class="col-12">
-    <div class="card">
-        <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1;padding: 0px 10px;">
+<div class="row">
+    <div class="card mt-2">
+        <h3 class="card-title p-2" style="background-color: #cedef1;margin: 0px -11px;font-weight: bold;margin: 0px -12px;">
             {{'Asset.ServiceRequest' | translate }}</h3>
         <div class="card-body">
             <div class="row">
@@ -60,11 +60,12 @@
                 </div>
             </div>
         </div>
-        <div class="card-body">
-            <h3 class="card-title" style="font-weight: bold;background-color: #cedef1; padding: 0px 2px;">
-                {{
-                'Asset.SRTrackDetails' | translate }}
+        </div>
+        <div class="card  mt-2">
+            <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1;margin: 0px -12px;">
+                {{'Asset.SRTrackDetails' | translate }}
             </h3>
+            <div class="card-body">
             <div class="row">
                 <div class="col-7">
                     <p-table [value]="requestObj?.listTracks"
@@ -72,62 +73,68 @@
                         <ng-template pTemplate="header">
                             <tr [ngStyle]="lang =='en' ? {'text-align': 'left'} : {  'text-align': 'right'}">
 
-                                <th>{{'Asset.Status' | translate }}</th>
-                                <th>{{'Asset.CreatedBy' | translate }}</th>
-                                <th>{{'Asset.Date' | translate }}</th>
-                                <th>{{'Asset.Description' | translate }}</th>
-                                <th>{{'Asset.Documents' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.Status' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.CreatedBy' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.Date' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.Description' | translate }}</th>
+                                <th style="text-align: center;">{{'Asset.Documents' | translate }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-i>
                             <tr>
-                                <td> <span [ngStyle]="{'color':i.statusColor}">
+                                <td style="text-align: center;"> <span [ngStyle]="{'color':i.statusColor}">
                                         <span><i [ngClass]="i.statusIcon"></i></span>
                                         {{lang=="en" ? i.statusNameAr:i.statusNameAr}}
                                     </span>
                                 </td>
-                                <td>{{i.userName}}</td>
-                                <td>{{i.date| date:'dd-MM-yyyy HH:mm'}}</td>
-                                <td>{{i.description}}</td>
-                                <td> <a (click)="getSRDocuments(i.id)" pTooltip="View Files" tooltipPosition="bottom">
-                                        <i class="fa-solid fa-file"
-                                            style="color: #d58308; cursor: pointer;margin: 0px 5px;"></i></a>
+                                <td style="text-align: center;">{{i.userName}}</td>
+                                <td style="text-align: center;">{{i.date| date:'dd-MM-yyyy HH:mm'}}</td>
+                                <td style="text-align: center;">{{i.description}}</td>
+                                <td style="text-align: center;"> <a (click)="getSRDocuments(i.id)"  pTooltip="{{'Asset.ShowDocuments' | translate }}"tooltipPosition="bottom">
+                                    <i class="pi pi-file" style="color: #d58308; cursor: pointer;margin: 0px 5px;"></i></a>
                                 </td>
                             </tr>
                         </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                              <td colspan="5" class="text-center"> {{'Asset.NoDataAvailable' | translate }}</td>
+                            </tr>
+                          </ng-template>
                     </p-table>
                 </div>
                 <div class="col-5" *ngIf="isSRShowFiles">
-                    <p-fieldset legend="{{'Asset.TrackDocuments' | translate }}">
                         <p-table [value]="lstSRDocuments" responsiveLayout="stack"
                             styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th> {{'Asset.Name' | translate }}</th>
-                                    <th> {{'Asset.Title' | translate }}</th>
-                                    <th>{{'Asset.Download' | translate }}</th>
+                                    <th style="text-align: center;"> {{'Asset.Name' | translate }}</th>
+                                    <th style="text-align: center;"> {{'Asset.Title' | translate }}</th>
+                                    <th style="text-align: center;">{{'Asset.Download' | translate }}</th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-doc>
                                 <tr>
-                                    <td>{{doc.fileName}}</td>
-                                    <td>{{doc.documentName}}</td>
-                                    <td>
-                                        <a (click)="downloadSRFile(doc.fileName)" pTooltip="View Files"
+                                    <td style="text-align: center;">{{doc.fileName}}</td>
+                                    <td style="text-align: center;">{{doc.documentName}}</td>
+                                    <td style="text-align: center;">
+                                        <a (click)="downloadSRFile(doc.fileName)"  pTooltip="{{'Asset.ShowDocuments' | translate }}"
                                             tooltipPosition="bottom">
-                                            <i class="fa-solid fa fa-download" style="color: #61bb20;"></i></a>
+                                            <i class="pi pi-download viewIcon" style="color: #61bb20;font-size: 1rem;"></i></a>
                                     </td>
                                 </tr>
                             </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                  <td colspan="5" class="text-center"> {{'Asset.NoDataAvailable' | translate }}</td>
+                                </tr>
+                              </ng-template>
                         </p-table>
-                    </p-fieldset>
                 </div>
             </div>
+            </div>
         </div>
-    </div>
-    <div class="row mt-2"></div>
-    <div class="card">
-        <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1; padding: 0px 10px;">
+        <div class="card mt-2">
+        <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1;;margin: 0px -12px;">
             {{ 'Asset.WorkOrderDetail' | translate }}</h3>
         <div class="card-body">
             <div class="row ">
@@ -179,13 +186,14 @@
                     {{editWorkOrderObj.subject}}
                 </div>
             </div>
-
-        </div>
-        <div class="card-body">
-            <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1;">
+</div>
+</div>
+        <div class="card mt-2">
+            <h3 class="card-title p-2" style="font-weight: bold;background-color: #cedef1;margin: 0px -12px;">
                 {{ 'Asset.WOTrackDetails' | translate }}</h3>
-            <div class="row">
-                <div class="col-8">
+                <div class="card-body">
+                    <div class="row">
+                <div class="col-7">
                     <p-table [value]="lstTracks" styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines">
                         <ng-template pTemplate="header">
                             <tr [ngStyle]="lang =='en' ? {'text-align': 'left'} : {  'text-align': 'right'}">
@@ -212,7 +220,7 @@
                                 <td style="text-align: center;">{{trk.actualEndDate| date:'dd-MM-yyyy HH:mm'}} </td>
                                 <td style="text-align: center;">{{trk.notes}}</td>
                                 <td style="text-align: center;">
-                                    <a (click)="getDocuments(trk.id)" [pTooltip]="lang?:" tooltipPosition="bottom">
+                                    <a (click)="getDocuments(trk.id)" pTooltip="{{'Asset.ShowDocuments' | translate }}" tooltipPosition="bottom">
                                         <i class="pi pi-file"
                                             style="color: #d58308; cursor: pointer;margin: 0px 5px;"></i></a>
                                 </td>
@@ -220,16 +228,20 @@
                                     <span class="editIcon" (click)="editWorkOrderTrack(trk.id)">
                                         <i class="fa-solid fa-edit"></i>
                                     </span>
-                                    <span class="deleteIcon" (click)="deleteWorkOrderTrack(trk.trackId)">
+                                    <span class="deleteIcon" (click)="deleteWorkOrderTrack(trk)">
                                         <i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i>
                                     </span>
                                 </td>
                             </tr>
                         </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                              <td colspan="200" class="text-center">{{'Asset.NoDataAvailable' | translate }}</td>
+                            </tr>
+                          </ng-template>
                     </p-table>
                 </div>
-                <div class="col-4" *ngIf="isShowFiles">
-                    <p-fieldset legend="{{'Asset.TrackDocuments' | translate }}">
+                <div class="col-5" *ngIf="isShowFiles">
                         <p-table [value]="lstDocuments"
                             styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines">
                             <ng-template pTemplate="header">
@@ -250,16 +262,20 @@
                                     </td>
                                 </tr>
                             </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr *ngIf="lstDocuments.length == 0">
+                                    <td   colspan="3" style="color: rgb(102, 97, 23);text-align: center;">{{'Asset.NoDataAvailable' | translate }}
+                                    </td>
+                                </tr>
+                            </ng-template>
                         </p-table>
-                    </p-fieldset>
 
                 </div>
-            </div>
+                </div>
         </div>
     </div>
-</div>
-
-
+    </div>
+    <p-confirmDialog />
 <p-dialog appendTo="body" modal="true" [(visible)]="updateWorkOrderNote" [style]="{ width: '700px' }"
     [closable]="false">
     <button (click)="closeUpdate()" class="btn btn-outline-primary  btn-sm"
