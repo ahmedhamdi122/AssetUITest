@@ -669,8 +669,11 @@ export class ListWOComponent implements OnInit {
         "font-size": 40
       }
     });
-    dialogRef2.onClose.subscribe((res) => {
-      this.reload();
+    dialogRef2.onClose.subscribe((Created) => {
+      if(Created)
+      {
+    
+      }
     });
   }
   viewWorkOrder(id: number) {
@@ -755,8 +758,6 @@ export class ListWOComponent implements OnInit {
 
   }
   LoadWorkOrder(event) {
-
-
 
     if (this.currentUser.hospitalId > 0)
       this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;

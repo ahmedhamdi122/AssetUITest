@@ -457,6 +457,8 @@ export class ListComponent implements OnInit {
       this.lstRequests = items.results;
       this.count = items.count;
       this.spinner.hide();
+
+      console.log(' this.lstRequests  :', this.lstRequests  )
       this.loading = false;
     });
     // this.requestService.ExportRequestsByStatusId(this.sortFilterObjects).subscribe(list => {
@@ -662,7 +664,9 @@ export class ListComponent implements OnInit {
     ref.onClose.subscribe((Edited: number) => {
       if(Edited)
       {
-        //relod
+        this.reloadTableObj.first= this.rowsSkipped;
+        this.LoadRequests(this.reloadTableObj);
+        this.dataTable.first= this.rowsSkipped;
       }
     });
   }
@@ -778,10 +782,12 @@ export class ListComponent implements OnInit {
         "font-size": 40
       }
     });
-    ref.onClose.subscribe(Added => {
-      if(Added)
+    ref.onClose.subscribe(Created => {
+      if(Created)
       {
-        //reload 
+        this.reloadTableObj.first= this.rowsSkipped;
+        this.LoadRequests(this.reloadTableObj)
+        this.dataTable.first= this.rowsSkipped;
       }
     });
 

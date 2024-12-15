@@ -328,7 +328,7 @@
                                 *ngIf="item.latestWorkOrderStatusId == 9">
                                 <i class="pi pi-sync" style="color: #0d4f28;margin: 0px 5px;"></i>
                             </span>
-                            <span pTooltip="{{'Asset.AddWorkOrder'| translate}}" tooltipPosition="top"
+                            <span *ngIf="item.countWorkOrder==0" pTooltip="{{'Asset.AddWorkOrder'| translate}}" tooltipPosition="top"
                                 (click)="addWorkOrder(item.id)">
                                 <i class="pi pi-plus-circle"
                                     style="color: #55595e; cursor: pointer;margin: 0px 5px;"></i>

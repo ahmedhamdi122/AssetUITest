@@ -362,7 +362,7 @@ export class CreateComponent implements OnInit {
       return false;
     }
     
-
+    
     
     console.log('this.reqObj.assetDetailId  :',this.reqObj.assetDetailId  )
     this.reqObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;

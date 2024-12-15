@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CreateAssetStatusTransactionVM } from 'src/app/Shared/Models/assetStatusTransactionVM';
 import { CreateAssetWorkOrderTaskVM, IndexAssetWorkOrderTaskVM } from 'src/app/Shared/Models/AssetWorkOrderTaskVM';
@@ -112,7 +113,7 @@ export class CreateWOComponent implements OnInit {
   itmIndex: any[] = [];
   public woId: number = 0;
   formData = new FormData();
-  constructor(
+  constructor(private spinner:NgxSpinnerService,
     private authenticationService: AuthenticationService, private assetStatusTransactionService: AssetStatusTransactionService, private ref: DynamicDialogRef, private workOrderType: WorkOrderTypeService,
     private workOrderStatusService: WorkOrderStatusService, private workOrderPeriorityService: WorkOrderPeriorityService, private _formBuilder: FormBuilder, private workOrderservice: WorkOrderService,
     private workOrderTrackingService: WorkOrderTrackingService, private requestService: RequestService, private requestTrackingService: RequestTrackingService,
@@ -309,7 +310,7 @@ export class CreateWOComponent implements OnInit {
       this.createWorkOrderObj.actualEndDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
 
 
-
+    this.spinner.show();
       this.workOrderservice.CreateWorkOrder(this.createWorkOrderObj)
         .subscribe(id => {
           this.workOrderId = id;
@@ -370,13 +371,13 @@ export class CreateWOComponent implements OnInit {
               });
               this.display = true;
               this.ref.close();
-
               this.lstCreateWorkOrderTracking = [];
             }
             else {
               this.display = true;
               this.isDisabled = true;
             }
+            this.ref.close("Created");
           });
         }, (error) => {
           this.errorDisplay = true;
