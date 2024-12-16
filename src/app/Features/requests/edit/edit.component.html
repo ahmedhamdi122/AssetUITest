@@ -39,7 +39,7 @@
         </div>
         <div class="row mt-2"
             *ngIf="showStatus">
-            <div class="col-12" style="font-size: 16px;font-weight: bold;color: red;">
+            <div class="col-12" style="font-size: 16px;font-weight: bold;"[ngStyle]="{ 'color': assetIsWorking ? 'green' : 'red' }">
                 <label for="status" [translate]="'Asset.AssetStatus'"></label>:
                 {{applicationStatus}}
             </div>
@@ -146,22 +146,22 @@
                 <div class="col">
                     <label for="brandId" [translate]="'Asset.Brand'"></label>
                     <br />
-                    {{brandName}}
+                    {{lang=='en'?reqObj.brandName:reqObj.brandNameAr}}
                 </div>
                 <div class="col">
                     <label for="model" [translate]="'Asset.Model'"></label>
                     <br />
-                    {{modelNumber}}
+                    {{reqObj.modelNumber}}
                 </div>
                 <div class="col">
                     <label for="model" [translate]="'Asset.Serial'"></label>
                     <br />
-                    {{serialNumber}}
+                    {{reqObj.serialNumber}}
                 </div>
                 <div class="col">
                     <label for="model" [translate]="'Asset.Barcode'"></label>
                     <br />
-                    {{barCode}}
+                    {{reqObj.barcode}}
                 </div>
             
             </div>
@@ -169,12 +169,12 @@
                 <div class="col">
                     <label for="model" [translate]="'Asset.Department'"></label>
                     <br />
-                    {{departmentName}}
+                    {{lang=='en'?departmentName:departmentNameAr}}
                 </div>
                 <div class="col">
                     <label for="" class="labeldetails"> {{ 'Asset.Building' | translate }}
                     </label>
-                    {{ lang=='en' ? assetBarCodeObj?.buildName : assetBarCodeObj?.buildNameAr}}
+                    {{ lang=='en' ? reqObj?.buildName : assetBarCodeObj?.buildNameAr}}
                 </div>
                 <div class="col">
                     <label for="" class="labeldetails"> {{ 'Asset.Floor' | translate }} </label>

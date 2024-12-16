@@ -79,7 +79,7 @@ export class EditComponent implements OnInit {
   isAssetOwner: boolean = false;
   lstRoleNames: string[] = [];
 
- 
+  assetIsWorking:boolean=true;
 
   page: Paging;
   errorDisplay: boolean = false;

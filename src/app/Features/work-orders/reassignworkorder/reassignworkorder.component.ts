@@ -194,7 +194,7 @@ export class ReassignworkorderComponent implements OnInit {
 
 
 
-    this.creatWorkOrderTrackingObj = { id: 0, hospitalId: 0, notes: '', createdById: '', creationDate: '', workOrderDate: new Date(), workOrderId: 0, workOrderStatusId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedStartDate: '', plannedEndDate: '', strWorkOrderDate: '' };
+    this.creatWorkOrderTrackingObj = { id: 0, hospitalId: 0, notes: '', createdById: '', creationDate: '', workOrderDate:'', workOrderId: 0, workOrderStatusId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedStartDate: '', plannedEndDate: '', strWorkOrderDate: '' };
     this.CreateWorkOrderAttachmentObj = { documentName: '', fileName: '', workOrderTrackingId: 0, workOrderFile: File, hospitalId: 0 };
 
   }

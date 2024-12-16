@@ -142,15 +142,11 @@ export class ApproverequestComponent implements OnInit {
     this.reqTrackObj = { strDescriptionDate: '', id: 0, createdById: '', description: '', descriptionDate: new Date, requestId: 0, requestStatusId: 0, hospitalId: 0 };
 
     this.creatWorkOrderTrackingObj = {
-      id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: new Date(), workOrderId: 0, workOrderStatusId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: '', plannedStartDate: '',
+      id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: '', workOrderId: 0, workOrderStatusId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: '', plannedStartDate: '',
       hospitalId: 0, strWorkOrderDate: ''
     };
 
 
-    this.creatWorkOrderTrackingObj = {
-      id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: new Date(), workOrderId: 0, workOrderStatusId: 0, hospitalId: 0,
-      assignedTo: '', actualEndDate: '', actualStartDate: '', plannedStartDate: '', plannedEndDate: '', strWorkOrderDate: ''
-    };
     this.createRequestDocument = { documentName: '', fileName: '', requestTrackingId: 0, id: 0, requestFile: File, hospitalId: 0 };
 
   }

@@ -26,7 +26,7 @@ export class WorkOrderTrackingVM {
 
 export class CreateWorkOrderTrackingVM {
     id: number;
-    workOrderDate: Date
+    workOrderDate: string
     strWorkOrderDate: string;
     creationDate: string;
     notes: string

@@ -151,7 +151,7 @@ export class EditComponent implements OnInit {
       createdById: '', requestId: 0, subject: '', creationDate: new Date, note: '', workOrderNumber: '', workOrderPeriorityId: 0, workOrderTypeId: 0
     }
     this.creatWorkOrderTrackingObj = {
-      id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: new Date, workOrderId: 0, workOrderStatusId: 1, assignedTo: '',
+      id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: '', workOrderId: 0, workOrderStatusId: 1, assignedTo: '',
       actualEndDate: '', actualStartDate: '', plannedStartDate: '', plannedEndDate: '', hospitalId: 0, strWorkOrderDate: ''
     }
     this.CreateWorkOrderAttachmentObj = { documentName: '', fileName: '', workOrderTrackingId: 0, workOrderFile: File, hospitalId: 0 }

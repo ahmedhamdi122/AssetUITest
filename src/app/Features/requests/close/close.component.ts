@@ -41,7 +41,7 @@ export class CloseComponent implements OnInit {
     this.assetStatusObj = { assetDetailId: 0, assetStatusId: 0, statusDate: '', hospitalId: 0 }
     this.reqTrackObj = { strDescriptionDate: '', id: 0, createdById: '', description: '', descriptionDate: new Date, requestId: 0, requestStatusId: 0, hospitalId: 0 }
     this.workorderObj = {
-      id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: new Date(), workOrderId: 0, workOrderStatusId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: '', plannedStartDate: '',
+      id: 0, notes: '', createdById: '', creationDate: '', workOrderDate:'', workOrderId: 0, workOrderStatusId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: '', plannedStartDate: '',
       hospitalId: 0, strWorkOrderDate: ''
     };
     if (this.config.data != null) {

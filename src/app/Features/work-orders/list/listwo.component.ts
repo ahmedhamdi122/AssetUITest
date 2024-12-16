@@ -180,10 +180,10 @@ export class ListWOComponent implements OnInit {
     this.printWO = { hospitalName: '', hospitalNameAr: '', lang: '', printedBy: '' }
     this.printWorkOrderObj = {
       creationDate1: '', brandName: '', brandNameAr: '', lastWorkOrder: '', firstRequest: '', closedDate: '', assetBarCode: '', modelNumber: "", masterAssetCode: '', assetCode: '', id: 0, lstWorkOrderTracking: [], assetName: '', assetNameAr: '', assetSerial: '', createdBy: '', creationDate: new Date, hospitalName: '', hospitalNameAr: '', note: '',
-      periorityName: '', periorityNameAr: '', plannedEndDate: new Date, plannedStartDate: new Date, requestSubject: '', subject: '', typeName: '', typeNameAr: '', workOrderNumber: '', barCode: ''
+      periorityName: '', periorityNameAr: '', plannedEndDate:'', plannedStartDate:'', requestSubject: '', subject: '', typeName: '', typeNameAr: '', workOrderNumber: '', barCode: ''
     }
     this.woTrackObj = {
-      workOrderId: 0, createdById: '', notes: '', workOrderDate: new Date, workOrderStatusId: 0, id: 0,
+      workOrderId: 0, createdById: '', notes: '', workOrderDate:'', workOrderStatusId: 0, id: 0,
       actualEndDate: '', actualStartDate: '', creationDate: '', assignedTo: '', plannedEndDate: '', plannedStartDate: '',
       hospitalId: 0, strWorkOrderDate: ''
     }
@@ -875,12 +875,9 @@ export class ListWOComponent implements OnInit {
 
   startWO(id: number) {
     this.workOrderTrackingService.GetFirstTrackForWorkOrderByWorkOrderId(id).subscribe(woObj => {
-
+      console.log("woobj :",woObj);
+      
       this.woTrackObj.assignedTo = woObj["assignedTo"];
-      this.woTrackObj.strWorkOrderDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-      this.woTrackObj.creationDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-      this.woTrackObj.actualStartDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-      this.woTrackObj.actualEndDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");;
       this.woTrackObj.createdById = this.currentUser.id;
       this.woTrackObj.hospitalId = this.currentUser.hospitalId;
       if (this.lang == "en")

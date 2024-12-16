@@ -205,7 +205,6 @@ export class CreateWorkOrderVM {
     id: number;
     subject: string;
     workOrderNumber: string;
-    //creationDate: Date;
     creationDate: string;
     plannedStartDate: string;
     plannedEndDate: string;
@@ -294,8 +293,8 @@ export class PrintWorkOrderVM {
     creationDate: Date;
     closedDate: string;
     creationDate1: string;
-    plannedStartDate?: Date
-    plannedEndDate?: Date
+    plannedStartDate?: string
+    plannedEndDate?: string
     note?: string;
     createdBy?: string
     periorityName?: string;

@@ -373,7 +373,7 @@ export class ListComponent implements OnInit {
   onLoad() {
     this.assetStatusObj = { assetDetailId: 0, assetStatusId: 0, statusDate: '', hospitalId: 0 }
     this.reqTrackObj = { strDescriptionDate: '', id: 0, createdById: '', description: '', descriptionDate: new Date, requestId: 0, requestStatusId: 0, hospitalId: 0 };
-    this.creatWorkOrderTrackingObj = { strWorkOrderDate: '', id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: new Date(), workOrderId: 0, workOrderStatusId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: '', plannedStartDate: '', hospitalId: 0 };
+    this.creatWorkOrderTrackingObj = { strWorkOrderDate: '', id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: '', workOrderId: 0, workOrderStatusId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: '', plannedStartDate: '', hospitalId: 0 };
     this.sortFilterObjects = {
       searchObj: { assetDetailId: 0, userName: '', lang: '', hospitalName: '', hospitalNameAr: '', printedBy: '', strEndDate: '', strStartDate: '', masterAssetId: 0, woLastTrackDescription: '', modelNumber: '', serialNumber: '', code: '', periorityId: 0, statusId: 0, modeId: 0, userId: '', cityId: 0, governorateId: 0, hospitalId: 0, barcode: '', organizationId: 0, subOrganizationId: 0, subject: '', start: '', end: '', assetOwnerId: 0, departmentId: 0 },
      sortFiled:"",sortOrder:1
@@ -430,11 +430,7 @@ export class ListComponent implements OnInit {
     });
 
    
-    this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
-      this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})  
-      this.listRequestStatus[this.listRequestStatus.length-1].isActive=true;
-      
-    });
+    this.GetRequestStatusByUserIdAndActiveStatusById(0);
 
     this.requestPeriorityService.GetAllRequestPeriorties().subscribe(lst => {
       this.lstPeriorities = lst
@@ -447,6 +443,13 @@ export class ListComponent implements OnInit {
       this.lstDepartments = items;
     });
   }
+  GetRequestStatusByUserIdAndActiveStatusById(statusId:number){
+    this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
+      this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}}) 
+      var status=this.listRequestStatus.find(s=> s.id==statusId)
+      status.isActive=true;
+    });
+  }
   LoadRequests(event) {
 
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
@@ -457,7 +460,6 @@ export class ListComponent implements OnInit {
       this.lstRequests = items.results;
       this.count = items.count;
       this.spinner.hide();
-
       console.log(' this.lstRequests  :', this.lstRequests  )
       this.loading = false;
     });
@@ -624,14 +626,8 @@ export class ListComponent implements OnInit {
       const lastPageIndex = Math.max(0, Math.floor((this.listRequestStatus[0].count) / 10) * 10);
       this.reloadTableObj.first=lastPageIndex;
       await this.LoadRequests(this.reloadTableObj);
-      
       this.dataTable.first=lastPageIndex;
-      this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
-        this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})  
-        this.listRequestStatus.forEach((s)=>{ s.isActive=false});    
-        this.listRequestStatus[0].isActive=true;
-      })
-
+      this.GetRequestStatusByUserIdAndActiveStatusById(1);
       this.showSuccessfullyMessage=true;
           if(this.lang=="en"){
             this.SuccessfullyMessage="Added Successfully";
@@ -782,14 +778,27 @@ export class ListComponent implements OnInit {
         "font-size": 40
       }
     });
-    ref.onClose.subscribe(Created => {
+    ref.onClose.subscribe(async Created => {
+      console.log('Created :',Created )
       if(Created)
       {
+        this.sortFilterObjects.searchObj.statusId=3;
         this.reloadTableObj.first= this.rowsSkipped;
-        this.LoadRequests(this.reloadTableObj)
-        this.dataTable.first= this.rowsSkipped;
+        await this.LoadRequests(this.reloadTableObj)
+        this.GetRequestStatusByUserIdAndActiveStatusById(3);
+        this.showSuccessfullyMessage=true;
+        if(this.lang=="en"){
+          this.SuccessfullyMessage="Added Successfully";
+          this.SuccessfullyHeader="Add" 
       }
-    });
+      else
+      {
+        this.SuccessfullyMessage="تم حفظ البيانات بنجاح";
+        this.SuccessfullyHeader="حفظ" 
+      }
+   }
+  });
+  
 
   }
   trackWorkOrder(requestId: number) {

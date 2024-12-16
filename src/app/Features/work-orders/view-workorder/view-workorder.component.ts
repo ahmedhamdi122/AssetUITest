@@ -155,7 +155,7 @@ export class ViewWorkorderComponent implements OnInit {
       workOrderPeriorityId: 0, workOrderTypeId: 0
     }
     this.creatWorkOrderTrackingObj = {
-      id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: new Date, workOrderId: 0, workOrderStatusId: 0,
+      id: 0, notes: '', createdById: '', creationDate: '', workOrderDate: '', workOrderId: 0, workOrderStatusId: 0,
       assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: '', plannedStartDate: '', hospitalId: 0, strWorkOrderDate: ''
     }
     this.CreateWorkOrderAttachmentObj = { documentName: '', fileName: '', workOrderTrackingId: 0, workOrderFile: File, hospitalId: 0 }

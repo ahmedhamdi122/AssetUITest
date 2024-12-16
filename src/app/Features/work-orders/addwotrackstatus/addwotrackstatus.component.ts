@@ -95,7 +95,7 @@ export class AddwotrackstatusComponent implements OnInit {
     this.assetStatusObj = { assetDetailId: 0, assetStatusId: 0, hospitalId: 0, statusDate: '' }
 
     this.woTrackObj = {
-      workOrderId: 0, createdById: '', notes: '', workOrderDate: new Date, workOrderStatusId: 0, id: 0, actualEndDate: '', actualStartDate: '', creationDate: '', assignedTo: '', plannedEndDate: '', plannedStartDate: '', hospitalId: 0, strWorkOrderDate: ''
+      workOrderId: 0, createdById: '', notes: '', workOrderDate: '', workOrderStatusId: 0, id: 0, actualEndDate: '', actualStartDate: '', creationDate: '', assignedTo: '', plannedEndDate: '', plannedStartDate: '', hospitalId: 0, strWorkOrderDate: ''
     }
     this.lstRadioItems = ["External Support", "Out Of Scoop", "esclate"];
     if (this.statusId == 7) {

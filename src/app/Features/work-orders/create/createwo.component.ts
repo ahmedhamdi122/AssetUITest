@@ -100,7 +100,6 @@ export class CreateWOComponent implements OnInit {
   lstCreateWorkOrderTracking: CreateWorkOrderAttachmentVM[] = [];
   lstUsers: ListEmployees[] = [];
   minDate: Date;
-  plannedStartdate: null;
   ActualStartDate: any;
   display: boolean = false;
   isHide: boolean = false;
@@ -144,7 +143,6 @@ export class CreateWOComponent implements OnInit {
         });
       this.workOrderservice.GenerateWorOrderNumber().subscribe(num => {
         this.createWorkOrderObj.workOrderNumber = num.woNumber;
-        console.log("num :",num);
         
       })
 
@@ -230,15 +228,10 @@ export class CreateWOComponent implements OnInit {
     this.assetStatusObj = { assetDetailId: 0, assetStatusId: 0, statusDate: '', hospitalId: 0 }
     this.requestDetailObj = { departmentName: '', departmentNameAr: '', wONotes: '', hospitalId: 0, barcode: '', serialNumber: '', createdById: '', descriptionDate: new Date(), modeName: '', lstTracking: [], requestStatusId: 0, periorityName: '', requestId: 0, statusName: '', subProblemName: '', userName: '', id: 0, requestCode: '', subject: '', requestPeriorityId: 0, requestDate: new Date(), requestTypeId: 0, requestTypeName: '', subProblemId: 0, description: '', requestModeId: 0, assetDetailId: 0, assetName: '', assetNameAr: '', assetCode: '', modeNameAr: '', periorityNameAr: '', requestTypeNameAr: '', statusNameAr: '', subProblemNameAr: '', problemId: 0, problemName: '', problemNameAr: '' };
 
-    this.createWorkOrderObj = { actualEndDate: "", actualStartDate: "", plannedEndDate: null, plannedStartDate: null, assignedTo: '', createdById: '', requestId: 0, subject: '', creationDate: '', note: '', barCode: '', workOrderNumber: '', workOrderPeriorityId: 0, workOrderTypeId: 0, id: 0, hospitalId: 0 };
-    this.creatWorkOrderTrackingObj = { id: 0, notes: '', createdById: '', creationDate: '', strWorkOrderDate: '', workOrderDate: new Date, workOrderId: 0, workOrderStatusId: 0, hospitalId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: "", plannedStartDate: "" };
+    this.createWorkOrderObj = { actualEndDate: "", actualStartDate: "", plannedEndDate: '', plannedStartDate: '', assignedTo: '', createdById: '', requestId: 0, subject: '', creationDate: '', note: '', barCode: '', workOrderNumber: '', workOrderPeriorityId: 0, workOrderTypeId: 0, id: 0, hospitalId: 0 };
+    this.creatWorkOrderTrackingObj = { id: 0, notes: '', createdById: '', creationDate: '', strWorkOrderDate: '', workOrderDate:'', workOrderId: 0, workOrderStatusId: 0, hospitalId: 0, assignedTo: '', actualEndDate: '', actualStartDate: '', plannedEndDate: "", plannedStartDate: "" };
     this.CreateWorkOrderAttachmentObj = { documentName: '', fileName: '', workOrderTrackingId: 0, workOrderFile: File, hospitalId: 0 };
 
-
-
-    this.workOrderStatusService.GetWorkOrderStatuss().subscribe((res) => {
-      this.lstWOStatus = res;
-    });
 
     this.workOrderType.GetWorkOrderTypes().subscribe((res) => {
       this.lstWorkOrderType = res;
@@ -246,13 +239,10 @@ export class CreateWOComponent implements OnInit {
     });
     this.workOrderPeriorityService.GetWorkOrderPerioritys().subscribe((res) => {
       this.lstWorkOrderPeriority = res;
-
       this.createWorkOrderObj.workOrderPeriorityId = 4;
     });
-
   }
   AddworkOrder() {
-
     this.createWorkOrderObj.hospitalId = this.currentUser.hospitalId;
     if (this.creatWorkOrderTrackingObj.assignedTo == "") {
       this.errorDisplay = true;
@@ -302,29 +292,18 @@ export class CreateWOComponent implements OnInit {
 
       this.createWorkOrderObj.createdById = this.currentUser.id;
       this.createWorkOrderObj.requestId = this.serviceRequestId;
-
-      this.createWorkOrderObj.creationDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-      this.createWorkOrderObj.plannedStartDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-      this.createWorkOrderObj.plannedEndDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-      this.createWorkOrderObj.actualStartDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-      this.createWorkOrderObj.actualEndDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-
-
     this.spinner.show();
+
       this.workOrderservice.CreateWorkOrder(this.createWorkOrderObj)
         .subscribe(id => {
           this.workOrderId = id;
-          this.creatWorkOrderTrackingObj.strWorkOrderDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-          this.creatWorkOrderTrackingObj.creationDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-          this.creatWorkOrderTrackingObj.plannedStartDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-          this.creatWorkOrderTrackingObj.plannedEndDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-          this.creatWorkOrderTrackingObj.actualStartDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-          this.creatWorkOrderTrackingObj.actualEndDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
           this.creatWorkOrderTrackingObj.createdById = this.currentUser.id;
           this.creatWorkOrderTrackingObj.notes = this.createWorkOrderObj.note;
           this.creatWorkOrderTrackingObj.workOrderId = Number(this.workOrderId);
           this.creatWorkOrderTrackingObj.workOrderStatusId = 1;
           this.creatWorkOrderTrackingObj.hospitalId = this.currentUser.hospitalId;
+
+          console.log('this.creatWorkOrderTrackingObj :',this.creatWorkOrderTrackingObj )
           this.workOrderTrackingService.AddWorkOrderTracking(this.creatWorkOrderTrackingObj).subscribe(trackId => {
             this.workOrderTrackId = trackId;
             if (this.lang == "en") {
@@ -341,7 +320,6 @@ export class CreateWOComponent implements OnInit {
             this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(inprogress => {
               this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
               this.assetStatusObj.assetDetailId = this.assetDetailId;
-              this.assetStatusObj.statusDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
               this.assetStatusObj.assetStatusId = 4;
               this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj).subscribe(() => {
                 this.display = true;
@@ -370,7 +348,6 @@ export class CreateWOComponent implements OnInit {
                 });
               });
               this.display = true;
-              this.ref.close();
               this.lstCreateWorkOrderTracking = [];
             }
             else {

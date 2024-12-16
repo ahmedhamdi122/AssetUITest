@@ -15,7 +15,7 @@ export class IndexRequestStatus {
 }
 
 export class RequestStatusVM{
-    id:string;
+    id:number;
     name:string;
     nameAr:string;
     color:string;
