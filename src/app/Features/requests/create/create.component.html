@@ -82,9 +82,9 @@
         <div class="row top-buffer" *ngIf="showName">
             <div class="col-12">
                 <label for="masterCode" [translate]="'Asset.MasterAsset'">Master Asset</label>
-                <p-autoComplete [(ngModel)]="masterAssetObj1"  [ngModelOptions]="{standalone: true}" [autoWidth]="true"[showClear]="true"
+                <p-autoComplete [(ngModel)]="masterAssetObj"  [ngModelOptions]="{standalone: true}" [autoWidth]="true"[showClear]="true"
                     [suggestions]="lsAssetDetailsWithMasterAsset" name="assetDetailId" id="assetDetailId"
-                    (completeMethod)="onMasterAssetSelectionChanged($event)" (onSelect)="getMasterAssetObject($event)"
+                    (completeMethod)="onMasterAssetSelectionChanged($event)" (onSelect)="getMasterAssetObject(masterAssetObj)"
                     field="name" placeholder="{{'Asset.AssetName' |  translate}}" [dropdown]="false">
                     <!-- <ng-template let-masterAssetObj1 pTemplate="item">
                         {{lang=="en"
@@ -136,22 +136,22 @@
                 <div class="col">
                     <label for="brandId" [translate]="'Asset.Brand'"></label>
                     <br />
-                    {{brandName}}
+                    {{assetObj.brandName}}
                 </div>
                 <div class="col">
                     <label for="model" [translate]="'Asset.Model'"></label>
                     <br />
-                    {{modelNumber}}
+                    {{assetObj.model}}
                 </div>
                 <div class="col">
                     <label for="model" [translate]="'Asset.Serial'"></label>
                     <br />
-                    {{serialNumber}}
+                    {{assetObj.serialNumber}}
                 </div>
                 <div class="col">
                     <label for="model" [translate]="'Asset.Barcode'"></label>
                     <br />
-                    {{barCode}}
+                    {{assetObj.barCode}}
                 </div>
             
             </div>
@@ -159,20 +159,20 @@
                 <div class="col">
                     <label for="model" [translate]="'Asset.Department'"></label>
                     <br />
-                    {{departmentName}}
+                    {{assetObj.departmentName}}
                 </div>
                 <div class="col">
                     <label for="" class="labeldetails"> {{ 'Asset.Building' | translate }}
                     </label>
-                    {{ lang=='en' ? assetBarCodeObj?.buildName : assetBarCodeObj?.buildNameAr}}
+                    {{ lang=='en' ? assetObj?.buildName : assetObj?.buildNameAr}}
                 </div>
                 <div class="col">
                     <label for="" class="labeldetails"> {{ 'Asset.Floor' | translate }} </label>
-                    {{ lang=='en' ? assetBarCodeObj?.floorName : assetBarCodeObj?.floorNameAr}}
+                    {{ lang=='en' ? assetObj?.floorName : assetObj?.floorNameAr}}
                 </div>
                 <div class="col">
                     <label for="" class="labeldetails"> {{ 'Asset.Room' | translate }} </label>
-                    {{ lang=='en' ? assetBarCodeObj?.roomName : assetBarCodeObj?.roomNameAr}}
+                    {{ lang=='en' ? assetObj?.roomName : assetObj?.roomNameAr}}
                 </div>
             </div>
         </div>

@@ -460,7 +460,6 @@ export class ListComponent implements OnInit {
       this.lstRequests = items.results;
       this.count = items.count;
       this.spinner.hide();
-      console.log(' this.lstRequests  :', this.lstRequests  )
       this.loading = false;
     });
     // this.requestService.ExportRequestsByStatusId(this.sortFilterObjects).subscribe(list => {
@@ -663,6 +662,16 @@ export class ListComponent implements OnInit {
         this.reloadTableObj.first= this.rowsSkipped;
         this.LoadRequests(this.reloadTableObj);
         this.dataTable.first= this.rowsSkipped;
+        this.showSuccessfullyMessage=true;
+        if(this.lang=="en"){
+          this.SuccessfullyMessage="Updated Successfully";
+          this.SuccessfullyHeader="Update" 
+      }
+      else
+      {
+        this.SuccessfullyMessage="تم تعديل البيانات بنجاح";
+        this.SuccessfullyHeader="تعديل" 
+      }
       }
     });
   }
@@ -706,13 +715,12 @@ export class ListComponent implements OnInit {
         this.spinner.show()
         this.requestService.DeleteRequest(id).subscribe(async deleted => {
           this.reloadTableObj.first= this.rowsSkipped;
-          
           await this.LoadRequests(this.reloadTableObj);
-          
           this.dataTable.first= this.rowsSkipped;
           this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
             this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})  
-            this.listRequestStatus[0].isActive=true;
+            var openStatus=this.listRequestStatus.find(s=>s.id==1);
+            openStatus.isActive=true;
           })
           this.showSuccessfullyMessage=true;
           if(this.lang=="en"){
@@ -779,13 +787,13 @@ export class ListComponent implements OnInit {
       }
     });
     ref.onClose.subscribe(async Created => {
-      console.log('Created :',Created )
       if(Created)
       {
         this.sortFilterObjects.searchObj.statusId=3;
-        this.reloadTableObj.first= this.rowsSkipped;
+        const lastPageIndex = Math.max(0, Math.floor((this.listRequestStatus[0].count) / 10) * 10);
+        this.reloadTableObj.first=lastPageIndex;
         await this.LoadRequests(this.reloadTableObj)
-        this.GetRequestStatusByUserIdAndActiveStatusById(3);
+        await this.GetRequestStatusByUserIdAndActiveStatusById(3);
         this.showSuccessfullyMessage=true;
         if(this.lang=="en"){
           this.SuccessfullyMessage="Added Successfully";

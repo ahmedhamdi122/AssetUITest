@@ -48,7 +48,7 @@ export class CreaterequestComponent implements OnInit {
   currentUser: LoggedUser;
   reqId: CreateRequest;
   requestId: number;
-  requestTrackingId: CreateRequestTracking;
+  requestTrackingId: number;
   createRequestDocument: CreateRequestDocument;
   assetBarCodeObj: AssetDetailVM;
   assetSerialObj: AssetDetailVM;
@@ -294,10 +294,10 @@ export class CreaterequestComponent implements OnInit {
       this.assetDetailService.GetAllAssetDetailsByHospitalId(this.currentUser.hospitalId).subscribe(masters => {
         this.lstassetDetailBarcodes = masters;
         if (this.lang == "en") {
-          this.lstassetDetailBarcodes.forEach(item => item.name = item.barcode);
+          this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);
         }
         else {
-          this.lstassetDetailBarcodes.forEach(item => item.name = item.barcode);
+          this.lstassetDetailBarcodes.forEach(item => item.name = item.barCode);
         }
 
       });
@@ -1001,8 +1001,8 @@ export class CreaterequestComponent implements OnInit {
 
         this.createRequestTrackingObj.description = this.reqObj.description
         this.createRequestTrackingObj.createdById = this.currentUser.id
-        this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(trackObj => {
-          this.requestTrackingId = trackObj;
+        this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(requestTrackingId => {
+          this.requestTrackingId = requestTrackingId;
 
           var statusObj = new AssetStatusTransactionVM();
           statusObj.assetDetailId = this.reqObj.assetDetailId;
@@ -1014,7 +1014,7 @@ export class CreaterequestComponent implements OnInit {
           if (this.lstCreateRequestDocument.length > 0) {
             this.lstCreateRequestDocument.forEach((item, index) => {
               item.hospitalId = this.currentUser.hospitalId;
-              item.requestTrackingId = Number(trackObj);
+              item.requestTrackingId = Number(requestTrackingId);
               this.requestService.CreateRequestAttachments(item).subscribe(fileObj => {
                 this.uploadService.uploadRequestFiles(item.requestFile, item.fileName).subscribe(
                   (event) => {

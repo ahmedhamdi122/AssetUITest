@@ -180,15 +180,15 @@ export class ApproverequestComponent implements OnInit {
             this.reqTrackObj.description = "تم العمل وقبل";
             this.reqTrackObj.hospitalId = this.currentUser.hospitalId;
             this.reqTrackObj.strDescriptionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-            this.requestTrackingService.AddRequestTracking(this.reqTrackObj).subscribe(savedTrack => {
+            this.requestTrackingService.AddRequestTracking(this.reqTrackObj).subscribe(RequestTrackingId => {
 
               this.requestService.GetRequestById(this.serviceRequestId).subscribe(reqObj => {
-                this.assetStatusObj.assetDetailId = reqObj["assetDetailId"];
-                this.assetStatusObj.statusDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-                this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
-                this.assetStatusObj.assetStatusId = 3;
-                this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj).subscribe(() => {
-                  this.display = true;
+              this.assetStatusObj.assetDetailId = reqObj["assetDetailId"];
+              this.assetStatusObj.statusDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
+              this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
+              this.assetStatusObj.assetStatusId = 3;
+              this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj).subscribe(() => {
+              this.display = true;
                   this.isDisabled = true;
                   // this.reload();
                 });
@@ -233,9 +233,8 @@ export class ApproverequestComponent implements OnInit {
             this.reqTrackObj.description = this.creatWorkOrderTrackingObj.notes;
             this.reqTrackObj.hospitalId = this.currentUser.hospitalId;
             this.reqTrackObj.strDescriptionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-            this.requestTrackingService.AddRequestTracking(this.reqTrackObj).subscribe(savedTrack => {
-              this.reqTrackObj = savedTrack;
-              const requestTrackId = savedTrack["id"];
+            this.requestTrackingService.AddRequestTracking(this.reqTrackObj).subscribe(RequestTrackingId => {
+              const requestTrackId = RequestTrackingId;
               this.trackId = requestTrackId;
               this.requestService.GetRequestById(this.serviceRequestId).subscribe(reqObj => {
                 this.assetStatusObj.assetDetailId = reqObj["assetDetailId"];

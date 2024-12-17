@@ -157,10 +157,7 @@ export class EditComponent implements OnInit {
     this.CreateWorkOrderAttachmentObj = { documentName: '', fileName: '', workOrderTrackingId: 0, workOrderFile: File, hospitalId: 0 }
     this.CreateWorkOrderattach = { documentName: '', fileName: '', workOrderTrackingId: 0, workOrderFile: File, hospitalId: 0 }
 
-    this.workOrderStatusService.GetWorkOrderStatuss().subscribe((res) => {
-      this.lstWOStatus = res;
-    });
-
+   
 
     this.workOrderType.GetWorkOrderTypes().subscribe(
       res => {

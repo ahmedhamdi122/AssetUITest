@@ -20,8 +20,8 @@ export class RequestTrackingService {
   }
 
 
-  AddRequestTracking(requestTrackObj: CreateRequestTracking): Observable<CreateRequestTracking> {
-    return this.httpClient.post<CreateRequestTracking>(`${environment.AddRequestTracking}`, requestTrackObj, this.httpHeader);
+  AddRequestTracking(requestTrackObj: CreateRequestTracking): Observable<number> {
+    return this.httpClient.post<number>(`${environment.AddRequestTracking}`, requestTrackObj, this.httpHeader);
   }
 
   GetSRTracksByRequestId(requestId: number): Observable<RequestDetails> {

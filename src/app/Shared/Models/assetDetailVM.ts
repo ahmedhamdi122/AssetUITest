@@ -225,9 +225,7 @@ export class AssetDetailVM {
     name: string;
     nameAr: string;
     serialNumber: string;
-    //assetBarCode: string;
     barCode: string;
-    barcode: string;
     masterAssetName: string;
     masterAssetNameAr: string;
     masterAssetId: number;

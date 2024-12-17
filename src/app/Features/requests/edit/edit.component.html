@@ -1,7 +1,7 @@
 
 <div class="col-12">
     <div >
-        <div class="row mt-2" >
+        <div class="row mt-2" *ngIf="showHospital">
             <div class="col-12">
                 <label for="hospitalId" [translate]="'Asset.Hospitals'">{{'Asset.SRNumber' | translate }}
                 </label>
@@ -74,21 +74,7 @@
                 </p-autoComplete>
             </div>
         </div>
-        <!-- <div class="row top-buffer" *ngIf="showBarcode || showSerial">
-            <div class="col-12">
-                <label for="MasterAsset" [translate]="'Asset.MasterAsset'">MasterAsset</label>
-                <select (change)="ViewAllAssetDetailByMasterId($event)" id="masterAssetId" class="form-control"
-                    name="masterAssetId" [(ngModel)]="reqObj.masterAssetId" #masterAssetId="ngModel" [value]="0"
-                    pTooltip="Please,Select Master Asset" tooltipPosition="bottom" disabled style="font-size: 13px;">
-                    <option value="0">{{'Asset.Select' | translate}} {{'Asset.MasterAsset' | translate}}
-                    </option>
-                    <option *ngFor="let master of lstMasterAsset" [value]="master.id">
-                        {{lang == "en" ? master.name: master.nameAr}}- {{lang == "en" ? master.brandName:
-                        master.brandNameAr}} - {{master.model}}
-                    </option>
-                </select>
-            </div>
-        </div> -->
+     
         <div class="row top-buffer" *ngIf="showName">
             <div class="col-12">
                 <label for="masterCode" [translate]="'Asset.MasterAsset'">Master Asset</label>
@@ -146,43 +132,42 @@
                 <div class="col">
                     <label for="brandId" [translate]="'Asset.Brand'"></label>
                     <br />
-                    {{lang=='en'?reqObj.brandName:reqObj.brandNameAr}}
+                    {{lang=='en'?reqObj?.brandName:reqObj?.brandNameAr}}
                 </div>
                 <div class="col">
                     <label for="model" [translate]="'Asset.Model'"></label>
                     <br />
-                    {{reqObj.modelNumber}}
+                    {{reqObj?.modelNumber}}
                 </div>
                 <div class="col">
                     <label for="model" [translate]="'Asset.Serial'"></label>
                     <br />
-                    {{reqObj.serialNumber}}
+                    {{reqObj?.serialNumber}}
                 </div>
                 <div class="col">
                     <label for="model" [translate]="'Asset.Barcode'"></label>
                     <br />
-                    {{reqObj.barcode}}
+                    {{reqObj?.barcode}}
                 </div>
-            
             </div>
             <div class="row mt-3 p-1" >
                 <div class="col">
                     <label for="model" [translate]="'Asset.Department'"></label>
                     <br />
-                    {{lang=='en'?departmentName:departmentNameAr}}
+                    {{lang=='en'?reqObj?.departmentName:reqObj?.departmentNameAr}}
                 </div>
                 <div class="col">
                     <label for="" class="labeldetails"> {{ 'Asset.Building' | translate }}
                     </label>
-                    {{ lang=='en' ? reqObj?.buildName : assetBarCodeObj?.buildNameAr}}
+                    {{ lang=='en' ? reqObj?.buildName : reqObj?.buildNameAr}}
                 </div>
                 <div class="col">
                     <label for="" class="labeldetails"> {{ 'Asset.Floor' | translate }} </label>
-                    {{ lang=='en' ? assetBarCodeObj?.floorName : assetBarCodeObj?.floorNameAr}}
+                    {{ lang=='en' ? reqObj?.floorName : reqObj?.floorNameAr}}
                 </div>
                 <div class="col">
                     <label for="" class="labeldetails"> {{ 'Asset.Room' | translate }} </label>
-                    {{ lang=='en' ? assetBarCodeObj?.roomName : assetBarCodeObj?.roomNameAr}}
+                    {{ lang=='en' ? reqObj?.roomName : reqObj?.roomNameAr}}
                 </div>
             </div>
         </div>
@@ -318,12 +303,52 @@
                 </p-table>
             </div>
         </div>
-      
+        <div class="row mt-2">
+            <div style="font-size: 1rem;" class="mb-3">    <i class="pi pi-wrench"></i>
+                {{ 'Asset.SavedDocuments' | translate }}</div>
+            <div class="col-12">
+                <p-table [value]="lstCreateRequestDocument" [rows]="3" [totalRecords]="lstCreateRequestDocument.length"  [paginator]="true" dataKey="id">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th  style="text-align: center;">{{ 'Asset.FileName' | translate }}</th>
+                            <th  style="text-align: center;">{{ 'Asset.Title' | translate }}</th>
+                            <th style="text-align: center;">{{'Asset.Delete' | translate}}</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-createRequestDocument let-rowIndex="rowIndex" let-editing="editing">
+                        <tr>
+                            <td  style="text-align: center;">{{createRequestDocument.fileName}}</td>
+                            <td  style="text-align: center;" [pEditableColumn]="createRequestDocument.documentName" pEditableColumnField="documentName"
+                                [pEditableColumnRowIndex]="rowIndex">
+                                <p-cellEditor>
+                                    <ng-template pTemplate="input">
+                                        <input pInputText [(ngModel)]="createRequestDocument.documentName"
+                                            [ngModelOptions]="{standalone: true}" />
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{createRequestDocument.documentName}}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td  style="text-align: center;">
+                                <span class="deleteIcon" (click)="removeFileFromObjectArray(rowIndex)"><i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i></span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr *ngIf="lstCreateRequestDocument.length == 0">
+                            <td   colspan="3" style="color: rgb(102, 97, 23);text-align: center;" [translate]="'Asset.NoData'">
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
         <div class="row mt-3">
             <div style="font-size: 1rem;" class="mb-3">    <i class="pi pi-wrench"></i>
                 {{ 'Asset.PreviousRequests' | translate }}</div>
             <div class="col-12">
-                <p-table [value]="lstRequests" name="requestTbl"
+                <p-table [value]="lstOldRequests" name="requestTbl"
                     styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
                     [paginator]="true" [lazy]="false" [rows]="10" [totalRecords]="count" pageLinks="10">
     
@@ -379,7 +404,7 @@
                         </tr>
                     </ng-template>
     
-                    <ng-template pTemplate="emptymessage" *ngIf="lstRequests.length === 0">
+                    <ng-template pTemplate="emptymessage" *ngIf="lstOldRequests.length === 0">
                         <tr>
                             <td colspan="6" style="text-align: center;">
                                 {{'Asset.NoData' | translate}}

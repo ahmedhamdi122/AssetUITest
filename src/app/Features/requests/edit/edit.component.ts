@@ -102,7 +102,7 @@ export class EditComponent implements OnInit {
   lstTypes: FilterList[] = [];
   masterAssetObj1: any;
   radioPerioritySelected: number;
-  lstRequests: ListRequestVM[] = [];
+  lstOldRequests: ListRequestVM[] = [];
   count: number;
   SuccessfullyMessage:string='';
   showSuccessfullyMessage:boolean=false;
@@ -116,7 +116,7 @@ export class EditComponent implements OnInit {
   assetDepartmentBarCodeObj: AssetDetailVM;
   lstassetDetailBarcodes: AssetDetailVM[] = [];
   departmentId:number;
-
+  showHospital:boolean=false;
   constructor(private hospitalService:HospitalService,private authenticationService: AuthenticationService, private requestService: RequestService, private _formBuilder: FormBuilder,
     private assetDetailService: AssetDetailService, private masterAssetService: MasterAssetService, private requestPeriorityService: RequestPeriorityService,
     private requestModeService: RequestModeService, private requestDocumentService: RequestDocumentService, private requestTrackingService: RequestTrackingService,
@@ -125,15 +125,18 @@ export class EditComponent implements OnInit {
 
 
   ngOnInit(): void {
-   
-    console.log("id :",this.config.data.id);
+    this.showHospital=this.currentUser.hospitalId!=0?false:true;
     this.onLoad();
     this.requestId = this.config.data.id;
+
+    console.log('this.requestId :',this.requestId )
     this.requestService.GetRequestById(this.requestId).subscribe(
       res => {
-        console.log("res :",res);
-        console.log("res.hospitalId :",res.hospitalId);
         this.reqObj = res;
+
+        console.log('this.reqObj :',this.reqObj )
+        console.log('this.reqObj.barcode :',this.reqObj.barcode )
+        this.radioPerioritySelected= this.reqObj.requestPeriorityId;
         this.selectedType=1;
         this.showBarcode = true;
         this.showSerial = false;
@@ -149,18 +152,14 @@ export class EditComponent implements OnInit {
         var assetId =  this.reqObj.assetDetailId;
          this.applicationStatus=this.lang=='en'?"Working":"يعمل"
         this.requestService.GetOldRequestsByHospitalAssetId(assetId).subscribe(items => {
-          this.lstRequests = items;
-          console.log("this.lstRequests :",this.lstRequests);
+          this.lstOldRequests = items;
         });
-        console.log("lang :",this.lang);
-        console.log("this.assetBarCodeObj :",this.assetBarCodeObj);
         
         this.brandName = this.lang == 'en' ? this.assetBarCodeObj.brandName : this.assetBarCodeObj.brandNameAr;
-        console.log(" this.brandName :", this.brandName );
         
         this.modelNumber = this.assetBarCodeObj.model;
         this.serialNumber = this.assetBarCodeObj.serialNumber;
-        this.barCode = this.assetBarCodeObj.barcode;
+        this.barCode = this.assetBarCodeObj.barCode;
         this.departmentName = this.lang == 'en' ? this.assetBarCodeObj["departmentName"] : this.assetBarCodeObj["departmentNameAr"];
     
         this.problemService.GetProblemByMasterAssetId(this.reqObj.masterAssetId).subscribe(problems => {
@@ -173,30 +172,10 @@ export class EditComponent implements OnInit {
           });
         });
 
-        this.requestTrackingService.GetTracksByRequestId(this.reqObj.id).subscribe(tracks => {
-          this.lstTracks = tracks;
-          if (this.lstTracks.length > 1) {
-            this.isDisabled = true;
-          }
-          else {
-            this.isDisabled = false;
-          }
-        });
-        this.masterAssetService.ListMasterAssetsByHospitalUserId(this.currentUser.hospitalId, this.currentUser.id).subscribe(
-          res => {
-            this.lstMasterAsset = res;
-            this.assetDetailService.GetAssetById(this.reqObj.assetDetailId).subscribe(item => {
-              this.assetDetailService.ViewAllAssetDetailByMasterId(item.masterAssetId).subscribe(lstSerials => {
-                this.lstassetDetails = lstSerials;
-              });
-              this.reqObj.masterAssetId = item.masterAssetId;
-            });
-          });
+    
       });
   }
-  close() {
-    this.ref.close({ data: this.statusId });
-  }
+
   
   onLoad() {
 
@@ -296,14 +275,16 @@ export class EditComponent implements OnInit {
     })
   }
   getBarCode(assetBarCodeObj:any) {
-    this.showStatus=true;
-    this.assetBarCodeObj.barCode = assetBarCodeObj["barCode"];
-    this.assetBarCodeObj.id = assetBarCodeObj["id"];
+    this.reqObj.assetDetailId=assetBarCodeObj.id;
+    this.assetStatusId=this.assetBarCodeObj.assetStatusId;
+    this.findAssetStatusByStatusId( this.assetStatusId);
+    this.reqObj.hospitalId=assetBarCodeObj.hospitalId
     var assetId = assetBarCodeObj["id"];
-    console.log("assetId :",assetId);
+    this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
+    this.showStatus=true;
+    this.assetIsWorking=this.assetBarCodeObj.assetStatus=="Working"?true:false;
     this.requestService.GetOldRequestsByHospitalAssetId(assetId).subscribe(items => {
-      this.lstRequests = items;
-      console.log("this.lstRequests :",this.lstRequests);
+      this.lstOldRequests = items;
     });
     
     this.brandName = this.lang == 'en' ? assetBarCodeObj["brandName"] : assetBarCodeObj["brandNameAr"];
@@ -311,83 +292,8 @@ export class EditComponent implements OnInit {
     this.serialNumber = assetBarCodeObj["serialNumber"];
     this.barCode = assetBarCodeObj["barCode"];
     this.departmentName = this.lang == 'en' ? assetBarCodeObj["departmentName"] : assetBarCodeObj["departmentNameAr"];
+   
 
-    if (this.currentUser.hospitalId != 0) {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(assetBarCodeObj["masterAssetId"]), this.currentUser.hospitalId).subscribe(
-        res => {
-          this.lstassetDetails = res;
-          this.reqObj.assetDetailId = assetBarCodeObj["id"];
-          this.reqObj.masterAssetId = assetBarCodeObj["masterAssetId"];
-          this.lstRequests = [];
-          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
-            this.assetBarCodeObj = assetObj;
-            if (this.assetBarCodeObj["assetStatusAr"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
-              return false;
-            }
-            if (this.assetBarCodeObj["assetStatus"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "This asset is not working in system";
-              return false;
-            }
-
-            this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
-            this.assetBarCodeObj.name = assetObj["barcode"];
-            this.assetStatusId = this.assetBarCodeObj["assetStatusId"];
-
-            var isWorking = this.findAssetStatusByStatusId(this.assetStatusId);
-            if (isWorking == false) {
-              return false;
-            }
-            else {
-              this.isDisabled = false;
-            }
-          });
-        });
-    }
-    else {
-      this.assetDetailService.GetAssetNameByMasterAssetIdAndHospitalId(Number(assetBarCodeObj["masterAssetId"]), this.reqObj.hospitalId).subscribe(
-        res => {
-          this.lstassetDetails = res;
-          this.reqObj.assetDetailId = assetBarCodeObj["id"];
-          this.reqObj.masterAssetId = assetBarCodeObj["masterAssetId"];
-          this.lstRequests = [];
-          this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
-            this.assetBarCodeObj = assetObj;
-
-            if (this.assetBarCodeObj["assetStatusAr"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
-              return false;
-            }
-            if (this.assetBarCodeObj["assetStatus"] == null) {
-              this.isDisabled = true;
-              this.errorDisplay = true;
-              this.errorMessage = "This asset is not working in system";
-              return false;
-            }
-            else if (this.assetBarCodeObj["assetStatusAr"] != null && this.assetBarCodeObj["assetStatus"] != null){
-              this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
-              this.assetBarCodeObj.name = assetObj["barcode"];
-              this.assetStatusId = this.assetBarCodeObj["assetStatusId"];
-
-              var isWorking = this.findAssetStatusByStatusId(this.assetStatusId);
-              if (this.assetStatusId == 3) {
-                isWorking = true;
-                this.isDisabled = false;
-              }
-              else
-              {
-                return false;
-              }
-            }
-          });
-        });
-    }
   }
   findAssetStatusByStatusId(assetStatusId: number): boolean {
     switch (assetStatusId) {
@@ -707,6 +613,16 @@ export class EditComponent implements OnInit {
     this.addMultiFilesToList();
   }
   onSelectionChanged(event) {
+
+    console.log('onSelectionChanged')
+    this.reqObj=null;
+    this.assetBarCodeObj=undefined;
+    this.lstOldRequests=[];
+    this.applicationStatus='';
+    this.showStatus=false;
+    this.isDisabled = false;
+    this.assetStatusId=0;
+    this.resetAssetDetailsFields();
     this.isDisabled = false;
     var hospitalId=this.currentUser.hospitalId != 0? this.currentUser.hospitalId:this.reqObj.hospitalId
       this.assetDetailService.AutoCompleteAssetBarCode(event.query, hospitalId,this.currentUser.id).subscribe(assets => {
@@ -719,8 +635,20 @@ export class EditComponent implements OnInit {
         }
       });
   }
+  resetAssetDetailsFields()
+  {
+    this.isDisabled=false;
+    this.lstOldRequests=[];
+    this.applicationStatus='';
+    this.showStatus=false;
+    this.brandName='';
+    this.modelNumber='';
+    this.serialNumber='';
+    this.barCode='';
+    this.departmentName='';
+  
+  }
   onTypeChange($event) {
-    console.log("event:",$event)
     let typeId = $event.value;
     this.showStatus=false;
     this.selectedType = typeId;

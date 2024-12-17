@@ -51,9 +51,9 @@ export class CreateComponent implements OnInit {
   reqObj: CreateRequest;
   currentUser: LoggedUser;
   reqId: CreateRequest;
-  requestTrackingId: CreateRequestTracking;
+  requestTrackingId: number;
   createRequestDocument: CreateRequestDocument;
-  assetBarCodeObj: AssetDetailVM;
+  assetObj: AssetDetailVM;
   assetDepartmentBarCodeObj: AssetDetailVM;
   assetSerialObj: AssetDetailVM;
 
@@ -149,6 +149,8 @@ export class CreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.assetObj={id:0,name: '',nameAr: '',serialNumber: '',barCode: '',masterAssetName: '',masterAssetNameAr: '',masterAssetId: 0,roomNameAr: '',roomName: '',floorNameAr: '',floorName: '',buildNameAr: '',buildName: '',assetStatus: '',assetStatusAr: '',assetStatusId: 0,createdBy: '',model:'',brandName: '',brandNameAr: ''}
+
     this.showHospital=this.currentUser.hospitalId!=0?false:true;
     this.radioPerioritySelected = 4;
     this.disabledButton = false;
@@ -235,7 +237,7 @@ export class CreateComponent implements OnInit {
  
   AddRequest() {
     var validStatus=true;
-     if(this.assetBarCodeObj!=null)
+     if(this.assetObj!=null)
     {
        validStatus=this.findAssetStatusByStatusId(this.assetStatusId);
     }
@@ -246,7 +248,7 @@ export class CreateComponent implements OnInit {
     console.log("this.selectedType :",this.selectedType);
   
     if (this.selectedType == 1) {
-      if (this.assetBarCodeObj == undefined) {
+      if (this.assetObj == undefined) {
         this.resetAssetDetailsFields();
         this.errorDisplay = true;
         if (this.lang == "en") {
@@ -368,6 +370,7 @@ export class CreateComponent implements OnInit {
     this.reqObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
     this.reqObj.createdById = this.currentUser.id;
     
+    console.log('this.reqObj :',this.reqObj )
     this.requestService.inserRequest(this.reqObj).subscribe(e => {
       this.reqId = e;
       this.createRequestTrackingObj.requestId = Number(this.reqId)
@@ -376,8 +379,9 @@ export class CreateComponent implements OnInit {
       this.createRequestTrackingObj.description = this.reqObj.description;
       this.createRequestTrackingObj.createdById = this.currentUser.id;
       
-      this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(e => {
-        this.requestTrackingId = e
+      this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(requestTrackingId => {
+        this.requestTrackingId = requestTrackingId
+
         var statusObj = new AssetStatusTransactionVM();
         statusObj.assetDetailId = this.reqObj.assetDetailId;
         statusObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
@@ -389,6 +393,7 @@ export class CreateComponent implements OnInit {
           this.lstCreateRequestDocument.forEach((elemnt, index) => {
             elemnt.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
             elemnt.requestTrackingId = Number(e);
+            console.log('elemnt :',elemnt )
             this.requestService.CreateRequestAttachments(elemnt).subscribe(lstfiles => {
               this.uploadService.uploadRequestFiles(elemnt.requestFile, elemnt.fileName).subscribe(
                 (event) => {
@@ -528,7 +533,7 @@ export class CreateComponent implements OnInit {
   }
   onHospitalChange()
   {    
-    this.assetBarCodeObj=undefined;
+    this.assetObj=undefined;
     this.assetSerialObj=undefined;
     this.applicationStatus='';
     this.resetAssetDetailsFields();
@@ -536,17 +541,16 @@ export class CreateComponent implements OnInit {
     this.showStatus=false;
   }
   getBarCode(assetBarCodeObj:any) {
-
+    this.assetObj=assetBarCodeObj;
     console.log('assetBarCodeObj :',assetBarCodeObj )
     this.reqObj.assetDetailId=assetBarCodeObj.id;
-    this.assetStatusId=this.assetBarCodeObj.assetStatusId;
+    this.assetStatusId=this.assetObj.assetStatusId;
     this.findAssetStatusByStatusId( this.assetStatusId);
     this.reqObj.hospitalId=assetBarCodeObj.hospitalId
-    var assetId = assetBarCodeObj["id"];
-    this.applicationStatus = this.lang == "en" ? this.assetBarCodeObj["assetStatus"] : this.assetBarCodeObj["assetStatusAr"];
+    this.applicationStatus = this.lang == "en" ? this.assetObj["assetStatus"] : this.assetObj["assetStatusAr"];
     this.showStatus=true;
-    this.assetIsWorking=this.assetBarCodeObj.assetStatus=="Working"?true:false;
-    this.requestService.GetOldRequestsByHospitalAssetId(assetId).subscribe(items => {
+    this.assetIsWorking=this.assetObj.assetStatus=="Working"?true:false;
+    this.requestService.GetOldRequestsByHospitalAssetId(assetBarCodeObj.id).subscribe(items => {
       this.lstOldRequests = items;
     });
     
@@ -572,15 +576,10 @@ export class CreateComponent implements OnInit {
     this.serialNumber='';
     this.barCode='';
     this.departmentName='';
-    this.roomName='';
-    this.roomNameAr='';
-    this.floorName='';
-    this.floorNameAr='';
-    this.buildName=''; 
-    this.buildNameAr='';
+
   }
   onSelectionChanged(event) {
-    this.assetBarCodeObj=undefined;
+    this.assetObj={id:0,name: '',nameAr: '',serialNumber: '',barCode: '',masterAssetName: '',masterAssetNameAr: '',masterAssetId: 0,roomNameAr: '',roomName: '',floorNameAr: '',floorName: '',buildNameAr: '',buildName: '',assetStatus: '',assetStatusAr: '',assetStatusId: 0,createdBy: '',model:'',brandName: '',brandNameAr: ''}
     this.lstOldRequests=[];
     this.applicationStatus='';
     this.showStatus=false;
@@ -600,6 +599,9 @@ export class CreateComponent implements OnInit {
       });
   }
   getSerial(assetSerialObj) {
+
+    console.log('assetSerialObj :',assetSerialObj )
+    this.assetObj=assetSerialObj;
     this.assetStatusId=this.assetSerialObj.assetStatusId;
     this.findAssetStatusByStatusId( this.assetStatusId);
 
@@ -667,13 +669,13 @@ export class CreateComponent implements OnInit {
           this.lstOldRequests = [];
           this.assetDetailService.GetHospitalAssetById(this.reqObj.assetDetailId).subscribe(assetObj => {
             this.assetDepartmentBarCodeObj = assetObj;
-            if (this.assetBarCodeObj["assetStatusAr"] == null) {
+            if (this.assetObj["assetStatusAr"] == null) {
               this.isDisabled = true;
               this.errorDisplay = true;
               this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
               return false;
             }
-            if (this.assetBarCodeObj["assetStatus"] == null) {
+            if (this.assetObj["assetStatus"] == null) {
               this.isDisabled = true;
               this.errorDisplay = true;
               this.errorMessage = "This asset is not working in system";
@@ -705,13 +707,13 @@ export class CreateComponent implements OnInit {
             this.assetDepartmentBarCodeObj = assetObj;
 
 
-            if (this.assetBarCodeObj["assetStatusAr"] == null) {
+            if (this.assetObj["assetStatusAr"] == null) {
               this.isDisabled = true;
               this.errorDisplay = true;
               this.errorMessage = "هذا الجهاز لا يوجد ضمن الأجهزة التي تعمل داخل النظام";
               return false;
             }
-            if (this.assetBarCodeObj["assetStatus"] == null) {
+            if (this.assetObj["assetStatus"] == null) {
               this.isDisabled = true;
               this.errorDisplay = true;
               this.errorMessage = "This asset is not working in system";
@@ -750,33 +752,29 @@ export class CreateComponent implements OnInit {
     var hospitalId=this.reqObj.hospitalId;
     this.masterAssetService.AutoCompleteMasterAssetName(event.query, hospitalId,this.currentUser.id).subscribe(masters => {
       this.lsAssetDetailsWithMasterAsset = masters;
+
+      console.log('this.lsAssetDetailsWithMasterAsset', this.lsAssetDetailsWithMasterAsset)
       if (this.lang == "en") {
         this.lsAssetDetailsWithMasterAsset.forEach(item => item.name = item.masterAsseName + " - " + item.masterAsseBrandName + " - " + item.masterAsseModelNumbe + " - " + item.serialNumber+" - "+item.barcode);
       }
       else {
         this.lsAssetDetailsWithMasterAsset.forEach(item => item.name = item.masterAsseNameAr + " - " + item.masterAsseBrandNameAr + " - " + item.masterAsseModelNumbe + " - " + item.serialNumber+" - "+item.barcode);
       }
+      console.log('after this.lsAssetDetailsWithMasterAsset', this.lsAssetDetailsWithMasterAsset)
+
     });
   }
-  getMasterAssetObject(event) {
+  getMasterAssetObject(masterAssetObj) {
     
-    this.lstHospitalAssets = [];
-    this.masterAssetObj1.id = event["id"];
-    this.reqObj.assetDetailId = event["id"];
-
-    this.assetId = event["id"];
-    this.requestService.GetOldRequestsByHospitalAssetId(event["id"]).subscribe(items => {
+    console.log('masterAssetObj :',masterAssetObj )
+    this.reqObj.assetDetailId = masterAssetObj["id"];
+    this.requestService.GetOldRequestsByHospitalAssetId(masterAssetObj.id).subscribe(items => {
       this.lstOldRequests = items;
       
     });
-    this.brandName = this.lang == 'en' ? event["brandName"] : event["brandNameAr"];
-    this.modelNumber = event["model"];
-    this.serialNumber = event["serialNumber"];
-    this.barCode = event["barCode"];
-
-
   }
   onTypeChange($event) {
+    this.assetObj={id:0,name: '',nameAr: '',serialNumber: '',barCode: '',masterAssetName: '',masterAssetNameAr: '',masterAssetId: 0,roomNameAr: '',roomName: '',floorNameAr: '',floorName: '',buildNameAr: '',buildName: '',assetStatus: '',assetStatusAr: '',assetStatusId: 0,createdBy: '',model:'',brandName: '',brandNameAr: ''}
     this.assetStatusId=0;
     this.showStatus=false;
     this.resetAssetDetailsFields();
@@ -790,8 +788,6 @@ export class CreateComponent implements OnInit {
       this.showName = false;
       this.showDepartment = false;
       this.lstMasterAsset = [];
-    
-      this.assetBarCodeObj = null;
       this.assetSerialObj = null;
       this.masterAssetObj1 = null;
       this.reqObj.masterAssetId = 0;
@@ -803,7 +799,6 @@ export class CreateComponent implements OnInit {
       this.showDepartment = false;
       this.lstMasterAsset = [];
     
-      this.assetBarCodeObj = null;
       this.assetSerialObj = null;
       this.masterAssetObj1 = null;
       this.reqObj.masterAssetId = 0;
@@ -813,7 +808,6 @@ export class CreateComponent implements OnInit {
       this.showSerial = false;
       this.showName = true;
       this.showDepartment = false;
-      this.assetBarCodeObj = null;
       this.masterAssetObj1 = null;
       this.assetSerialObj = null;
       this.reqObj.masterAssetId = 0;
@@ -823,7 +817,6 @@ export class CreateComponent implements OnInit {
       this.showSerial = false;
       this.showName = false;
       this.showDepartment = true;
-      this.assetBarCodeObj = null;
       this.masterAssetObj1 = null;
       this.assetSerialObj = null;
       this.assetDepartmentBarCodeObj = null;
