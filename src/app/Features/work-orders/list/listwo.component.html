@@ -281,20 +281,19 @@
                             </span>
                             <span *ngIf="item.workOrderStatusId < 2">
                                 <span class="viewIcon" pTooltip="{{'Asset.Start' | translate}}" tooltipPosition="top"
-                                    *ngIf=" ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))"
-                                    (click)="startWO(item.id)">
+                                    *ngIf=" item.workOrderStatusId==1"
+                                    (click)="startWO(item)">
                                     <i class="pi pi-play"
                                         style="color: #F58840; cursor: pointer;"></i>
                                 </span>
                             </span>
-                            <span *ngIf="item.workOrderStatusId >= 2">
+                            <span *ngIf="item.workOrderStatusId == 2">
                                 <span  class="viewIcon" pTooltip="{{'Asset.addNotes' | translate}}" tooltipPosition="top"
-                                    (click)="addNotes(item.id)"
-                                    *ngIf=" ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))">
+                                    (click)="addNotes(item)"
+                                    >
                                     <i class="pi pi-address-book" style="color: #89272a;cursor: pointer;"></i>
                                 </span>
                                 <span class="viewIcon" pTooltip="{{'Asset.Done' | translate}}" tooltipPosition="top"
-                                    *ngIf=" ((item.workOrderStatusId < 7) || (item.workOrderStatusId == 9))"
                                     (click)="woDone(item.id)">
                                     <i class="pi pi-list-check" style="color: #bb9b4c;"></i>
                                 </span>
@@ -320,17 +319,16 @@
     </div>
 </div>
 
+<p-confirmDialog />
 
-<p-dialog appendTo="body" modal="true" [(visible)]="display" [style]="{ width: '350px' }">
+<p-dialog appendTo="body" modal="true" [(visible)]="showSuccessfullyMessage">
     <ng-template pTemplate="header">
-        <h6 style="color: #04527e; font-weight: bold; font-size: 16pt">
-            {{ "Asset.Save" | translate }}
-        </h6>
+      <h6 style="color: #04527e; font-weight: bold; font-size: 16pt">
+        {{ SuccessfullyHeader }}
+      </h6>
     </ng-template>
-    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
-        {{ "Asset.SavedSuccess" | translate }}</span>
-</p-dialog>
-
+    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">{{ SuccessfullyMessage}}</span>
+  </p-dialog>
 <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
     <p-header style="color: rgb(181, 4, 4)">
         {{ "Asset.Error" | translate }}

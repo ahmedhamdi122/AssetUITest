@@ -1,6 +1,5 @@
 
 
-        <form (ngSubmit)="saveStatus()">
 
             <div class="row mt-2">
                 <div class="col-12">
@@ -9,19 +8,11 @@
                         [(ngModel)]="woTrackObj.notes" [placeholder]="'Asset.Notes' | translate"></textarea>
                 </div>
             </div>
-            <div class="row mt-2">
-                <div class="col-12">
-                    <button [disabled]="isDisabled" class="btn btn-primary pull-center btn-sm" value="save"
-                        type="submit" style="margin-top: 20px;background-color: #1483c2;border-color: #1483c2;">
-                        {{ 'Asset.Save' | translate }}
-                    </button>
-                </div>
-            </div>
-        </form>
+           
 
 
         <div class="row mt-2">
-            <div class="col-10">
+            <!-- <div class="col-10">
                 <label for="docmentName"> {{'Asset.DocumentTitle' | translate }}</label>
                 <input #documentName="ngModel" class="form-control" type="text" pInputText
                     placeholder="{{'Asset.DocumentTitle' | translate }}"
@@ -31,61 +22,69 @@
             <div class="col-2">
                 <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)"
                     style="display:none;">
-                <button type="button" class="btnUpload"
+                <button type="button" class="btnUpload mt-3"
                     (click)="file.click()"> <i  class="pi pi-upload"
                         style="color: #61bb20; cursor: pointer;margin: 0px 5px;"></i>{{'Asset.SelectDocument' |
                     translate }}
                 </button>
-            </div>
+            </div> -->
+
+            <div class="col-2 mt-3">
+                <input type="file" multiple #file  (change)="uploadMultipleFile($event)"
+                  style="display: none;">
+                <div type="button" name="btnUpload" class="addbutton" style="margin:0px 10px;border: none;" (click)="file.click()">
+                  <i class="pi pi-upload"></i> {{'Asset.SelectUploadFiles' |translate }}
+                </div>
+              </div>
         </div>
-        <div class="row mt-2">
+        <div class="row mt-2 p-3">
             <div class="col-12">
-                <table class="table">
-                    <thead>
+                <p-table class="table" [value]="lstCreateWorkOrderAttachment" styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
+                [paginator]="true" [rows]="10" >
+                <ng-template pTemplate="header">
                         <tr>
-                            <th>{{'Asset.Name' | translate }}</th>
-                            <th>{{'Asset.DocumentTitle' | translate }}</th>
+                            <th class="text-center">{{'Asset.Name' | translate }}</th>
+                            <th class="text-center">{{'Asset.DocumentTitle' | translate }}</th>
                             <th></th>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let i of lstCreateWorkOrderTracking">
-                            <td>{{i.fileName}}</td>
-                            <td>{{i.documentName}}</td>
-                            <td>
-                                <span (click)="removeFileFromObjectArray(i)"><i class="fa-solid fa-times-circle"
-                                        style="color: rgb(123, 9, 9);"></i></span>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-item let-rowIndex="rowIndex" let-editing="editing">
+                        <tr >
+                            <td class="text-center">{{item.fileName}}</td>
+                            <td class="text-center" [pEditableColumn]="item.documentName" pEditableColumnField="documentName"
+                            [pEditableColumnRowIndex]="rowIndex">
+                            <p-cellEditor>
+                              <ng-template pTemplate="input">
+                                <input pInputText [(ngModel)]="item.documentName"
+                                  [ngModelOptions]="{standalone: true}" />
+                              </ng-template>
+                              <ng-template pTemplate="output">
+                                {{item.documentName}}
+                              </ng-template>
+                            </p-cellEditor>
+                          </td>
+                            <td class="text-center">
+                                <span class="deleteIcon" (click)="removeFileFromObjectArray(rowIndex)"><i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i></span>
                             </td>
                         </tr>
-                        <tr *ngIf="lstCreateWorkOrderTracking.length == 0">
-                            <td colspan="4" style="color: rgb(102, 97, 23);" [translate]="'Asset.NoData'">
-                            </td>
+                 
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                          <td colspan="200" class="text-center"> {{'Asset.NoDataAvailable' | translate }}</td>
                         </tr>
-                    </tbody>
-                </table>
+                      </ng-template>
+                </p-table>
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-<p-dialog [(visible)]="errorDisplay" [style]="{width: '350px'}">
-    <p-header style="color: rgb(181, 4, 4);"> {{ 'Asset.Error' | translate }} </p-header>
-    <span style="color: rgb(181, 4, 4);font-weight: bold;"> {{errorMessage}}</span>
-</p-dialog>
-<p-dialog [(visible)]="display" [style]="{width: '350px'}">
-    <ng-template pTemplate="header">
-        <h6 style="color: #04527e;font-weight: bold;font-size: 16pt;">{{ 'Asset.Save' | translate }}
-        </h6>
-    </ng-template>
-    <span style="color: green;font-weight: bold;font-size: 12pt;text-align: center;"> {{ 'Asset.SavedSuccess' |
-        translate
-        }}</span>
-
-
-</p-dialog>
+        <div class="row mt-3  d-flex justify-content-center p-3">
+            <div class="col-2"  (click)="saveStatus()" >
+                <a  class="addbutton">{{'Asset.Save' | translate }}</a>
+            </div>
+        </div>
+        <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
+            <p-header style="color: rgb(181, 4, 4)"> {{ 'Asset.Error' | translate }} </p-header>
+            <span style="color: rgb(181, 4, 4); font-weight: bold">
+                {{ errorMessage }}</span>
+        </p-dialog>
+    

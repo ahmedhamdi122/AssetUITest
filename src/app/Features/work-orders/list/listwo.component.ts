@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, viewChild, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -47,6 +47,7 @@ import * as jsPDF from 'jspdf';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { WorkOrderStatusVM } from 'src/app/Shared/Models/WorkOrderStatusVM';
+import { Table } from 'primeng/table';
 @Component({
   selector: 'app-listwo',
   templateUrl: './listwo.component.html',
@@ -127,21 +128,24 @@ export class ListWOComponent implements OnInit {
   lstCheckedWorkOrders: IndexWorkOrderVM[] = [];
 
   checkedWorkOrderObj: IndexWorkOrderVM;
-
-
-
+  SuccessfullyHeader:string
+  SuccessfullyMessage:string;
+  showSuccessfullyMessage:boolean=false;
   lstExportWorkOrdersToExcel: ListWorkOrderVM[] = [];
   lstDepartments: ListDepartmentVM[] = [];
   checkedWorkOrder: IndexWorkOrderVM;
   first = 0;
   displayWOObj: boolean = false;
   printedBy: string = "";
-
+  rowsSkipped:number;
   thisYear: number;
   lastYear: number;
   nextYear: number;
   isValidDate: boolean = false;
+  @ViewChild("wotable") dataTable: Table;
+
   error: any = { isError: false, errorMessage: '' };
+  WorkOrderTrackingVM:CreateWorkOrderTrackingVM;
   reloadTableObj:reloadTableObj={sortOrder:1,sortField:'',first:0,rows:10};
   sortFilterObjects: SortAndFilterWorkOrderVM;
   constructor(private spinner:NgxSpinnerService,private authenticationService: AuthenticationService, private workOrderService: WorkOrderService, private assetDetailService: AssetDetailService, private masterAssetService: MasterAssetService, private governorateService: GovernorateService, private cityService: CityService,
@@ -766,6 +770,7 @@ export class ListWOComponent implements OnInit {
 
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.statusId = this.statusId;
+    this.rowsSkipped=event.first;
     this.spinner.show();
     this.workOrderService.ListWorkOrders(this.sortFilterObjects, event.first, event.rows).subscribe(workorders => {
 
@@ -845,11 +850,11 @@ export class ListWOComponent implements OnInit {
   }
 
 
-  addNotes(id: number) {
+  addNotes(workorder:any) {
     const dialogRef2 = this.dialogService.open(AddwotrackstatusComponent, {
       header: this.lang == "en" ? 'Note' : "ملاحظات",
       data: {
-        workOrderId: id,
+        workOrderObj: workorder,
         statusId: 2
       },
       width: '60%',
@@ -861,57 +866,61 @@ export class ListWOComponent implements OnInit {
         "font-size": 40
       }
     });
-    dialogRef2.onClose.subscribe((created) => {
+    dialogRef2.onClose.subscribe(async(created) => {
       if(created)
       {
-        this.reload();
+
+        this.reloadTableObj.first= this.rowsSkipped;
+        await this.LoadWorkOrder(this.reloadTableObj);
+        this.dataTable.first= this.rowsSkipped;
+        this.showSuccessfullyMessage=true;
+        if(this.lang=="en"){
+          this.SuccessfullyMessage="Added successfully";
+          this.SuccessfullyHeader="Add" 
+      }
+      else
+      {
+        this.SuccessfullyMessage="تم الإضافة بنجاح";
+        this.SuccessfullyHeader="إضافة" 
+      }
       }
     });
-
-
 
   }
 
 
-  startWO(id: number) {
-    this.workOrderTrackingService.GetFirstTrackForWorkOrderByWorkOrderId(id).subscribe(woObj => {
-      console.log("woobj :",woObj);
-      
-      this.woTrackObj.assignedTo = woObj["assignedTo"];
-      this.woTrackObj.createdById = this.currentUser.id;
-      this.woTrackObj.hospitalId = this.currentUser.hospitalId;
-      if (this.lang == "en")
-        this.woTrackObj.notes = "Work Order Started";
-      else {
-        this.woTrackObj.notes = "بدء أمر الشغل";
-      }
-      this.woTrackObj.workOrderId = id;
-      this.woTrackObj.workOrderStatusId = 2;
-      this.workOrderTrackingService.AddWorkOrderTracking(this.woTrackObj).subscribe(saved => {
-        this.startDisplay = true;
-        if (this.lang == "en")
-          this.startMessage = "This Work Order Started";
-        else {
-          this.startMessage = "أمر الشغل بدأ";
-        }
-        this.displayWOIcons = true;
-        this.reload();
+  startWO(workorder:any) {
 
-      }, error => {
-        this.errorDisplay = true;
-        if (this.lang == 'en') {
-          if (error.error.status == 'sr') {
-            this.errorMessage = error.error.message;
-          }
-        }
-        if (this.lang == 'ar') {
-          if (error.error.status == 'sr') {
-            this.errorMessage = error.error.messageAr;
-          }
-        }
-        return false;
-      });
-    });
+    console.log('workorder :',workorder )
+    console.log('workorder.workOrderStatusId :',workorder.statusId )
+    this.WorkOrderTrackingVM=workorder;
+    this.WorkOrderTrackingVM.workOrderStatusId=2;
+    console.log('this.WorkOrderTrackingVM :',this.WorkOrderTrackingVM )
+    //   this.workOrderTrackingService.AddWorkOrderTracking(this.woTrackObj).subscribe(saved => {
+    //     this.startDisplay = true;
+    //     if (this.lang == "en")
+    //       this.startMessage = "This Work Order Started";
+    //     else {
+    //       this.startMessage = "أمر الشغل بدأ";
+    //     }
+    //     this.displayWOIcons = true;
+    //     this.reload();
+
+    //   }, error => {
+    //     this.errorDisplay = true;
+    //     if (this.lang == 'en') {
+    //       if (error.error.status == 'sr') {
+    //         this.errorMessage = error.error.message;
+    //       }
+    //     }
+    //     if (this.lang == 'ar') {
+    //       if (error.error.status == 'sr') {
+    //         this.errorMessage = error.error.messageAr;
+    //       }
+    //     }
+    //     return false;
+    //   });
+    // });
   }
   reload() {
 

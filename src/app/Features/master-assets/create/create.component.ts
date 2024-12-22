@@ -623,7 +623,6 @@ export class CreateComponent implements OnInit {
         last_element = last_element + 1;
       }
       this.itmIndex.push(last_element);
-
       let ext = element.fileName.split('.').pop();
       var code = this.pad(this.masterAssetObj.code, 10);
       var last = this.itmIndex[this.itmIndex.length - 1];
