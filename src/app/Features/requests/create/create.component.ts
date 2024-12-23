@@ -156,7 +156,7 @@ export class CreateComponent implements OnInit {
     this.disabledButton = false;
   
     this.reqObj = {
-      serialNumber: '', createdById: "", problemId: 0, masterAssetId: 0, requestCode: '', subject: '', requestPeriorityId: 0, requestStatusId: 0, requestTime: new Date().getHours() + ':' + new Date().getMinutes(),
+      serialNumber: '', createdById: "", problemId: 0, masterAssetId: 0, requestCode: '', subject: '', requestPeriorityId: 0, requestStatusId: 0, requestTime: '',
       subProblemId: 0, description: '', requestModeId: 0, assetDetailId: 0, requestTypeId: 0, hospitalId: 0
     }
     this.onLoad()

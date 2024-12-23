@@ -43,6 +43,7 @@ import { AuthGuard } from 'src/app/Shared/Services/guards/authGuard.guard';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { BadgeModule } from 'primeng/badge';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { EditWorkOrderTrackComponent } from './edit-work-order-track/edit-work-order-track.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     WotasksComponent,
     AddwotrackstatusComponent,
     ViewWorkorderComponent,
-    ReassignworkorderComponent
+    ReassignworkorderComponent,
+    EditWorkOrderTrackComponent
   ],
 
   imports: [

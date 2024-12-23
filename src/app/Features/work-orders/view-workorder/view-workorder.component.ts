@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { IndexAssetWorkOrderTaskVM } from 'src/app/Shared/Models/AssetWorkOrderTaskVM';
 import { ListCityVM } from 'src/app/Shared/Models/cityVM';
 import { ListEmployeeVM } from 'src/app/Shared/Models/employeeVM';
@@ -40,6 +40,8 @@ import { environment } from 'src/environments/environment';
 import { RequestDocumentService } from 'src/app/Shared/Services/request-document.service';
 import { ListRequestDocumentVM } from 'src/app/Shared/Models/RequestDocumentVM';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { forkJoin } from 'rxjs';
+import { EditWorkOrderTrackComponent } from '../edit-work-order-track/edit-work-order-track.component';
 
 
 @Component({
@@ -50,8 +52,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class ViewWorkorderComponent implements OnInit {
 
   lang = localStorage.getItem('lang');
-
-
   currentUser: LoggedUser;
   lstWorkOrderPeriority: IndexWorkOrderPeriorityVM[]
   lstWorkOrderType: IndexWorkOrderTypeVM[]
@@ -67,9 +67,6 @@ export class ViewWorkorderComponent implements OnInit {
   lstDocuments: IndexWorkOrderAttachmentVM[] = [];
   //lstTasks: IndexAssetWorkOrderTaskVM[] = [];
   lstTasks: IndexAssetWorkOrderTaskVM[] = [];
-
-
-
   isSRShowFiles: boolean = false;
   isShowFiles: boolean = false;
   creatWorkOrderTrackingObj: CreateWorkOrderTrackingVM;
@@ -102,8 +99,6 @@ export class ViewWorkorderComponent implements OnInit {
   hospitalId: number;
 
   lstSRDocuments: ListRequestDocumentVM[] = [];
-
-
   CreateWorkOrderattach: CreateWorkOrderAttachmentVM
   lstAttachmentFiles: IndexWorkOrderAttachmentVM[] = [];
   minplannedStartDate: Date = new Date();
@@ -131,7 +126,7 @@ export class ViewWorkorderComponent implements OnInit {
   editWorkOrderTrackingObj: EditWorkOrderTrackingVM;
   statusId: number = 0;
   updateWorkOrderNote: boolean = false;
-  constructor(private confirmationService:ConfirmationService,private spinner:NgxSpinnerService,private authenticationService: AuthenticationService, private requestDocumentService: RequestDocumentService,
+  constructor(private DialogService:DialogService,private confirmationService:ConfirmationService,private spinner:NgxSpinnerService,private authenticationService: AuthenticationService, private requestDocumentService: RequestDocumentService,
     private config: DynamicDialogConfig, private workOrderType: WorkOrderTypeService, private workOrderPeriorityService: WorkOrderPeriorityService, private _formBuilder: FormBuilder, private workOrderservice: WorkOrderService,
     private messageService: MessageService, private router: Router, private workOrderTrackingService: WorkOrderTrackingService,
     private uploadService: UploadFilesService, private httpClient: HttpClient, private workOrderStatusService: WorkOrderStatusService,
@@ -163,10 +158,6 @@ export class ViewWorkorderComponent implements OnInit {
     this.editWorkOrderTrackingObj = {
       id: 0, notes: '', createdById: '', creationDate: new Date, workOrderDate: new Date, workOrderId: 0, workOrderStatusId: 1
     }
-
-
-
-
     if (this.config.data != null || this.config.data != undefined) {
       let statusId = this.config.data.statusId;
       if (statusId != undefined) {
@@ -230,183 +221,28 @@ export class ViewWorkorderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-   
+   this.spinner.show();
     this.onLoad();
     this.workOrderId = this.config.data.id;
-    this.workOrderservice.GetWorkOrderById(this.workOrderId).subscribe(woObj => {
-      this.editWorkOrderObj = woObj;
-      
+    forkJoin([ this.requestService.GetRequestByWorkOrderId(this.workOrderId), this.workOrderservice.GetWorkOrderById(this.workOrderId)]).subscribe(
+      ([reqObj, woObj]) => {
+        this.requestObj = reqObj;
+        this.editWorkOrderObj = woObj;
+        this.workOrderTrackingService.GetTrackOfWorkOrderByWorkOrderId(woObj.id).subscribe(tracks => {
+          this.lstTracks = tracks;
 
-
-
-
-
-      
-
-      this.requestService.GetRequestByWorkOrderId(this.workOrderId).subscribe(reqObj => {
-        
-        this.requestObj = reqObj });
-      this.assetWorkOrderTaskService.GetAllAssetWorkOrderTasksByMasterAssetId(this.editWorkOrderObj.masterAssetId).subscribe(
-        res => {
-          this.lstTasks = res
+          console.log(' this.lstTracks  :', this.lstTracks  )
+          this.spinner.hide();
         });
-      this.workOrderTrackingService.GetTrackOfWorkOrderByWorkOrderId(woObj.id).subscribe(tracks => {
-        this.lstTracks = tracks;
-        var count = this.lstTracks.filter(x => x.workOrderStatusId == 6).length;
-        if (count > 0) {
-          this.isClosed = false;
-          this.isDisabled = true;
-        }
-        else {
-          this.isClosed = true;
-          this.isDisabled = false;
-        }
-        if (this.lstTracks.length > 0) {
-          if (this.lstTracks[0]["workOrderStatusId"] >= 2 && this.lstTracks[0]["workOrderStatusId"] < 7) {
-
-            let woDate = new Date(this.editWorkOrderObj.creationDate);
-            this.startDateTime = new Date(woDate.getFullYear(), woDate.getMonth(), woDate.getDate() - 1, woDate.getHours(), woDate.getMinutes(), 0)
-            this.startStamp = this.startDateTime.getTime();
-            if (this.lang == "en") {
-              this.timer = window.setInterval(() => {
-                this.updateClock()
-              }, 1000);
-            }
-            else {
-              this.timer = window.setInterval(() => {
-                this.updateClockInArabic()
-              }, 1000);
-            }
-          }
-          else {
-          }
-        }
-      });
-    });
-
-    if (this.currentUser.hospitalId > 0) {
-      if (this.isEngManager) {
-        this.employeeService
-          .GetEmployeesHasEngDepManagerRoleInHospital(this.currentUser.hospitalId)
-          .subscribe((lstemployees) => {
-            this.lstEngEmployees = lstemployees;
-          });
-      }
-      if (this.isEng) {
-        this.employeeService
-          .GetEmployeesHasEngRoleInHospital(this.currentUser.hospitalId)
-          .subscribe((lstemployees) => {
-            this.lstEngEmployees = lstemployees;
-          });
-      }
-    }
-
-    else {
-      this.isAdmin = true;
-    }
-
-  }
-
-  AddworkOrder() {
-
-    if (this.creatWorkOrderTrackingObj.assignedTo == "") {
-      this.errorDisplay = true;
-      if (this.lang == "en") {
-        this.errorMessage = "Please select person to assigned engineer";
-      } else {
-        this.errorMessage = "من فضلك اختر المهندس المختص بالصيانة";
-      }
-
-      return false;
-    }
-
-    else {
-      this.creatWorkOrderTrackingObj.createdById = this.currentUser.id;
-      this.creatWorkOrderTrackingObj.workOrderId = Number(this.workOrderId);
-      this.creatWorkOrderTrackingObj.actualStartDate = this.datePipe.transform(this.creatWorkOrderTrackingObj.actualStartDate, "yyyy-MM-dd HH:mm:ss");
-      this.creatWorkOrderTrackingObj.actualEndDate = this.datePipe.transform(this.creatWorkOrderTrackingObj.actualEndDate, "yyyy-MM-dd HH:mm:ss");
-      this.workOrderTrackingService.CreateWorkOrderTracking(this.creatWorkOrderTrackingObj)
-        .subscribe(trackId => {
-          this.workOrderTrackingId = trackId
-
-          this.display = true;
-          this.isShowDocs = true;
-          this.ref.close();
-        });
-    }
+  })
   }
 
 
 
-  closeWorkOrder() {
-    this.creatWorkOrderTrackingObj.createdById = this.currentUser.id;
-    this.creatWorkOrderTrackingObj.workOrderId = Number(this.workOrderId);
-    this.creatWorkOrderTrackingObj.actualStartDate = this.datePipe.transform(new Date, "dd-MM-yyyy HH:mm:ss");
-    this.creatWorkOrderTrackingObj.actualEndDate = this.datePipe.transform(new Date, "dd-MM-yyyy HH:mm:ss");
-    this.creatWorkOrderTrackingObj.workOrderStatusId = 6;
-    this.workOrderTrackingService.CreateWorkOrderTracking(this.creatWorkOrderTrackingObj)
-      .subscribe((res) => {
-        this.display = true;
-      });
-  }
 
-  EditworkOrder() {
-    this.workOrderservice.UpdateWorkOrder(this.editWorkOrderObj).subscribe(
-      res => {
-        // this.WorkOrderId = res
-        //   this.display = true;
-      }
-    )
-  }
-
-  // public uploadFile = (files) => {
-  //   if (files.length === 0) {
-  //     return;
-  //   }
-  //   let fileToUpload = <File>files[0];
-  //   const formData = new FormData();
-  //   formData.append('file', fileToUpload, fileToUpload.name);
-  //   this.CreateWorkOrderAttachmentObj.fileName = fileToUpload.name;
-  //   this.httpClient.post(environment.uploadWorkOrderDcouments, formData)
-  //     .subscribe(res => {
-  //       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Uploaded Successfully' });
-  //     });
-  // }
+  
 
 
-
-  // Savedoctolist() {
-
-  //   this.CreateWorkOrderAttachmentObj.workOrderTrackingId = this.workOrderTrackingId;
-
-  //   if (this.CreateWorkOrderAttachmentObj.documentName != "" && this.CreateWorkOrderAttachmentObj.fileName != "") {
-  //     this.lstCreateWorkOrderTracking.push(this.CreateWorkOrderAttachmentObj);
-  //     this.CreateWorkOrderAttachmentObj = { documentName: '', fileName: '', workOrderTrackingId: 0, workOrderFile: File }
-  //   }
-  //   else {
-  //     if (this.lang == "en") {
-  //       this.messageService.add({ key: 'er', severity: 'error', summary: 'Attention !!!', sticky: true, detail: 'Please Complete Data' });
-  //     }
-  //     else {
-  //       this.messageService.add({ key: 'er', severity: 'خطأ', summary: 'انتبه!!!', sticky: true, detail: 'من فضلك اختر اسم الملف والملف' });
-  //     }
-  //   }
-  // }
-  // SaveimageToDB() {
-  //   this.workOrderAttachmentService.addListWorkOrderAttachments(this.lstCreateWorkOrderTracking).subscribe(e => {
-  //     if (this.lang == "en") {
-  //       this.messageService.add({ key: 'files', severity: 'success', summary: 'Success', detail: 'Files added successfully' });
-  //     }
-  //     else {
-  //       this.messageService.add({ key: 'files', severity: 'نجاح الحفظ', summary: 'نجاح الحفظ', detail: 'تم رفع الملفات بنجاح' });
-  //     }
-
-  //   });
-  // }
-
-  CloseStipper() {
-    this.router.navigate(['dash/workOrders/', this.serviceRequestId]);
-  }
   downloadFile(fileName) {
     var filePath = `${environment.Domain}UploadedAttachments/`;
     this.uploadService.downloadWorkOrderFile(fileName).subscribe(file => {
@@ -456,19 +292,33 @@ export class ViewWorkorderComponent implements OnInit {
   }
 
 
-  close() {
-    this.ref.close({ data: this.statusId });
-  }
 
 
   trackId: number = 0;
 
-  editWorkOrderTrack(id: number) {
-    this.workOrderTrackingService.GetWorkOrderTrackingById2(id).subscribe(trckObj => {
-      this.requestObj.description = trckObj.notes;
-      this.trackId = trckObj.id;
+  editWorkOrderTrack(WorkOrderTrack: any) {
+   
+    console.log('WorkOrderTrack : ', WorkOrderTrack)
+    const dialogRef2 = this.DialogService.open(EditWorkOrderTrackComponent, {
+      data: {
+        WorkOrderTrackObj: WorkOrderTrack
+      },
+      width: '60%',
+      style: {
+        'dir': this.lang == "en" ? 'ltr' : "rtl",
+        "text-align": this.lang == "en" ? 'left' : "right",
+        "direction": this.lang == "en" ? 'ltr' : "rtl",
+        "font-family": "sans-serif",
+        "font-size": 40
+      }
     });
-    this.updateWorkOrderNote = true;
+
+    dialogRef2.onClose.subscribe((updated) => {
+     if(updated)
+     {
+      console.log('updated :', updated)
+     }
+    });
   }
   updateWorkOrderTrack() {
     this.editWorkOrderTrackingObj.notes = this.requestObj.description;
@@ -478,9 +328,6 @@ export class ViewWorkorderComponent implements OnInit {
     });
   }
   deleteWorkOrderTrack(trk:any) {
-    
-    console.log('trk :',trk )
-    console.log('trk.workOrderNumber :',trk.workOrderNumber )
     this.confirmationService.confirm({
       message: `${this.lang === 'en' ? `Are you sure you want to delete the Work Order?` : `هل أنت متأكد أنك تريد حذف أمر الشغل`}`,
       header: `${this.lang === 'en' ? 'Delete Confirmation' : 'تأكيد المسح'}`,

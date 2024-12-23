@@ -568,7 +568,6 @@ export class ListWOComponent implements OnInit {
   editWorkOrder(id: number) {
 
 
-    console.log('statusId :',this.statusId )
     const dialogRef2 = this.dialogService.open(EditComponent, {
       data: {
         id: id,
@@ -686,7 +685,8 @@ export class ListWOComponent implements OnInit {
       header: this.lang == "en" ? "View Work Order" : "بيان أمر الشغل",
       data: {
         id: id,
-        statusId: this.statusId
+        statusId: this.statusId,
+        
       },
       width: '70%',
       style: {
@@ -773,7 +773,6 @@ export class ListWOComponent implements OnInit {
     this.rowsSkipped=event.first;
     this.spinner.show();
     this.workOrderService.ListWorkOrders(this.sortFilterObjects, event.first, event.rows).subscribe(workorders => {
-
       workorders.results.forEach(element => {
         if (element.workOrderStatusId < 12 && (element.workOrderStatusId != 0)) {
           this.timer = window.setInterval(() => {
