@@ -457,6 +457,7 @@ export class ListComponent implements OnInit {
     this.rowsSkipped=event.first;
     this.spinner.show();
     this.requestService.ListRequests(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
+      console.log('items :', items)
       this.lstRequests = items.results;
       this.count = items.count;
       this.spinner.hide();

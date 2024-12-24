@@ -60,7 +60,6 @@ export class CreateWOComponent implements OnInit {
   requestDetailObj: RequestDetails;
   woTaskObj: CreateAssetWorkOrderTaskVM;
   lstWOTasks: CreateAssetWorkOrderTaskVM[] = [];
-
   createTaskObj: CreateTasks;
   lstAssetWorkOrderTask: IndexAssetWorkOrderTaskVM[] = [];
   lstSelectedCreateTasks: IndexAssetWorkOrderTaskVM[] = [];
@@ -253,7 +252,6 @@ export class CreateWOComponent implements OnInit {
       }
       return false;
     }
-
     if (this.createWorkOrderObj.subject == "") {
       this.errorDisplay = true;
       if (this.lang == "en") {
@@ -261,12 +259,8 @@ export class CreateWOComponent implements OnInit {
       } else {
         this.errorMessage = "من فضلك اكتب موضوع أمر الشغل";
       }
-
       return false;
     }
-
-
-
     if (this.createWorkOrderObj.workOrderPeriorityId == 0) {
       this.errorDisplay = true;
       if (this.lang == "en") {
@@ -315,46 +309,37 @@ export class CreateWOComponent implements OnInit {
             this.createRequestTrackingObj.createdById = this.currentUser.id
             this.createRequestTrackingObj.requestId = this.serviceRequestId;
             this.createRequestTrackingObj.hospitalId = this.currentUser.hospitalId;
-            this.createRequestTrackingObj.strDescriptionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
             this.createRequestTrackingObj.requestStatusId = 3;
-            this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(inprogress => {
-              this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
-              this.assetStatusObj.assetDetailId = this.assetDetailId;
-              this.assetStatusObj.assetStatusId = 4;
-              this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj).subscribe(() => {
-                this.display = true;
-                this.isDisabled = true;
-              });
-            });
-            if (this.lstCreateWorkOrderTracking.length > 0) {
-              this.lstCreateWorkOrderTracking.forEach((elemnt, index) => {
-                elemnt.hospitalId = this.currentUser.hospitalId;
-                elemnt.workOrderTrackingId = Number(trackId);
-                this.workOrderservice.CreateWorkOrderAttachments(elemnt).subscribe(lstfiles => {
-                  this.uploadService.uploadWorkOrderFiles(elemnt.workOrderFile, elemnt.fileName).subscribe(
-                    (event) => {
-                      this.display = true;
-                    },
-                    (err) => {
-                      if (this.lang == "en") {
-                        this.errorDisplay = true;
-                        this.errorMessage = 'Could not upload the file:' + elemnt[index].fileName;
-                      }
-                      else {
-                        this.errorDisplay = true;
-                        this.errorMessage = 'لا يمكن رفع ملف ' + elemnt[index].fileName;
-                      }
-                    });
+            console.log('this.createRequestTrackingObj', this.createRequestTrackingObj)
+            this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(reqTrackingId => {
+              if (this.lstCreateWorkOrderTracking.length > 0) {
+                console.log('this.lstCreateWorkOrderTracking', this.lstCreateWorkOrderTracking)
+                this.lstCreateWorkOrderTracking.forEach((elemnt, index) => {
+                  elemnt.hospitalId = this.currentUser.hospitalId;
+                  elemnt.workOrderTrackingId = reqTrackingId;
+                  console.log('reqTrackingId', reqTrackingId)
+                  this.workOrderservice.CreateWorkOrderAttachments(elemnt).subscribe(lstfiles => {
+                    this.uploadService.uploadWorkOrderFiles(elemnt.workOrderFile, elemnt.fileName).subscribe(
+                      (event) => {
+                      },
+                      (err) => {
+                        if (this.lang == "en") {
+                          this.errorDisplay = true;
+                          this.errorMessage = 'Could not upload the file:' + elemnt[index].fileName;
+                        }
+                        else {
+                          this.errorDisplay = true;
+                          this.errorMessage = 'لا يمكن رفع ملف ' + elemnt[index].fileName;
+                        }
+                      });
+                  });
                 });
-              });
-              this.display = true;
-              this.lstCreateWorkOrderTracking = [];
-            }
-            else {
-              this.display = true;
-              this.isDisabled = true;
-            }
-            this.ref.close("Created");
+                this.lstCreateWorkOrderTracking = [];
+              }
+              
+              this.ref.close("Created");
+            });
+        
           });
         }, (error) => {
           this.errorDisplay = true;

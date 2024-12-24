@@ -244,9 +244,7 @@ export class CreateComponent implements OnInit {
     if(!validStatus)
     {
       return;
-    }
-    console.log("this.selectedType :",this.selectedType);
-  
+    }  
     if (this.selectedType == 1) {
       if (this.assetObj == undefined) {
         this.resetAssetDetailsFields();
@@ -381,7 +379,6 @@ export class CreateComponent implements OnInit {
       
       this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(requestTrackingId => {
         this.requestTrackingId = requestTrackingId
-
         var statusObj = new AssetStatusTransactionVM();
         statusObj.assetDetailId = this.reqObj.assetDetailId;
         statusObj.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
@@ -390,9 +387,10 @@ export class CreateComponent implements OnInit {
         });
 
         if (this.lstCreateRequestDocument.length > 0) {
+          console.log('this.lstCreateRequestDocument', this.lstCreateRequestDocument)
           this.lstCreateRequestDocument.forEach((elemnt, index) => {
             elemnt.hospitalId = this.currentUser.hospitalId != 0 ? this.currentUser.hospitalId : this.reqObj.hospitalId;
-            elemnt.requestTrackingId = Number(e);
+            elemnt.requestTrackingId = this.requestTrackingId;
             console.log('elemnt :',elemnt )
             this.requestService.CreateRequestAttachments(elemnt).subscribe(lstfiles => {
               this.uploadService.uploadRequestFiles(elemnt.requestFile, elemnt.fileName).subscribe(
@@ -549,6 +547,7 @@ export class CreateComponent implements OnInit {
     this.reqObj.hospitalId=assetBarCodeObj.hospitalId
     this.applicationStatus = this.lang == "en" ? this.assetObj["assetStatus"] : this.assetObj["assetStatusAr"];
     this.showStatus=true;
+    console.log('this.applicationStatus', this.applicationStatus)
     this.assetIsWorking=this.assetObj.assetStatus=="Working"?true:false;
     this.requestService.GetOldRequestsByHospitalAssetId(assetBarCodeObj.id).subscribe(items => {
       this.lstOldRequests = items;

@@ -61,7 +61,6 @@ export class ListWOComponent implements OnInit {
   errorDisplay: boolean = false;
   display: boolean = false;
   printWorkOrderObj: PrintWorkOrderVM;
-  page: Paging;
   lstWorkOrders: ListWorkOrderVM[] = [];
   lstWorkOrderStatus: WorkOrderStatusVM[]=[];
   createRequestTrackingObj: CreateRequestTracking;
@@ -138,9 +137,7 @@ export class ListWOComponent implements OnInit {
   displayWOObj: boolean = false;
   printedBy: string = "";
   rowsSkipped:number;
-  thisYear: number;
-  lastYear: number;
-  nextYear: number;
+ 
   isValidDate: boolean = false;
   @ViewChild("wotable") dataTable: Table;
 
@@ -162,25 +159,14 @@ export class ListWOComponent implements OnInit {
     this._selectedColumns = this.cols.filter(col => val.includes(col));
   }
   ngOnInit(): void {
-
-    this.thisYear = (new Date().getFullYear());
-    this.lastYear = (new Date().getFullYear()) - 1;
-    this.nextYear = (new Date().getFullYear()) + 1;
-
     this.createRequestTrackingObj = { strDescriptionDate: '', id: 0, createdById: "", description: '', descriptionDate: new Date(), requestId: 0, requestStatusId: 0, hospitalId: 0 }
-
-
     this.onLoad();
-    
-
     const translationKeys = ['Asset.Maintainance', 'Asset.WorkOrders'];
     const parentUrlArray = this.breadcrumbService.getParentUrlSegments();
     this.breadcrumbService.addBreadcrumb(this.activateRoute.snapshot, parentUrlArray, translationKeys);
-
     this.onLoadByLogIn();
   }
   onLoad() {
-    this.page = { pagenumber: 1, pagesize: 10 }
     this.printWO = { hospitalName: '', hospitalNameAr: '', lang: '', printedBy: '' }
     this.printWorkOrderObj = {
       creationDate1: '', brandName: '', brandNameAr: '', lastWorkOrder: '', firstRequest: '', closedDate: '', assetBarCode: '', modelNumber: "", masterAssetCode: '', assetCode: '', id: 0, lstWorkOrderTracking: [], assetName: '', assetNameAr: '', assetSerial: '', createdBy: '', creationDate: new Date, hospitalName: '', hospitalNameAr: '', note: '',
@@ -214,9 +200,7 @@ export class ListWOComponent implements OnInit {
       warrantyExpires: '', warrantyStart: '', workOrderPeriorityId: 0, workOrderPeriorityName: '', workOrderPeriorityNameAr: '', workOrderStatusId: 0, workOrderSubject: '', workOrderTrackingId: 0, workOrderTypeId: 0
       , workOrderTypeName: '', workOrderTypeNameAr: '',brandId:0
     }
-    this.governorateService.GetGovernorates().subscribe(items => {
-      this.lstGovernorates = items;
-    });
+ 
 
     this.exportCheckedWO = {
       id: 0, subject: '', workOrderNumber: '', barCode: '', creationDate: new Date, closedDate: new Date, plannedStartDate: new Date, plannedEndDate: new Date, actualStartDate: new Date, actualEndDate: new Date, note: '', createdById: '', createdBy: '', workOrderPeriorityId: 0, workOrderPeriorityName: '', workOrderPeriorityNameAr: '', workOrderTypeId: 0, workOrderTypeName: '', requestId: 0, requestSubject: '', requestNumber: '', workOrderSubject: '', workOrderTrackingId: 0,
@@ -225,11 +209,6 @@ export class ListWOComponent implements OnInit {
       printedBy: '', hospitalName: '', hospitalNameAr: '',
     }
 
-
-
-    this.organizationService.GetOrganizations().subscribe(items => {
-      this.lstOrganizations = items;
-    });
 
 
     this.workOrderStatusService.GetWorkOrderStatusByUserId(this.currentUser.id).subscribe(lstWorkOrderStatus => {
@@ -295,11 +274,9 @@ export class ListWOComponent implements OnInit {
           this.isOrg = true;
           this.subOrganizationService.GetSubOrganizationByOrgId(this.currentUser.organizationId).subscribe(suborgs => {
             this.lstSubOrganizations = suborgs;
-
             if (this.currentUser.subOrganizationId > 0) {
               this.sortFilterObjects.searchObj.subOrganizationId = this.currentUser.subOrganizationId;
               this.isSubOrg = true;
-
               this.hospitalService.GetHospitalsBySubOrganizationId(this.currentUser.organizationId).subscribe(hosts => {
                 this.lstHospitals = hosts;
                 this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
@@ -478,75 +455,72 @@ export class ListWOComponent implements OnInit {
       });
   }
   onSearch() {
-    this.page.pagenumber = 1;
-    this.lstWorkOrders = [];
+    // this.lstWorkOrders = [];
 
-    this.validateDates(this.sortFilterObjects.searchObj.start, this.sortFilterObjects.searchObj.end);
-    if (!this.isValidDate) {
-      this.errorDisplay = true;
-      this.errorMessage = this.error.errorMessage;
-      return false;
-    }
-    else {
-      this.page.pagenumber = 1;
-      this.errorDisplay = false;
-      this.sortFilterObjects.searchObj.userId = this.currentUser.id;
-      this.sortFilterObjects.searchObj.statusId = this.statusId;
-      this.workOrderService.ListWorkOrders(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(workorders => {
-        workorders.results.forEach(element => {
-          if (element.workOrderStatusId < 12 && (element.workOrderStatusId != 0)) {
-            this.timer = window.setInterval(() => {
-              this.startStamp = new Date(element.creationDate).getTime();
-              this.newDate = new Date();
-              this.newStamp = this.newDate.getTime();
-              var diff = Math.round((this.newStamp - this.startStamp) / 1000);
-              var d = Math.floor(diff / (24 * 60 * 60));
-              diff = diff - (d * 24 * 60 * 60);
-              var h = Math.floor(diff / (60 * 60));
-              diff = diff - (h * 60 * 60);
-              var m = Math.floor(diff / (60));
-              diff = diff - (m * 60);
-              var s = diff;
+    // this.validateDates(this.sortFilterObjects.searchObj.start, this.sortFilterObjects.searchObj.end);
+    // if (!this.isValidDate) {
+    //   this.errorDisplay = true;
+    //   this.errorMessage = this.error.errorMessage;
+    //   return false;
+    // }
+    // else {
+    //   this.errorDisplay = false;
+    //   this.sortFilterObjects.searchObj.userId = this.currentUser.id;
+    //   this.sortFilterObjects.searchObj.statusId = this.statusId;
+    //   this.workOrderService.ListWorkOrders(this.sortFilterObjects, this.page.pagenumber, this.page.pagesize).subscribe(workorders => {
+    //     workorders.results.forEach(element => {
+    //       if (element.workOrderStatusId < 12 && (element.workOrderStatusId != 0)) {
+    //         this.timer = window.setInterval(() => {
+    //           this.startStamp = new Date(element.creationDate).getTime();
+    //           this.newDate = new Date();
+    //           this.newStamp = this.newDate.getTime();
+    //           var diff = Math.round((this.newStamp - this.startStamp) / 1000);
+    //           var d = Math.floor(diff / (24 * 60 * 60));
+    //           diff = diff - (d * 24 * 60 * 60);
+    //           var h = Math.floor(diff / (60 * 60));
+    //           diff = diff - (h * 60 * 60);
+    //           var m = Math.floor(diff / (60));
+    //           diff = diff - (m * 60);
+    //           var s = diff; 
+    //           if (this.lang == "en")
+    //             element.elapsedTime = d + " day(s), " + h + ":" + m + ":" + s + "";
+    //           else
+    //             element.elapsedTime = (d).toLocaleString("ar-SA") + " يوم و  " + (s).toLocaleString("ar-SA") + ":" + (m).toLocaleString("ar-SA") + ":" + (h).toLocaleString("ar-SA") + "";
 
-              if (this.lang == "en")
-                element.elapsedTime = d + " day(s), " + h + ":" + m + ":" + s + "";
-              else
-                element.elapsedTime = (d).toLocaleString("ar-SA") + " يوم و  " + (s).toLocaleString("ar-SA") + ":" + (m).toLocaleString("ar-SA") + ":" + (h).toLocaleString("ar-SA") + "";
+    //         }, 1000);
+    //       }
+    //       else if (element.workOrderStatusId == 12) {
+    //         var firstItem = element.firstTrackDate;
+    //         var lastItem = element.creationDate;
+    //         this.startStamp = new Date(firstItem).getTime();
+    //         this.newDate = new Date(lastItem);
+    //         this.newStamp = this.newDate.getTime();
+    //         var diff2 = Math.round((this.newStamp - this.startStamp) / 1000);
+    //         var d2 = Math.floor(diff2 / (24 * 60 * 60));
+    //         diff2 = diff2 - (d2 * 24 * 60 * 60);
+    //         var h2 = Math.floor(diff2 / (60 * 60));
+    //         diff2 = diff2 - (h2 * 60 * 60);
+    //         var m2 = Math.floor(diff2 / (60));
+    //         diff2 = diff2 - (m2 * 60);
+    //         var s2 = diff2;
+    //         if (this.lang == "en")
+    //           element.elapsedTime = d2 + " day(s), " + h2 + ":" + m2 + ":" + s2 + "";
+    //         else
+    //           element.elapsedTime = (d2).toLocaleString("ar-SA") + " يوم و  " + ":" + (m2).toLocaleString("ar-SA") + ":" + (h2).toLocaleString("ar-SA") + "";
+    //       }
+    //       this.lstWorkOrders.push(element);
 
-            }, 1000);
-          }
-          else if (element.workOrderStatusId == 12) {
-            var firstItem = element.firstTrackDate;
-            var lastItem = element.creationDate;
-            this.startStamp = new Date(firstItem).getTime();
-            this.newDate = new Date(lastItem);
-            this.newStamp = this.newDate.getTime();
-            var diff2 = Math.round((this.newStamp - this.startStamp) / 1000);
-            var d2 = Math.floor(diff2 / (24 * 60 * 60));
-            diff2 = diff2 - (d2 * 24 * 60 * 60);
-            var h2 = Math.floor(diff2 / (60 * 60));
-            diff2 = diff2 - (h2 * 60 * 60);
-            var m2 = Math.floor(diff2 / (60));
-            diff2 = diff2 - (m2 * 60);
-            var s2 = diff2;
-            if (this.lang == "en")
-              element.elapsedTime = d2 + " day(s), " + h2 + ":" + m2 + ":" + s2 + "";
-            else
-              element.elapsedTime = (d2).toLocaleString("ar-SA") + " يوم و  " + ":" + (m2).toLocaleString("ar-SA") + ":" + (h2).toLocaleString("ar-SA") + "";
-          }
-          this.lstWorkOrders.push(element);
-
-        });
-        this.count = workorders.count;
-        this.loading = false;
-      });
+    //     });
+    //     this.count = workorders.count;
+    //     this.loading = false;
+    //   });
 
 
-      this.workOrderService.ListWorkOrders(this.sortFilterObjects, 0, 0).subscribe(exportWO => {
-        this.lstExportWorkOrdersToExcel = exportWO.results;
-      });
+    //   this.workOrderService.ListWorkOrders(this.sortFilterObjects, 0, 0).subscribe(exportWO => {
+    //     this.lstExportWorkOrdersToExcel = exportWO.results;
+    //   });
 
-    }
+    // }
   }
   getAssetsByHospitalId($event) {
     // if (this.currentUser.hospitalId == 0 && this.currentUser.organizationId == 0 && this.currentUser.subOrganizationId == 0 && this.currentUser.governorateId == 0 && this.currentUser.cityId == 0) {
@@ -724,7 +698,6 @@ export class ListWOComponent implements OnInit {
   getWOByStatusId(Status: any) {
     this.statusId = Status.id;
     this.lstWorkOrders = [];
-    this.page.pagenumber = 1;
     this.sortFilterObjects.searchObj.statusId = Status.id;
     this.lstWorkOrderStatus.forEach((s)=>{ s.isActive=false});    
     Status.isActive=true;

@@ -79,7 +79,6 @@ export class ViewComponent implements OnInit {
       if (listworkorders.length > 0) {
         this.lstWO = listworkorders;
         console.log("this.lstWO :",this.lstWO);
-        
         this.workOrderOj.workOrderNumber = listworkorders[0].workOrderNumber;
         this.workOrderOj.serialNumber = listworkorders[0].serialNumber;
         this.workOrderOj.subject = listworkorders[0].subject;
@@ -87,8 +86,11 @@ export class ViewComponent implements OnInit {
     });
   }
   getDocuments(trackid: number) {
+
+    console.log('trackid :',trackid )
     this.requestDocumentService.GetRequestDocumentsByRequestTrackingId(trackid).subscribe(lstdocs => {
       this.lstDocuments = lstdocs;
+      console.log('this.lstDocuments', this.lstDocuments)
     });
     this.isShowFiles = true;
   }
