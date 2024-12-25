@@ -451,7 +451,6 @@ export class ListComponent implements OnInit {
     });
   }
   LoadRequests(event) {
-
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
     this.rowsSkipped=event.first;
@@ -617,21 +616,19 @@ export class ListComponent implements OnInit {
         "font-size": 40
       }
     });
-
     dialogRef2.onClose.subscribe(async (created) => {
      if(created)
      {
-      
       this.sortFilterObjects.searchObj.statusId=1;
       const lastPageIndex = Math.max(0, Math.floor((this.listRequestStatus[0].count) / 10) * 10);
       this.reloadTableObj.first=lastPageIndex;
       await this.LoadRequests(this.reloadTableObj);
       this.dataTable.first=lastPageIndex;
-      this.GetRequestStatusByUserIdAndActiveStatusById(1);
+      await this.GetRequestStatusByUserIdAndActiveStatusById(1);
       this.showSuccessfullyMessage=true;
           if(this.lang=="en"){
             this.SuccessfullyMessage="Added Successfully";
-            this.SuccessfullyHeader="Add" 
+            this.SuccessfullyHeader="Add"
         }
         else
         {

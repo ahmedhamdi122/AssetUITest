@@ -25,20 +25,20 @@ export class WorkOrderTrackingVM {
 
 
 export class CreateWorkOrderTrackingVM {
-    id: number;
-    workOrderDate: string
-    strWorkOrderDate: string;
-    creationDate: string;
-    notes: string
-    createdById: string
-    workOrderStatusId: number
-    workOrderId: number;
-    assignedTo?: string;
-    actualStartDate: string;
-    actualEndDate: string;
-    plannedStartDate: string;
-    plannedEndDate: string;
-    hospitalId: number;
+    id: number=0;
+    workOrderDate: string=''
+    strWorkOrderDate: string='';
+    creationDate: string='';
+    notes: string=''
+    createdById: string=''
+    workOrderStatusId: number=0
+    workOrderId: number=0;
+    assignedTo?: string='';
+    actualStartDate: string='';
+    actualEndDate: string='';
+    plannedStartDate: string='';
+    plannedEndDate: string='';
+    hospitalId: number=0;
 }
 export class IndexWorkOrderTrackingVM {
     id: number;

@@ -224,6 +224,7 @@ export class GeneratedWorkOrderNumberVM {
 }
 export class ListWorkOrderVM {
     id: number
+    timeDifference:Date
     subject: string;
     requestSubject: string;
     workOrderNumber: string

@@ -215,7 +215,6 @@
                 styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
                 [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" pageLinks="10"
                 (onLazyLoad)="LoadWorkOrder($event)" [loading]="loading" [columns]="selectedColumns" [rowHover]="true">
-  
                 <ng-template pTemplate="header" let-cols>
                     <tr>
                         <th style="text-align: center;display: none;"></th>
@@ -252,6 +251,7 @@
                                 *ngIf="col.field !='assetName' && col.field !='assetNameAr' &&col.field !='creationDate' && col.field !== 'statusName' && col.field !== 'statusNameAr' && col.field !='requestSubject'  && col.field !== 'closedDate'">
                                 {{item[col.field]}}
                             </td>
+                       
                             <td style="text-align: center;" *ngIf="col.field=='creationDate'">
                                 {{item.creationDate | date:'dd-MM-yyyy HH:mm'}}
                             </td>
@@ -338,13 +338,7 @@
 </p-dialog>
 
 
-<p-dialog appendTo="body" modal="true" [(visible)]="startDisplay" [style]="{ width: '350px' }">
-    <p-header style="color: #9f4408">
-        {{ "Asset.Save" | translate }}
-    </p-header>
-    <span style="color: #9f4408; font-weight: bold">
-        {{ startMessage }}</span>
-</p-dialog>
+
 
 <p-dialog appendTo="body" modal="true" [(visible)]="displayWOObj" [style]="{ width: '900px' }" [closable]="false">
     <button (click)="print()">{{'Asset.Print' | translate}}</button>

@@ -96,7 +96,7 @@ export class CreateWOComponent implements OnInit {
   CreateWorkOrderAttachmentObj: CreateWorkOrderAttachmentVM;
   workOrderTrackingObj: CreateWorkOrderTrackingVM;
 
-  lstCreateWorkOrderTracking: CreateWorkOrderAttachmentVM[] = [];
+  lstCreateWorkOrderTrackingAttachment: CreateWorkOrderAttachmentVM[] = [];
   lstUsers: ListEmployees[] = [];
   minDate: Date;
   ActualStartDate: any;
@@ -223,7 +223,7 @@ export class CreateWOComponent implements OnInit {
 
     this.disabledButton = false;
     this.IsSaveProject = false;
-    this.lstCreateWorkOrderTracking = [];
+    this.lstCreateWorkOrderTrackingAttachment = [];
     this.assetStatusObj = { assetDetailId: 0, assetStatusId: 0, statusDate: '', hospitalId: 0 }
     this.requestDetailObj = { departmentName: '', departmentNameAr: '', wONotes: '', hospitalId: 0, barcode: '', serialNumber: '', createdById: '', descriptionDate: new Date(), modeName: '', lstTracking: [], requestStatusId: 0, periorityName: '', requestId: 0, statusName: '', subProblemName: '', userName: '', id: 0, requestCode: '', subject: '', requestPeriorityId: 0, requestDate: new Date(), requestTypeId: 0, requestTypeName: '', subProblemId: 0, description: '', requestModeId: 0, assetDetailId: 0, assetName: '', assetNameAr: '', assetCode: '', modeNameAr: '', periorityNameAr: '', requestTypeNameAr: '', statusNameAr: '', subProblemNameAr: '', problemId: 0, problemName: '', problemNameAr: '' };
 
@@ -312,9 +312,10 @@ export class CreateWOComponent implements OnInit {
             this.createRequestTrackingObj.requestStatusId = 3;
             console.log('this.createRequestTrackingObj', this.createRequestTrackingObj)
             this.requestTrackingService.AddRequestTracking(this.createRequestTrackingObj).subscribe(reqTrackingId => {
-              if (this.lstCreateWorkOrderTracking.length > 0) {
-                console.log('this.lstCreateWorkOrderTracking', this.lstCreateWorkOrderTracking)
-                this.lstCreateWorkOrderTracking.forEach((elemnt, index) => {
+              if (this.lstCreateWorkOrderTrackingAttachment.length > 0) {
+                console.log('this.lstCreateWorkOrderTracking', this.lstCreateWorkOrderTrackingAttachment)
+                this.lstCreateWorkOrderTrackingAttachment.forEach((elemnt, index) => {
+                  console.log('elemnt', elemnt)
                   elemnt.hospitalId = this.currentUser.hospitalId;
                   elemnt.workOrderTrackingId = reqTrackingId;
                   console.log('reqTrackingId', reqTrackingId)
@@ -334,7 +335,7 @@ export class CreateWOComponent implements OnInit {
                       });
                   });
                 });
-                this.lstCreateWorkOrderTracking = [];
+                this.lstCreateWorkOrderTrackingAttachment = [];
               }
               
               this.ref.close("Created");
@@ -396,13 +397,13 @@ export class CreateWOComponent implements OnInit {
         woDocumentObj.fileName = fileToUpload.name;
         woDocumentObj.workOrderFile = fileToUpload;
         woDocumentObj.documentName = fileToUpload.name.split('.')[0];
-        this.lstCreateWorkOrderTracking.push(woDocumentObj);
+        this.lstCreateWorkOrderTrackingAttachment.push(woDocumentObj);
       }
       this.addMultiFilesToList();
     }
   }
   addMultiFilesToList() {
-    this.lstCreateWorkOrderTracking.forEach((element, index) => {
+    this.lstCreateWorkOrderTrackingAttachment.forEach((element, index) => {
       element.workOrderTrackingId = Number(this.workOrderTrackId)
       if (this.itmIndex.length === 0) {
         index = 1;
@@ -424,19 +425,19 @@ export class CreateWOComponent implements OnInit {
   }
   removeFileFromObjectArray(rowIndex) {
     let newIndex;
-    if (rowIndex >= 0 && rowIndex < this.lstCreateWorkOrderTracking.length) {
-      this.lstCreateWorkOrderTracking.splice(rowIndex, 1);
+    if (rowIndex >= 0 && rowIndex < this.lstCreateWorkOrderTrackingAttachment.length) {
+      this.lstCreateWorkOrderTrackingAttachment.splice(rowIndex, 1);
 
-      this.lstCreateWorkOrderTracking.forEach((element, index) => {
+      this.lstCreateWorkOrderTrackingAttachment.forEach((element, index) => {
         element.workOrderTrackingId = Number(this.workOrderTrackId)
         if (this.itmIndex.length === 0) {
           last_element = 1;
         }
-        else if (this.itmIndex.length > 0 && this.lstCreateWorkOrderTracking.length == 0) {
+        else if (this.itmIndex.length > 0 && this.lstCreateWorkOrderTrackingAttachment.length == 0) {
           var last_element = this.itmIndex[this.itmIndex.length - 1];
           last_element = last_element + 1;
         }
-        else if (this.itmIndex.length > 0 && this.lstCreateWorkOrderTracking.length > 0) {
+        else if (this.itmIndex.length > 0 && this.lstCreateWorkOrderTrackingAttachment.length > 0) {
           const incrementedIndex = index + 1;
           newIndex = this.pad((incrementedIndex).toString(), 2);
         }

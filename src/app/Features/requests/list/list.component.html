@@ -218,7 +218,6 @@
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines" responsiveLayout="scroll"
                 [paginator]="true" [lazy]="true" [rows]="10" [totalRecords]="count" pageLinks="10" [rowHover]="true"
                 (onLazyLoad)="LoadRequests($event)" [loading]="loading" [columns]="selectedColumns">
-                 
                 <ng-template pTemplate="header" let-cols>
                     <tr>
                         <th style="text-align: center;"></th>

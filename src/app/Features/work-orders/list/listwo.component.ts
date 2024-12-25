@@ -159,6 +159,7 @@ export class ListWOComponent implements OnInit {
     this._selectedColumns = this.cols.filter(col => val.includes(col));
   }
   ngOnInit(): void {
+    this.WorkOrderTrackingVM=new CreateWorkOrderTrackingVM();
     this.createRequestTrackingObj = { strDescriptionDate: '', id: 0, createdById: "", description: '', descriptionDate: new Date(), requestId: 0, requestStatusId: 0, hospitalId: 0 }
     this.onLoad();
     const translationKeys = ['Asset.Maintainance', 'Asset.WorkOrders'];
@@ -211,11 +212,7 @@ export class ListWOComponent implements OnInit {
 
 
 
-    this.workOrderStatusService.GetWorkOrderStatusByUserId(this.currentUser.id).subscribe(lstWorkOrderStatus => {
-      console.log("lstWorkOrderStatus :",lstWorkOrderStatus);
-      this.lstWorkOrderStatus = lstWorkOrderStatus.map((status)=>{return {...status,isActive:false}})  
-      this.lstWorkOrderStatus[this.lstWorkOrderStatus.length-1].isActive=true;
-    });
+    this.GetWorkOrderStatusByUserIdAndActiveStatusById(0);
 
     this.workOrderPeriorityService.GetWorkOrderPerioritys().subscribe((res) => {
       this.lstWorkOrderPeriority = res;
@@ -265,6 +262,14 @@ export class ListWOComponent implements OnInit {
     }
     this._selectedColumns = this.cols;
   }
+  GetWorkOrderStatusByUserIdAndActiveStatusById(statusId:number){
+    this.workOrderStatusService.GetWorkOrderStatusByUserId(this.currentUser.id).subscribe(lstWorkOrderStatus => {
+      this.lstWorkOrderStatus = lstWorkOrderStatus.map((status)=>{return {...status,isActive:false}}) 
+      var status=this.lstWorkOrderStatus.find(s=> s.id==statusId)
+      status.isActive=true;
+    });
+  }
+  
   onLoadByLogIn() {
     if (this.currentUser.hospitalId > 0 && this.currentUser.organizationId > 0 && this.currentUser.subOrganizationId > 0) {
       this.organizationService.GetOrganizations().subscribe(items => {
@@ -746,56 +751,62 @@ export class ListWOComponent implements OnInit {
     this.rowsSkipped=event.first;
     this.spinner.show();
     this.workOrderService.ListWorkOrders(this.sortFilterObjects, event.first, event.rows).subscribe(workorders => {
-      workorders.results.forEach(element => {
-        if (element.workOrderStatusId < 12 && (element.workOrderStatusId != 0)) {
-          this.timer = window.setInterval(() => {
-            this.startStamp = new Date(element.creationDate).getTime();
-            this.newDate = new Date();
-            this.newStamp = this.newDate.getTime();
-            var diff = Math.round((this.newStamp - this.startStamp) / 1000);
-            var d = Math.floor(diff / (24 * 60 * 60));
-            diff = diff - (d * 24 * 60 * 60);
-            var h = Math.floor(diff / (60 * 60));
-            diff = diff - (h * 60 * 60);
-            var m = Math.floor(diff / (60));
-            diff = diff - (m * 60);
-            var s = diff;
-
-            if (this.lang == "en")
-              element.elapsedTime = d + " day(s), " + h + ":" + m + ":" + s + "";
-            else
-              element.elapsedTime = (d).toLocaleString("ar-SA") + " يوم و  " + (s).toLocaleString("ar-SA") + ":" + (m).toLocaleString("ar-SA") + ":" + (h).toLocaleString("ar-SA") + "";
-
-          }, 1000);
-        }
-        else if (element.workOrderStatusId == 12) {
-          var firstItem = element.firstTrackDate;
-          var lastItem = element.creationDate;
-          this.startStamp = new Date(firstItem).getTime();
-          this.newDate = new Date(lastItem);
-          this.newStamp = this.newDate.getTime();
-          var diff2 = Math.round((this.newStamp - this.startStamp) / 1000);
-          var d2 = Math.floor(diff2 / (24 * 60 * 60));
-          diff2 = diff2 - (d2 * 24 * 60 * 60);
-          var h2 = Math.floor(diff2 / (60 * 60));
-          diff2 = diff2 - (h2 * 60 * 60);
-          var m2 = Math.floor(diff2 / (60));
-          diff2 = diff2 - (m2 * 60);
-          var s2 = diff2;
-          if (this.lang == "en")
-            element.elapsedTime = d2 + " day(s), " + h2 + ":" + m2 + ":" + s2 + "";
-          else
-            element.elapsedTime = (d2).toLocaleString("ar-SA") + " يوم و  " + ":" + (m2).toLocaleString("ar-SA") + ":" + (h2).toLocaleString("ar-SA") + "";
-        }
-        this.lstWorkOrders.push(element);
-        
-        console.log('lstWorkOrders',this.lstWorkOrders )
-
-      });
+      console.log('workorders :', workorders.results)
+      this.lstWorkOrders=workorders.results;
+      console.log('lstWorkOrders',this.lstWorkOrders )
       this.count = workorders.count;
+      this.lstWorkOrders.forEach(workorder=>
+        console.log('workorder :',workorder.timeDifference)
+        
+      )
       this.loading = false;
       this.spinner.hide();
-    });
+      // workorders.results.forEach(element => {
+      //   if (element.workOrderStatusId < 12 && (element.workOrderStatusId != 0)) {
+      //     this.timer = window.setInterval(() => {
+      //       this.startStamp = new Date(element.creationDate).getTime();
+      //       this.newDate = new Date();
+      //       this.newStamp = this.newDate.getTime();
+      //       var diff = Math.round((this.newStamp - this.startStamp) / 1000);
+      //       var d = Math.floor(diff / (24 * 60 * 60));
+      //       diff = diff - (d * 24 * 60 * 60);
+      //       var h = Math.floor(diff / (60 * 60));
+      //       diff = diff - (h * 60 * 60);
+      //       var m = Math.floor(diff / (60));
+      //       diff = diff - (m * 60);
+      //       var s = diff;
+
+      //       if (this.lang == "en")
+      //         element.elapsedTime = d + " day(s), " + h + ":" + m + ":" + s + "";
+      //       else
+      //         element.elapsedTime = (d).toLocaleString("ar-SA") + " يوم و  " + (s).toLocaleString("ar-SA") + ":" + (m).toLocaleString("ar-SA") + ":" + (h).toLocaleString("ar-SA") + "";
+
+      //     }, 1000);
+      //   }
+      //   else if (element.workOrderStatusId == 12) {
+      //     var firstItem = element.firstTrackDate;
+      //     var lastItem = element.creationDate;
+      //     this.startStamp = new Date(firstItem).getTime();
+      //     this.newDate = new Date(lastItem);
+      //     this.newStamp = this.newDate.getTime();
+      //     var diff2 = Math.round((this.newStamp - this.startStamp) / 1000);
+      //     var d2 = Math.floor(diff2 / (24 * 60 * 60));
+      //     diff2 = diff2 - (d2 * 24 * 60 * 60);
+      //     var h2 = Math.floor(diff2 / (60 * 60));
+      //     diff2 = diff2 - (h2 * 60 * 60);
+      //     var m2 = Math.floor(diff2 / (60));
+      //     diff2 = diff2 - (m2 * 60);
+      //     var s2 = diff2;
+      //     if (this.lang == "en")
+      //       element.elapsedTime = d2 + " day(s), " + h2 + ":" + m2 + ":" + s2 + "";
+      //     else
+      //       element.elapsedTime = (d2).toLocaleString("ar-SA") + " يوم و  " + ":" + (m2).toLocaleString("ar-SA") + ":" + (h2).toLocaleString("ar-SA") + "";
+      //   }
+      //   this.lstWorkOrders.push(element);
+        
+      
+      });
+
   }
   woDone(id: number) {
     const dialogRef2 = this.dialogService.open(AddwotrackstatusComponent, {
@@ -863,37 +874,47 @@ export class ListWOComponent implements OnInit {
 
   startWO(workorder:any) {
 
-    console.log('workorder :',workorder )
-    console.log('workorder.workOrderStatusId :',workorder.statusId )
-    this.WorkOrderTrackingVM=workorder;
+    this.WorkOrderTrackingVM.notes=workorder.note;
+    this.WorkOrderTrackingVM.createdById=this.currentUser.id;
     this.WorkOrderTrackingVM.workOrderStatusId=2;
-    console.log('this.WorkOrderTrackingVM :',this.WorkOrderTrackingVM )
-    //   this.workOrderTrackingService.AddWorkOrderTracking(this.woTrackObj).subscribe(saved => {
-    //     this.startDisplay = true;
-    //     if (this.lang == "en")
-    //       this.startMessage = "This Work Order Started";
-    //     else {
-    //       this.startMessage = "أمر الشغل بدأ";
-    //     }
-    //     this.displayWOIcons = true;
-    //     this.reload();
-
-    //   }, error => {
-    //     this.errorDisplay = true;
-    //     if (this.lang == 'en') {
-    //       if (error.error.status == 'sr') {
-    //         this.errorMessage = error.error.message;
-    //       }
-    //     }
-    //     if (this.lang == 'ar') {
-    //       if (error.error.status == 'sr') {
-    //         this.errorMessage = error.error.messageAr;
-    //       }
-    //     }
-    //     return false;
-    //   });
-    // });
+    this.WorkOrderTrackingVM.workOrderId=workorder.id;
+    this.WorkOrderTrackingVM.hospitalId=workorder.hospitalId
+      this.workOrderTrackingService.AddWorkOrderTracking(this.WorkOrderTrackingVM).subscribe(async saved => {
+   
+        this.statusId=2;
+        const lastPageIndex = Math.max(0, Math.floor((this.lstWorkOrderStatus[1].count) / 10) * 10);
+        this.reloadTableObj.first=lastPageIndex;
+        console.log('this.reloadTableObj', this.reloadTableObj)
+        await this.LoadWorkOrder(this.reloadTableObj)
+        this.dataTable.first=lastPageIndex;
+        await this.GetWorkOrderStatusByUserIdAndActiveStatusById(2);
+        this.showSuccessfullyMessage=true;
+        if(this.lang=="en"){
+          this.SuccessfullyMessage="This Work Order Started";
+          this.SuccessfullyHeader="Save" 
+      }
+      else
+      {
+        this.SuccessfullyMessage="أمر الشغل بدأ";
+        this.SuccessfullyHeader="حفظ" 
+      }        
+      }, error => {
+        this.errorDisplay = true;
+        if (this.lang == 'en') {
+          if (error.error.status == 'sr') {
+            this.errorMessage = error.error.message;
+          }
+        }
+        if (this.lang == 'ar') {
+          if (error.error.status == 'sr') {
+            this.errorMessage = error.error.messageAr;
+          }
+        }
+        return false;
+      });
+    
   }
+
   reload() {
 
     let currentUrl = this.route.url;
@@ -1742,12 +1763,10 @@ export class ListWOComponent implements OnInit {
       if (this.printWorkOrderObj.closedDate != "") {
         this.printWorkOrderObj.closedDate = new Intl.DateTimeFormat("ar-EG", options).format(new Date(this.printWorkOrderObj.closedDate));
       }
-
       if (this.printWorkOrderObj.subProblemNameAr != "") {
         this.printWorkOrderObj.problemNameAr = this.printWorkOrderObj.problemNameAr;
         this.printWorkOrderObj.subProblemNameAr = this.printWorkOrderObj.subProblemNameAr;
       }
-
       if (this.printWorkOrderObj.lstWorkOrderTracking != null) {
         for (let index = 0; index < this.printWorkOrderObj.lstWorkOrderTracking.length; index++) {
           const element = this.printWorkOrderObj.lstWorkOrderTracking[index];
