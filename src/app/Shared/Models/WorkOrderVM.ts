@@ -222,9 +222,31 @@ export class CreateWorkOrderVM {
 export class GeneratedWorkOrderNumberVM {
     woNumber: string;
 }
+export class lstWorkOrderVM
+{
+    id: number = 0;
+  note: string = '';
+  closedDate: string = '';
+  workOrderStatusId: number = 0;
+  subject: string = '';
+  elapsedTime: string | null = null;
+  workOrderNumber: string = '';
+  creationDate: Date | null = null;
+  createdBy: string = '';
+  requestSubject: string = '';
+  barCode: string = '';
+  statusName: string = '';
+  statusNameAr: string = '';
+  statusColor: string = '';
+  statusIcon: string = '';
+  assetName: string = '';
+  assetNameAr: string = '';
+  serialNumber: string = '';
+  modelNumber: string = '';
+
+}
 export class ListWorkOrderVM {
     id: number
-    timeDifference:Date
     subject: string;
     requestSubject: string;
     workOrderNumber: string
@@ -429,6 +451,10 @@ export class SearchWorkOrderDateVM {
 }
 export class MainClass {
     results: ListWorkOrderVM[];
+    count: number;
+}
+export class WorkOrderResultVM{
+    results: lstWorkOrderVM[];
     count: number;
 }
 

@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Paging } from '../Models/paging';
 import { CreateWorkOrderAttachmentVM } from '../Models/WorkOrderAttachmentVM';
-import { CreateWorkOrderVM, EditWorkOrderVM, ExportWorkOrderVM, GeneratedWorkOrderNumberVM, IndexWorkOrderVM, ListWorkOrderVM, MainClass, PrintPDFWorkOrderVM, PrintWorkOrderVM, SearchWorkOrderDateVM, SearchWorkOrderVM, SortAndFilterWorkOrderVM, sortWorkOrdersVM } from '../Models/WorkOrderVM';
+import { CreateWorkOrderVM, EditWorkOrderVM, ExportWorkOrderVM, GeneratedWorkOrderNumberVM, IndexWorkOrderVM, ListWorkOrderVM, MainClass, PrintPDFWorkOrderVM, PrintWorkOrderVM, SearchWorkOrderDateVM, SearchWorkOrderVM, SortAndFilterWorkOrderVM, sortWorkOrdersVM, WorkOrderResultVM } from '../Models/WorkOrderVM';
 @Injectable({
   providedIn: 'root'
 })
@@ -137,8 +137,8 @@ export class WorkOrderService {
 
 
 
-  ListWorkOrders(data: SortAndFilterWorkOrderVM, first: number, rows: number): Observable<MainClass> {
-    return this.httpClient.post<MainClass>(`${environment.ListWorkOrders}${first}/${rows}`, data, this.httpHeader);
+  ListWorkOrders(data: SortAndFilterWorkOrderVM, first: number, rows: number): Observable<WorkOrderResultVM> {
+    return this.httpClient.post<WorkOrderResultVM>(`${environment.ListWorkOrders}${first}/${rows}`, data, this.httpHeader);
   }
 
 

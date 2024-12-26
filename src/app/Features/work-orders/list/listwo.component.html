@@ -241,6 +241,7 @@
                             </mat-checkbox>
                         </td>
                         <ng-container *ngFor=" let col of columns">
+                         
                             <td style="text-align: center;"
                                 *ngIf="col.field =='assetName' || col.field =='assetNameAr'">
                                 <span style="text-decoration-line: underline;" (click)="viewDetail(item.id)">

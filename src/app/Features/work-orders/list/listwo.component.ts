@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, ChangeDetectorRef, viewChild, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, viewChild, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { LoggedUser } from 'src/app/Shared/Models/userVM';
-import { ExportWorkOrderVM, IndexWorkOrderVM, ListWorkOrderVM, PrintPDFWorkOrderVM, PrintWorkOrderVM, SearchWorkOrderVM, SortAndFilterWorkOrderVM } from 'src/app/Shared/Models/WorkOrderVM';
+import { ExportWorkOrderVM, IndexWorkOrderVM, ListWorkOrderVM, lstWorkOrderVM, PrintPDFWorkOrderVM, PrintWorkOrderVM, SearchWorkOrderVM, SortAndFilterWorkOrderVM } from 'src/app/Shared/Models/WorkOrderVM';
 import { WorkOrderStatusService } from 'src/app/Shared/Services/work-order-status.service';
 import { WorkOrderService } from 'src/app/Shared/Services/work-order.service';
 import { ViewComponent } from '../../requests/view/view.component';
@@ -48,12 +48,13 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { WorkOrderStatusVM } from 'src/app/Shared/Models/WorkOrderStatusVM';
 import { Table } from 'primeng/table';
+import { timestamp } from 'rxjs';
 @Component({
   selector: 'app-listwo',
   templateUrl: './listwo.component.html',
   styleUrls: ['./listwo.component.css']
 })
-export class ListWOComponent implements OnInit {
+export class ListWOComponent implements OnInit ,OnDestroy{
 
   lang = localStorage.getItem("lang");
 
@@ -61,7 +62,7 @@ export class ListWOComponent implements OnInit {
   errorDisplay: boolean = false;
   display: boolean = false;
   printWorkOrderObj: PrintWorkOrderVM;
-  lstWorkOrders: ListWorkOrderVM[] = [];
+  lstWorkOrders: lstWorkOrderVM[] = [];
   lstWorkOrderStatus: WorkOrderStatusVM[]=[];
   createRequestTrackingObj: CreateRequestTracking;
 
@@ -130,7 +131,7 @@ export class ListWOComponent implements OnInit {
   SuccessfullyHeader:string
   SuccessfullyMessage:string;
   showSuccessfullyMessage:boolean=false;
-  lstExportWorkOrdersToExcel: ListWorkOrderVM[] = [];
+  lstExportWorkOrdersToExcel: lstWorkOrderVM[] = [];
   lstDepartments: ListDepartmentVM[] = [];
   checkedWorkOrder: IndexWorkOrderVM;
   first = 0;
@@ -140,6 +141,7 @@ export class ListWOComponent implements OnInit {
  
   isValidDate: boolean = false;
   @ViewChild("wotable") dataTable: Table;
+  incrementIntervals: any[] = [];
 
   error: any = { isError: false, errorMessage: '' };
   WorkOrderTrackingVM:CreateWorkOrderTrackingVM;
@@ -150,6 +152,9 @@ export class ListWOComponent implements OnInit {
     private departmentService: DepartmentService, private uploadService: UploadFilesService, private breadcrumbService: BreadcrumbService, private activateRoute: ActivatedRoute,private ngxService: NgxUiLoaderService,
     private confirmationService: ConfirmationService, private route: Router, private datePipe: DatePipe, public dialogService: DialogService, private cdr: ChangeDetectorRef) {
     this.currentUser = this.authenticationService.currentUserValue;
+  }
+  ngOnDestroy(): void {
+    this.incrementIntervals.forEach(i=>clearInterval(i))
   }
 
   @Input() get selectedColumns(): any[] {
@@ -567,98 +572,98 @@ export class ListWOComponent implements OnInit {
     });
   }
   deleteWorkOrder(id: number) {
-    this.lstWorkOrders.forEach((element) => {
-      if (element.id == id) {
+  //   this.lstWorkOrders.forEach((element) => {
+  //     if (element.id == id) {
 
-        if (this.lang == "en") {
+  //       if (this.lang == "en") {
 
-          this.confirmationService.confirm({
-            message: 'Are you sure that you want to delete this item   ' + element["subject"] + ' ?',
-            header: 'Delete Item Confirmation',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-              this.workOrderService.DeleteWorkOrder(id).subscribe(deleted => {
-                let currentUrl = this.route.url;
-                this.route.routeReuseStrategy.shouldReuseRoute = () => false;
-                this.route.onSameUrlNavigation = 'reload';
-                this.route.navigate([currentUrl]);
-              },
-                error => {
-                  this.errorDisplay = true;
-                  if (this.lang == 'en') {
-                    if (error.error.status == 'workorder') {
-                      this.errorMessage = error.error.message;
-                    }
-                  } if (this.lang == 'ar') {
-                    if (error.error.status == 'workorder') {
-                      this.errorMessage = error.error.messageAr;
-                    }
-                  }
-                  return false;
-                });
-            },
-            reject: () => {
-              this.confirmationService.close();
-              this.reload();
-            }
-          });
-        }
-        if (this.lang == "ar") {
-          this.confirmationService.confirm({
-            message: ' هل أنت متأكد من مسح هذا العنصر ؟ ' + element["subject"] + ' ?',
-            header: 'تأكيد المسح',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
+  //         this.confirmationService.confirm({
+  //           message: 'Are you sure that you want to delete this item   ' + element["subject"] + ' ?',
+  //           header: 'Delete Item Confirmation',
+  //           icon: 'pi pi-exclamation-triangle',
+  //           accept: () => {
+  //             this.workOrderService.DeleteWorkOrder(id).subscribe(deleted => {
+  //               let currentUrl = this.route.url;
+  //               this.route.routeReuseStrategy.shouldReuseRoute = () => false;
+  //               this.route.onSameUrlNavigation = 'reload';
+  //               this.route.navigate([currentUrl]);
+  //             },
+  //               error => {
+  //                 this.errorDisplay = true;
+  //                 if (this.lang == 'en') {
+  //                   if (error.error.status == 'workorder') {
+  //                     this.errorMessage = error.error.message;
+  //                   }
+  //                 } if (this.lang == 'ar') {
+  //                   if (error.error.status == 'workorder') {
+  //                     this.errorMessage = error.error.messageAr;
+  //                   }
+  //                 }
+  //                 return false;
+  //               });
+  //           },
+  //           reject: () => {
+  //             this.confirmationService.close();
+  //             this.reload();
+  //           }
+  //         });
+  //       }
+  //       if (this.lang == "ar") {
+  //         this.confirmationService.confirm({
+  //           message: ' هل أنت متأكد من مسح هذا العنصر ؟ ' + element["subject"] + ' ?',
+  //           header: 'تأكيد المسح',
+  //           icon: 'pi pi-exclamation-triangle',
+  //           accept: () => {
 
-              this.workOrderService.DeleteWorkOrder(id).subscribe(deleted => {
-                let currentUrl = this.route.url;
-                this.route.routeReuseStrategy.shouldReuseRoute = () => false;
-                this.route.onSameUrlNavigation = 'reload';
-                this.route.navigate([currentUrl]);
-              },
-                error => {
-                  this.errorDisplay = true;
-                  if (this.lang == 'en') {
-                    if (error.error.status == 'workorder') {
-                      this.errorMessage = error.error.message;
-                    }
-                  } if (this.lang == 'ar') {
-                    if (error.error.status == 'workorder') {
-                      this.errorMessage = error.error.messageAr;
-                    }
-                  }
-                  return false;
-                });
-            },
-            reject: () => {
-              this.confirmationService.close();
-              this.reload();
-            }
-          });
-        }
+  //             this.workOrderService.DeleteWorkOrder(id).subscribe(deleted => {
+  //               let currentUrl = this.route.url;
+  //               this.route.routeReuseStrategy.shouldReuseRoute = () => false;
+  //               this.route.onSameUrlNavigation = 'reload';
+  //               this.route.navigate([currentUrl]);
+  //             },
+  //               error => {
+  //                 this.errorDisplay = true;
+  //                 if (this.lang == 'en') {
+  //                   if (error.error.status == 'workorder') {
+  //                     this.errorMessage = error.error.message;
+  //                   }
+  //                 } if (this.lang == 'ar') {
+  //                   if (error.error.status == 'workorder') {
+  //                     this.errorMessage = error.error.messageAr;
+  //                   }
+  //                 }
+  //                 return false;
+  //               });
+  //           },
+  //           reject: () => {
+  //             this.confirmationService.close();
+  //             this.reload();
+  //           }
+  //         });
+  //       }
 
-      }
-    });
-  }
-  addWorkOrder() {
-    const dialogRef2 = this.dialogService.open(CreateWOComponent, {
-      width: '60%',
-      style: {
-        'dir': this.lang == "en" ? 'ltr' : "rtl",
-        "text-align": this.lang == "en" ? 'left' : "right",
-        "direction": this.lang == "en" ? 'ltr' : "rtl",
-        "font-family": "sans-serif",
-        "font-size": 40
-      }
-    });
-    dialogRef2.onClose.subscribe((Created) => {
-      if(Created)
-      {
+  //     }
+  //   });
+  // }
+  // addWorkOrder() {
+  //   const dialogRef2 = this.dialogService.open(CreateWOComponent, {
+  //     width: '60%',
+  //     style: {
+  //       'dir': this.lang == "en" ? 'ltr' : "rtl",
+  //       "text-align": this.lang == "en" ? 'left' : "right",
+  //       "direction": this.lang == "en" ? 'ltr' : "rtl",
+  //       "font-family": "sans-serif",
+  //       "font-size": 40
+  //     }
+  //   });
+  //   dialogRef2.onClose.subscribe((Created) => {
+  //     if(Created)
+  //     {
     
-      }
-    });
-  }
-  viewWorkOrder(id: number) {
+  //     }
+  //   });
+   }
+  viewWorkOrder(id: Number) {
 
     const dialogRef2 = this.dialogService.open(ViewWorkorderComponent, {
       header: this.lang == "en" ? "View Work Order" : "بيان أمر الشغل",
@@ -745,22 +750,24 @@ export class ListWOComponent implements OnInit {
       this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
     if (this.sortFilterObjects.searchObj.hospitalId > 0)
       this.sortFilterObjects.searchObj.hospitalId = this.sortFilterObjects.searchObj.hospitalId;
-
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.statusId = this.statusId;
     this.rowsSkipped=event.first;
     this.spinner.show();
     this.workOrderService.ListWorkOrders(this.sortFilterObjects, event.first, event.rows).subscribe(workorders => {
-      console.log('workorders :', workorders.results)
       this.lstWorkOrders=workorders.results;
       console.log('lstWorkOrders',this.lstWorkOrders )
       this.count = workorders.count;
       this.lstWorkOrders.forEach(workorder=>
-        console.log('workorder :',workorder.timeDifference)
-        
-      )
+        { this.startTimer(workorder.elapsedTime)})
+      // var Timestamps=this.lstWorkOrders.map(workorder=>
+      // {return this.convertTimestamp(workorder.elapsedTime)})
+      // console.log('Timestamps', Timestamps)
       this.loading = false;
       this.spinner.hide();
+    })
+    
+    
       // workorders.results.forEach(element => {
       //   if (element.workOrderStatusId < 12 && (element.workOrderStatusId != 0)) {
       //     this.timer = window.setInterval(() => {
@@ -805,9 +812,45 @@ export class ListWOComponent implements OnInit {
       //   this.lstWorkOrders.push(element);
         
       
-      });
-
+      
   }
+  
+
+convertTimestamp(timestamp: string): string {
+  const dayPart = timestamp.split('.')[0];  
+  const hours = timestamp.split(':')[0].split('.')[1].padStart(2, '0'); 
+  const minutes = timestamp.split(':')[1].padStart(2, '0'); 
+  const seconds =  timestamp.split(':')[2].split(".")[0].padStart(2, '0'); 
+  return `${dayPart} days ${hours}:${minutes}:${seconds}`;
+}
+startTimer(timeStamp): void {
+  this.incrementIntervals.push( setInterval(() => {
+    this.incrementTime(timeStamp);
+  }, 1000))
+}
+
+incrementTime(timeStamp:string): void {
+  // 2.07:08:19.9141799
+  Number(this.lstWorkOrders[0].elapsedTime.split(':')[2])+1;
+  // this.seconds += 1;
+  // // If seconds exceed 59, increment minutes
+  // if (this.seconds >= 60) {
+  //   this.seconds = 0;
+  //   this.minutes += 1;
+  // }
+
+  // // If minutes exceed 59, increment hours
+  // if (this.minutes >= 60) {
+  //   this.minutes = 0;
+  //   this.hours += 1;
+  // }
+
+  // // If hours exceed 23, increment days
+  // if (this.hours >= 24) {
+  //   this.hours = 0;
+  //   this.days += 1;
+  // }
+}
   woDone(id: number) {
     const dialogRef2 = this.dialogService.open(AddwotrackstatusComponent, {
       data: {
@@ -879,6 +922,7 @@ export class ListWOComponent implements OnInit {
     this.WorkOrderTrackingVM.workOrderStatusId=2;
     this.WorkOrderTrackingVM.workOrderId=workorder.id;
     this.WorkOrderTrackingVM.hospitalId=workorder.hospitalId
+    this.spinner.show();
       this.workOrderTrackingService.AddWorkOrderTracking(this.WorkOrderTrackingVM).subscribe(async saved => {
    
         this.statusId=2;
@@ -888,6 +932,7 @@ export class ListWOComponent implements OnInit {
         await this.LoadWorkOrder(this.reloadTableObj)
         this.dataTable.first=lastPageIndex;
         await this.GetWorkOrderStatusByUserIdAndActiveStatusById(2);
+        this.spinner.hide();
         this.showSuccessfullyMessage=true;
         if(this.lang=="en"){
           this.SuccessfullyMessage="This Work Order Started";
@@ -1509,27 +1554,27 @@ export class ListWOComponent implements OnInit {
             barCode: e.barCode,
             serialNumber: e.serialNumber,
             modelNumber: e.modelNumber,
-            supplierName: e.supplierName,
+       //     supplierName: e.supplierName,
             creationDate: creationDate,
             closedDate: closedDate,
             note: e.note,
             status: e.statusName,
-            brandName: e.brandName,
-            departmentName: e.departmentName,
-            warrantyStart: e.warrantyStart,
-            warrantyEnd: e.warrantyEnd,
-            warrantyExpires: e.warrantyExpires,
-            purchaseDate: e.purchaseDate,
-            receivingDate: e.receivingDate,
-            operationDate: e.operationDate,
-            installationDate: e.installationDate,
-            buildingName: e.buildingName,
-            floorName: e.floorName,
-            roomName: e.roomName,
-            price: e.price,
-            costCenter: e.costCenter,
-            poNumber: e.poNumber,
-            remarks: e.remarks
+            // brandName: e.brandName,
+            // departmentName: e.departmentName,
+            // warrantyStart: e.warrantyStart,
+            // warrantyEnd: e.warrantyEnd,
+            // warrantyExpires: e.warrantyExpires,
+            // purchaseDate: e.purchaseDate,
+            // receivingDate: e.receivingDate,
+            // operationDate: e.operationDate,
+            // installationDate: e.installationDate,
+            // buildingName: e.buildingName,
+            // floorName: e.floorName,
+            // roomName: e.roomName,
+            // price: e.price,
+            // costCenter: e.costCenter,
+            // poNumber: e.poNumber,
+            // remarks: e.remarks
           }, "n");
         });
 
@@ -1617,27 +1662,27 @@ export class ListWOComponent implements OnInit {
           var creationDate = this.datePipe.transform(e.creationDate, "dd/MM/yyyy");
           var closedDate = this.datePipe.transform(e.closedDate, "dd/MM/yyyy");
           var row = worksheet.addRow({
-            remarks: e.remarks,
-            poNumber: e.poNumber,
-            costCenter: e.costCenter,
-            price: e.price,
-            roomNameAr: e.roomNameAr,
-            floorNameAr: e.floorNameAr,
-            buildingNameAr: e.buildingNameAr,
-            installationDate: e.installationDate,
-            operationDate: e.operationDate,
-            receivingDate: e.receivingDate,
-            purchaseDate: e.purchaseDate,
-            warrantyExpires: e.warrantyExpires,
-            warrantyEnd: e.warrantyEnd,
-            warrantyStart: e.warrantyStart,
-            brandNameAr: e.brandNameAr,
-            departmentNameAr: e.departmentNameAr,
+            // remarks: e.remarks,
+            // poNumber: e.poNumber,
+            // costCenter: e.costCenter,
+            // price: e.price,
+            // roomNameAr: e.roomNameAr,
+            // floorNameAr: e.floorNameAr,
+            // buildingNameAr: e.buildingNameAr,
+            // installationDate: e.installationDate,
+            // operationDate: e.operationDate,
+            // receivingDate: e.receivingDate,
+            // purchaseDate: e.purchaseDate,
+            // warrantyExpires: e.warrantyExpires,
+            // warrantyEnd: e.warrantyEnd,
+            // warrantyStart: e.warrantyStart,
+            // brandNameAr: e.brandNameAr,
+            // departmentNameAr: e.departmentNameAr,
             status: e.statusNameAr,
             note: e.note,
             closedDate: closedDate,
             creationDate: creationDate,
-            supplierNameAr: e.supplierNameAr,
+           // supplierNameAr: e.supplierNameAr,
             modelNumber: e.modelNumber,
             serialNumber: e.serialNumber,
             barCode: e.barCode,
@@ -1702,27 +1747,27 @@ export class ListWOComponent implements OnInit {
             var creationDate = this.datePipe.transform(e.creationDate, "dd/MM/yyyy");
             var closedDate = this.datePipe.transform(e.closedDate, "dd/MM/yyyy");
             var row = worksheet.addRow({
-              remarks: e.remarks,
-              poNumber: e.poNumber,
-              costCenter: e.costCenter,
-              price: e.price,
-              roomNameAr: e.roomNameAr,
-              floorNameAr: e.floorNameAr,
-              buildingNameAr: e.buildingNameAr,
-              installationDate: e.installationDate,
-              operationDate: e.operationDate,
-              receivingDate: e.receivingDate,
-              purchaseDate: e.purchaseDate,
-              warrantyExpires: e.warrantyExpires,
-              warrantyEnd: e.warrantyEnd,
-              warrantyStart: e.warrantyStart,
-              brandNameAr: e.brandNameAr,
-              departmentNameAr: e.departmentNameAr,
+              // remarks: e.remarks,
+              // poNumber: e.poNumber,
+              // costCenter: e.costCenter,
+              // price: e.price,
+              // roomNameAr: e.roomNameAr,
+              // floorNameAr: e.floorNameAr,
+              // buildingNameAr: e.buildingNameAr,
+              // installationDate: e.installationDate,
+              // operationDate: e.operationDate,
+              // receivingDate: e.receivingDate,
+              // purchaseDate: e.purchaseDate,
+              // warrantyExpires: e.warrantyExpires,
+              // warrantyEnd: e.warrantyEnd,
+              // warrantyStart: e.warrantyStart,
+              // brandNameAr: e.brandNameAr,
+              // departmentNameAr: e.departmentNameAr,
               status: e.statusNameAr,
               note: e.note,
               closedDate: closedDate,
               creationDate: creationDate,
-              supplierNameAr: e.supplierNameAr,
+           //   supplierNameAr: e.supplierNameAr,
               modelNumber: e.modelNumber,
               serialNumber: e.serialNumber,
               barCode: e.barCode,
