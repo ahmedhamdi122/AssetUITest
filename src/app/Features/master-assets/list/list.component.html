@@ -1,4 +1,4 @@
-<div class="col-12" [ngStyle]="{ display: loading ? 'none' : 'block' }">
+<div class="col-12 p-1" [ngStyle]="{ display: loading ? 'none' : 'block' }">
  
     <div class=" row top-buffer p-3">
         <div class="col-2">
@@ -22,7 +22,7 @@
     </div>
     <div *ngIf="showFilter" class="filter p-3 m-2" style="background-color: white ;border-radius: 20px;">
         <div class="col-12" >
-            <div >
+            <div>
                 <form (ngSubmit)="onSearch()" #searchForm="ngForm">
                     <div class="row">
                         <div class="col-2">

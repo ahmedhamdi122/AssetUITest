@@ -186,7 +186,7 @@ export class EditComponent implements OnInit {
     this.requestDetailsObj = {
       wONotes: '', departmentName: '', departmentNameAr: '',
       barcode: '', requestTypeName: '', subProblemName: '', modeName: '', periorityName: '', assetCode: '', hospitalId: 0,
-      serialNumber: '', createdById: "", id: 0, requestCode: '', descriptionDate: new Date, lstTracking: [], requestId: 0, statusName: "", userName: "",
+      serialNumber: '', createdById: "", id: 0, requestCode: '', descriptionDate: new Date, lstRequestTracking: [],lstWorkorderTracking:[], requestId: 0, statusName: "", userName: "",
       subject: '', requestPeriorityId: 0, requestStatusId: 0, requestDate: new Date(), subProblemId: 0, description: '', requestModeId: 0, assetDetailId: 0, requestTypeId: 0,
       assetName: '', assetNameAr: '', modeNameAr: '', periorityNameAr: '', requestTypeNameAr: '', statusNameAr: '', subProblemNameAr: '', problemId: 0, problemName: '', problemNameAr: ''
     }

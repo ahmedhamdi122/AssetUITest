@@ -225,6 +225,7 @@ export class GeneratedWorkOrderNumberVM {
 export class lstWorkOrderVM
 {
     id: number = 0;
+    RequestId:number;
   note: string = '';
   closedDate: string = '';
   workOrderStatusId: number = 0;

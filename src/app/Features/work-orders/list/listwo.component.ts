@@ -745,7 +745,6 @@ export class ListWOComponent implements OnInit ,OnDestroy{
 
   }
   LoadWorkOrder(event) {
-
     if (this.currentUser.hospitalId > 0)
       this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
     if (this.sortFilterObjects.searchObj.hospitalId > 0)
@@ -756,13 +755,13 @@ export class ListWOComponent implements OnInit ,OnDestroy{
     this.spinner.show();
     this.workOrderService.ListWorkOrders(this.sortFilterObjects, event.first, event.rows).subscribe(workorders => {
       this.lstWorkOrders=workorders.results;
-      console.log('lstWorkOrders',this.lstWorkOrders )
+      console.log('this.lstWorkOrders :', this.lstWorkOrders)
       this.count = workorders.count;
       this.lstWorkOrders.forEach(workorder=>
         { this.startTimer(workorder.elapsedTime)})
       // var Timestamps=this.lstWorkOrders.map(workorder=>
       // {return this.convertTimestamp(workorder.elapsedTime)})
-      // console.log('Timestamps', Timestamps)
+      
       this.loading = false;
       this.spinner.hide();
     })
@@ -851,10 +850,11 @@ incrementTime(timeStamp:string): void {
   //   this.days += 1;
   // }
 }
-  woDone(id: number) {
+  woDone(workorder:any) {
+
     const dialogRef2 = this.dialogService.open(AddwotrackstatusComponent, {
       data: {
-        workOrderId: id,
+        workOrderObj: workorder,
         statusId: 7
       },
       width: '60%',
@@ -866,10 +866,26 @@ incrementTime(timeStamp:string): void {
         "font-size": 40
       }
     });
-    dialogRef2.onClose.subscribe((WoDone) => {
+    dialogRef2.onClose.subscribe(async(WoDone) => {
       if(WoDone)
       {
-        this.reload();
+        this.statusId=11;
+        const lastPageIndex = Math.max(0, Math.floor((this.lstWorkOrderStatus[1].count) / 10) * 10);
+        this.reloadTableObj.first=lastPageIndex;
+        await this.LoadWorkOrder(this.reloadTableObj)
+        this.dataTable.first=lastPageIndex;
+        await this.GetWorkOrderStatusByUserIdAndActiveStatusById(11);
+        this.spinner.hide();
+        this.showSuccessfullyMessage=true;
+        if(this.lang=="en"){
+          this.SuccessfullyMessage="Saved successfully";
+          this.SuccessfullyHeader="Save" 
+      }
+      else
+      {
+        this.SuccessfullyMessage="تم حفظ البيانات بنجاح"
+        this.SuccessfullyHeader="حفظ" 
+      }        
       }
     });
 
@@ -928,7 +944,6 @@ incrementTime(timeStamp:string): void {
         this.statusId=2;
         const lastPageIndex = Math.max(0, Math.floor((this.lstWorkOrderStatus[1].count) / 10) * 10);
         this.reloadTableObj.first=lastPageIndex;
-        console.log('this.reloadTableObj', this.reloadTableObj)
         await this.LoadWorkOrder(this.reloadTableObj)
         this.dataTable.first=lastPageIndex;
         await this.GetWorkOrderStatusByUserIdAndActiveStatusById(2);

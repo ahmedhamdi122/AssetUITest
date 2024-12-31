@@ -89,7 +89,7 @@
                     <div class="row">
                 <div class="col-7">
 
-                    <p-table [value]="requestDetailObj.lstTracking"
+                    <p-table [value]="requestDetailObj.lstRequestTracking" 
                         styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
                         <ng-template pTemplate="header">
                             <tr [ngStyle]="lang =='en' ? {'text-align': 'left'} : {  'text-align': 'right'}">
@@ -166,7 +166,7 @@
            
             <div class="row">
                 <div class="col-7">
-                    <p-table [value]="lstWO" name="WOTbl"
+                    <p-table [value]="requestDetailObj.lstWorkorderTracking" name="WOTbl" 
                         styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
                         [paginator]="true" [rows]="10">
                         <ng-template pTemplate="header">
@@ -217,7 +217,7 @@
                 </div>
                 <div class="col-5" *ngIf="isWOShowFiles">
                     <p-fieldset legend="{{'Asset.TrackDocuments' | translate }}">
-                        <p-table class="table" [value]="lstWODocuments"
+                        <p-table class="table" [value]="lstWODocuments" [totalRecords]="lstWODocuments.length"
                             styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
                             <ng-template pTemplate="header">
                                 <tr>
@@ -234,7 +234,6 @@
                                         <a (click)="downloadWOFile(doc.fileName)" class="viewIcon"   pTooltip="{{'Asset.DownloadFile' | translate }}"
                                             tooltipPosition="bottom">
                                             <i class="pi pi-download viewIcon" style="color: #61bb20;font-size: 1rem;"></i></a>
-
                                     </td>
                                 </tr>
                             </ng-template>

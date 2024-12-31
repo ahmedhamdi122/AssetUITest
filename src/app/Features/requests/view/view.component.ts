@@ -51,14 +51,14 @@ export class ViewComponent implements OnInit {
 
     this.requestDetailObj = {
       wONotes: '', departmentName: '', departmentNameAr: '',
-      hospitalId: 0, barcode: '', serialNumber: '', createdById: "", descriptionDate: new Date(), modeName: "", lstTracking: [], requestStatusId: 0, periorityName: "", requestId: 0, statusName: "", subProblemName: "", userName: "",
+      hospitalId: 0, barcode: '', serialNumber: '', createdById: "", descriptionDate: new Date(), modeName: "", lstRequestTracking: [],lstWorkorderTracking:[], requestStatusId: 0, periorityName: "", requestId: 0, statusName: "", subProblemName: "", userName: "",
       id: 0, requestCode: '', subject: '', requestPeriorityId: 0, requestDate: new Date(), requestTypeId: 0, requestTypeName: "", subProblemId: 0, description: '', requestModeId: 0, assetDetailId: 0,
       assetName: '', assetNameAr: '', modeNameAr: '', periorityNameAr: '', requestTypeNameAr: '', statusNameAr: '', subProblemNameAr: '', problemId: 0, problemName: '', problemNameAr: '', assetCode: ''
     }
     this.workOrderOj = { actualEndDate: new Date(), actualStartDate: new Date(), assignedTo: "", assignedToName: '', createdBy: '', createdById: '', creationDate: new Date(), id: 0, note: '', notes: '', plannedEndDate: new Date(), plannedStartDate: new Date(), requestId: 0, requestSubject: '', serialNumber: '', statusName: '', subject: '', trackId: 0, workOrderDate: new Date(), workOrderId: 0, workOrderNumber: '', workOrderPeriorityId: 0, workOrderPeriorityName: '', workOrderStatusId: 0, workOrderSubject: '', workOrderTrackingId: 0, workOrderTypeId: 0, workOrderTypeName: '' };
 
-    let id = this.config.data.id;
-    this.requestTrackingService.GetAllDescByRequestID(id).subscribe(
+    let RequestID = this.config.data.id;
+    this.requestTrackingService.GetAllDescByRequestID(RequestID).subscribe(
       res => {
         this.requestDetailObj = res
         console.log("this.requestDetailObj :",this.requestDetailObj)
@@ -75,15 +75,8 @@ export class ViewComponent implements OnInit {
     else {
       this.statusId = 0;
     }
-    this.workorderTracking.GetAllWorkOrderFromTrackingByServiceRequestUserId(id, this.currentUser.id).subscribe(listworkorders => {
-      if (listworkorders.length > 0) {
-        this.lstWO = listworkorders;
-        console.log("this.lstWO :",this.lstWO);
-        this.workOrderOj.workOrderNumber = listworkorders[0].workOrderNumber;
-        this.workOrderOj.serialNumber = listworkorders[0].serialNumber;
-        this.workOrderOj.subject = listworkorders[0].subject;
-      }
-    });
+
+ 
   }
   getDocuments(trackid: number) {
 

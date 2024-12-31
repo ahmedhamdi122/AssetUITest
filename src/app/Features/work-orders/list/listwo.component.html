@@ -1,4 +1,4 @@
-<div class="col-12 p-3" [ngStyle]="{ display: loading ? 'none' : 'block' }">
+<div class="col-12 p-1" [ngStyle]="{ display: loading ? 'none' : 'block' }">
 
 <div class="col-12">
     <div class="row p-3">
@@ -295,11 +295,11 @@
                                     <i class="pi pi-address-book" style="color: #89272a;cursor: pointer;"></i>
                                 </span>
                                 <span class="viewIcon" pTooltip="{{'Asset.Done' | translate}}" tooltipPosition="top"
-                                    (click)="woDone(item.id)">
+                                    (click)="woDone(item)">
                                     <i class="pi pi-list-check" style="color: #bb9b4c;"></i>
                                 </span>
                             </span>
-                            <span class="viewIcon" pTooltip="{{'Asset.Reviewed' | translate}}" tooltipPosition="top"
+                            <span  [ngClass]="{ 'viewIcon': item.workOrderStatusId != 11 }" pTooltip="{{'Asset.Reviewed' | translate}}" tooltipPosition="top"
                                 *ngIf="item.workOrderStatusId == 11">
                                 <i class="pi pi-check-circle" style="color: #0d4f28;"></i>
                             </span>
@@ -319,9 +319,7 @@
         </div>
     </div>
 </div>
-
 <p-confirmDialog />
-
 <p-dialog appendTo="body" modal="true" [(visible)]="showSuccessfullyMessage">
     <ng-template pTemplate="header">
       <h6 style="color: #04527e; font-weight: bold; font-size: 16pt">

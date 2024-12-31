@@ -70,13 +70,8 @@ export class AddwotrackstatusComponent implements OnInit {
 
     this.statusId = this.config.data.statusId;
     this.workOrderObj = this.config.data.workOrderObj;
-
-    console.log('workOrderObj :',this.workOrderObj )
     this.onLoad();
-    this.workOrederStatusService.GetWorkOrderStatusById(this.statusId).subscribe(stsName => {
-      this.statusName = this.lang == "en" ? stsName.name : stsName.nameAr
-    });
- 
+  
 
     this.requestObj = { assetCode: '', assetDetailId: 0, assetName: '', assetNameAr: '', barcode: '', createdBy: '', createdById: '', description: '', hospitalId: 0, id: 0, masterAssetId: 0, modeName: '', periorityName: '', problemId: 0, requestCode: '', requestDate: new Date(), requestModeId: 0, requestPeriorityId: 0, requestStatusId: 0, requestTime: '', requestTrackingId: 0, requestTypeId: 0, requestTypeName: '', requestTypeNameAr: '', serialNumber: '', subject: '', subProblemId: 0, subProblemName: '', subProblemNameAr: '' }
   }
@@ -104,7 +99,7 @@ export class AddwotrackstatusComponent implements OnInit {
     this.woTrackObj.notes = $event.value;
   }
   saveStatus() {
-    this.woTrackObj.workOrderId = this.workOrderId;
+    this.woTrackObj.workOrderId = this.workOrderObj.id;
     this.woTrackObj.workOrderStatusId = this.statusId;
     this.woTrackObj.hospitalId = this.currentUser.hospitalId;
 
@@ -124,12 +119,12 @@ export class AddwotrackstatusComponent implements OnInit {
      
 
       this.woTrackObj.hospitalId = this.currentUser.hospitalId;
+
       if (this.statusId == 7) {
         this.woTrackObj.workOrderStatusId = 11;
         this.workOrderTrackingService.AddWorkOrderTracking(this.woTrackObj).subscribe(savedTrack => {
           this.WOTrackingId = savedTrack;
           // this.display = true;
-
           if (this.lstCreateWorkOrderAttachment.length > 0) {
             this.lstCreateWorkOrderAttachment.forEach((item, index) => {
 
@@ -138,8 +133,7 @@ export class AddwotrackstatusComponent implements OnInit {
               this.workOrederService.CreateWorkOrderAttachments(item).subscribe(fileObj => {
                 this.uploadService.uploadWorkOrderFiles(item.workOrderFile, item.fileName).subscribe(
                   (event) => {
-                    this.display = true;
-                    this.isDisabled = true;
+       
                   },
                   (err) => {
                     if (this.lang == "en") {
@@ -154,14 +148,8 @@ export class AddwotrackstatusComponent implements OnInit {
               });
             });
             this.lstCreateWorkOrderAttachment = [];
-
-            this.display = true;
-            this.isDisabled = true;
           }
-          else {
-            this.display = true;
-            this.isDisabled = true;
-          }
+          
         }, error => {
           this.errorDisplay = true;
           if (this.lang == 'en') {
@@ -185,69 +173,22 @@ export class AddwotrackstatusComponent implements OnInit {
           this.requestTrackObj.description = "امر الشغل تم تنفيذه وبإنتظار مراجعة مقدم البلاغ";
         }
         //Solved
-        this.requestTrackObj.strDescriptionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-        this.workOrederService.GetWorkOrderById(this.workOrderId).subscribe(getRequestId => {
-          this.requestId = getRequestId["requestId"];
-
-          this.requestService.GetRequestById(getRequestId["requestId"]).subscribe(reqObj => {
-
           this.requestTrackObj.requestStatusId = 4;
-          this.requestTrackObj.createdById = reqObj.createdById;
-          this.requestTrackObj.requestId = this.requestId;
+          this.requestTrackObj.createdById =this.currentUser.id;
+          this.requestTrackObj.requestId = this.workOrderObj.requestId;
           this.requestTrackObj.hospitalId = this.currentUser.hospitalId;
-          this.requestTrackObj.strDescriptionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-
           this.requestTrackingService.AddRequestTracking(this.requestTrackObj).subscribe(savedWOTrack => {
-         
-              this.assetStatusObj.assetDetailId = reqObj["assetDetailId"];
-              this.assetStatusObj.statusDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-              this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
-              this.assetStatusObj.assetStatusId = 4;
-              this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj).subscribe(() => {
-                if (this.lstCreateWorkOrderAttachment.length > 0) {
-                  this.lstCreateWorkOrderAttachment.forEach((item, index) => {
+            this.ref.close('creadted');
 
-                    item.hospitalId = this.currentUser.hospitalId;
-                    item.workOrderTrackingId = Number(savedWOTrack);
-                    this.workOrederService.CreateWorkOrderAttachments(item).subscribe(fileObj => {
-                      this.uploadService.uploadWorkOrderFiles(item.workOrderFile, item.fileName).subscribe(
-                        (event) => {
-                          this.display = true;
-                          this.isDisabled = true;
-                        },
-                        (err) => {
-                          if (this.lang == "en") {
-                            this.errorDisplay = true;
-                            this.errorMessage = 'Could not upload the file:' + item[index].fileName;
-                          }
-                          else {
-                            this.errorDisplay = true;
-                            this.errorMessage = 'لا يمكن رفع ملف ' + item[index].fileName;
-                          }
-                        });
-                    });
-                  });
-                  this.lstCreateWorkOrderAttachment = [];
-                  this.display = true;
-                  this.isDisabled = true;
-                }
-                else {
-                  this.display = true;
-                  this.isDisabled = true;
-                }
-              });
-            });
-          });
-        });
+          })
+         
+       
+   
       }
       else {
- 
-
-
-        console.log('this.woTrackObj :',this.woTrackObj )
         this.workOrderTrackingService.AddWorkOrderTracking(this.woTrackObj).subscribe(saved => {
           // this.display = true;
-        
+          
                   if (this.lstCreateWorkOrderAttachment.length > 0) {
                     this.lstCreateWorkOrderAttachment.forEach((item, index) => {
                       item.hospitalId = this.currentUser.hospitalId;
@@ -294,12 +235,10 @@ export class AddwotrackstatusComponent implements OnInit {
       var hCode = this.pad(this.currentUser.hospitalCode, 4);
       var srCode = this.pad(this.workOrderObj.workOrderNumber, 10);
       var newIndex = this.pad((this.lstCreateWorkOrderAttachment.length).toString(), 2);
-      console.log('newIndex :',newIndex)
       let WOFileName = hCode + "WO" + srCode + newIndex;
       CreateWorkOrderAttachment.fileName = WOFileName + "." + ext;
         this.lstCreateWorkOrderAttachment.push(CreateWorkOrderAttachment);
       }
-      console.log(' this.lstCreateWorkOrderAttachment :', this.lstCreateWorkOrderAttachment)
 
     }
   }
@@ -314,7 +253,7 @@ export class AddwotrackstatusComponent implements OnInit {
   //       var last =  this.itmIndex.length;
   //       let newIndex = this.pad((last).toString(), 2);
 
-  //       console.log('newIndex :',newIndex )
+  
   //       let WOFileName = hCode + "WO" + srCode + newIndex;
   //       this.createWorkOrderAttachmentObj.fileName = WOFileName + "." + ext;
   //       this.lstCreateWorkOrderAttachment.push(this.createWorkOrderAttachmentObj);
