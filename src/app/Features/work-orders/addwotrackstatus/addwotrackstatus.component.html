@@ -12,22 +12,7 @@
 
 
         <div class="row mt-2">
-            <!-- <div class="col-10">
-                <label for="docmentName"> {{'Asset.DocumentTitle' | translate }}</label>
-                <input #documentName="ngModel" class="form-control" type="text" pInputText
-                    placeholder="{{'Asset.DocumentTitle' | translate }}"
-                    [(ngModel)]="createWorkOrderAttachmentObj.documentName">
-            </div>
-
-            <div class="col-2">
-                <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)"
-                    style="display:none;">
-                <button type="button" class="btnUpload mt-3"
-                    (click)="file.click()"> <i  class="pi pi-upload"
-                        style="color: #61bb20; cursor: pointer;margin: 0px 5px;"></i>{{'Asset.SelectDocument' |
-                    translate }}
-                </button>
-            </div> -->
+        
 
             <div class="col-2 mt-3">
                 <input type="file" multiple #file  (change)="uploadMultipleFile($event)"
@@ -39,8 +24,9 @@
         </div>
         <div class="row mt-2 p-3">
             <div class="col-12">
-                <p-table class="table" [value]="lstCreateWorkOrderAttachment" styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
-                [paginator]="true" [rows]="10" >
+                <p-table class="table"      [paginator]="true"
+                [rows]="5"[totalRecords]="lstCreateWorkOrderAttachment.length"  dataKey="id"    [value]="lstCreateWorkOrderAttachment" styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
+                [paginator]="true">
                 <ng-template pTemplate="header">
                         <tr>
                             <th class="text-center">{{'Asset.Name' | translate }}</th>

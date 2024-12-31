@@ -193,7 +193,8 @@
                 <div class="card-body">
                     <div class="row">
                 <div class="col-7">
-                    <p-table [value]="lstTracks" styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines">
+                    <p-table [value]="lstTracks"  [paginator]="true"
+                    [rows]="5"[totalRecords]="lstTracks.length" dataKey="id"styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines">
                         <ng-template pTemplate="header">
                             <tr [ngStyle]="lang =='en' ? {'text-align': 'left'} : {  'text-align': 'right'}">
                                 <th style="text-align: center;">{{'Asset.Status' | translate }}</th>
@@ -202,7 +203,6 @@
                                 <th style="text-align: center;">{{'Asset.Date' | translate }}</th>
                                 <th style="text-align: center;">{{'Asset.Notes' | translate }}</th>
                                 <th style="text-align: center;">{{'Asset.Documents' | translate }}</th>
-                                <th style="text-align: center;">{{'Asset.Actions' | translate }}</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-trk>
@@ -221,14 +221,7 @@
                                         <i class="pi pi-file"
                                             style="color: #d58308; cursor: pointer;margin: 0px 5px;"></i></a>
                                 </td>
-                                <td style="text-align: center;">
-                                    <span class="editIcon" (click)="editWorkOrderTrack(trk)">
-                                        <i class="pi pi-pen-to-square" style="color: purple" pTooltip="{{'Asset.Edit' | translate}}"></i>
-                                    </span>
-                                    <span class="deleteIcon" (click)="deleteWorkOrderTrack(trk)">
-                                        <i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i>
-                                    </span>
-                                </td>
+                              
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="emptymessage">

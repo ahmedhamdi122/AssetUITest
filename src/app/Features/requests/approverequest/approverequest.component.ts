@@ -133,7 +133,7 @@ export class ApproverequestComponent implements OnInit {
 
     this.requestDetailObj = {
       wONotes: '', departmentName: '', departmentNameAr: '',
-      hospitalId: 0, barcode: '', assetCode: '', assetName: '', assetNameAr: '', descriptionDate: new Date, id: 0, lstTracking: [], modeName: '', modeNameAr: '', periorityName: '', periorityNameAr: '', problemName: '', problemNameAr: '',
+      hospitalId: 0, barcode: '', assetCode: '', assetName: '', assetNameAr: '', descriptionDate: new Date, id: 0, lstRequestTracking: [],lstWorkorderTracking:[], modeName: '', modeNameAr: '', periorityName: '', periorityNameAr: '', problemName: '', problemNameAr: '',
       requestId: 0, requestTypeName: '', requestTypeNameAr: '', statusName: '', statusNameAr: '', subProblemName: '', subProblemNameAr: '', userName: '',
       assetDetailId: 0, createdById: '', description: '', problemId: 0, requestCode: '', requestDate: new Date, requestModeId: 0, requestPeriorityId: 0, requestStatusId: 0, requestTypeId: 0, serialNumber: "", subProblemId: 0, subject: ''
     };

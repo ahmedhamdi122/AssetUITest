@@ -1,5 +1,6 @@
 import { Time } from "@angular/common"
 import { ListRequestDocumentVM } from "./RequestDocumentVM"
+import { WorkOrderTrackingVM } from "./WorkOrderTrackingVM";
 
 export class CreateRequestTracking {
     id: number
@@ -105,7 +106,8 @@ export class RequestDetails {
     departmentNameAr: string;
 
 
-    lstTracking: RequestTrackingView[]
+    lstRequestTracking: RequestTrackingView[]
+    lstWorkorderTracking:WorkOrderTrackingVM[];
 }
 
 

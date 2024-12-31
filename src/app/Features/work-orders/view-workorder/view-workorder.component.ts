@@ -140,7 +140,6 @@ export class ViewWorkorderComponent implements OnInit {
 
 
   onLoad() {
-    this.minDate = new Date();
     this.editWorkOrderObj = {
       workOrderTypeName: '', workOrderTypeNameAr: '',
       id: 0, workOrderStatusId: 0, workOrderTrackingId: 0, masterAssetId: 0, hospitalId: 0, cityId: 0, governorateId: 0,
@@ -171,12 +170,12 @@ export class ViewWorkorderComponent implements OnInit {
 
 
   getDocuments(trackid: number) {
+    console.log('trackid :', trackid)
     this.workOrderAttachmentService.GetWorkOrderAttachmentsByWorkOrderTrackingId(trackid).subscribe(lstdocs => {
       this.lstDocuments = lstdocs;
     });
     this.isShowFiles = true;
   }
-
 
   getSRDocuments(trackid: number) {
     this.requestDocumentService.GetRequestDocumentsByRequestTrackingId(trackid).subscribe(lstdocs => {
@@ -260,130 +259,13 @@ export class ViewWorkorderComponent implements OnInit {
       }
     })
   }
-  updateClock() {
-    this.newDate = new Date();
-    this.newStamp = this.newDate.getTime();
-    var diff = Math.round((this.newStamp - this.startStamp) / 1000);
-
-    var d = Math.floor(diff / (24 * 60 * 60)); /* though I hope she won't be working for consecutive days :) */
-    diff = diff - (d * 24 * 60 * 60);
-    var h = Math.floor(diff / (60 * 60));
-    diff = diff - (h * 60 * 60);
-    var m = Math.floor(diff / (60));
-    diff = diff - (m * 60);
-    var s = diff;
-
-
-    document.getElementById("time-elapsed").innerHTML = d + " day(s), " + h + " hour(s), " + m + " minute(s), " + s + " second(s)";
-  }
-  updateClockInArabic() {
-    this.newDate = new Date();
-    this.newStamp = this.newDate.getTime();
-    var diff = Math.round((this.newStamp - this.startStamp) / 1000);
-
-    var d = Math.floor(diff / (24 * 60 * 60)); /* though I hope she won't be working for consecutive days :) */
-    diff = diff - (d * 24 * 60 * 60);
-    var h = Math.floor(diff / (60 * 60));
-    diff = diff - (h * 60 * 60);
-    var m = Math.floor(diff / (60));
-    diff = diff - (m * 60);
-    var s = diff;
-    // document.getElementById("time-elapsed").innerHTML = d + " يوم ، " + h + " ساعة ، " + m + " دقيقة ، " + s + " ثانية";
-  }
-
-
+ 
 
 
   trackId: number = 0;
 
-  editWorkOrderTrack(WorkOrderTrack: any) {
-   
-    console.log('WorkOrderTrack : ', WorkOrderTrack)
-    const dialogRef2 = this.DialogService.open(EditWorkOrderTrackComponent, {
-      data: {
-        WorkOrderTrackObj: WorkOrderTrack
-      },
-      width: '60%',
-      style: {
-        'dir': this.lang == "en" ? 'ltr' : "rtl",
-        "text-align": this.lang == "en" ? 'left' : "right",
-        "direction": this.lang == "en" ? 'ltr' : "rtl",
-        "font-family": "sans-serif",
-        "font-size": 40
-      }
-    });
-
-    dialogRef2.onClose.subscribe((updated) => {
-     if(updated)
-     {
-      console.log('updated :', updated)
-     }
-    });
-  }
-  updateWorkOrderTrack() {
-    this.editWorkOrderTrackingObj.notes = this.requestObj.description;
-    this.editWorkOrderTrackingObj.id = this.trackId;
-    this.workOrderTrackingService.UpdateWorkOrderTracking(this.editWorkOrderTrackingObj).subscribe(updated => {
-      alert("record updated successfully");
-    });
-  }
-  deleteWorkOrderTrack(trk:any) {
-    this.confirmationService.confirm({
-      message: `${this.lang === 'en' ? `Are you sure you want to delete the Work Order?` : `هل أنت متأكد أنك تريد حذف أمر الشغل`}`,
-      header: `${this.lang === 'en' ? 'Delete Confirmation' : 'تأكيد المسح'}`,
-      icon: 'pi pi-exclamation-triangle',
-      acceptIcon: 'none', 
-      rejectIcon: 'none', 
-      acceptButtonStyleClass: 'btn btn-primary m-2', 
-      rejectButtonStyleClass: 'btn btn-light m-2',
-      rejectLabel: this.lang === 'en' ? 'No' : 'لا',
-      acceptLabel: this.lang === 'en' ? 'Yes' : 'نعم',
-      accept: () => {
-        // this.spinner.show()
-        // this.requestService.DeleteRequest(id).subscribe(async deleted => {
-        //   this.reloadTableObj.first= this.rowsSkipped;
-          
-        //   await this.LoadRequests(this.reloadTableObj);
-          
-        //   this.dataTable.first= this.rowsSkipped;
-        //   this.requestStatusService.GetRequestStatusByUserId(this.currentUser.id).subscribe(res => {
-        //     this.listRequestStatus = res.map((status)=>{return {...status,isActive:false}})  
-        //     this.listRequestStatus[0].isActive=true;
-        //   })
-        //   this.showSuccessfullyMessage=true;
-        //   if(this.lang=="en"){
-        //     this.SuccessfullyMessage="Deleted Successfully";
-        //     this.SuccessfullyHeader="Delete" 
-        // }
-        // else
-        // {
-        //   this.SuccessfullyMessage="تم حذف البيانات بنجاح";
-        //   this.SuccessfullyHeader="مسح" 
-        // }
-        // }, (error) => {
-        //   this.errorDisplay = true;
-    
-        //   if (this.lang == 'en') {
-        //     if (error.error.status == 'req') {
-        //       this.errorMessage = error.error.message;
-        //     }
-        //   } if (this.lang == 'ar') {
-        //     if (error.error.status == 'req') {
-        //       this.errorMessage = error.error.messageAr;
-        //     }
-        //   }
-        //   return false;
-        // });
-      },
-      reject: () => {
-      }
-    });
-
-
-    // this.workOrderTrackingService.DeleteWorkOrderTracking(id).subscribe(deletedObj => {
-    //   alert("record deleted successfully");
-    // });
-  }
+ 
+  
   closeUpdate() {
     this.ref.close();
   }
