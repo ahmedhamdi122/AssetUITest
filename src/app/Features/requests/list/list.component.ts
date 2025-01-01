@@ -673,14 +673,14 @@ export class ListComponent implements OnInit {
       }
     });
   }
-  ApproveRequest(id: number) {
-
+  ApproveRequest(requestId:number,workOrderId:number) {
     const dialogRef2 = this.dialogService.open(ApproverequestComponent, {
       header: this.lang == "en" ? 'Approve Request' : "تأكيد أو رفض الإصلاح",
       data: {
-        id: id
+        reqId:requestId,
+        WoId:workOrderId
       },
-      width: '50%',
+      width: '60%',
       style: {
         'dir': this.lang == "en" ? 'ltr' : "rtl",
         "text-align": this.lang == "en" ? 'left' : "right",
@@ -692,6 +692,7 @@ export class ListComponent implements OnInit {
     dialogRef2.onClose.subscribe((Approved) => {
       if(Approved)
       {
+        console.log('Approved :', Approved)
         //get updated requests
       }
     });

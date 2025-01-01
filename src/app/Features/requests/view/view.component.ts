@@ -34,7 +34,6 @@ export class ViewComponent implements OnInit {
   lstWO: ListWorkOrderFromTrackingVM[] = [];
 
   lstWODocuments: IndexWorkOrderAttachmentVM[] = [];
-  workOrderOj: ListWorkOrderFromTrackingVM;
   constructor(private requestTrackingService: RequestTrackingService, private requestDocumentService: RequestDocumentService,
     private uploadService: UploadFilesService, private ref: DynamicDialogRef, private workOrderAttachmentService: WorkOrderAttachmentService,
     private workOrderTrackingService: WorkOrderTrackingService, private workorderTracking: WorkOrderTrackingService,
@@ -55,11 +54,11 @@ export class ViewComponent implements OnInit {
       id: 0, requestCode: '', subject: '', requestPeriorityId: 0, requestDate: new Date(), requestTypeId: 0, requestTypeName: "", subProblemId: 0, description: '', requestModeId: 0, assetDetailId: 0,
       assetName: '', assetNameAr: '', modeNameAr: '', periorityNameAr: '', requestTypeNameAr: '', statusNameAr: '', subProblemNameAr: '', problemId: 0, problemName: '', problemNameAr: '', assetCode: ''
     }
-    this.workOrderOj = { actualEndDate: new Date(), actualStartDate: new Date(), assignedTo: "", assignedToName: '', createdBy: '', createdById: '', creationDate: new Date(), id: 0, note: '', notes: '', plannedEndDate: new Date(), plannedStartDate: new Date(), requestId: 0, requestSubject: '', serialNumber: '', statusName: '', subject: '', trackId: 0, workOrderDate: new Date(), workOrderId: 0, workOrderNumber: '', workOrderPeriorityId: 0, workOrderPeriorityName: '', workOrderStatusId: 0, workOrderSubject: '', workOrderTrackingId: 0, workOrderTypeId: 0, workOrderTypeName: '' };
 
     let RequestID = this.config.data.id;
     this.requestTrackingService.GetAllDescByRequestID(RequestID).subscribe(
       res => {
+        console.log('res', res)
         this.requestDetailObj = res
         console.log("this.requestDetailObj :",this.requestDetailObj)
       });

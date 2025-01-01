@@ -229,19 +229,11 @@ export class ViewWorkorderComponent implements OnInit {
         this.editWorkOrderObj = woObj;
         this.workOrderTrackingService.GetTrackOfWorkOrderByWorkOrderId(woObj.id).subscribe(tracks => {
           this.lstTracks = tracks;
-
           console.log(' this.lstTracks  :', this.lstTracks  )
           this.spinner.hide();
         });
   })
   }
-
-
-
-
-  
-
-
   downloadFile(fileName) {
     var filePath = `${environment.Domain}UploadedAttachments/`;
     this.uploadService.downloadWorkOrderFile(fileName).subscribe(file => {

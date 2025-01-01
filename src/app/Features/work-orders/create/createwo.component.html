@@ -139,7 +139,7 @@
     </div>
     <div class="row mt-3">
         <div class="col-12">
-            <p-table [value]="lstCreateWorkOrderTrackingAttachment" dataKey="id"
+            <p-table [value]="lstCreateWorkOrderTrackingAttachment" dataKey="id"    [paginator]="true"  [rows]="10" [totalRecords]="lstCreateWorkOrderTrackingAttachment.length" pageLinks="10" [rowHover]="true"
                 styleClass="p-datatable-striped p-datatable-sm p-datatable-gridlines">
                 <ng-template pTemplate="header">
                     <tr>

@@ -1,15 +1,11 @@
-<div class="container card">
-    <div class="card-header">
-
-    </div>
-    <div class="card-body">
-        <div class="row">
+  
+        <div class="row p-1">
             <div class="col-md-12">
                 <span style="font-weight: bold;"> {{'Asset.SRNumber' | translate }} :
                 </span>&nbsp;{{requestDetailObj.requestCode}}
             </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row  p-1">
             <div class="col-md-6">
 
                 <span style="font-weight: bold;">{{'Asset.AssetName' | translate }} :
@@ -23,7 +19,7 @@
                 {{requestDetailObj.assetCode}}
             </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row  p-1">
             <div class="col-md-6" *ngIf="requestDetailObj.problemNameAr !== '' || requestDetailObj.problemName !== ''">
                 <span style="font-weight: bold;">{{'Asset.Problem' | translate }} :
                 </span>&nbsp;{{lang == 'en' ? requestDetailObj.problemName:requestDetailObj.problemNameAr}}
@@ -34,7 +30,7 @@
                 </span>&nbsp;{{lang == 'en' ? requestDetailObj.subProblemName:requestDetailObj.subProblemNameAr}}
             </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row  p-1">
             <div class="col-md-6">
                 <span style="font-weight: bold;"> {{'Asset.Subject' | translate }} :
                 </span>&nbsp;{{requestDetailObj.subject}}
@@ -44,7 +40,7 @@
                 </span>&nbsp;{{requestDetailObj.requestDate | date:'dd-MM-yyyy HH:mm'}}
             </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row  p-1">
             <div class="col-md-4">
                 <span style="font-weight: bold;">{{'Asset.Type' | translate }} :
                 </span>&nbsp;{{lang == 'en' ? requestDetailObj.requestTypeName:requestDetailObj.requestTypeNameAr}}
@@ -59,21 +55,19 @@
                 </span>&nbsp;{{lang == 'en' ? requestDetailObj.periorityName:requestDetailObj.periorityNameAr}}
             </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row  p-1">
             <div class="col-md-12">
                 <span style="font-weight: bold;"> {{'Asset.Description' | translate }} :
                 </span>&nbsp;{{requestDetailObj.description}}
             </div>
         </div>
-        <div class="row top-buffer">
+        <div class="row  p-1">
             <div class="col-md-12" *ngIf="requestDetailObj.lstWorkorderTracking.length != 0">
                 <span style="font-weight: bold;"> {{'Asset.WONotes' | translate }} :
                 </span>&nbsp;{{requestDetailObj.woNotes}}
             </div>
         </div>
-    </div>
-
-    <div class="row top-buffer">
+    <div class="row  p-1">
         <div class="col-12">
             <mat-radio-group [(ngModel)]="selectedItem" (change)="onItemChange($event)" name="gcat" id="gcat">
                 <mat-radio-button [value]="item" *ngFor="let item of lstRadioItems">
@@ -83,22 +77,11 @@
         </div>
     </div>
 
-    <div class="row top-buffer" *ngIf="isReviewed">
-        <div class="col-12">
-            <button (click)="addApprovedRequest()" [disabled]="isDisabled"
-                class="btn btn-primary pull-center btn-sm">{{'Asset.Save' | translate
-                }} </button>
-        </div>
-    </div>
+    
 
-    <div class="row top-buffer" *ngIf="isAssigned">
+    <div class="row  p-1" *ngIf="isAssigned">
         <div class="col-12">
-            <mat-horizontal-stepper [linear]="isLinear" #stepper>
-                <p-toast position="top-right" key="tr" [baseZIndex]="10000"></p-toast>
-                <mat-step [stepControl]="firstFormGroup">
-                    <ng-template matStepLabel>{{'Asset.ReAssign' | translate}} {{'Asset.WorkOrder' | translate}}
-                    </ng-template>
-
+                
 
                     <div class="row top-buffer">
                         <div class="col-12">
@@ -114,65 +97,23 @@
                             </select>
                         </div>
                     </div>
-                    <!-- <div class="row  top-buffer">
-                        <div class="col-6">
-                            <label for="asd">{{'Asset.ActualStartDate' | translate }}</label>
-                            <input type="date" class="form-control" id="asd" name="asd" placeholder="Actual Start Date"
-                                [(ngModel)]="creatWorkOrderTrackingObj.actualStartDate"
-                                min="{{minDate | date:'yyyy-MM-dd'}}" pTooltip="Please,Enter Actual Start Date"
-                                tooltipPosition="bottom">
-                        </div>
-                        <div class="col-6">
-                            <label for="aed">{{'Asset.ActualEndDate' | translate }}</label>
-                            <input type="date" class="form-control" id="aed" name="aed" placeholder="Plannded End Date"
-                                [(ngModel)]="creatWorkOrderTrackingObj.actualEndDate"
-                                min="{{actualStartDate | date:'yyyy-MM-dd'}}" pTooltip="Please,Enter Actual End Date"
-                                tooltipPosition="bottom">
-                        </div>
-                    </div> -->
+                 
 
-                    <div class="row  top-buffer">
-                        <div class="col-md-3" hidden>
-                            <label for="Request Date">{{'Asset.Date' | translate }}</label>
-                            <p-calendar [(ngModel)]="creatWorkOrderTrackingObj.creationDate" [yearNavigator]="true"
-                                yearRange="1900:2030" [monthNavigator]="true" [ngModelOptions]="{standalone: true}"
-                                dateFormat="dd/mm/yy"></p-calendar>
-                        </div>
-                    </div>
+           
                     <div class="row  top-buffer">
                         <div class="p-field col-md-12">
                             <label for="description">{{'Asset.Description' | translate }}</label>
-                            <textarea class="form-control" id="Note" [(ngModel)]="creatWorkOrderTrackingObj.notes"
+                            <textarea class="form-control" id="Note" [(ngModel)]="creatWorkOrderTrackingObj.notes" [placeholder]="'Asset.Notes' | translate"
                                 pInputTextarea name="Note" [ngModelOptions]="{standalone: true}"></textarea>
                         </div>
 
                     </div>
 
-                    <div class="row  top-buffer">
-                        <div class="col-md-2"></div>
-                        <div class="col-md-8"></div>
-                        <div class="col-md-2">
-                            <button mat-stroked-button (click)="addNoneApprovedRequest()" matStepperNext color="primary"
-                                [disabled]="isDisabled" mat-button>{{'Asset.Save' | translate }} </button>
-                            <button mat-stroked-button class="ml-2" color="primary" mat-button
-                                matStepperNext>{{'Asset.Next' | translate }}</button>
-                        </div>
-                    </div>
-                </mat-step>
+                  
 
-                <mat-step [stepControl]="secondFormGroup">
-                    <ng-template matStepLabel>{{'Asset.AddDocuments' | translate }}</ng-template>
-                    <div class="row top-buffer">
-                        <div class="col-12">
-                            <label for="docmentName"> {{'Asset.DocumentTitle' | translate }}</label>
-                            <input #documentName="ngModel" class="form-control" type="text" pInputText
-                                placeholder="{{'Asset.DocumentTitle' | translate }}"
-                                [(ngModel)]="createRequestDocument.documentName">
+    
 
-                        </div>
-                    </div>
-
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-12">
 
                             <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)"
@@ -185,13 +126,7 @@
                                 |
                                 translate }}
                             </button>
-                            <!-- 
-                            <button class="btn btn-outline-primary" style="margin-top: 20px;float: right;"
-                                (click)="SaveimageToDB()" [ngStyle]="{'float': lang == 'en' ? 'right': 'left'}">
-                                <i class="fa fa-plus"
-                                    style="color: #007bff; cursor: pointer;margin: 0px 5px;"></i>{{'Asset.AddDocumentToList'
-                                |
-                                translate }}</button> -->
+                           
                         </div>
                     </div>
                     <div class="row top-buffer">
@@ -222,58 +157,70 @@
 
                             </table>
 
-                            <button class="btn btn-primary pull-center btn-sm"
-                                [disabled]="lstCreateRequestDocument.length == 0"
-                                (click)="SaveimageToDB()">{{'Asset.SaveFiles' | translate
-                                }}</button>
+                        </div> -->
+                    <!-- </div> -->
+                    <div class="row mt-2">
+                        <div class="col-2">
+                            <input type="file" multiple #file  (change)="uploadMultipleFile($event)"
+                              style="display: none;">
+                              <div type="button" name="btnUpload" class="addbutton" style="margin:0px 10px;border: none;" (click)="file.click()">
+                                <i class="pi pi-upload"></i> {{'Asset.SelectUploadFiles' |translate }}
+                              </div>
+                            
+                          </div>
+                    </div>
+                    <div class="row mt-2 p-3">
+                        <div class="col-12">
+                            <p-table class="table"      [paginator]="true"
+                            [rows]="5"[totalRecords]="lstCreateRequestDocument.length" [rowHover]="true" dataKey="id"    [value]="lstCreateRequestDocument" styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
+                            [paginator]="true">
+                            <ng-template pTemplate="header">
+                                    <tr>
+                                        <th class="text-center">{{'Asset.Name' | translate }}</th>
+                                        <th class="text-center">{{'Asset.DocumentTitle' | translate }}</th>
+                                        <th>{{'Asset.Delete' | translate}}</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-item let-rowIndex="rowIndex" let-editing="editing">
+                                    <tr >
+                                        <td class="text-center">{{item.fileName}}</td>
+                                        <td class="text-center" [pEditableColumn]="item.documentName" pEditableColumnField="documentName"
+                                        [pEditableColumnRowIndex]="rowIndex">
+                                        <p-cellEditor>
+                                          <ng-template pTemplate="input">
+                                            <input pInputText [(ngModel)]="item.documentName"
+                                              [ngModelOptions]="{standalone: true}" />
+                                          </ng-template>
+                                          <ng-template pTemplate="output">
+                                            {{item.documentName}}
+                                          </ng-template>
+                                        </p-cellEditor>
+                                      </td>
+                                        <td class="text-center">
+                                            <span class="deleteIcon" (click)="removeFileFromObjectArray(rowIndex)"><i class="pi pi-trash" style="color: red" pTooltip="{{'Asset.Delete' | translate}}"></i></span>
+                                        </td>
+                                    </tr>
+                             
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                      <td colspan="200" class="text-center"> {{'Asset.NoDataAvailable' | translate }}</td>
+                                    </tr>
+                                  </ng-template>
+                            </p-table>
                         </div>
                     </div>
-
-
-                    <div class="row top-buffer">
-                        <div class="col-md-2">
-                            <button mat-stroked-button color="primary" mat-button matStepperPrevious>{{'Asset.Previous'
-                                |
-                                translate }}</button>
-                        </div>
-                        <div class="col-md-9"></div>
-                        <div class="col-md-1">
-                            <button mat-stroked-button color="primary" mat-button matStepperNext>{{'Asset.Next' |
-                                translate
-                                }}</button>
-                        </div>
-                    </div>
-                </mat-step>
-                <mat-step>
-                    <ng-template matStepLabel>{{'Asset.Finish' | translate }}</ng-template>
-                    <p>{{'Asset.Done' | translate }}</p>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <button mat-stroked-button color="primary" mat-button matStepperPrevious>{{'Asset.Previous'
-                                |
-                                translate }}</button>
-                        </div>
-                        <div class="col-md-8"></div>
-                        <div class="col-md-2">
-                            <button mat-stroked-button (click)="CloseStepper()" color="primary"
-                                mat-button>{{'Asset.Finish' | translate }}</button>
-                        </div>
-                    </div>
-                </mat-step>
-            </mat-horizontal-stepper>
+           
+        </div>
+        </div>
+    
+ 
+    <div class="row mt-3  d-flex justify-content-center p-3">
+        <div class="col-2"  (click)="addApprovedRequest()" >
+            <a  class="addbutton">{{'Asset.Save' | translate }}</a>
         </div>
     </div>
-</div>
 
-<p-dialog appendTo="body" modal="true" [(visible)]="display" [style]="{ width: '350px' }">
-    <ng-template pTemplate="header">
-        <h6 [translate]="''" style="color: #04527e; font-weight: bold; font-size: 16pt">
-            {{ "Asset.Save" | translate }}
-        </h6>
-    </ng-template>
-    <span style="color: green; font-weight: bold; font-size: 12pt; text-align: center">
-        {{ "Asset.SavedSuccess" | translate }}</span>
-</p-dialog>
 
 <p-dialog appendTo="body" modal="true" [(visible)]="errorDisplay" [style]="{ width: '350px' }">
     <p-header style="color: rgb(181, 4, 4)"> {{ 'Asset.Error' | translate }} </p-header>

@@ -50,7 +50,8 @@ export class ListRequestVM {
     statusColor: string;
     statusIcon: string;
     countListTracks: number;
-    countWorkOrder: number;
+    WorkOrderId: number;
+    countWorkOrder:number;
     latestWorkOrderStatusId: number;
     elapsedTime: string;
     woLastTrackDescription: string;

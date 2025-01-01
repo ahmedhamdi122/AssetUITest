@@ -59,7 +59,6 @@ export class ApproverequestComponent implements OnInit {
   minDate: Date;
   plannedStartdate: any;
   actualStartDate: any;
-  display: boolean = false;
   isHide: boolean = false;
   isAssigned: boolean = false;
   isReviewed: boolean = false;
@@ -67,6 +66,8 @@ export class ApproverequestComponent implements OnInit {
   disabledButton: boolean = true;
   isDisabled: boolean = false;
   public trackId: number;
+  CreateRequestDocument:CreateRequestDocument;
+  WorkOrderId:number
   itmIndex: any[] = [];
   constructor(
     private authenticationService: AuthenticationService, private employeeService: EmployeeService,
@@ -81,10 +82,13 @@ export class ApproverequestComponent implements OnInit {
   ngOnInit(): void {
     this.onLoad();
     if (this.config.data != null || this.config.data != undefined) {
-      this.serviceRequestId = this.config.data.id;
-
+      this.serviceRequestId = this.config.data.reqId;
+      console.log('this.serviceRequestId', this.serviceRequestId)
+      this.WorkOrderId=this.config.data.WoId;
+      console.log('this.WorkOrderId', this.WorkOrderId)
       this.requestTrackingService.GetSRTracksByRequestId(this.serviceRequestId).subscribe(
         requestObj => {
+          console.log('requestObj :', requestObj)
           this.requestDetailObj = requestObj;
         });
     }
@@ -103,8 +107,9 @@ export class ApproverequestComponent implements OnInit {
       this.employeeService
         .GetEmployeesHasEngRoleInHospital(this.currentUser.hospitalId)
         .subscribe((lstemployees) => {
+          console.log('lstemployees :', lstemployees)
           this.lstEngEmployees = lstemployees;
-          this.creatWorkOrderTrackingObj.assignedTo = this.lstEngEmployees[0].userId;
+          // this.creatWorkOrderTrackingObj.assignedTo = this.lstEngEmployees[0].userId;
         });
     }
     else {
@@ -126,7 +131,6 @@ export class ApproverequestComponent implements OnInit {
     this.selectedItem = $event.value;
   }
   onLoad() {
-    this.minDate = new Date();
     this.disabledButton = false;
     // this.IsSaveProject = false;
     this.lstCreateRequestDocument = [];
@@ -151,17 +155,13 @@ export class ApproverequestComponent implements OnInit {
 
   }
   addApprovedRequest() {
-    if (this.selectedItem == "SR Done" || this.selectedItem == "تمت الصيانة") {
+    if (this.selectedItem == "SR Done" || this.selectedItem == "تمت الصيانة") 
+      {
 
-      this.workOrderService.GetWorkOrderByRequestId(this.serviceRequestId).subscribe(getWOId => {
-        this.creatWorkOrderTrackingObj.strWorkOrderDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.plannedStartDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.plannedEndDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.actualStartDate = this.datePipe.transform(new Date, "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.actualEndDate = this.datePipe.transform(new Date, "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.creationDate = this.datePipe.transform(new Date, "yyyy-MM-dd HH:mm:ss");
+        console.log('تمت الصيانة')
+        console.log('this.selectedItem', this.selectedItem)
         this.creatWorkOrderTrackingObj.createdById = this.currentUser.id;
-        this.creatWorkOrderTrackingObj.workOrderId = Number(getWOId["id"]);
+        this.creatWorkOrderTrackingObj.workOrderId = this.WorkOrderId;
         this.creatWorkOrderTrackingObj.workOrderStatusId = 12;
         if (this.lang == "en") {
           this.creatWorkOrderTrackingObj.notes = "User Approve";
@@ -179,24 +179,24 @@ export class ApproverequestComponent implements OnInit {
             this.reqTrackObj.hospitalId = this.currentUser.hospitalId;
             this.reqTrackObj.description = "تم العمل وقبل";
             this.reqTrackObj.hospitalId = this.currentUser.hospitalId;
-            this.reqTrackObj.strDescriptionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
             this.requestTrackingService.AddRequestTracking(this.reqTrackObj).subscribe(RequestTrackingId => {
-
-              this.requestService.GetRequestById(this.serviceRequestId).subscribe(reqObj => {
-              this.assetStatusObj.assetDetailId = reqObj["assetDetailId"];
-              this.assetStatusObj.statusDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
+              this.assetStatusObj.assetDetailId = this.requestDetailObj.assetDetailId;
               this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
               this.assetStatusObj.assetStatusId = 3;
               this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj).subscribe(() => {
-              this.display = true;
-                  this.isDisabled = true;
-                  // this.reload();
-                });
+                this.ref.close("Added");
+              });
               });
             });
-          });
-      });
+         
+    
 
+    }
+    else
+    {
+
+      console.log('لم تتنه بعد')
+      console.log('this.selectedItem', this.selectedItem)
     }
   }
   addNoneApprovedRequest() {
@@ -242,7 +242,6 @@ export class ApproverequestComponent implements OnInit {
                 this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
                 this.assetStatusObj.assetStatusId = 4;
                 this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj).subscribe(() => {
-                  this.display = true;
                   this.isDisabled = true;
                 });
               });
@@ -253,22 +252,11 @@ export class ApproverequestComponent implements OnInit {
       });
     }
   }
-  public uploadFile = (files) => {
-    if (files.length === 0) {
-      return;
-    }
-    let fileToUpload = <File>files[0];
-    this.formData.append('file', fileToUpload, fileToUpload.name);
-    this.createRequestDocument.requestTrackingId = Number(this.reqTrackObj);
-    this.createRequestDocument.fileName = fileToUpload.name;
-    this.Savedoctolist();
-  }
-  removeFileFromObjectArray(doc) {
-    const index: number = this.lstCreateRequestDocument.indexOf(doc);
-    if (index !== -1) {
-      this.lstCreateRequestDocument.splice(index, 1);
-    }
-  }
+ 
+  removeFileFromObjectArray(rowIndex) {
+
+    this.lstCreateRequestDocument.splice(rowIndex, 1);
+}
   Savedoctolist() {
     if (this.createRequestDocument.documentName != "" && this.createRequestDocument.fileName != "") {
       this.createRequestDocument.requestTrackingId = Number(this.reqTrackObj);
@@ -317,10 +305,8 @@ export class ApproverequestComponent implements OnInit {
             let SRFileName = hCode + "SR" + srCode + newIndex;
             this.createRequestDocument.fileName = SRFileName + "." + ext;
           }
-
           this.lstCreateRequestDocument.push(this.createRequestDocument);
           this.createRequestDocument = { id: 0, fileName: '', requestTrackingId: 0, documentName: '', requestFile: File, hospitalId: 0 };
-
         });
       }
       else if (this.itmIndex.length > 0) {
@@ -337,46 +323,63 @@ export class ApproverequestComponent implements OnInit {
         this.createRequestDocument = { id: 0, fileName: '', requestTrackingId: 0, documentName: '', requestFile: File, hospitalId: 0 };
       }
     }
-    else {
-      if (this.lang == "en") {
-        this.messageService.add({ key: 'sr', severity: 'error', summary: 'Attention !!!', sticky: true, detail: 'Please Complete Data' });
+    
+  }
+  uploadMultipleFile = (event: any) => {
+      const files: FileList = event.target.files;
+  
+      if (files.length === 0) {
+        return;
       }
       else {
-        this.messageService.add({ key: 'sr', severity: 'خطأ', summary: 'انتبه!!!', sticky: true, detail: 'من فضلك اختر اسم الملف والملف' });
+  
+        for (var i = 0; i < files.length; i++) {
+          let fileToUpload = <File>files[i];
+          var CreateRequestDocumentObj =new CreateRequestDocument();
+          CreateRequestDocumentObj.requestFile = fileToUpload;
+          CreateRequestDocumentObj.documentName = fileToUpload.name.split('.')[0];
+          var hCode = this.pad(this.currentUser.hospitalCode, 4);
+        var srCode = this.pad(this.requestDetailObj.requestCode, 10);
+        var newIndex = this.pad((this.lstCreateRequestDocument.length).toString(), 2);
+        let SRFileName = hCode + "SR" + srCode + newIndex;
+        console.log('SRFileName', SRFileName)
+        CreateRequestDocumentObj.fileName = SRFileName ;
+        console.log('this.createRequestDocument', this.createRequestDocument)
+          this.lstCreateRequestDocument.push(CreateRequestDocumentObj);
+        }
       }
     }
-  }
-  SaveimageToDB() {
-    this.lstCreateRequestDocument.forEach((item, index) => {
-      this.requestService.CreateRequestAttachments(item).subscribe(fileObj => {
-        this.uploadService.uploadRequestFiles(item.requestFile, item.fileName).subscribe(
-          (event) => {
-            if (this.lang == "en") {
-              this.messageService.add({ key: 'files', severity: 'success', summary: 'Success', detail: 'Files added successfully' });
-            }
-            else {
-              this.messageService.add({ key: 'files', severity: 'نجاح الحفظ', summary: 'نجاح الحفظ', detail: 'تم رفع الملفات بنجاح' });
-            }
-            this.requestDocumentService.GetRequestDocumentsByRequestTrackingId(item.requestTrackingId).subscribe(lstdocs => {
-              this.lstDocuments = lstdocs;
-            });
+  // SaveimageToDB() {
+  //   this.lstCreateRequestDocument.forEach((item, index) => {
+  //     this.requestService.CreateRequestAttachments(item).subscribe(fileObj => {
+  //       this.uploadService.uploadRequestFiles(item.requestFile, item.fileName).subscribe(
+  //         (event) => {
+  //           if (this.lang == "en") {
+  //             this.messageService.add({ key: 'files', severity: 'success', summary: 'Success', detail: 'Files added successfully' });
+  //           }
+  //           else {
+  //             this.messageService.add({ key: 'files', severity: 'نجاح الحفظ', summary: 'نجاح الحفظ', detail: 'تم رفع الملفات بنجاح' });
+  //           }
+  //           this.requestDocumentService.GetRequestDocumentsByRequestTrackingId(item.requestTrackingId).subscribe(lstdocs => {
+  //             this.lstDocuments = lstdocs;
+  //           });
 
-          },
-          (err) => {
+  //         },
+  //         (err) => {
 
-            if (this.lang == "en") {
-              this.errorDisplay = true;
-              this.errorMessage = 'Could not upload the file:' + item[index].fileName;
-            }
-            else {
-              this.errorDisplay = true;
-              this.errorMessage = 'لا يمكن رفع ملف ' + item[index].fileName;
-            }
-          });
-      });
-    });
-    this.lstCreateRequestDocument = [];
-  }
+  //           if (this.lang == "en") {
+  //             this.errorDisplay = true;
+  //             this.errorMessage = 'Could not upload the file:' + item[index].fileName;
+  //           }
+  //           else {
+  //             this.errorDisplay = true;
+  //             this.errorMessage = 'لا يمكن رفع ملف ' + item[index].fileName;
+  //           }
+  //         });
+  //     });
+  //   });
+  //   this.lstCreateRequestDocument = [];
+  // }
   pad(num: string, size: number): string {
     while (num.length < size) num = "0" + num;
     return num;
