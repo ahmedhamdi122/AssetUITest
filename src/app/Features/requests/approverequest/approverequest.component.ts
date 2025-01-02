@@ -2,8 +2,10 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { forkJoin } from 'rxjs';
 import { CreateAssetStatusTransactionVM } from 'src/app/Shared/Models/assetStatusTransactionVM';
 import { ListEmployeeVM } from 'src/app/Shared/Models/employeeVM';
 import { CreateRequestDocument, ListRequestDocumentVM } from 'src/app/Shared/Models/RequestDocumentVM';
@@ -62,14 +64,15 @@ export class ApproverequestComponent implements OnInit {
   isHide: boolean = false;
   isAssigned: boolean = false;
   isReviewed: boolean = false;
-  assignedEngTo: string = '';
   disabledButton: boolean = true;
   isDisabled: boolean = false;
   public trackId: number;
   CreateRequestDocument:CreateRequestDocument;
-  WorkOrderId:number
+  WorkOrderId:number;
+  WoCreatedById:string;
+  WoCreatedByName:string;
   itmIndex: any[] = [];
-  constructor(
+  constructor(private spinner:NgxSpinnerService,
     private authenticationService: AuthenticationService, private employeeService: EmployeeService,
     private requestService: RequestService, private requestTrackingService: RequestTrackingService,
     private workOrderService: WorkOrderService, private workOrderTrackingService: WorkOrderTrackingService,
@@ -83,12 +86,11 @@ export class ApproverequestComponent implements OnInit {
     this.onLoad();
     if (this.config.data != null || this.config.data != undefined) {
       this.serviceRequestId = this.config.data.reqId;
-      console.log('this.serviceRequestId', this.serviceRequestId)
-      this.WorkOrderId=this.config.data.WoId;
-      console.log('this.WorkOrderId', this.WorkOrderId)
+      this.WorkOrderId=this.config.data.woObj.WoId;
+      this.WoCreatedByName=this.config.data.woObj.WoCreatedByName;
+      this.WoCreatedById=this.config.data.woObj.WoCreatedById;
       this.requestTrackingService.GetSRTracksByRequestId(this.serviceRequestId).subscribe(
         requestObj => {
-          console.log('requestObj :', requestObj)
           this.requestDetailObj = requestObj;
         });
     }
@@ -103,38 +105,19 @@ export class ApproverequestComponent implements OnInit {
       this.selectedItem = "تمت الصيانة";
     this.isReviewed = true;
 
-    if (this.currentUser.hospitalId > 0) {
-      this.employeeService
-        .GetEmployeesHasEngRoleInHospital(this.currentUser.hospitalId)
-        .subscribe((lstemployees) => {
-          console.log('lstemployees :', lstemployees)
-          this.lstEngEmployees = lstemployees;
-          // this.creatWorkOrderTrackingObj.assignedTo = this.lstEngEmployees[0].userId;
-        });
-    }
-    else {
-      this.isAdmin = true;
-    }
-
-
-
   }
   onItemChange($event) {
+    this.selectedItem = $event.value;
     if ($event.value == "SR not done" || $event.value == "لم تتم الصيانة") {
       this.isAssigned = true;
-      this.isReviewed = false;
     }
     if ($event.value == "SR Done" || $event.value == "تمت الصيانة") {
       this.isAssigned = false;
-      this.isReviewed = true;
     }
-    this.selectedItem = $event.value;
   }
   onLoad() {
     this.disabledButton = false;
-    // this.IsSaveProject = false;
     this.lstCreateRequestDocument = [];
-
     this.requestDetailObj = {
       wONotes: '', departmentName: '', departmentNameAr: '',
       hospitalId: 0, barcode: '', assetCode: '', assetName: '', assetNameAr: '', descriptionDate: new Date, id: 0, lstRequestTracking: [],lstWorkorderTracking:[], modeName: '', modeNameAr: '', periorityName: '', periorityNameAr: '', problemName: '', problemNameAr: '',
@@ -154,107 +137,80 @@ export class ApproverequestComponent implements OnInit {
     this.createRequestDocument = { documentName: '', fileName: '', requestTrackingId: 0, id: 0, requestFile: File, hospitalId: 0 };
 
   }
-  addApprovedRequest() {
+  Save()
+   {
     if (this.selectedItem == "SR Done" || this.selectedItem == "تمت الصيانة") 
       {
-
-        console.log('تمت الصيانة')
-        console.log('this.selectedItem', this.selectedItem)
-        this.creatWorkOrderTrackingObj.createdById = this.currentUser.id;
-        this.creatWorkOrderTrackingObj.workOrderId = this.WorkOrderId;
-        this.creatWorkOrderTrackingObj.workOrderStatusId = 12;
-        if (this.lang == "en") {
-          this.creatWorkOrderTrackingObj.notes = "User Approve";
-        }
-        else {
-          this.creatWorkOrderTrackingObj.notes = "تم العمل";
-        }
-        this.creatWorkOrderTrackingObj.hospitalId = this.currentUser.hospitalId;
-        this.workOrderTrackingService.AddWorkOrderTracking(this.creatWorkOrderTrackingObj)
-          .subscribe((res) => {
-
-            this.reqTrackObj.requestStatusId = 2;
-            this.reqTrackObj.requestId = this.serviceRequestId;
-            this.reqTrackObj.createdById = this.currentUser.id;
-            this.reqTrackObj.hospitalId = this.currentUser.hospitalId;
-            this.reqTrackObj.description = "تم العمل وقبل";
-            this.reqTrackObj.hospitalId = this.currentUser.hospitalId;
-            this.requestTrackingService.AddRequestTracking(this.reqTrackObj).subscribe(RequestTrackingId => {
-              this.assetStatusObj.assetDetailId = this.requestDetailObj.assetDetailId;
-              this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
-              this.assetStatusObj.assetStatusId = 3;
-              this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj).subscribe(() => {
-                this.ref.close("Added");
-              });
-              });
-            });
-         
-    
-
+        this.addApprovedRequest();
     }
     else
     {
-
-      console.log('لم تتنه بعد')
-      console.log('this.selectedItem', this.selectedItem)
-    }
-  }
-  addNoneApprovedRequest() {
-
-    if (this.creatWorkOrderTrackingObj.assignedTo == "") {
-      this.errorDisplay = true;
+      if(this.creatWorkOrderTrackingObj.notes=='')
+      {
+        this.errorDisplay = true;
       if (this.lang == "en") {
-        this.errorMessage = "Please select person to assigned engineer";
-      } else {
-        this.errorMessage = "من فضلك اختر المهندس المختص بالصيانة";
+        this.errorMessage = "Please Insert Notes";
+      }
+      else {
+        this.errorMessage = "من فضلك اكتب ملاحظات";
       }
       return false;
+      }
+      this.addNoneApprovedRequest();
+    }
+  }
+  addApprovedRequest()
+  {
+    this.spinner.show();
+    //creatWorkOrderTrackingObj
+    this.creatWorkOrderTrackingObj.createdById = this.WoCreatedById;
+    this.creatWorkOrderTrackingObj.workOrderId = this.WorkOrderId;
+    this.creatWorkOrderTrackingObj.workOrderStatusId = 12;
+    if (this.lang == "en") {
+      this.creatWorkOrderTrackingObj.notes = "User Approve";
     }
     else {
-      this.workOrderService.GetWorkOrderByRequestId(this.serviceRequestId).subscribe(woObj => {
-        this.creatWorkOrderTrackingObj.strWorkOrderDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.actualStartDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.actualEndDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.plannedStartDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.plannedEndDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.creationDate = this.datePipe.transform(new Date, "yyyy-MM-dd HH:mm:ss");
-        this.creatWorkOrderTrackingObj.createdById = this.currentUser.id;
-        this.creatWorkOrderTrackingObj.workOrderId = Number(woObj.id);
+      this.creatWorkOrderTrackingObj.notes = "تم العمل";
+    }
+    this.creatWorkOrderTrackingObj.hospitalId = this.currentUser.hospitalId;
+        // /reqTrackObj
+        this.reqTrackObj.requestStatusId = 2;
+        this.reqTrackObj.requestId = this.serviceRequestId;
+        this.reqTrackObj.createdById = this.currentUser.id;
+        this.reqTrackObj.hospitalId = this.currentUser.hospitalId;
+        this.reqTrackObj.description = "تم العمل وقبل";
+      //assetStatusObj
+          this.assetStatusObj.assetDetailId = this.requestDetailObj.assetDetailId;
+          this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
+          this.assetStatusObj.assetStatusId = 3;
+        forkJoin([this.workOrderTrackingService.AddWorkOrderTracking(this.creatWorkOrderTrackingObj), this.requestTrackingService.AddRequestTracking(this.reqTrackObj),this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj)]).subscribe(
+          ([creatWorkOrderTrackingObjRes,RequestTrackingIdRes,AddAssetStatusTransactionRes])=>{
+            this.spinner.hide();
+            this.ref.close("Approved");
+          },error=>{
+          }
+        )
+  }
+  addNoneApprovedRequest() {
+        this.spinner.show();
+        //creatWorkOrderTrackingObj
+        //this.creatWorkOrderTrackingObj.createdById = this.currentUser.id;
+        this.creatWorkOrderTrackingObj.workOrderId =  this.WorkOrderId;
         this.creatWorkOrderTrackingObj.workOrderStatusId = 9;
         this.creatWorkOrderTrackingObj.notes = this.creatWorkOrderTrackingObj.notes;
         this.creatWorkOrderTrackingObj.hospitalId = this.currentUser.hospitalId;
-
-        this.workOrderTrackingService.AddWorkOrderTracking(this.creatWorkOrderTrackingObj)
-          .subscribe((res) => {
-            this.workOrderId = res;
-            this.reqTrackObj.requestStatusId = 3;
-            this.reqTrackObj.requestId = this.serviceRequestId;
-            this.reqTrackObj.createdById = this.currentUser.id;
-            this.reqTrackObj.description = this.creatWorkOrderTrackingObj.notes;
-            this.reqTrackObj.hospitalId = this.currentUser.hospitalId;
-            this.reqTrackObj.strDescriptionDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-            this.requestTrackingService.AddRequestTracking(this.reqTrackObj).subscribe(RequestTrackingId => {
-              const requestTrackId = RequestTrackingId;
-              this.trackId = requestTrackId;
-              this.requestService.GetRequestById(this.serviceRequestId).subscribe(reqObj => {
-                this.assetStatusObj.assetDetailId = reqObj["assetDetailId"];
-                this.assetStatusObj.statusDate = this.datePipe.transform(new Date(), "yyyy-MM-dd HH:mm:ss");
-                this.assetStatusObj.hospitalId = this.currentUser.hospitalId;
-                this.assetStatusObj.assetStatusId = 4;
-                this.assetStatusTransactionService.AddAssetStatusTransaction(this.assetStatusObj).subscribe(() => {
-                  this.isDisabled = true;
-                });
-              });
-            });
-
-
-          });
-      });
-    }
-  }
- 
+        //create reqTrackObj
+        this.reqTrackObj.requestStatusId = 3;
+        this.reqTrackObj.requestId = this.serviceRequestId;
+        this.reqTrackObj.createdById = this.currentUser.id;
+        this.reqTrackObj.description = this.creatWorkOrderTrackingObj.notes;
+        this.reqTrackObj.hospitalId = this.currentUser.hospitalId;
+        forkJoin([ this.workOrderTrackingService.AddWorkOrderTracking(this.creatWorkOrderTrackingObj),this.requestTrackingService.AddRequestTracking(this.reqTrackObj)]).subscribe(
+                ([resdWorkOrderTracking,RequestTrackingIdRes])=>{
+                  this.spinner.hide();
+                  this.ref.close("Approved");
+                })}
   removeFileFromObjectArray(rowIndex) {
-
     this.lstCreateRequestDocument.splice(rowIndex, 1);
 }
   Savedoctolist() {
@@ -342,9 +298,7 @@ export class ApproverequestComponent implements OnInit {
         var srCode = this.pad(this.requestDetailObj.requestCode, 10);
         var newIndex = this.pad((this.lstCreateRequestDocument.length).toString(), 2);
         let SRFileName = hCode + "SR" + srCode + newIndex;
-        console.log('SRFileName', SRFileName)
         CreateRequestDocumentObj.fileName = SRFileName ;
-        console.log('this.createRequestDocument', this.createRequestDocument)
           this.lstCreateRequestDocument.push(CreateRequestDocumentObj);
         }
       }

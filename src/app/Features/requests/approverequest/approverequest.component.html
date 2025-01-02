@@ -86,7 +86,7 @@
                     <div class="row top-buffer">
                         <div class="col-12">
                             <label for="assignedTo">{{'Asset.AssignedTo' | translate }}</label>
-                            <select id="assignedTo" class="form-control" name="assignedTo"
+                            <!-- <select id="assignedTo" class="form-control" name="assignedTo"
                                 [(ngModel)]="creatWorkOrderTrackingObj.assignedTo" disabled="true"
                                 pTooltip="{{'Asset.AssignedTo' | translate }}" tooltipPosition="bottom">
                                 <option value="0">{{'Asset.Select' | translate }} {{'Asset.Eng' | translate }}
@@ -94,7 +94,8 @@
                                 <option *ngFor="let eng of lstEngEmployees" [value]="eng.userId">
                                     {{eng.name}}
                                 </option>
-                            </select>
+                            </select> -->
+                            <input type="text" disabled id="assignedTo" class="form-control" name="assignedTo" [value]="WoCreatedByName">
                         </div>
                     </div>
                  
@@ -169,10 +170,10 @@
                             
                           </div>
                     </div>
-                    <div class="row mt-2 p-3">
+                    <div class="row mt-1 p-1">
                         <div class="col-12">
                             <p-table class="table"      [paginator]="true"
-                            [rows]="5"[totalRecords]="lstCreateRequestDocument.length" [rowHover]="true" dataKey="id"    [value]="lstCreateRequestDocument" styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
+                            [rows]="3"[totalRecords]="lstCreateRequestDocument.length" [rowHover]="true" dataKey="id"    [value]="lstCreateRequestDocument" styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines" responsiveLayout="scroll"
                             [paginator]="true">
                             <ng-template pTemplate="header">
                                     <tr>
@@ -215,8 +216,8 @@
         </div>
     
  
-    <div class="row mt-3  d-flex justify-content-center p-3">
-        <div class="col-2"  (click)="addApprovedRequest()" >
+    <div class="row mt-1 d-flex justify-content-center">
+        <div class="col-2"  (click)="Save()" >
             <a  class="addbutton">{{'Asset.Save' | translate }}</a>
         </div>
     </div>

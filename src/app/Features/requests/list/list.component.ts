@@ -451,12 +451,13 @@ export class ListComponent implements OnInit {
     });
   }
   LoadRequests(event) {
+
     this.sortFilterObjects.searchObj.userId = this.currentUser.id;
     this.sortFilterObjects.searchObj.hospitalId = this.currentUser.hospitalId;
     this.rowsSkipped=event.first;
     this.spinner.show();
     this.requestService.ListRequests(this.sortFilterObjects,event.first, event.rows).subscribe(items => {
-      console.log('items :', items)
+
       this.lstRequests = items.results;
       this.count = items.count;
       this.spinner.hide();
@@ -673,12 +674,16 @@ export class ListComponent implements OnInit {
       }
     });
   }
-  ApproveRequest(requestId:number,workOrderId:number) {
+  ApproveRequest(requestId:number,workOrderId:number,woCreatedBy:string,woCreatedByName:string) {
     const dialogRef2 = this.dialogService.open(ApproverequestComponent, {
       header: this.lang == "en" ? 'Approve Request' : "تأكيد أو رفض الإصلاح",
       data: {
         reqId:requestId,
-        WoId:workOrderId
+        woObj:{
+          WoId:workOrderId,
+          WoCreatedById:woCreatedBy,
+          WoCreatedByName:woCreatedByName
+        }
       },
       width: '60%',
       style: {
@@ -689,11 +694,25 @@ export class ListComponent implements OnInit {
         "font-size": 40
       }
     });
-    dialogRef2.onClose.subscribe((Approved) => {
-      if(Approved)
+    dialogRef2.onClose.subscribe(async(Saveed) => {
+      if(Saveed)
       {
-        console.log('Approved :', Approved)
-        //get updated requests
+        console.log('Saveed :', Saveed)
+        this.sortFilterObjects.searchObj.statusId=2;
+        const lastPageIndex = Math.max(0, Math.floor((this.listRequestStatus[1].count) / 10) * 10);
+        this.reloadTableObj.first=lastPageIndex;
+        await this.LoadRequests(this.reloadTableObj)
+        await this.GetRequestStatusByUserIdAndActiveStatusById(2);
+        this.showSuccessfullyMessage=true;
+        if(this.lang=="en"){
+          this.SuccessfullyMessage="Saved Successfully";
+          this.SuccessfullyHeader="Save" 
+      }
+      else
+      {
+        this.SuccessfullyMessage="تم حفظ بنجاح";
+        this.SuccessfullyHeader="حفظ" 
+      }
       }
     });
   }

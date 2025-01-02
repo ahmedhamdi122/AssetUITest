@@ -16,6 +16,8 @@ export class RequestModeVM {
 }
 
 export class ListRequestVM {
+    woCreatedByName:string;
+    woCreatedBy:string;
     id: number;
     requestId: number
     subject: string
@@ -68,7 +70,6 @@ export class ListRequestVM {
     actualEndDate: string;
     workOrderNote: string;
     assignedTo: string;
-    woCreatedBy: string;
     woPeriorityName: string;
     woPeriorityNameAr: string;
     workOrderTypeName: string;
